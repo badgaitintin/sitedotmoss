@@ -1,0 +1,682 @@
+---
+// cv.astro — Wireframe Layout with Windows 8 Tile Identity
+import '@fontsource/google-sans-flex';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Curriculum Vitae — Tinnaphop Sonsang" />
+		<title>CV — Tinnaphop Sonsang</title>
+
+		<style>
+			/* ===========================
+			   RESET & CORE WIREFRAME TOKENS
+			=========================== */
+			:root {
+				--wf-bg:            #f5f6f8; /* clean light-blue-grey background */
+				--wf-tile:          #ffffff; /* crisp white for tiles */
+				--wf-card:          #ffffff;
+				--wf-border:        #cdd3de; /* clean border color */
+				--wf-stroke:        #8c96a8; /* standard grey-blue stroke */
+				--wf-text:          #333a42; /* main text */
+				--wf-label:         #6c757d; /* secondary labels */
+				--wf-accent:        #0071e3; /* primary link/accent */
+				--wf-hover:         #f1f3f7; /* clean hover state */
+			}
+
+			*, *::before, *::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			html, body {
+				width: 100%;
+				min-height: 100vh;
+				background: var(--wf-bg);
+				font-family: 'Google Sans Flex', 'Segoe UI', Roboto, sans-serif;
+				color: var(--wf-text);
+			}
+
+			a {
+				color: var(--wf-accent);
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+
+			/* ===========================
+			   PAGE TRANSITION SYSTEM
+			=========================== */
+			.cv-page {
+				animation: page-open 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				will-change: transform, opacity;
+			}
+
+			@keyframes page-open {
+				0% {
+					opacity: 0;
+					transform: scale(0.98) translateY(10px);
+				}
+				100% {
+					opacity: 1;
+					transform: scale(1) translateY(0);
+				}
+			}
+
+			@keyframes page-close {
+				0% {
+					opacity: 1;
+					transform: scale(1) translateY(0);
+				}
+				100% {
+					opacity: 0;
+					transform: scale(0.98) translateY(10px);
+				}
+			}
+
+			body.is-exiting .cv-page {
+				animation: page-close 0.25s cubic-bezier(0.4, 0, 1, 1) both;
+				pointer-events: none;
+			}
+
+			/* ===========================
+			   LAYOUT STRUCTURE
+			=========================== */
+			.cv-container {
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: 56px 24px 80px;
+				display: grid;
+				grid-template-columns: 220px 1fr;
+				gap: 48px;
+				align-items: start;
+			}
+
+			/* ===========================
+			   SIDEBAR MENU
+			=========================== */
+			.cv-sidebar {
+				position: sticky;
+				top: 24px; /* stick to the top of viewport with clean offset */
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+			}
+
+			/* Windows 8 style circular back button */
+			.sidebar-back-top {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				text-decoration: none;
+				color: var(--wf-text);
+				margin-bottom: 12px;
+				transition: color 0.15s;
+			}
+
+			.back-arrow-circle {
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				border: 2px solid var(--wf-text);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.1rem;
+				font-weight: bold;
+				transition: background 0.15s, color 0.15s, border-color 0.15s;
+			}
+			.sidebar-back-top:hover .back-arrow-circle {
+				background: var(--wf-text);
+				color: var(--wf-bg);
+			}
+			.sidebar-back-top:hover {
+				color: var(--wf-accent);
+				text-decoration: none;
+			}
+
+			.page-title {
+				font-size: 2rem;
+				font-weight: 300;
+				letter-spacing: -0.5px;
+				color: var(--wf-text);
+			}
+
+			.sidebar-group {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+
+			.sidebar-item {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 6px 12px;
+				border-radius: 4px;
+				font-size: 0.85rem;
+				color: var(--wf-text);
+				transition: background 0.15s, color 0.15s;
+				cursor: pointer;
+				border-left: 2px solid transparent;
+			}
+			.sidebar-item:hover {
+				background: var(--wf-hover);
+				text-decoration: none;
+			}
+			.sidebar-item.is-active {
+				font-weight: 600;
+				color: var(--wf-accent);
+				border-left-color: var(--wf-stroke);
+				background: var(--wf-hover);
+			}
+
+			.sidebar-item svg {
+				opacity: 0.6;
+				flex-shrink: 0;
+			}
+			.sidebar-item.is-active svg {
+				opacity: 1;
+				color: var(--wf-accent);
+			}
+
+			/* ===========================
+			   CONTENT AREA & TILE PANELS
+			=========================== */
+			.cv-main {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+			}
+
+			/* Styled as wireframe Metro UI content tiles */
+			.hero, .section {
+				background: var(--wf-card);
+				border: 1.5px solid var(--wf-border);
+				padding: 28px;
+				transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), border-color 0.2s, box-shadow 0.2s;
+			}
+			.hero:hover, .section:hover {
+				transform: translateY(-2px);
+				border-color: var(--wf-stroke);
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+			}
+
+			.section {
+				scroll-margin-top: 24px; /* align with sticky sidebar offset */
+			}
+
+			.hero__name {
+				font-size: 2.2rem;
+				font-weight: 300;
+				color: var(--wf-text);
+				letter-spacing: -0.5px;
+				margin-bottom: 8px;
+			}
+
+			.hero__role {
+				font-size: 1rem;
+				color: var(--wf-label);
+				margin-bottom: 16px;
+			}
+
+			.hero__contact {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 4px 12px;
+				font-size: 0.8rem;
+				color: var(--wf-label);
+			}
+
+			.dot {
+				color: var(--wf-border);
+			}
+
+			.section-label {
+				font-size: 0.7rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--wf-label);
+				margin-bottom: 20px;
+			}
+
+			.summary-text {
+				font-size: 0.9rem;
+				line-height: 1.6;
+				color: var(--wf-text);
+			}
+
+			.entries {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+			}
+
+			.entry__head {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				gap: 12px;
+				margin-bottom: 4px;
+			}
+
+			.entry__title {
+				font-size: 0.9rem;
+				font-weight: 600;
+				color: var(--wf-text);
+			}
+
+			.entry__date {
+				font-size: 0.75rem;
+				color: var(--wf-label);
+				white-space: nowrap;
+			}
+
+			.entry__org {
+				font-size: 0.8rem;
+				color: var(--wf-label);
+				margin-bottom: 8px;
+			}
+
+			.entry__sub {
+				font-size: 0.8rem;
+				font-weight: 600;
+				color: var(--wf-text);
+				margin: 12px 0 6px;
+			}
+
+			.bullets {
+				list-style: none;
+				padding-left: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+			.bullets li {
+				font-size: 0.8rem;
+				color: var(--wf-label);
+				line-height: 1.5;
+				position: relative;
+				padding-left: 14px;
+			}
+			.bullets li::before {
+				content: "—";
+				position: absolute;
+				left: 0;
+				color: var(--wf-border);
+			}
+
+			/* Skills grid format (Mini-Tiles) */
+			.skills-list {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+				gap: 16px;
+			}
+
+			.skill-group {
+				background: var(--wf-bg);
+				border: 1.5px solid var(--wf-border);
+				padding: 16px;
+				border-radius: 4px;
+				transition: border-color 0.2s, background 0.2s;
+			}
+			.skill-group:hover {
+				border-color: var(--wf-stroke);
+				background: var(--wf-tile);
+			}
+
+			.skill-group__label {
+				font-size: 0.75rem;
+				font-weight: 600;
+				color: var(--wf-text);
+				margin-bottom: 8px;
+				display: block;
+			}
+
+			.skill-pills {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 6px;
+			}
+
+			.pill {
+				display: inline-block;
+				padding: 3px 8px;
+				border: 1.5px solid var(--wf-border);
+				border-radius: 4px;
+				background: var(--wf-card);
+				font-size: 0.72rem;
+				color: var(--wf-text);
+			}
+
+			/* ===========================
+			   RESPONSIVE DESIGN
+			=========================== */
+			@media (max-width: 768px) {
+				.cv-container {
+					grid-template-columns: 1fr;
+					gap: 20px;
+					padding: 16px 16px 80px;
+				}
+
+				.cv-sidebar {
+					position: sticky;
+					top: 0;
+					background: var(--wf-bg);
+					z-index: 10;
+					padding: 12px 16px;
+					margin: -16px -16px 16px -16px; /* offset container padding */
+					border-bottom: 1.5px solid var(--wf-border);
+					display: flex;
+					flex-direction: row;
+					align-items: center;
+					gap: 12px;
+					overflow-x: auto;
+					scrollbar-width: none;
+					-ms-overflow-style: none;
+				}
+				.cv-sidebar::-webkit-scrollbar {
+					display: none;
+				}
+
+				.sidebar-group {
+					display: flex;
+					flex-direction: row;
+					gap: 8px;
+				}
+
+				.sidebar-back-top {
+					margin-bottom: 0;
+					padding: 4px 10px;
+					background: var(--wf-card);
+					border: 1.5px solid var(--wf-border);
+					border-radius: 20px;
+					white-space: nowrap;
+					gap: 8px;
+				}
+
+				.back-arrow-circle {
+					width: 24px;
+					height: 24px;
+					font-size: 0.9rem;
+					border-width: 1.5px;
+				}
+
+				.page-title {
+					font-size: 0.95rem;
+					font-weight: 500;
+				}
+
+				.sidebar-item {
+					white-space: nowrap;
+					padding: 6px 12px;
+					border: 1.5px solid var(--wf-border);
+					border-radius: 4px;
+					background: var(--wf-card);
+					font-size: 0.8rem;
+					border-left: 1.5px solid var(--wf-border);
+				}
+				.sidebar-item.is-active {
+					background: var(--wf-hover);
+					border-color: var(--wf-accent);
+				}
+			}
+		</style>
+	</head>
+	<body>
+
+		<div class="cv-page">
+			<div class="cv-container">
+				<!-- Sidebar Menu -->
+				<aside class="cv-sidebar" aria-label="CV navigation">
+					<!-- Dashboard Back Link styled as Windows 8 Settings circle button -->
+					<a href="/" class="sidebar-back-top" id="sidebarBackTop" title="Back to Dashboard">
+						<span class="back-arrow-circle">←</span>
+						<span class="page-title">CV</span>
+					</a>
+
+					<div class="sidebar-group">
+						<a href="#hero" class="sidebar-item" data-section="hero">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="12" height="12" rx="1.5"/><circle cx="7" cy="6" r="2.5"/><path d="M2 13c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
+							Overview
+						</a>
+						<a href="#summary" class="sidebar-item" data-section="summary">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="10" x2="8" y2="10"/></svg>
+							Summary
+						</a>
+						<a href="#education" class="sidebar-item" data-section="education">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l6-3 6 3-6 3-6-3z"/><path d="M4 6.5V10c0 1 1.3 2 3 2s3-1 3-2V6.5"/><line x1="13" y1="5" x2="13" y2="9"/></svg>
+							Education
+						</a>
+						<a href="#skills" class="sidebar-item" data-section="skills">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="7,1 8.8,5.2 13.4,5.5 10,8.5 11.1,13 7,10.4 2.9,13 4,8.5 0.6,5.5 5.2,5.2"/></svg>
+							Skills
+						</a>
+						<a href="#experience" class="sidebar-item" data-section="experience">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="12" height="9" rx="1"/><path d="M4 4V3a1.5 1.5 0 013 0v1"/><path d="M7 4V3a1.5 1.5 0 013 0v1"/></svg>
+							Experience
+						</a>
+						<a href="#projects" class="sidebar-item" data-section="projects">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3.5h4.5L7 2h6v10H1z"/></svg>
+							Projects
+						</a>
+					</div>
+				</aside>
+
+				<!-- Main CV Content -->
+				<main class="cv-main">
+					<!-- HERO -->
+					<section class="hero" id="hero">
+						<h1 class="hero__name">Tinnaphop Sonsang</h1>
+						<p class="hero__role">Computer Engineering &amp; AI Graduate</p>
+						<div class="hero__contact">
+							<a href="mailto:tinnaphop.moss@gmail.com">tinnaphop.moss@gmail.com</a>
+							<span class="dot" aria-hidden="true">·</span>
+							<span>064-948-1740</span>
+							<span class="dot" aria-hidden="true">·</span>
+							<a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+							<span class="dot" aria-hidden="true">·</span>
+							<a href="https://github.com/badgaitintin" target="_blank" rel="noopener">GitHub</a>
+						</div>
+					</section>
+
+					<!-- SUMMARY -->
+					<section class="section" id="summary">
+						<h2 class="section-label">Profile Summary</h2>
+						<p class="summary-text">
+							A Computer Engineering and AI graduate with hands-on experience building end-to-end AI pipelines — from data engineering and model training to real-world deployment. Skilled in computer vision, data engineering, and full-stack web development, with a focus on making AI systems production-ready.
+						</p>
+					</section>
+
+					<!-- EDUCATION -->
+					<section class="section" id="education">
+						<h2 class="section-label">Education</h2>
+						<div class="entries">
+							<div class="entry">
+								<div class="entry__head">
+									<span class="entry__title">Walailak University</span>
+									<span class="entry__date">June 2022 – May 2026</span>
+								</div>
+								<p class="entry__org">B.Eng. Computer Engineering and Artificial Intelligence · Nakhon Si Thammarat</p>
+								<ul class="bullets">
+									<li>GPAX 3.65 — First-class honours</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<!-- SKILLS -->
+					<section class="section" id="skills">
+						<h2 class="section-label">Key Skills</h2>
+						<div class="skills-list">
+							<div class="skill-group">
+								<span class="skill-group__label">End-to-End AI Pipeline Design</span>
+								<div class="skill-pills">
+									<span class="pill">Computer Vision</span>
+									<span class="pill">Object Detection</span>
+									<span class="pill">Depth Estimation</span>
+									<span class="pill">Pose Estimation</span>
+									<span class="pill">YOLO Models</span>
+								</div>
+							</div>
+							<div class="skill-group">
+								<span class="skill-group__label">Data Engineering &amp; Unsupervised Learning</span>
+								<div class="skill-pills">
+									<span class="pill">Spotify API Pipeline</span>
+									<span class="pill">K-Means</span>
+									<span class="pill">PCA / UMAP / t-SNE</span>
+									<span class="pill">Data Deduplication</span>
+								</div>
+							</div>
+							<div class="skill-group">
+								<span class="skill-group__label">Full-Stack Web Development</span>
+								<div class="skill-pills">
+									<span class="pill">Astro</span>
+									<span class="pill">Next.js</span>
+									<span class="pill">React</span>
+									<span class="pill">TypeScript</span>
+									<span class="pill">Tailwind CSS</span>
+									<span class="pill">PostgreSQL (Supabase)</span>
+									<span class="pill">SQLite / Drizzle ORM</span>
+								</div>
+							</div>
+							<div class="skill-group">
+								<span class="skill-group__label">Tools &amp; Productivity</span>
+								<div class="skill-pills">
+									<span class="pill">Figma</span>
+									<span class="pill">Adobe Photoshop</span>
+									<span class="pill">Canva</span>
+									<span class="pill">Microsoft Office Suite</span>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<!-- EXPERIENCE -->
+					<section class="section" id="experience">
+						<h2 class="section-label">Work Experience</h2>
+						<div class="entries">
+							<div class="entry">
+								<div class="entry__head">
+									<span class="entry__title">Intern Developer (Co-op / Internship)</span>
+									<span class="entry__date">Sept 2025 – Apr 2026</span>
+								</div>
+								<p class="entry__org">ThaiDotRun · Bangkok</p>
+
+								<p class="entry__sub">Automated Runner Highlight Extraction System</p>
+								<ul class="bullets">
+									<li>Built an end-to-end pipeline detecting and tracking runners from race footage using computer vision</li>
+									<li>Automated highlight clip generation, significantly reducing post-event manual editing time</li>
+								</ul>
+
+								<p class="entry__sub">Robustness Shoe Detection &amp; Classification Pipeline</p>
+								<ul class="bullets">
+									<li>Developed a YOLO-based detection and classification system for runner footwear</li>
+									<li>Implemented data deduplication and validation checks for production-grade reliability</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<!-- PROJECTS -->
+					<section class="section" id="projects">
+						<h2 class="section-label">Projects &amp; Thesis</h2>
+						<div class="entries">
+							<div class="entry">
+								<div class="entry__head">
+									<span class="entry__title">Madonna Discography Analysis</span>
+									<span class="entry__date">March 2026 – Present</span>
+								</div>
+								<ul class="bullets">
+									<li>Data pipeline using the Spotify API to collect and process full discography metadata</li>
+									<li>Applied K-Means clustering with PCA / UMAP / t-SNE for audio feature visualization</li>
+								</ul>
+							</div>
+
+							<div class="entry">
+								<div class="entry__head">
+									<span class="entry__title">Site(.)moss — Portfolio Site</span>
+									<span class="entry__date">December 2025 – Present</span>
+								</div>
+								<ul class="bullets">
+									<li>Personal portfolio built with Astro, featuring a Windows Metro-inspired tile UI</li>
+									<li>Responsive wireframe design system with animated live tiles and drag-to-scroll navigation</li>
+								</ul>
+							</div>
+
+							<div class="entry">
+								<div class="entry__head">
+									<span class="entry__title">Capstone Thesis — WBC Detection in Raptors</span>
+									<span class="entry__date">August 2024 – August 2025</span>
+								</div>
+								<ul class="bullets">
+									<li>Trained and evaluated YOLO models for white blood cell detection in avian blood smear images</li>
+									<li>Addressed class imbalance and domain-specific data challenges in a medical imaging context</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+				</main>
+			</div>
+		</div>
+
+		<script>
+			// ==============================
+			// Sidebar active section tracking (Scroll-spy)
+			// ==============================
+			const sections = document.querySelectorAll('.hero, .section');
+			const sideItems = document.querySelectorAll('.sidebar-item[data-section]');
+
+			const obs = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((e) => {
+						if (e.isIntersecting) {
+							sideItems.forEach((item) => {
+								item.classList.toggle('is-active', item.dataset.section === e.target.id);
+							});
+						}
+					});
+				},
+				{
+					root: null, // viewport level
+					rootMargin: '-20% 0px -60% 0px',
+					threshold: 0,
+				}
+			);
+
+			sections.forEach((s) => obs.observe(s));
+
+			// ==============================
+			// Smooth scroll to sections
+			// ==============================
+			document.querySelectorAll('a[href^="#"]').forEach((a) => {
+				a.addEventListener('click', (e) => {
+					const target = document.querySelector(a.getAttribute('href'));
+					if (target) {
+						e.preventDefault();
+						target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				});
+			});
+
+			// ==============================
+			// Page transition interceptor for back navigation
+			// ==============================
+			document.querySelectorAll('#sidebarBackTop').forEach((btn) => {
+				btn.addEventListener('click', (e) => {
+					e.preventDefault();
+					document.body.classList.add('is-exiting');
+					setTimeout(() => {
+						window.location.href = btn.getAttribute('href');
+					}, 250); // matches page-close transition duration
+				});
+			});
+		</script>
+	</body>
+</html>

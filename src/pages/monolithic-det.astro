@@ -1,0 +1,2544 @@
+---
+// monolithic-det.astro — Monolithic Det · Blackhole Theme
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			name="description"
+			content="Monolithic Det — Custom Swin Transformer + FCOS Object Detector built from scratch in PyTorch."
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Coral+Pixels&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Libre+Barcode+128+Text&family=Trirong:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* ===========================
+			   RESET
+			=========================== */
+			*,
+			*::before,
+			*::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			/* ===========================
+			   BLACKHOLE TOKEN SYSTEM
+			=========================== */
+			:root {
+				--bh-void: #000000;
+				--bh-deep: #07080a;
+				--bh-surface: #0d0f12;
+				--bh-card: #111318;
+				--bh-border: rgba(255, 255, 255, 0.07);
+				--bh-border-hi: rgba(255, 255, 255, 0.14);
+				--bh-text: #e8eaf0;
+				--bh-muted: #6b7280;
+				--bh-accent: #818cf8; /* slate blue */
+				--bh-accent2: #a78bfa; /* violet */
+				--bh-accent3: #34d399; /* emerald (gap badges) */
+				--bh-danger: #f87171;
+				--bh-glow: transparent;
+				--bh-glow-sm: transparent;
+			}
+
+			/* ===========================
+			   BASE
+			=========================== */
+			html,
+			body {
+				width: 100%;
+				min-height: 100vh;
+				background: #000;
+				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+				color: var(--bh-text);
+				line-height: 1.6;
+			}
+
+			a {
+				color: var(--bh-accent);
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+
+			/* ===========================
+			   PAGE TRANSITION
+			=========================== */
+			.page-wrap {
+				animation: bh-enter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+			}
+			@keyframes bh-enter {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			body.is-exiting .page-wrap {
+				animation: bh-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+				pointer-events: none;
+			}
+			@keyframes bh-exit {
+				from {
+					opacity: 1;
+					transform: translateY(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+			}
+
+			/* ===========================
+			   ENERGY BURST BACKGROUND
+			   — Radial gradient from bright center
+			     to void, fixed behind all content
+			=========================== */
+			/* ===========================
+			   FLUID ORB BACKGROUND
+			   — Scattered atmospheric orbs fading
+			     and drifting slowly, scroll-linked
+			=========================== */
+			.bh-bg {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 0;
+				overflow: hidden;
+				background: #000;
+			}
+
+			/* Theme Containers */
+			.bh-bg-theme {
+				position: absolute;
+				inset: 0;
+				will-change: filter;
+				filter: invert(var(--scroll-invert, 0));
+				isolation: isolate;
+			}
+
+			.bh-glow-orb {
+				position: absolute;
+				border-radius: 50%;
+				mix-blend-mode: screen;
+				will-change: transform, border-radius;
+			}
+
+			/* RGB Orbs (Red, Green, Blue) - Positioned closer and animated to overlap */
+			.bh-glow-orb--1 {
+				width: 500px;
+				height: 500px;
+				top: 10%;
+				left: 15%;
+				filter: blur(75px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.55) 0%, rgba(239, 68, 68, 0.8) 30%, rgba(185, 28, 28, 0.25) 70%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-1 28s infinite ease-in-out, morph-1 16s infinite ease-in-out;
+			}
+			.bh-glow-orb--2 {
+				width: 380px;
+				height: 380px;
+				top: 25%;
+				left: 45%;
+				filter: blur(65px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, rgba(34, 197, 94, 0.8) 30%, rgba(21, 128, 61, 0.2) 70%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-2 24s infinite ease-in-out, morph-2 12s infinite ease-in-out;
+			}
+			.bh-glow-orb--3 {
+				width: 300px;
+				height: 300px;
+				bottom: 15%;
+				left: 30%;
+				filter: blur(55px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, rgba(59, 130, 246, 0.8) 30%, rgba(29, 78, 216, 0.25) 70%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-3 20s infinite ease-in-out, morph-3 10s infinite ease-in-out;
+			}
+
+			@keyframes drift-1 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(200px, 120px) scale(1.1); }
+				66% { transform: translate(-100px, -50px) scale(0.9); }
+			}
+
+			@keyframes drift-2 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(-250px, 150px) scale(0.9); }
+				66% { transform: translate(150px, -100px) scale(1.1); }
+			}
+
+			@keyframes drift-3 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(120px, -200px) scale(1.15); }
+				66% { transform: translate(-180px, 100px) scale(0.85); }
+			}
+
+			@keyframes morph-1 {
+				0%, 100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+				33% { border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; }
+				66% { border-radius: 50% 50% 35% 65% / 40% 60% 40% 60%; }
+			}
+
+			@keyframes morph-2 {
+				0%, 100% { border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%; }
+				33% { border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; }
+				66% { border-radius: 60% 40% 40% 60% / 60% 40% 60% 40%; }
+			}
+
+			@keyframes morph-3 {
+				0%, 100% { border-radius: 38% 62% 40% 60% / 53% 48% 52% 47%; }
+				33% { border-radius: 65% 35% 62% 38% / 45% 55% 40% 60%; }
+				66% { border-radius: 48% 52% 35% 65% / 60% 40% 55% 45%; }
+			}
+
+			/* Shared vignette overlay fading to solid black at the outer boundaries */
+			.bh-vignette {
+				position: absolute;
+				inset: 0;
+				z-index: 4;
+				background: radial-gradient(
+					ellipse 100% 100% at 50% 50%,
+					transparent 30%,
+					rgba(0, 0, 0, 0.45) 70%,
+					rgba(0, 0, 0, 0.96) 100%
+				);
+			}
+
+			.bh-bubbles {
+				position: absolute;
+				inset: 0;
+				z-index: 3; /* above blue/orange gradients, below vignette */
+				pointer-events: none;
+				overflow: hidden;
+			}
+
+			.bh-bubble {
+				position: absolute;
+				bottom: -60px;
+				left: var(--left);
+				width: var(--size);
+				height: var(--size);
+				opacity: 0;
+				background: radial-gradient(
+					circle at 30% 30%,
+					rgba(255, 255, 255, 0.08) 0%,
+					rgba(255, 255, 255, 0.01) 70%
+				);
+				border: 1px solid rgba(255, 255, 255, 0.09);
+				border-radius: 50%;
+				box-shadow:
+					inset 0 2px 4px rgba(255, 255, 255, 0.15),
+					0 2px 10px rgba(0, 0, 0, 0.3);
+				animation: float-up var(--duration) infinite linear;
+				animation-delay: var(--delay);
+				will-change: transform, opacity;
+			}
+
+			@keyframes float-up {
+				0% {
+					transform: translateY(0) translateX(0) scale(0.8);
+					opacity: 0;
+				}
+				10% {
+					opacity: var(--opacity);
+				}
+				90% {
+					opacity: var(--opacity);
+				}
+				100% {
+					transform: translateY(-110vh) translateX(var(--sway))
+						scale(1.1);
+					opacity: 0;
+				}
+			}
+
+			/* ===========================
+			   LAYOUT CONTAINER
+			=========================== */
+			.bh-page {
+				position: relative;
+				z-index: 1;
+				max-width: 860px;
+				margin: 0 auto;
+				padding: 48px 24px 80px;
+				box-sizing: border-box;
+			}
+
+			/* ===========================
+			   TOP NAV BAR
+			=========================== */
+			.bh-topbar {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				margin-bottom: 24px;
+			}
+
+			.bh-back {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 7px 14px;
+				border: 1px solid var(--bh-border-hi);
+				border-radius: 4px;
+				font-size: 0.82rem;
+				font-weight: 500;
+				color: var(--bh-muted);
+				background: var(--bh-card);
+				transition:
+					color 0.2s,
+					border-color 0.2s,
+					background 0.2s;
+				cursor: pointer;
+			}
+			.bh-back:hover {
+				color: var(--bh-text);
+				border-color: var(--bh-accent);
+				background: rgba(124, 156, 255, 0.06);
+				text-decoration: none;
+			}
+
+			.bh-breadcrumb {
+				font-size: 0.78rem;
+				color: var(--bh-muted);
+				letter-spacing: 0.3px;
+			}
+			.bh-breadcrumb span {
+				color: var(--bh-text);
+				font-weight: 500;
+			}
+
+			/* Apply Google Sans to all content sections starting from 00 downwards */
+			.bh-content-scroll {
+				font-family: "Google Sans", sans-serif;
+			}
+
+			/* Style SVG flowcharts with Google Sans */
+			.bh-diag-svg text {
+				font-family: "Google Sans", sans-serif;
+			}
+
+			/* ===========================
+			   HEADER & SCROLL LAYOUT
+			=========================== */
+			.bh-header {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				margin-bottom: 48px;
+				width: 100%;
+			}
+
+			@media (min-width: 900px) {
+				.bh-page {
+					max-width: 1100px !important;
+					width: 100%;
+					padding: 60px 40px 120px !important;
+					display: flex;
+					flex-direction: column;
+					margin: 0 auto !important;
+				}
+
+				.bh-topbar {
+					margin-bottom: 32px;
+				}
+
+				.bh-header {
+					display: grid;
+					grid-template-columns: auto 1fr;
+					gap: 64px;
+					align-items: flex-start;
+					flex-shrink: 0;
+					margin-bottom: 72px;
+				}
+
+				.bh-header-right {
+					display: flex;
+					justify-content: flex-end;
+				}
+
+				.bh-header-right .bh-summary {
+					text-align: right;
+					margin: 0 0 0 auto;
+					font-size: 0.92rem;
+					line-height: 1.75;
+					max-width: 720px;
+				}
+
+				.bh-title {
+					font-size: clamp(2.2rem, 4vw, 3.2rem) !important;
+					justify-content: flex-start !important;
+					text-align: left !important;
+				}
+
+				.bh-content-scroll {
+					display: flex;
+					flex-direction: column;
+					gap: 80px;
+					overflow-x: visible;
+					overflow-y: visible;
+					flex-grow: 0;
+					padding-bottom: 0;
+					align-items: stretch;
+				}
+
+				.bh-section {
+					margin-bottom: 0 !important;
+					display: flex;
+					flex-direction: column;
+					width: 100% !important;
+				}
+
+				.bh-divider {
+					display: block !important;
+					height: 1px;
+					background: linear-gradient(
+						to right,
+						transparent,
+						rgba(255, 255, 255, 0.08),
+						transparent
+					);
+					margin: 100px 0;
+				}
+			}
+
+			/* ===========================
+			   HERO SECTION
+			=========================== */
+			.bh-hero {
+				margin-bottom: 80px;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+
+			.bh-eyebrow {
+				font-size: 0.72rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				letter-spacing: 2px;
+				color: var(--bh-accent);
+				margin-bottom: 20px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 12px;
+				width: 100%;
+			}
+			.bh-eyebrow::before {
+				content: "";
+				display: block;
+				width: 60px;
+				height: 1px;
+				background: linear-gradient(
+					to left,
+					var(--bh-accent),
+					transparent
+				);
+			}
+			.bh-eyebrow::after {
+				content: "";
+				display: block;
+				width: 60px;
+				height: 1px;
+				background: linear-gradient(
+					to right,
+					var(--bh-accent),
+					transparent
+				);
+			}
+
+			.bh-title {
+				font-size: clamp(2.8rem, 7vw, 5rem);
+				font-weight: 900;
+				line-height: 1.1;
+				letter-spacing: -1px;
+				margin-bottom: 16px;
+				color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-wrap: wrap;
+				gap: 16px;
+			}
+
+			.title-monolithic {
+				font-family: "Google Sans", sans-serif;
+				background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.title-det {
+				font-family: "Coral Pixels", sans-serif;
+				font-size: 1.1em;
+				font-weight: normal;
+			}
+
+			.bh-subtitle {
+				font-family: "Google Sans", sans-serif;
+				font-size: 0.95rem;
+				color: rgba(255, 255, 255, 0.75);
+				font-weight: 400;
+				margin-bottom: 28px;
+				line-height: 1.5;
+				letter-spacing: 0.3px;
+			}
+
+			.bh-summary {
+				font-family: "Google Sans", sans-serif;
+				font-size: 0.88rem;
+				color: rgba(255, 255, 255, 0.8);
+				line-height: 1.8;
+				max-width: 620px;
+				margin-bottom: 32px;
+				margin-left: auto;
+				margin-right: auto;
+				font-weight: 400;
+			}
+
+			.bh-summary strong {
+				color: #ffffff !important;
+				font-weight: 600;
+			}
+
+			.bh-tags {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				justify-content: center;
+			}
+
+			.bh-tag {
+				padding: 4px 12px;
+				border: 1px solid var(--bh-border-hi);
+				border-radius: 0;
+				font-size: 0.73rem;
+				font-weight: 600;
+				color: var(--bh-muted);
+				background: var(--bh-card);
+				letter-spacing: 0.3px;
+				transition:
+					border-color 0.2s,
+					color 0.2s;
+			}
+			.bh-tag:hover {
+				border-color: var(--bh-accent);
+				color: var(--bh-accent);
+			}
+
+			/* ===========================
+			   SECTION WRAPPER
+			=========================== */
+			.bh-section {
+				margin-bottom: 80px;
+				scroll-margin-top: 48px;
+			}
+
+			.bh-section-head {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 6px;
+				margin-bottom: 32px;
+			}
+
+			.bh-section-num {
+				font-size: 0.85rem;
+				font-weight: 600;
+				color: var(--bh-accent);
+				font-variant-numeric: tabular-nums;
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				opacity: 0.9;
+			}
+
+			.bh-section-title {
+				font-size: clamp(1.8rem, 4vw, 2.4rem);
+				font-weight: 700;
+				color: #fff;
+				letter-spacing: -0.02em;
+				line-height: 1.25;
+			}
+
+			.bh-section-line {
+				display: none;
+			}
+
+			.bh-prose {
+				font-size: 1.15rem;
+				color: #d1d5db;
+				line-height: 1.65;
+				margin-bottom: 32px;
+				font-weight: 400;
+			}
+
+			.bh-prose strong {
+				color: #ffffff;
+				font-weight: 600;
+			}
+
+			/* ===========================
+			   ARCHITECTURE DIAGRAM
+			=========================== */
+			.bh-diag-wrap {
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 40px 28px;
+				overflow-x: auto;
+				scrollbar-width: thin;
+				scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+				margin-bottom: 40px;
+			}
+
+			.bh-diag-svg {
+				display: block;
+				width: 100%;
+				height: auto;
+				max-width: 760px;
+				margin: 0 auto;
+			}
+
+			/* ===========================
+			   VARIANTS GRID (Section 00)
+			=========================== */
+			.bh-variants-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 20px;
+				margin-bottom: 24px;
+			}
+
+			.bh-variant-card {
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 24px;
+				transition: border-color 0.25s, background-color 0.25s, transform 0.25s, box-shadow 0.25s;
+				position: relative;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
+
+			.bh-variant-card:hover {
+				background: rgba(28, 28, 30, 0.6);
+				border-color: var(--card-glow, rgba(255, 255, 255, 0.16));
+				transform: translateY(-4px);
+				box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--card-glow-soft, transparent);
+			}
+
+			.bh-variant-card--nano {
+				--card-glow: rgba(52, 211, 153, 0.4);
+				--card-glow-soft: rgba(52, 211, 153, 0.08);
+				--accent-color: #34d399;
+			}
+			.bh-variant-card--macro {
+				--card-glow: rgba(99, 102, 241, 0.4);
+				--card-glow-soft: rgba(99, 102, 241, 0.08);
+				--accent-color: #6366f1;
+			}
+			.bh-variant-card--small {
+				--card-glow: rgba(129, 140, 248, 0.45);
+				--card-glow-soft: rgba(129, 140, 248, 0.1);
+				--accent-color: var(--bh-accent);
+				border-color: rgba(129, 140, 248, 0.25);
+			}
+			.bh-variant-card--medium {
+				--card-glow: rgba(244, 63, 94, 0.4);
+				--card-glow-soft: rgba(244, 63, 94, 0.08);
+				--accent-color: #f43f5e;
+			}
+
+			.bh-variant-badge {
+				align-self: flex-start;
+				padding: 2px 8px;
+				font-size: 0.65rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				background: rgba(255, 255, 255, 0.05);
+				color: var(--bh-muted);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+			}
+
+			.bh-variant-card--small .bh-variant-badge {
+				background: rgba(129, 140, 248, 0.15);
+				color: var(--bh-accent);
+				border-color: rgba(129, 140, 248, 0.3);
+			}
+
+			.bh-variant-name {
+				font-size: 1.3rem;
+				font-weight: 700;
+				color: #fff;
+			}
+
+			.bh-variant-spec-list {
+				list-style: none;
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				font-size: 0.8rem;
+				color: #cbd5e1;
+				margin-top: 8px;
+			}
+
+			.bh-variant-spec-item {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.bh-variant-spec-label {
+				color: var(--bh-muted);
+			}
+
+			.bh-variant-spec-value {
+				font-weight: 500;
+				color: #f5f5f7;
+			}
+
+			.bh-variant-bar-bg {
+				width: 100%;
+				height: 4px;
+				background: rgba(255, 255, 255, 0.08);
+				margin-top: auto;
+				position: relative;
+			}
+
+			.bh-variant-bar-fill {
+				height: 100%;
+				background: var(--accent-color, #fff);
+				box-shadow: 0 0 8px var(--accent-color);
+			}
+
+			@media (max-width: 950px) {
+				.bh-variants-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+			}
+
+			@media (max-width: 500px) {
+				.bh-variants-grid {
+					grid-template-columns: 1fr;
+				}
+			}
+
+			/* ===========================
+			   SPEC CARDS GRID
+			=========================== */
+			.bh-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 24px;
+			}
+
+			.bh-card {
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 28px;
+				transition:
+					border-color 0.25s,
+					background-color 0.25s,
+					transform 0.25s;
+			}
+			.bh-card:hover {
+				background: rgba(28, 28, 30, 0.6);
+				border-color: rgba(255, 255, 255, 0.16);
+				transform: translateY(-2px);
+			}
+
+			.bh-card__label {
+				font-size: 0.85rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1.5px;
+				color: var(--bh-accent);
+				margin-bottom: 18px;
+				padding-bottom: 12px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+			}
+
+			.bh-kv {
+				list-style: none;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+
+			.bh-kv li {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 8px;
+				font-size: 0.88rem;
+				padding: 2px 0;
+			}
+
+			.bh-k {
+				color: #cbd5e1;
+				font-weight: 400;
+				flex-shrink: 0;
+			}
+
+			.bh-v {
+				color: #f5f5f7;
+				font-weight: 500;
+				text-align: right;
+				font-variant-numeric: tabular-nums;
+			}
+
+			/* ===========================
+			   PERFORMANCE TABLE
+			=========================== */
+			.bh-table-wrap {
+				overflow-x: auto;
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				margin-bottom: 40px;
+				scrollbar-width: thin;
+				scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+			}
+
+			.bh-table {
+				width: 100%;
+				border-collapse: collapse;
+				font-size: 0.88rem;
+				text-align: left;
+			}
+
+			.bh-table thead tr {
+				border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+			}
+
+			.bh-table th {
+				padding: 16px 24px;
+				font-weight: 600;
+				font-size: 0.8rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: #cbd5e1;
+				background: rgba(22, 22, 23, 0.3);
+				white-space: nowrap;
+			}
+
+			.bh-table th.col-mine {
+				color: var(--bh-accent);
+				background: rgba(129, 140, 248, 0.08);
+				border-bottom: 1.5px solid var(--bh-accent);
+			}
+
+			.bh-table td {
+				padding: 16px 24px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+				color: #cbd5e1;
+			}
+
+			.bh-table tr:last-child td {
+				border-bottom: none;
+			}
+
+			.bh-table tr:hover td {
+				background: rgba(255, 255, 255, 0.01);
+			}
+
+			.bh-table td.col-mine {
+				color: #fff;
+				font-weight: 600;
+				background: rgba(129, 140, 248, 0.04);
+			}
+
+			.bh-table td:not(:first-child),
+			.bh-table th:not(:first-child) {
+				text-align: center;
+			}
+
+			/* ===========================
+			   BAR CHARTS
+			=========================== */
+			.bh-charts {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 24px;
+			}
+
+			.bh-chart-card {
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 28px;
+			}
+
+			.bh-chart-title {
+				font-size: 0.85rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: #cbd5e1;
+				margin-bottom: 20px;
+			}
+
+			.bh-chart-list {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+			}
+
+			.bh-chart-row {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+			}
+
+			.bh-chart-info {
+				display: flex;
+				justify-content: space-between;
+				font-size: 0.85rem;
+				color: #d1d5db;
+			}
+
+			.bh-chart-row--mine .bh-chart-info {
+				color: #fff;
+				font-weight: 600;
+			}
+
+			.bh-bar-bg {
+				width: 100%;
+				height: 12px;
+				background: rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				overflow: hidden;
+				margin-top: 2px;
+			}
+
+			.bh-bar-fill {
+				height: 100%;
+				background: #3a3a3c;
+				border-radius: 0;
+				opacity: 1;
+				transition: width 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+			}
+
+			.bh-chart-row--mine .bh-bar-fill {
+				background: linear-gradient(90deg, #818cf8 0%, #a78bfa 100%);
+				box-shadow: 0 0 12px rgba(129, 140, 248, 0.25);
+			}
+
+			/* ===========================
+			   JOURNEY GRID (Section 05)
+			=========================== */
+			.bh-journey-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 24px;
+			}
+
+			.bh-journey-card {
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 28px;
+				transition:
+					border-color 0.25s,
+					background-color 0.25s,
+					transform 0.25s;
+				display: flex;
+				flex-direction: column;
+			}
+			.bh-journey-card:hover {
+				background: rgba(28, 28, 30, 0.6);
+				border-color: rgba(255, 255, 255, 0.16);
+				transform: translateY(-2px);
+			}
+
+			.bh-journey-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 16px;
+			}
+
+			.bh-journey-step {
+				font-size: 1.4rem;
+				font-weight: 700;
+				color: var(--bh-accent);
+				font-variant-numeric: tabular-nums;
+			}
+
+			.bh-journey-phase {
+				font-size: 0.72rem;
+				font-weight: 600;
+				text-transform: uppercase;
+				color: #9ca3af;
+				letter-spacing: 1px;
+			}
+
+			.bh-journey-title {
+				font-size: 1.1rem;
+				font-weight: 600;
+				color: #fff;
+				margin-bottom: 10px;
+			}
+
+			.bh-journey-text {
+				font-size: 0.9rem;
+				color: #cbd5e1;
+				line-height: 1.65;
+			}
+
+			/* ===========================
+			   GAPS GRID (Section 06)
+			=========================== */
+			.bh-gaps-grid {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 24px;
+			}
+
+			.bh-gap-item {
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				align-items: flex-start;
+				background: rgba(22, 22, 23, 0.45);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 0;
+				padding: 28px;
+				transition:
+					border-color 0.25s,
+					background-color 0.25s,
+					transform 0.25s;
+			}
+			.bh-gap-item:hover {
+				background: rgba(28, 28, 30, 0.6);
+				border-color: rgba(255, 255, 255, 0.16);
+				transform: translateY(-2px);
+			}
+
+			.bh-gap-badge {
+				flex-shrink: 0;
+				padding: 4px 12px;
+				border-radius: 0;
+				font-size: 0.68rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				min-width: 76px;
+				text-align: center;
+			}
+
+			.bh-gap-badge--perf {
+				background: rgba(129, 140, 248, 0.1);
+				color: var(--bh-accent);
+				border: 1px solid rgba(129, 140, 248, 0.2);
+			}
+			.bh-gap-badge--speed {
+				background: rgba(251, 146, 60, 0.1);
+				color: #fb923c;
+				border: 1px solid rgba(251, 146, 60, 0.2);
+			}
+			.bh-gap-badge--future {
+				background: rgba(52, 211, 153, 0.1);
+				color: var(--bh-accent3);
+				border: 1px solid rgba(52, 211, 153, 0.25);
+			}
+
+			.bh-gap-title {
+				font-size: 1.1rem;
+				font-weight: 600;
+				color: #fff;
+				margin-bottom: 6px;
+			}
+
+			.bh-gap-text {
+				font-size: 0.9rem;
+				color: #cbd5e1;
+				line-height: 1.6;
+			}
+
+			/* ===========================
+			   DIVIDER
+			=========================== */
+			.bh-divider {
+				height: 1px;
+				background: linear-gradient(
+					to right,
+					transparent,
+					rgba(255, 255, 255, 0.08),
+					transparent
+				);
+				margin: 80px 0;
+			}
+
+			/* ===========================
+			   RESPONSIVE
+			=========================== */
+			@media (max-width: 850px) {
+				.bh-journey-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+				.bh-gaps-grid {
+					grid-template-columns: repeat(2, 1fr);
+				}
+			}
+
+			@media (max-width: 700px) {
+				.bh-page {
+					padding: 32px 16px 80px;
+				}
+
+				.bh-title {
+					font-size: 2.4rem;
+					letter-spacing: -1px;
+				}
+
+				.bh-grid {
+					grid-template-columns: 1fr;
+					gap: 16px;
+				}
+
+				.bh-charts {
+					grid-template-columns: 1fr;
+					gap: 16px;
+				}
+
+				.bh-topbar {
+					margin-bottom: 32px;
+				}
+
+				.bh-breadcrumb {
+					display: none;
+				}
+			}
+
+			@media (max-width: 600px) {
+				.bh-journey-grid {
+					grid-template-columns: 1fr;
+					gap: 16px;
+				}
+				.bh-gaps-grid {
+					grid-template-columns: 1fr;
+					gap: 16px;
+				}
+			}
+
+			@media (max-width: 480px) {
+				.bh-table th,
+				.bh-table td {
+					padding: 12px 14px;
+					font-size: 0.78rem;
+				}
+
+				.bh-gap-item {
+					flex-direction: column;
+					gap: 12px;
+				}
+			}
+		</style>
+	</head>
+
+	<body>
+		<!-- Fluid Ambient Orb Background -->
+		<div class="bh-bg" aria-hidden="true">
+			<!-- RGB Theme with Dynamic Scroll Color Inversion -->
+			<div class="bh-bg-theme">
+				<div class="bh-glow-orb bh-glow-orb--1"></div>
+				<div class="bh-glow-orb bh-glow-orb--2"></div>
+				<div class="bh-glow-orb bh-glow-orb--3"></div>
+			</div>
+			<!-- Shared Vignette -->
+			<div class="bh-vignette"></div>
+		</div>
+
+		<div class="page-wrap">
+			<div class="bh-page">
+				<!-- HEADER (Back, Title, Summary) -->
+				<header class="bh-header">
+					<div class="bh-header-left">
+						<!-- TOP NAV -->
+						<nav class="bh-topbar">
+							<a href="/" class="bh-back" id="backBtn">
+								<svg
+									width="14"
+									height="14"
+									viewBox="0 0 14 14"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path d="M9 12L4 7l5-5"></path>
+								</svg>
+								Back
+							</a>
+							<div class="bh-breadcrumb">
+								Dashboard / <span>Monolithic Det</span>
+							</div>
+						</nav>
+						<h1 class="bh-title">
+							<span class="title-monolithic">Monolithic</span>
+							<span class="title-det">Det</span>
+						</h1>
+					</div>
+					<div class="bh-header-right">
+						<p class="bh-summary">
+							Swin Transformer Backbone + Custom FPN + FCOS Head.
+							A custom object detection system built entirely from
+							scratch in PyTorch, targeting the Pascal VOC dataset
+							(20 classes). Architecture combines a pretrained <strong
+								style="color:#e2e8f0">Swin-T backbone</strong
+							> with a custom <strong style="color:#e2e8f0"
+								>FPN neck</strong
+							> and an <strong style="color:#e2e8f0"
+								>anchor-free FCOS detection head</strong
+							>. All components — except the Swin-T weights — are
+							designed and trained from zero.
+						</p>
+					</div>
+				</header>
+
+				<!-- Scrollable Content Container -->
+				<div class="bh-content-scroll">
+					<!-- ── VARIANT ── -->
+					<section class="bh-section" id="variants">
+						<div class="bh-section-head">
+							<span class="bh-section-num">00</span>
+							<h2 class="bh-section-title">Variants</h2>
+							<div class="bh-section-line"></div>
+						</div>
+
+						<p class="bh-prose">
+							Monolithic Det comes in four computational scales. The variants utilize different stages of the Swin Transformer backbone and varying FPN/Head channel widths to scale from embedded real-time scenarios up to heavy high-fidelity detection models.
+						</p>
+
+						<div class="bh-variants-grid">
+							<!-- Variant: Nano -->
+							<div class="bh-variant-card bh-variant-card--nano">
+								<span class="bh-variant-badge">Ultra Light</span>
+								<h3 class="bh-variant-name">Nano</h3>
+								<ul class="bh-variant-spec-list">
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Backbone</span>
+										<span class="bh-variant-spec-value">CNN-Swin Hybrid</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">embed_dim</span>
+										<span class="bh-variant-spec-value">32</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">depths</span>
+										<span class="bh-variant-spec-value">[2, 2, 4, 2]</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FPN Channels</span>
+										<span class="bh-variant-spec-value">64ch</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Params (M)</span>
+										<span class="bh-variant-spec-value">~2.0 M</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FLOPs (G)</span>
+										<span class="bh-variant-spec-value">~1.6 G</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Pretrained</span>
+										<span class="bh-variant-spec-value">❌ from scratch</span>
+									</li>
+								</ul>
+								<div class="bh-variant-bar-bg">
+									<div class="bh-variant-bar-fill" style="width: 15%"></div>
+								</div>
+							</div>
+
+							<!-- Variant: Macro -->
+							<div class="bh-variant-card bh-variant-card--macro">
+								<span class="bh-variant-badge">Embedded</span>
+								<h3 class="bh-variant-name">Macro</h3>
+								<ul class="bh-variant-spec-list">
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Backbone</span>
+										<span class="bh-variant-spec-value">CNN-Swin Hybrid</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">embed_dim</span>
+										<span class="bh-variant-spec-value">48</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">depths</span>
+										<span class="bh-variant-spec-value">[2, 2, 6, 2]</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FPN Channels</span>
+										<span class="bh-variant-spec-value">96ch</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Params (M)</span>
+										<span class="bh-variant-spec-value">~5.0 M</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FLOPs (G)</span>
+										<span class="bh-variant-spec-value">~4.1 G</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Pretrained</span>
+										<span class="bh-variant-spec-value">❌ from scratch</span>
+									</li>
+								</ul>
+								<div class="bh-variant-bar-bg">
+									<div class="bh-variant-bar-fill" style="width: 45%"></div>
+								</div>
+							</div>
+
+							<!-- Variant: Small -->
+							<div class="bh-variant-card bh-variant-card--small">
+								<span class="bh-variant-badge">Current Model</span>
+								<h3 class="bh-variant-name">Small</h3>
+								<ul class="bh-variant-spec-list">
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Backbone</span>
+										<span class="bh-variant-spec-value">Swin-T (pretrained)</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">embed_dim</span>
+										<span class="bh-variant-spec-value">96</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">depths</span>
+										<span class="bh-variant-spec-value">[2, 2, 6, 2]</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FPN Channels</span>
+										<span class="bh-variant-spec-value">128ch</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Params (M)</span>
+										<span class="bh-variant-spec-value">27.92 M</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FLOPs (G)</span>
+										<span class="bh-variant-spec-value">6.71 G</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Pretrained</span>
+										<span class="bh-variant-spec-value">✅ ImageNet</span>
+									</li>
+								</ul>
+								<div class="bh-variant-bar-bg">
+									<div class="bh-variant-bar-fill" style="width: 70%"></div>
+								</div>
+							</div>
+
+							<!-- Variant: Medium -->
+							<div class="bh-variant-card bh-variant-card--medium">
+								<span class="bh-variant-badge">High Acc</span>
+								<h3 class="bh-variant-name">Medium</h3>
+								<ul class="bh-variant-spec-list">
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Backbone</span>
+										<span class="bh-variant-spec-value">Swin-S (pretrained)</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">embed_dim</span>
+										<span class="bh-variant-spec-value">96</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">depths</span>
+										<span class="bh-variant-spec-value">[2, 2, 18, 2]</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FPN Channels</span>
+										<span class="bh-variant-spec-value">256ch</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Params (M)</span>
+										<span class="bh-variant-spec-value">~50.8 M</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">FLOPs (G)</span>
+										<span class="bh-variant-spec-value">~15 G</span>
+									</li>
+									<li class="bh-variant-spec-item">
+										<span class="bh-variant-spec-label">Pretrained</span>
+										<span class="bh-variant-spec-value">✅ ImageNet</span>
+									</li>
+								</ul>
+								<div class="bh-variant-bar-bg">
+									<div class="bh-variant-bar-fill" style="width: 100%"></div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── ARCHITECTURE ── -->
+					<section class="bh-section" id="architecture">
+						<div class="bh-section-head">
+							<span class="bh-section-num">01</span>
+							<h2 class="bh-section-title">Architecture</h2>
+							<div class="bh-section-line"></div>
+						</div>
+
+						<p class="bh-prose">
+							The pipeline passes an input image through a Swin-T
+							backbone to produce multi-scale feature maps, merges
+							them via a custom FPN neck (P3–P7), and passes the
+							pyramidal features to a shared FCOS head for
+							per-pixel classification, box regression, and
+							centerness prediction.
+						</p>
+
+						<!-- SVG Flowchart -->
+						<div class="bh-diag-wrap">
+							<svg
+								class="bh-diag-svg"
+								width="760"
+								height="290"
+								viewBox="0 0 760 290"
+							>
+								<defs>
+									<marker
+										id="arr"
+										viewBox="0 0 10 10"
+										refX="6"
+										refY="5"
+										markerWidth="6"
+										markerHeight="6"
+										orient="auto-start-reverse"
+									>
+										<path
+											d="M 0 1.5 L 7 5 L 0 8.5 z"
+											fill="#6b7280"></path>
+									</marker>
+									<marker
+										id="arr-hi"
+										viewBox="0 0 10 10"
+										refX="6"
+										refY="5"
+										markerWidth="6"
+										markerHeight="6"
+										orient="auto-start-reverse"
+									>
+										<path
+											d="M 0 1.5 L 7 5 L 0 8.5 z"
+											fill="#818cf8"></path>
+									</marker>
+								</defs>
+
+								<!-- Input -->
+								<rect
+									x="10"
+									y="105"
+									width="90"
+									height="80"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.1)"
+									stroke-width="1.5"></rect>
+								<text
+									x="55"
+									y="143"
+									text-anchor="middle"
+									font-size="10"
+									font-weight="600"
+									fill="#e2e8f0"
+									font-family="Helvetica, Arial, sans-serif"
+									>Input</text
+								>
+								<text
+									x="55"
+									y="157"
+									text-anchor="middle"
+									font-size="9"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>640×640</text
+								>
+								<path
+									d="M 100 145 L 125 145"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+
+								<!-- Swin Stages -->
+								<rect
+									x="133"
+									y="20"
+									width="105"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="185"
+									y="40"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Swin Stage 1</text
+								>
+								<text
+									x="185"
+									y="55"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>stride 4 · 96ch</text
+								>
+
+								<rect
+									x="133"
+									y="80"
+									width="105"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="185"
+									y="100"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Swin Stage 2</text
+								>
+								<text
+									x="185"
+									y="115"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>stride 8 · 192ch</text
+								>
+
+								<rect
+									x="133"
+									y="140"
+									width="105"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="185"
+									y="160"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Swin Stage 3</text
+								>
+								<text
+									x="185"
+									y="175"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>stride 16 · 384ch</text
+								>
+
+								<rect
+									x="133"
+									y="200"
+									width="105"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="185"
+									y="220"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Swin Stage 4</text
+								>
+								<text
+									x="185"
+									y="235"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>stride 32 · 768ch</text
+								>
+
+								<!-- Backbone vertical flow -->
+								<path
+									d="M 185 64 L 185 80"
+									stroke="#6b7280"
+									stroke-width="1"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 185 124 L 185 140"
+									stroke="#6b7280"
+									stroke-width="1"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 185 184 L 185 200"
+									stroke="#6b7280"
+									stroke-width="1"
+									fill="none"
+									marker-end="url(#arr)"></path>
+
+								<!-- C3/C4/C5 → FPN -->
+								<path
+									d="M 238 102 L 310 102"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 238 162 L 310 162"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 238 222 L 310 222"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+
+								<!-- FPN Block -->
+								<rect
+									x="318"
+									y="50"
+									width="120"
+									height="200"
+									fill="rgba(129,140,248,0.05)"
+									stroke="var(--bh-accent)"
+									stroke-width="1.5"></rect>
+								<text
+									x="378"
+									y="138"
+									text-anchor="middle"
+									font-size="11"
+									font-weight="700"
+									fill="var(--bh-accent)"
+									font-family="Helvetica, Arial, sans-serif"
+									>Custom FPN</text
+								>
+								<text
+									x="378"
+									y="154"
+									text-anchor="middle"
+									font-size="8.5"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>1×1 lateral convs</text
+								>
+								<text
+									x="378"
+									y="168"
+									text-anchor="middle"
+									font-size="8.5"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>DW-Sep smooth layers</text
+								>
+								<text
+									x="378"
+									y="184"
+									text-anchor="middle"
+									font-size="8.5"
+									fill="#94a3b8"
+									font-family="Helvetica, Arial, sans-serif"
+									>P3 · P4 · P5 · P6 · P7</text
+								>
+
+								<path
+									d="M 438 150 L 475 150"
+									stroke="var(--bh-accent)"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr-hi)"></path>
+
+								<!-- FCOS Head -->
+								<rect
+									x="483"
+									y="120"
+									width="90"
+									height="60"
+									fill="rgba(129,140,248,0.05)"
+									stroke="var(--bh-accent)"
+									stroke-width="1.5"></rect>
+								<text
+									x="528"
+									y="148"
+									text-anchor="middle"
+									font-size="10.5"
+									font-weight="700"
+									fill="var(--bh-accent)"
+									font-family="Helvetica, Arial, sans-serif"
+									>FCOS</text
+								>
+								<text
+									x="528"
+									y="162"
+									text-anchor="middle"
+									font-size="8.5"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>Shared Head</text
+								>
+
+								<!-- FCOS → Outputs -->
+								<path
+									d="M 573 150 L 595 150 L 595 60 L 618 60"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 573 150 L 618 150"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+								<path
+									d="M 573 150 L 595 150 L 595 238 L 618 238"
+									stroke="#6b7280"
+									stroke-width="1.5"
+									fill="none"
+									marker-end="url(#arr)"></path>
+
+								<!-- Output boxes -->
+								<rect
+									x="626"
+									y="38"
+									width="100"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="676"
+									y="58"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Classification</text
+								>
+								<text
+									x="676"
+									y="73"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>20 classes · sigmoid</text
+								>
+
+								<rect
+									x="626"
+									y="128"
+									width="100"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="676"
+									y="148"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Regression</text
+								>
+								<text
+									x="676"
+									y="163"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>BBox offsets · exp</text
+								>
+
+								<rect
+									x="626"
+									y="218"
+									width="100"
+									height="44"
+									fill="#111318"
+									stroke="rgba(255,255,255,0.08)"
+									stroke-width="1.5"></rect>
+								<text
+									x="676"
+									y="238"
+									text-anchor="middle"
+									font-size="9.5"
+									font-weight="600"
+									fill="#cbd5e1"
+									font-family="Helvetica, Arial, sans-serif"
+									>Centerness</text
+								>
+								<text
+									x="676"
+									y="253"
+									text-anchor="middle"
+									font-size="8"
+									fill="#6b7280"
+									font-family="Helvetica, Arial, sans-serif"
+									>Quality score</text
+								>
+							</svg>
+						</div>
+
+						<!-- Spec cards -->
+						<div class="bh-grid">
+							<div class="bh-card">
+								<div class="bh-card__label">
+									Backbone — Swin-T
+								</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">embed_dim</span><span
+											class="bh-v">96</span>
+									</li>
+									<li>
+										<span class="bh-k">depths</span><span
+											class="bh-v">[2, 2, 6, 2]</span>
+									</li>
+									<li>
+										<span class="bh-k">num_heads</span><span
+											class="bh-v">[2, 4, 8, 16]</span>
+									</li>
+									<li>
+										<span class="bh-k">window_size</span
+										><span class="bh-v">7</span>
+									</li>
+									<li>
+										<span class="bh-k">outputs</span><span
+											class="bh-v"
+											>C3/C4/C5 @ 8/16/32</span>
+									</li>
+									<li>
+										<span class="bh-k">pretrained</span
+										><span class="bh-v">IMAGENET1K_V1</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">
+									Neck — Custom FPN
+								</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">lateral convs</span
+										><span class="bh-v">1×1 → 128ch</span>
+									</li>
+									<li>
+										<span class="bh-k">smooth layers</span
+										><span class="bh-v">DW-Sep Conv</span>
+									</li>
+									<li>
+										<span class="bh-k">upsample</span><span
+											class="bh-v">Nearest-neighbor</span>
+									</li>
+									<li>
+										<span class="bh-k">P6</span><span
+											class="bh-v"
+											>Stride Conv from P5</span>
+									</li>
+									<li>
+										<span class="bh-k">P7</span><span
+											class="bh-v"
+											>ReLU + Stride Conv</span>
+									</li>
+									<li>
+										<span class="bh-k">output</span><span
+											class="bh-v">P3–P7 @ 128ch</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">Head — FCOS</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">type</span><span
+											class="bh-v">Anchor-free</span>
+									</li>
+									<li>
+										<span class="bh-k">cls branch</span
+										><span class="bh-v"
+											>4× Conv 3×3 → 20ch</span>
+									</li>
+									<li>
+										<span class="bh-k">reg branch</span
+										><span class="bh-v"
+											>4× Conv → exp(ltrb)</span>
+									</li>
+									<li>
+										<span class="bh-k">centerness</span
+										><span class="bh-v"
+											>Shared cls → sigmoid</span>
+									</li>
+									<li>
+										<span class="bh-k">scale params</span
+										><span class="bh-v"
+											>Learnable per level</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── LOSS FUNCTIONS ── -->
+					<section class="bh-section" id="loss">
+						<div class="bh-section-head">
+							<span class="bh-section-num">02</span>
+							<h2 class="bh-section-title">Loss Functions</h2>
+							<div class="bh-section-line"></div>
+						</div>
+						<p class="bh-prose">
+							Three losses computed jointly and summed across all
+							active FPN levels and positive locations:
+						</p>
+						<div class="bh-grid">
+							<div class="bh-card">
+								<div class="bh-card__label">Classification</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">loss</span><span
+											class="bh-v">Focal Loss</span>
+									</li>
+									<li>
+										<span class="bh-k">α</span><span
+											class="bh-v">0.25</span>
+									</li>
+									<li>
+										<span class="bh-k">γ</span><span
+											class="bh-v">2.0</span>
+									</li>
+									<li>
+										<span class="bh-k">purpose</span><span
+											class="bh-v"
+											style="text-align:right"
+											>Down-weight easy negatives</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">Box Regression</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">loss</span><span
+											class="bh-v">GIoU Loss</span>
+									</li>
+									<li>
+										<span class="bh-k">target</span><span
+											class="bh-v"
+											>Positive points only</span>
+									</li>
+									<li>
+										<span class="bh-k">purpose</span><span
+											class="bh-v"
+											style="text-align:right"
+											>Geometry-aware fitting</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">Centerness</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">loss</span><span
+											class="bh-v">BCE</span>
+									</li>
+									<li>
+										<span class="bh-k">target</span><span
+											class="bh-v"
+											>√(min/max · min/max)</span>
+									</li>
+									<li>
+										<span class="bh-k">purpose</span><span
+											class="bh-v"
+											style="text-align:right"
+											>Suppress off-center preds</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── TRAINING ── -->
+					<section class="bh-section" id="training">
+						<div class="bh-section-head">
+							<span class="bh-section-num">03</span>
+							<h2 class="bh-section-title">Training Setup</h2>
+							<div class="bh-section-line"></div>
+						</div>
+						<div class="bh-grid">
+							<div class="bh-card">
+								<div class="bh-card__label">Augmentation</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">flip</span><span
+											class="bh-v">Horizontal p=0.5</span>
+									</li>
+									<li>
+										<span class="bh-k">color jitter</span
+										><span class="bh-v"
+											>brightness/contrast/sat/hue</span>
+									</li>
+									<li>
+										<span class="bh-k">resize</span><span
+											class="bh-v"
+											>Multi-scale 480–800px</span>
+									</li>
+									<li>
+										<span class="bh-k">normalize</span><span
+											class="bh-v">ImageNet μ/σ</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">
+									Optimizer & Schedule
+								</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">optimizer</span><span
+											class="bh-v">AdamW</span>
+									</li>
+									<li>
+										<span class="bh-k">base LR</span><span
+											class="bh-v">1×10⁻⁴</span>
+									</li>
+									<li>
+										<span class="bh-k">weight decay</span
+										><span class="bh-v">0.05</span>
+									</li>
+									<li>
+										<span class="bh-k">schedule</span><span
+											class="bh-v">Cosine annealing</span>
+									</li>
+									<li>
+										<span class="bh-k">warmup</span><span
+											class="bh-v">1 epoch linear</span>
+									</li>
+									<li>
+										<span class="bh-k">backbone LR</span
+										><span class="bh-v">0.1× head LR</span>
+									</li>
+								</ul>
+							</div>
+							<div class="bh-card">
+								<div class="bh-card__label">Hardware & Run</div>
+								<ul class="bh-kv">
+									<li>
+										<span class="bh-k">GPU</span><span
+											class="bh-v">RTX 3060 12GB</span>
+									</li>
+									<li>
+										<span class="bh-k">precision</span><span
+											class="bh-v">AMP (fp16)</span>
+									</li>
+									<li>
+										<span class="bh-k">batch size</span
+										><span class="bh-v">8</span>
+									</li>
+									<li>
+										<span class="bh-k">epochs</span><span
+											class="bh-v">~50</span>
+									</li>
+									<li>
+										<span class="bh-k">backbone freeze</span
+										><span class="bh-v"
+											>Stage 1–2, epoch 0–9</span>
+									</li>
+									<li>
+										<span class="bh-k">dataset</span><span
+											class="bh-v"
+											>VOC 07+12 / VOC07 test</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── PERFORMANCE ── -->
+					<section class="bh-section" id="performance">
+						<div class="bh-section-head">
+							<span class="bh-section-num">04</span>
+							<h2 class="bh-section-title">Performance</h2>
+							<div class="bh-section-line"></div>
+						</div>
+
+						<div class="bh-table-wrap">
+							<table class="bh-table">
+								<thead>
+									<tr>
+										<th>Metric</th>
+										<th class="col-mine"
+											>Swin-T FCOS (Mine)</th
+										>
+										<th>YOLO11s</th>
+										<th>YOLO11m</th>
+										<th>YOLO11l</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>mAP@0.5 (%)</td>
+										<td class="col-mine">63.18</td>
+										<td>68.74</td>
+										<td>73.19</td>
+										<td>74.91</td>
+									</tr>
+									<tr>
+										<td>mAP@0.5:0.95 (%)</td>
+										<td class="col-mine">37.43</td>
+										<td>51.75</td>
+										<td>56.31</td>
+										<td>58.55</td>
+									</tr>
+									<tr>
+										<td>mAR@100 (%)</td>
+										<td class="col-mine">44.45</td>
+										<td>59.97</td>
+										<td>64.35</td>
+										<td>66.09</td>
+									</tr>
+									<tr>
+										<td>Params (M)</td>
+										<td class="col-mine">27.92</td>
+										<td>9.4</td>
+										<td>20.1</td>
+										<td>25.3</td>
+									</tr>
+									<tr>
+										<td>FLOPs (G)</td>
+										<td class="col-mine">6.71</td>
+										<td>2.9</td>
+										<td>6.7</td>
+										<td>8.7</td>
+									</tr>
+									<tr>
+										<td>GPU Latency (ms)</td>
+										<td class="col-mine">43.92</td>
+										<td>13.02</td>
+										<td>15.10</td>
+										<td>21.02</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="bh-charts">
+							<div class="bh-chart-card">
+								<div class="bh-chart-title">
+									Accuracy — mAP@0.5 (%)
+								</div>
+								<div class="bh-chart-list">
+									<div
+										class="bh-chart-row bh-chart-row--mine"
+									>
+										<div class="bh-chart-info">
+											<span>Swin-T FCOS</span><span
+												>63.18%</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:63.18%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11s</span><span
+												>68.74%</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:68.74%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11m</span><span
+												>73.19%</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:73.19%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11l</span><span
+												>74.91%</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:74.91%"
+											>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="bh-chart-card">
+								<div class="bh-chart-title">
+									Speed — GPU Latency (ms)
+								</div>
+								<div class="bh-chart-list">
+									<div
+										class="bh-chart-row bh-chart-row--mine"
+									>
+										<div class="bh-chart-info">
+											<span>Swin-T FCOS</span><span
+												>43.92 ms</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:87.8%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11s</span><span
+												>13.02 ms</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:26%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11m</span><span
+												>15.10 ms</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:30.2%"
+											>
+											</div>
+										</div>
+									</div>
+									<div class="bh-chart-row">
+										<div class="bh-chart-info">
+											<span>YOLO11l</span><span
+												>21.02 ms</span>
+										</div>
+										<div class="bh-bar-bg">
+											<div
+												class="bh-bar-fill"
+												style="width:42%"
+											>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── JOURNEY ── -->
+					<section class="bh-section" id="journey">
+						<div class="bh-section-head">
+							<span class="bh-section-num">05</span>
+							<h2 class="bh-section-title">
+								Development Journey
+							</h2>
+							<div class="bh-section-line"></div>
+						</div>
+
+						<div class="bh-journey-grid">
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">01</span>
+									<span class="bh-journey-phase">Phase 1</span>
+								</div>
+								<h3 class="bh-journey-title">Backbone Integration</h3>
+								<p class="bh-journey-text">
+									Integrated pretrained Swin-T from
+									torchvision. Rewired internal feature
+									extraction to expose C3, C4, C5 stage
+									outputs. Verified tensor shapes match
+									expected strides (8/16/32).
+								</p>
+							</div>
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">02</span>
+									<span class="bh-journey-phase">Phase 2</span>
+								</div>
+								<h3 class="bh-journey-title">FPN Design & Debugging</h3>
+								<p class="bh-journey-text">
+									Built custom FPN with depthwise
+									separable smooth convolutions. Resolved
+									tensor dimension mismatches in the
+									top-down pathway. Added P6/P7 extra
+									levels for multi-scale coverage.
+								</p>
+							</div>
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">03</span>
+									<span class="bh-journey-phase">Phase 3</span>
+								</div>
+								<h3 class="bh-journey-title">FCOS Head Implementation</h3>
+								<p class="bh-journey-text">
+									Implemented the full FCOS head with
+									shared classification and regression
+									branches. Added per-level learnable
+									scale parameters. Integrated centerness
+									prediction as auxiliary quality signal.
+								</p>
+							</div>
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">04</span>
+									<span class="bh-journey-phase">Phase 4</span>
+								</div>
+								<h3 class="bh-journey-title">Loss Engineering</h3>
+								<p class="bh-journey-text">
+									Implemented Focal Loss, GIoU Loss, and
+									BCE Centerness from scratch. Resolved
+									NaN gradients from log(0) in empty-image
+									batches with epsilon clamping.
+								</p>
+							</div>
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">05</span>
+									<span class="bh-journey-phase">Phase 5</span>
+								</div>
+								<h3 class="bh-journey-title">Training Stability</h3>
+								<p class="bh-journey-text">
+									Stabilized training with AMP (mixed
+									precision), gradient clipping
+									(max_norm=1.0), and differential
+									learning rates (backbone 0.1×). Used
+									cosine annealing with 1-epoch linear
+									warmup.
+								</p>
+							</div>
+							<div class="bh-journey-card">
+								<div class="bh-journey-header">
+									<span class="bh-journey-step">06</span>
+									<span class="bh-journey-phase">Phase 6</span>
+								</div>
+								<h3 class="bh-journey-title">Evaluation Pipeline</h3>
+								<p class="bh-journey-text">
+									Implemented COCO-style mAP evaluation
+									using torchmetrics with per-class AP
+									logging. Benchmarked GPU latency via
+									torch.cuda.Event timing over 100 warmup
+									+ 500 measurement iterations.
+								</p>
+							</div>
+						</div>
+					</section>
+
+					<div class="bh-divider"></div>
+
+					<!-- ── KNOWN GAPS ── -->
+					<section class="bh-section" id="gaps">
+						<div class="bh-section-head">
+							<span class="bh-section-num">06</span>
+							<h2 class="bh-section-title">
+								Known Gaps & Future Work
+							</h2>
+							<div class="bh-section-line"></div>
+						</div>
+
+						<div class="bh-gaps-grid">
+							<div class="bh-gap-item">
+								<div class="bh-gap-badge bh-gap-badge--perf">
+									Perf
+								</div>
+								<h3 class="bh-gap-title">
+									mAP Gap vs. YOLO
+								</h3>
+								<p class="bh-gap-text">
+									5–11% lower mAP@0.5 compared to YOLO11
+									variants. Largely due to YOLO's highly
+									optimized training recipes, mosaic
+									augmentation, and multi-scale training
+									pipelines not yet replicated here.
+								</p>
+							</div>
+							<div class="bh-gap-item">
+								<div class="bh-gap-badge bh-gap-badge--speed">
+									Speed
+								</div>
+								<h3 class="bh-gap-title">
+									Latency Overhead
+								</h3>
+								<p class="bh-gap-text">
+									43.92 ms GPU latency (≈23 FPS) vs.
+									YOLO11s at 13 ms. Swin window-attention
+									is not inference-optimized — TensorRT
+									export or flash attention would
+									significantly reduce this.
+								</p>
+							</div>
+							<div class="bh-gap-item">
+								<div class="bh-gap-badge bh-gap-badge--future">
+									Future
+								</div>
+								<h3 class="bh-gap-title">
+									Planned Improvements
+								</h3>
+								<p class="bh-gap-text">
+									Mosaic augmentation, larger Swin-S/B
+									backbone, deformable attention in the
+									neck, and ONNX/TensorRT export for real
+									deployment are the next milestones on
+									the roadmap.
+								</p>
+							</div>
+						</div>
+					</section>
+				</div>
+				<!-- Close bh-content-scroll -->
+			</div>
+			<!-- Close bh-page -->
+		</div>
+		<!-- Close page-wrap -->
+
+		<script>
+			// ── Page exit transition ──
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.addEventListener("click", (e) => {
+					e.preventDefault();
+					document.body.classList.add("is-exiting");
+					setTimeout(() => {
+						window.location.href = backBtn.getAttribute("href");
+					}, 280);
+				});
+			}
+
+			// ── Background transition on scroll ──
+			const themeLayer = document.querySelector(".bh-bg-theme");
+
+			function updateScrollBg() {
+				const scrollTop = window.scrollY;
+				const docHeight =
+					document.documentElement.scrollHeight - window.innerHeight;
+				const progress =
+					docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+
+				if (themeLayer) {
+					themeLayer.style.setProperty("--scroll-invert", progress.toString());
+				}
+			}
+
+			window.addEventListener("scroll", updateScrollBg, {
+				passive: true,
+			});
+			window.addEventListener("resize", updateScrollBg);
+			updateScrollBg();
+
+			// ── Dynamic Fluid Bubble Generator ──
+			const bgContainer = document.querySelector(".bh-bg");
+			if (bgContainer) {
+				const bubblesContainer = document.createElement("div");
+				bubblesContainer.className = "bh-bubbles";
+				bgContainer.appendChild(bubblesContainer);
+
+				const bubbleCount = 20;
+				for (let i = 0; i < bubbleCount; i++) {
+					const bubble = document.createElement("div");
+					bubble.className = "bh-bubble";
+
+					const size = Math.random() * 40 + 10; // 10px to 50px
+					const left = Math.random() * 100; // 0% to 100%
+					const delay = Math.random() * 12; // 0s to 12s delay
+					const duration = Math.random() * 12 + 8; // 8s to 20s speed
+					const sway =
+						(Math.random() * 60 + 20) *
+						(Math.random() > 0.5 ? 1 : -1); // sway left or right
+					const opacity = Math.random() * 0.12 + 0.04; // subtle aesthetic
+
+					bubble.style.setProperty("--size", `${size}px`);
+					bubble.style.setProperty("--left", `${left}%`);
+					bubble.style.setProperty("--delay", `${delay}s`);
+					bubble.style.setProperty("--duration", `${duration}s`);
+					bubble.style.setProperty("--sway", `${sway}px`);
+					bubble.style.setProperty("--opacity", opacity.toString());
+
+					bubblesContainer.appendChild(bubble);
+				}
+			}
+		</script>
+	</body>
+</html>

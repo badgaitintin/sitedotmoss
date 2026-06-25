@@ -1,0 +1,1326 @@
+---
+// index.astro — Windows 8 Metro UI Tile Wireframe
+import '@fontsource/google-sans-flex';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Wireframe — Metro UI Tiles</title>
+
+		<style>
+			/* ===========================
+			   WIREFRAME DESIGN TOKENS
+			=========================== */
+			:root {
+				--wf-bg:            #f5f6f8; /* clean light-blue-grey background */
+				--wf-tile:          #ffffff; /* crisp white for tiles */
+				--wf-tile-border:   #cdd3de; /* clean border color */
+				--wf-tile-dark:     #f1f3f7; /* clean hover state */
+				--wf-stroke:        #8c96a8; /* standard grey-blue stroke */
+				--wf-text:          #333a42; /* main text */
+				--wf-label:         #6c757d; /* secondary labels */
+				--wf-group-label:   #495057; /* group titles */
+				--wf-icon:          #adb5bd; /* placeholders */
+				--wf-accent-line:   #8c96a8;
+
+				/* Tile grid unit — calculated dynamically to fit within 100vh */
+				--unit:   min(72px, calc((100vh - 120px) / 6));
+				--gap:    6px;
+			}
+
+			/* ===========================
+			   RESET & BASE
+			=========================== */
+			*, *::before, *::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			/* ===========================
+			   WIREFRAME ANNOTATION STYLE
+			=========================== */
+			.wf-annotation {
+				position: fixed;
+				top: 70px;
+				right: 20px;
+				background: #ffffff;
+				border: 1px solid var(--wf-tile-border);
+				padding: 12px 16px;
+				font-size: 0.72rem;
+				color: var(--wf-label);
+				line-height: 1.7;
+				z-index: 999;
+				max-width: 180px;
+				max-height: calc(100vh - 100px);
+				overflow-y: auto;
+				transform: translateY(10px);
+				opacity: 0;
+				pointer-events: none;
+				transition: opacity 0.2s ease, transform 0.2s ease;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+			}
+
+			.wf-annotation.is-visible {
+				transform: translateY(0);
+				opacity: 1;
+				pointer-events: auto;
+			}
+
+			.wf-annotation strong {
+				display: block;
+				font-size: 0.75rem;
+				color: var(--wf-text);
+				margin-bottom: 6px;
+				letter-spacing: 0.3px;
+			}
+
+			.wf-annotation ul {
+				list-style: none;
+				padding: 0;
+			}
+
+			.wf-annotation li::before {
+				content: '—  ';
+				color: var(--wf-icon);
+			}
+
+			.wf-annotation__divider {
+				border: 0;
+				border-top: 1px solid var(--wf-tile-border);
+				margin: 12px 0;
+			}
+
+			.wf-annotation__key {
+				list-style: none;
+				padding: 0;
+				margin-top: 6px;
+			}
+
+			.wf-annotation__key li {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 6px;
+				font-size: 0.68rem;
+			}
+
+			.wf-annotation__key li::before {
+				display: none !important; /* override default annotation list dash */
+			}
+
+			.wf-swatch {
+				border: 1.5px solid var(--wf-tile-border);
+				background: var(--wf-tile);
+				display: inline-block;
+				flex-shrink: 0;
+			}
+
+			.wf-swatch--sm   { width: 10px; height: 10px; }
+			.wf-swatch--md   { width: 18px; height: 18px; }
+			.wf-swatch--wide { width: 36px; height: 18px; }
+			.wf-swatch--tall { width: 18px; height: 36px; }
+
+			/* ===========================
+			   PAGE LAYOUT
+			=========================== */
+			.metro-screen {
+				height: 100vh;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				gap: 28px;
+				box-sizing: border-box;
+			}
+
+			.metro-screen__title {
+				font-size: 2.2rem;
+				font-weight: 300;
+				color: var(--wf-text);
+				letter-spacing: -0.5px;
+				line-height: 1.2;
+				margin: 0;
+				padding-left: 56px;
+			}
+
+			.metro-screen__content {
+				display: flex;
+				flex-wrap: nowrap;
+				gap: clamp(24px, 4vw, 48px);
+				align-items: flex-start;
+				overflow-x: scroll;
+				padding-left: 56px;
+				padding-right: 80px;
+				padding-bottom: 16px;
+				/* Hide scrollbar on all browsers */
+				scrollbar-width: none;        /* Firefox */
+				-ms-overflow-style: none;     /* IE/Edge */
+				/* Touch momentum scroll on iOS */
+				-webkit-overflow-scrolling: touch;
+				touch-action: pan-x;
+				cursor: grab;
+				user-select: none;
+			}
+			.metro-screen__content::-webkit-scrollbar {
+				display: none;                /* Chrome / Safari / Opera */
+			}
+			.metro-screen__content.is-dragging {
+				cursor: grabbing;
+			}
+
+			/* ===========================
+			   TILE GROUP
+			   Component: TileGroup
+			   Props: title, children
+			=========================== */
+			.tile-group {
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				flex-shrink: 0;            /* don't squish groups */
+			}
+
+			.tile-group__title {
+				font-size: 0.78rem;
+				font-weight: 400;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				color: var(--wf-group-label);
+				padding-left: 2px;
+				/* Represents: <GroupTitle /> component */
+			}
+
+			/* ===========================
+			   TILE GRID
+			   Component: TileGrid
+			   Fixed 6-row height, auto-flows new tiles rightward
+			=========================== */
+			.tile-grid {
+				display: grid;
+				/* Fixed 6 rows tall: tiles overflow into new columns to the right */
+				grid-template-rows: repeat(6, var(--unit));
+				grid-auto-flow: column dense;
+				grid-auto-columns: var(--unit);
+				gap: var(--gap);
+				max-width: calc(6 * var(--unit) + 5 * var(--gap));
+			}
+
+			/* ===========================
+			   BASE TILE
+			   Component: Tile
+			   Sizes: small | medium | wide | large
+			=========================== */
+			.tile {
+				background: var(--wf-tile);
+				border: 1.5px solid var(--wf-tile-border);
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				padding: 8px;
+				position: relative;
+				cursor: pointer;
+				overflow: hidden;
+				text-decoration: none;
+				color: inherit;
+				/* Tile base component */
+				transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), background 0.2s, border-color 0.2s, box-shadow 0.2s;
+				transform-style: preserve-3d;
+				will-change: transform, opacity;
+			}
+
+			/* Hover state */
+			.tile:hover {
+				background: var(--wf-tile-dark);
+				border-color: var(--wf-stroke);
+				transform: translateY(-2px) scale(1.01);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+			}
+
+			/* Pressed/Active state */
+			.tile:active {
+				transform: scale(0.96) translateZ(-10px);
+				transition: transform 0.05s ease-out;
+				box-shadow: none;
+			}
+
+			/* ===========================
+			   TILE SIZE VARIANTS
+			=========================== */
+
+			/* Small: 1×1 unit */
+			.tile--sm {
+				grid-column: span 1;
+				grid-row: span 1;
+			}
+			.tile--sm .tile__label {
+				display: none; /* Hide label in all small tiles to show only icon */
+			}
+
+			/* Medium: 2×2 units */
+			.tile--md {
+				grid-column: span 2;
+				grid-row: span 2;
+			}
+
+			/* Wide: 4×2 units */
+			.tile--wide {
+				grid-column: span 4;
+				grid-row: span 2;
+			}
+
+			/* Circle tiles removed */
+
+			/* Tall: 2×4 units */
+			.tile--tall {
+				grid-column: span 2;
+				grid-row: span 4;
+			}
+
+			/* ===========================
+			   TILE SUB-COMPONENTS
+			=========================== */
+
+			/* Icon placeholder (top-center of tile) */
+			.tile__icon {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -70%);
+				width: 32px;
+				height: 32px;
+				border: 2px solid var(--wf-icon);
+				border-radius: 2px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tile--sm .tile__icon {
+				width: 18px;
+				height: 18px;
+				border-width: 1.5px;
+				top: 50%;
+				transform: translate(-50%, -50%);
+				position: absolute;
+			}
+
+			.tile__icon-line {
+				width: 60%;
+				height: 2px;
+				background: var(--wf-icon);
+				display: block;
+			}
+
+			/* App/content label at bottom-left */
+			.tile__label {
+				font-size: 0.62rem;
+				font-weight: 400;
+				color: var(--wf-label);
+				line-height: 1.3;
+				letter-spacing: 0.2px;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			/* Link Indicator for interactive tiles */
+			.tile__link-indicator {
+				position: absolute;
+				top: 8px;
+				right: 8px;
+				width: 14px;
+				height: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 0.65rem;
+				color: var(--wf-icon);
+				transition: color 0.2s;
+			}
+			.tile:hover .tile__link-indicator {
+				color: var(--wf-stroke);
+			}
+
+			/* Content area filler (simulates live tile / image) */
+			.tile__content-block {
+				position: absolute;
+				inset: 0;
+				bottom: 28px;    /* reserve label area */
+				background: repeating-linear-gradient(
+					-45deg,
+					transparent,
+					transparent 4px,
+					rgba(140, 150, 168, 0.1) 4px,
+					rgba(140, 150, 168, 0.1) 8px
+				);
+			}
+
+			/* Text lines inside tile for content placeholders */
+			.tile__text-lines {
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				right: 10px;
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.tile__line {
+				height: 6px;
+				background: var(--wf-icon);
+				border-radius: 1px;
+			}
+
+			.tile__line--short { width: 55%; }
+			.tile__line--med   { width: 80%; }
+			.tile__line--full  { width: 100%; }
+			.tile__line--xs    { width: 35%; }
+
+			/* Sub-tile tag (e.g. XBOX LIVE badge) */
+			.tile__badge {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 12px;
+				background: var(--wf-stroke);
+				font-size: 0.5rem;
+				color: #fff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				letter-spacing: 0.5px;
+			}
+
+			/* Divider line (horizontal rule between tile sections) */
+			.tile__divider {
+				position: absolute;
+				bottom: 24px;
+				left: 0;
+				right: 0;
+				height: 1px;
+				background: var(--wf-tile-border);
+			}
+
+			/* Cards fan placeholder (solitaire-style) */
+			.tile__cards {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -60%);
+				display: flex;
+				gap: 4px;
+			}
+
+			.tile__card {
+				width: 20px;
+				height: 28px;
+				border: 1.5px solid var(--wf-stroke);
+				background: #fff;
+				border-radius: 2px;
+			}
+
+			/* Live image fill placeholder */
+			.tile__img {
+				position: absolute;
+				inset: 0;
+				bottom: 24px;
+				background: repeating-linear-gradient(
+					45deg,
+					var(--wf-tile-dark),
+					var(--wf-tile-dark) 6px,
+					var(--wf-tile-border) 6px,
+					var(--wf-tile-border) 12px
+				);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.tile__img-icon {
+				width: 24px;
+				height: 24px;
+				border: 2px solid var(--wf-icon);
+			}
+
+			/* ===========================
+			   GEOMETRIC SHAPE TILES
+			   Wireframe visual variants for tile content
+			=========================== */
+
+			/* Shared container: centers shape in tile */
+			.tile__geo {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 20px; /* reserve label area */
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			/* Circle */
+			.tile__geo-circle {
+				width: 52%;
+				aspect-ratio: 1;
+				border-radius: 50%;
+				border: 2px solid var(--wf-stroke);
+				background: rgba(0,0,0,0.05);
+			}
+
+			/* Diamond (rotated square) */
+			.tile__geo-diamond {
+				width: 40%;
+				aspect-ratio: 1;
+				border: 2px solid var(--wf-stroke);
+				background: rgba(0,0,0,0.05);
+				transform: rotate(45deg);
+			}
+
+			/* Hexagon (clip-path) */
+			.tile__geo-hex {
+				width: 50%;
+				aspect-ratio: 1 / 1.155; /* √3/2 ratio for regular hex */
+				background: var(--wf-stroke);
+				clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+				opacity: 0.25;
+				position: relative;
+			}
+			.tile__geo-hex::after {
+				content: '';
+				position: absolute;
+				inset: 4px;
+				background: var(--wf-tile);
+				clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+			}
+
+			/* Triangle (CSS border trick) */
+			.tile__geo-triangle {
+				width: 0;
+				height: 0;
+				border-left: 20px solid transparent;
+				border-right: 20px solid transparent;
+				border-bottom: 34px solid var(--wf-stroke);
+				opacity: 0.45;
+			}
+
+			/* Ring (concentric circles) */
+			.tile__geo-ring {
+				width: 52%;
+				aspect-ratio: 1;
+				border-radius: 50%;
+				border: 8px solid var(--wf-stroke);
+				opacity: 0.35;
+				box-shadow: 0 0 0 4px var(--wf-tile), 0 0 0 7px var(--wf-stroke);
+			}
+
+			/* ===========================
+			   LIVE TILES (WIREFRAME ANIMATIONS)
+			=========================== */
+			
+			/* MD Live Tile: Photos Slideshow */
+			.tile__slideshow {
+				position: absolute;
+				inset: 0;
+				bottom: 24px;
+				overflow: hidden;
+			}
+			.tile__slide {
+				position: absolute;
+				inset: 0;
+				opacity: 0;
+				animation: slideFade 12s infinite;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: var(--wf-tile);
+			}
+			.tile__slide--1 { animation-delay: 0s; }
+			.tile__slide--2 { animation-delay: 4s; }
+			.tile__slide--3 { animation-delay: 8s; }
+
+			@keyframes slideFade {
+				0%, 8% { opacity: 0; transform: scale(1.05); }
+				12%, 33% { opacity: 1; transform: scale(1); }
+				38%, 100% { opacity: 0; }
+			}
+
+			.tile__img-placeholder {
+				width: 48px;
+				height: 48px;
+				border: 2px solid var(--wf-icon);
+			}
+			.tile__img-placeholder--diag {
+				background: linear-gradient(45deg, transparent 45%, var(--wf-icon) 45%, var(--wf-icon) 55%, transparent 55%);
+			}
+			.tile__img-placeholder--cross {
+				background: 
+					linear-gradient(45deg, transparent 45%, var(--wf-icon) 45%, var(--wf-icon) 55%, transparent 55%),
+					linear-gradient(-45deg, transparent 45%, var(--wf-icon) 45%, var(--wf-icon) 55%, transparent 55%);
+			}
+			.tile__img-placeholder--circle {
+				border-radius: 50%;
+			}
+
+			/* 3D Cube Rotation Live Tile style */
+			.tile--cube {
+				--cube-half-height: calc((2 * var(--unit) + var(--gap)) / 2);
+				padding: 0 !important;
+				/* Border lives on each face so it rotates with the cube */
+				border: none !important;
+				background: transparent !important;
+				/* clip-path instead of overflow:hidden — keeps 3D context intact */
+				clip-path: inset(0);
+			}
+			/* On hover, lighten faces instead of the outer tile */
+			.tile--cube:hover .tile__cube-face {
+				background: var(--wf-tile-dark);
+				border-color: var(--wf-stroke);
+			}
+
+			/* Perspective wrapper: must be separate from the rotating element */
+			.tile__cube-perspective {
+				position: absolute;
+				inset: 0;
+				perspective: 600px;
+				perspective-origin: 50% 50%;
+			}
+
+			.tile__cube-container {
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				transform-style: preserve-3d;
+				animation: cubeRotate 16s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+			}
+
+			.tile__cube-face {
+				position: absolute;
+				inset: 0;
+				padding: 8px;
+				backface-visibility: hidden;
+				-webkit-backface-visibility: hidden;
+				display: flex;
+				flex-direction: column;
+				justify-content: flex-end;
+				background: var(--wf-tile);
+				/* Border on each face — rotates with the cube */
+				border: 1.5px solid var(--wf-tile-border);
+			}
+
+			/*
+			 * Wide tile dimensions:
+			 *   width  = 4*unit + 3*gap
+			 *   height = 2*unit + 1*gap  → half = (2*unit + gap) / 2
+			 *
+			 * Each face rotates on X-axis, so translateZ = half-height
+			 * Cube container is pulled back by -half-height so face--front sits flush
+			 */
+			.tile__cube-face--front  { transform: rotateX(  0deg) translateZ(var(--cube-half-height)); }
+			.tile__cube-face--bottom { transform: rotateX( 90deg) translateZ(var(--cube-half-height)); }
+			.tile__cube-face--back   { transform: rotateX(180deg) translateZ(var(--cube-half-height)); }
+			.tile__cube-face--top    { transform: rotateX(270deg) translateZ(var(--cube-half-height)); }
+
+			@keyframes cubeRotate {
+				0%,  18% { transform: translateZ(calc(-1 * var(--cube-half-height))) rotateX(  0deg); }
+				25%, 43% { transform: translateZ(calc(-1 * var(--cube-half-height))) rotateX( -90deg); }
+				50%, 68% { transform: translateZ(calc(-1 * var(--cube-half-height))) rotateX(-180deg); }
+				75%, 93% { transform: translateZ(calc(-1 * var(--cube-half-height))) rotateX(-270deg); }
+				100%     { transform: translateZ(calc(-1 * var(--cube-half-height))) rotateX(-360deg); }
+			}
+
+			/* LG Live Tile removed */
+
+			/* COMPONENT KEY styling removed */
+
+			/* Toggle button for annotation legend */
+			.wf-annotation-toggle {
+				display: flex; /* show on all screens */
+				position: fixed;
+				top: 20px;
+				right: 20px;
+				z-index: 1000;
+				width: 38px;
+				height: 38px;
+				border-radius: 50%;
+				background: #ffffff;
+				border: 1.5px solid var(--wf-tile-border);
+				color: var(--wf-text);
+				font-size: 1.2rem;
+				font-weight: 400;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+				transition: background 0.2s, border-color 0.2s, transform 0.2s;
+			}
+			.wf-annotation-toggle:hover {
+				background: var(--wf-tile-dark);
+				border-color: var(--wf-stroke);
+			}
+			.wf-annotation-toggle:active {
+				transform: scale(0.95);
+			}
+
+			/* Responsive styling */
+			@media (max-width: 992px) {
+				:root {
+					--unit: min(64px, calc((100vh - 100px) / 6));
+					--gap: 5px;
+				}
+				.metro-screen {
+					padding: 0;
+					gap: 20px;
+				}
+				.metro-screen__title {
+					font-size: 1.8rem;
+					padding-left: 40px;
+				}
+				.metro-screen__content {
+					padding-left: 40px;
+					padding-right: 60px;
+					/* gap inherits clamp() from base — no override needed */
+				}
+				.tile-group {
+					gap: 10px;
+				}
+				.wf-annotation {
+					top: 70px;
+					right: 20px;
+				}
+			}
+
+			@media (max-width: 576px) {
+				:root {
+					--unit: min(52px, calc((100vh - 80px) / 6));
+					--gap: 4px;
+				}
+				.metro-screen {
+					padding: 0;
+					gap: 16px;
+				}
+				.metro-screen__title {
+					font-size: 1.6rem;
+					padding-left: 20px;
+				}
+				.metro-screen__content {
+					padding-left: 20px;
+					padding-right: 40px;
+					/* gap inherits clamp() from base — no override needed */
+				}
+				.tile-group {
+					gap: 8px;
+				}
+				.tile-group__title {
+					font-size: 0.72rem;
+				}
+				.tile__label {
+					font-size: 0.58rem;
+				}
+				.wf-annotation {
+					left: 20px;
+					right: 20px;
+					max-width: none;
+				}
+			}
+
+			/* Vertical scrolling layout for portrait or narrow aspect ratios (<= 1.55, e.g. 4:3, 3:2, 7:5) */
+			@media (max-aspect-ratio: 1.55) {
+				.metro-screen {
+					height: auto !important;
+					min-height: 100vh;
+					padding: 60px 24px !important;
+					justify-content: flex-start !important;
+					align-items: center !important;
+				}
+
+				.metro-screen::before,
+				.metro-screen::after {
+					content: '';
+					flex-grow: 1;
+				}
+
+				.metro-screen__title {
+					text-align: center;
+					width: 100%;
+					padding-left: 0 !important;
+				}
+
+				:root {
+					--unit: min(72px, calc((100vw - 48px - 5 * var(--gap)) / 6));
+					--gap: 6px;
+				}
+
+				.metro-screen__content {
+					display: grid;
+					grid-template-columns: auto auto;
+					justify-content: center !important;
+					align-items: start;
+					gap: clamp(24px, 4vw, 48px);
+					width: 100%;
+					max-width: 1200px;
+					overflow-x: visible;
+					overflow-y: visible;
+					padding: 0 0 40px 0 !important;
+					cursor: default;
+					user-select: text;
+					touch-action: auto;
+				}
+
+				.tile-grid {
+					grid-template-rows: none !important;      /* remove fixed 6-row reserve */
+					grid-template-columns: repeat(6, var(--unit)) !important;
+					grid-auto-flow: row dense !important;
+					grid-auto-columns: auto !important;
+					grid-auto-rows: var(--unit) !important;   /* rows grow only as needed */
+					max-width: calc(6 * var(--unit) + 5 * var(--gap)) !important;
+				}
+			}
+
+			/* Tablet overrides under vertical layout */
+			@media (max-width: 992px) and (max-aspect-ratio: 1.55) {
+				.metro-screen {
+					padding: 40px 20px !important;
+				}
+				:root {
+					--unit: min(64px, calc((100vw - 40px - 5 * 5px) / 6));
+					--gap: 5px;
+				}
+				.metro-screen__content {
+					grid-template-columns: 1fr;
+					justify-items: center;
+				}
+			}
+
+			/* Mobile overrides under vertical layout */
+			@media (max-width: 576px) and (max-aspect-ratio: 1.55) {
+				.metro-screen {
+					padding: 32px 16px !important;
+				}
+				:root {
+					--unit: min(52px, calc((100vw - 32px - 5 * 4px) / 6));
+					--gap: 4px;
+				}
+				.metro-screen__content {
+					grid-template-columns: 1fr;
+					justify-items: center;
+				}
+			}
+
+			/* ===========================
+			   TURNSTILE PAGE TRANSITIONS
+			=========================== */
+			@keyframes turnstileIn {
+				0% {
+					opacity: 0;
+					transform: perspective(1000px) rotateY(45deg) translateZ(-150px);
+				}
+				100% {
+					opacity: 1;
+					transform: perspective(1000px) rotateY(0deg) translateZ(0);
+				}
+			}
+
+			@keyframes turnstileOut {
+				0% {
+					opacity: 1;
+					transform: perspective(1000px) rotateY(0deg) translateZ(0);
+				}
+				100% {
+					opacity: 0;
+					transform: perspective(1000px) rotateY(-45deg) translateZ(-150px);
+				}
+			}
+
+			@keyframes titleIn {
+				0% {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+				100% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+
+			@keyframes titleOut {
+				0% {
+					opacity: 1;
+					transform: translateY(0);
+				}
+				100% {
+					opacity: 0;
+					transform: translateY(-20px);
+				}
+			}
+
+			/* Entry Animations */
+			.tile {
+				animation: turnstileIn 0.6s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				animation-delay: calc(var(--tile-index, 0) * 35ms);
+			}
+
+			.metro-screen__title {
+				animation: titleIn 0.6s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+			}
+
+			.tile-group__title {
+				animation: titleIn 0.6s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				animation-delay: calc(80ms + var(--group-index, 0) * 100ms);
+			}
+
+			/* Exit Animations */
+			.metro-screen.is-exiting .tile {
+				animation: turnstileOut 0.4s cubic-bezier(0.7, 0, 0.9, 0.1) both;
+				animation-delay: calc(var(--tile-index, 0) * 15ms);
+				pointer-events: none;
+			}
+
+			.metro-screen.is-exiting .metro-screen__title {
+				animation: titleOut 0.3s cubic-bezier(0.7, 0, 0.9, 0.1) both;
+			}
+
+			.metro-screen.is-exiting .tile-group__title {
+				animation: titleOut 0.3s cubic-bezier(0.7, 0, 0.9, 0.1) both;
+				animation-delay: calc(var(--group-index, 0) * 40ms);
+			}
+		</style>
+
+		<style is:global>
+			/* Global Base Styles */
+			html, body {
+				width: 100%;
+				height: 100%;
+				min-height: 100vh;
+				background: var(--wf-bg);
+				font-family: 'Google Sans Flex', 'Segoe UI', sans-serif;
+				color: var(--wf-text);
+				/* Prevent vertical scroll on widescreen horizontal layout by default */
+				overflow: hidden;
+			}
+
+			/* Global Aspect Ratio Scroll Override */
+			@media (max-aspect-ratio: 1.55) {
+				html, body {
+					overflow-y: auto !important;
+					overflow-x: hidden !important;
+					height: auto !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+
+		<!-- Toggle button for wireframe annotations (visible on mobile/tablet) -->
+		<button class="wf-annotation-toggle" id="annotationToggle" aria-label="Toggle annotations info">?</button>
+
+		<!-- WIREFRAME LEGEND -->
+		<aside class="wf-annotation">
+			<strong>Components</strong>
+			<ul>
+				<li>TileGroup</li>
+				<li>TileGrid</li>
+				<li>Tile (sm/md/wide/tall)</li>
+				<li>Tile__Icon</li>
+				<li>Tile__Label</li>
+				<li>Tile__ContentBlock</li>
+				<li>Tile__Badge</li>
+				<li>GroupTitle</li>
+			</ul>
+			<hr class="wf-annotation__divider" />
+			<strong>Tile Size Key</strong>
+			<ul class="wf-annotation__key">
+				<li><span class="wf-swatch wf-swatch--sm"></span> sm — 1×1</li>
+				<li><span class="wf-swatch wf-swatch--md"></span> md — 2×2</li>
+				<li><span class="wf-swatch wf-swatch--wide"></span> wide — 4×2</li>
+				<li><span class="wf-swatch wf-swatch--tall"></span> tall — 2×4</li>
+			</ul>
+		</aside>
+
+		<!-- METRO START SCREEN -->
+		<main class="metro-screen">
+			<h1 class="metro-screen__title">Site(.)moss</h1>
+
+			<div class="metro-screen__content" id="tileScroll">
+
+				<!-- =====================
+				     GROUP: About Me
+				     Component: TileGroup
+				     Layout analysis:
+				       Landscape (col-flow 6-row): About Me wide(col1-4 r1-2) + 4 mds fill col1-4 r3-6 → 4×6 full rect
+				       Portrait  (row-flow dense): About Me wide(col1-4 r1-2), LinkedIn(col5-6 r1-2), 3 mds fill r3-4 → 6×4 full rect
+				===================== -->
+				<section class="tile-group">
+					<h2 class="tile-group__title">About Me</h2>
+					<div class="tile-grid">
+
+						<!-- Tile: About Me Info (wide) — FIRST so dense packing anchors col1-4 row1-2 -->
+						<div class="tile tile--wide" title="About Me Info">
+							<div class="tile__text-lines">
+								<div class="tile__line tile__line--full"></div>
+								<div class="tile__line tile__line--med"></div>
+								<div class="tile__line tile__line--short"></div>
+								<div class="tile__line tile__line--full"></div>
+								<div class="tile__line tile__line--med"></div>
+							</div>
+							<span class="tile__label">About Me Info</span>
+						</div>
+
+						<!-- Tile: LinkedIn (medium) -->
+						<a href="https://linkedin.com" target="_blank" class="tile tile--md" title="LinkedIn Profile">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">LinkedIn</span>
+						</a>
+
+						<!-- Tile: CV (medium) -->
+						<a href="/cv" class="tile tile--md" title="View CV Page">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__text-lines">
+								<div class="tile__line tile__line--med"></div>
+								<div class="tile__line tile__line--xs"></div>
+							</div>
+							<span class="tile__label">CV</span>
+						</a>
+
+						<!-- Tile: GitHub 1 (medium) -->
+						<a href="https://github.com/badgaitintin" target="_blank" class="tile tile--md" title="GitHub - badgaitintin">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__slideshow">
+								<div class="tile__slide tile__slide--1">
+									<div class="tile__img-placeholder tile__img-placeholder--diag"></div>
+								</div>
+								<div class="tile__slide tile__slide--2">
+									<div class="tile__img-placeholder tile__img-placeholder--cross"></div>
+								</div>
+								<div class="tile__slide tile__slide--3">
+									<div class="tile__img-placeholder tile__img-placeholder--circle"></div>
+								</div>
+							</div>
+							<span class="tile__label">badgaitintin</span>
+						</a>
+
+						<!-- Tile: GitHub 2 (medium) -->
+						<a href="https://github.com/badgaitintinagain" target="_blank" class="tile tile--md" title="GitHub - badgaitintinagain">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__content-block"></div>
+							<div class="tile__divider"></div>
+							<span class="tile__label">badgaitintinagain</span>
+						</a>
+
+					</div>
+				</section>
+
+				<!-- =====================
+				     GROUP: AI Lab
+				     Component: TileGroup
+				     Layout analysis:
+				       Interleave wide(4×2) + md(2×2) pairs → both landscape & portrait fill a perfect 6×6 rect
+				       Each pair: wide anchors col1-4, md fills col5-6 in the same row band
+				===================== -->
+				<section class="tile-group">
+					<h2 class="tile-group__title">AI Lab</h2>
+					<div class="tile-grid">
+
+						<!-- Wide tiles first: dense column-flow packs col1-4 (rows 1-2, 3-4, 5-6) -->
+
+						<!-- Wide 1: Nextwbc demo -->
+						<a href="#" class="tile tile--wide" title="nextwbc demo">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Nextwbc demo</span>
+						</a>
+
+						<!-- Wide 2: Madonna discography -->
+						<a href="#" class="tile tile--wide" title="madonna discography analysis">
+							<span class="tile__link-indicator">↗</span>
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Madonna discography analysis</span>
+						</a>
+
+						<!-- Wide 3: ... soon -->
+						<div class="tile tile--wide" title="... soon">
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">... soon</span>
+						</div>
+
+						<!-- MD tiles after: dense packing backfills col5-6 -->
+
+						<!-- MD 1: Monolithic Det -->
+						<a href="/monolithic-det" class="tile tile--md" title="Monolithic Det — Swin + FCOS Object Detection">
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Monolithic Det</span>
+						</a>
+
+						<!-- MD 2: Neural Net Viz -->
+						<div class="tile tile--md" title="Neural Network Visualizer">
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Neural Net Viz</span>
+						</div>
+
+						<!-- MD 3: Dataset Explorer -->
+						<div class="tile tile--md" title="Dataset Explorer">
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Dataset Explorer</span>
+						</div>
+
+					</div>
+				</section>
+
+			<!-- =====================
+			     GROUP: Play and explore
+			     Component: TileGroup
+			===================== -->
+			<section class="tile-group">
+				<h2 class="tile-group__title">Play and explore</h2>
+				<div class="tile-grid">
+
+					<!-- Tile: Circle — geometric shape (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Circle shape">
+						<div class="tile__geo"><div class="tile__geo-circle"></div></div>
+						<span class="tile__label">Circle</span>
+					</div>
+
+					<!-- Tile: Diamond — geometric shape (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Diamond shape">
+						<div class="tile__geo"><div class="tile__geo-diamond"></div></div>
+						<span class="tile__label">Diamond</span>
+					</div>
+
+					<!-- Tile: Hexagon — geometric shape (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Hexagon shape">
+						<div class="tile__geo"><div class="tile__geo-hex"></div></div>
+						<span class="tile__label">Hexagon</span>
+					</div>
+
+					<!-- Tile: Triangle — geometric shape (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Triangle shape">
+						<div class="tile__geo"><div class="tile__geo-triangle"></div></div>
+						<span class="tile__label">Triangle</span>
+					</div>
+
+					<!-- Tile: Ring — geometric shape (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Ring shape">
+						<div class="tile__geo"><div class="tile__geo-ring"></div></div>
+						<span class="tile__label">Ring</span>
+					</div>
+
+					<!-- Tile: Xbox (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
+						<div class="tile__icon"><span class="tile__icon-line"></span></div>
+						<span class="tile__label">Xbox</span>
+					</div>
+
+					<!-- Tile: Groove Music (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
+						<div class="tile__icon"><span class="tile__icon-line"></span></div>
+						<span class="tile__label">Groove Music</span>
+					</div>
+
+					<!-- Tile: Movies & TV (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
+						<div class="tile__icon"><span class="tile__icon-line"></span></div>
+						<span class="tile__label">Movies &amp; TV</span>
+					</div>
+
+					<!-- Tile: Solitaire — cards content (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Badge + cards graphic">
+						<div class="tile__badge">XBOX LIVE</div>
+						<div class="tile__cards">
+							<div class="tile__card"></div>
+							<div class="tile__card"></div>
+							<div class="tile__card"></div>
+						</div>
+						<span class="tile__label">Solitaire Collection</span>
+					</div>
+
+					</div>
+				</section>
+
+				<!-- =====================
+				     GROUP: Entertainment
+				     Component: TileGroup
+				===================== -->
+				<section class="tile-group">
+					<h2 class="tile-group__title">Entertainment</h2>
+					<div class="tile-grid">
+
+						<!-- Tile: Paint (medium) -->
+						<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
+							<div class="tile__icon"><span class="tile__icon-line"></span></div>
+							<span class="tile__label">Paint</span>
+						</div>
+
+						<!-- Tile: Money — live finance content (medium) -->
+						<div class="tile tile--md" title="Tile: medium (2×2) — Live financial text">
+							<div class="tile__text-lines">
+								<div class="tile__line tile__line--full"></div>
+								<div class="tile__line tile__line--med"></div>
+								<div class="tile__line tile__line--short"></div>
+							</div>
+							<span class="tile__label">Money</span>
+						</div>
+
+						<!-- Tile: News — wide live headline tile (3D cube rotating) -->
+						<div class="tile tile--wide tile--cube" title="Tile: wide (4×2) — Live news headline (3D cube)">
+							<div class="tile__cube-perspective">
+								<div class="tile__cube-container">
+									<div class="tile__cube-face tile__cube-face--front">
+										<div class="tile__text-lines">
+											<div class="tile__line tile__line--med"></div>
+											<div class="tile__line tile__line--full"></div>
+											<div class="tile__line tile__line--short"></div>
+										</div>
+										<span class="tile__label">News — Breaking</span>
+									</div>
+									<div class="tile__cube-face tile__cube-face--bottom">
+										<div class="tile__text-lines">
+											<div class="tile__line tile__line--full"></div>
+											<div class="tile__line tile__line--short"></div>
+											<div class="tile__line tile__line--med"></div>
+										</div>
+										<span class="tile__label">News — Tech</span>
+									</div>
+									<div class="tile__cube-face tile__cube-face--back">
+										<div class="tile__text-lines">
+											<div class="tile__line tile__line--short"></div>
+											<div class="tile__line tile__line--med"></div>
+											<div class="tile__line tile__line--full"></div>
+										</div>
+										<span class="tile__label">News — Business</span>
+									</div>
+									<div class="tile__cube-face tile__cube-face--top">
+										<div class="tile__text-lines">
+											<div class="tile__line tile__line--full"></div>
+											<div class="tile__line tile__line--full"></div>
+											<div class="tile__line tile__line--short"></div>
+										</div>
+										<span class="tile__label">News — Weather</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</main>
+
+		<script>
+			/* Drag-to-scroll for the tile strip */
+			(function() {
+				const el = document.getElementById('tileScroll');
+				if (!el) return;
+
+				let isDown = false;
+				let startX;
+				let scrollLeft;
+
+				el.addEventListener('mousedown', (e) => {
+					// Only enable drag-to-scroll if the scroll container has horizontal overflow
+					if (el.scrollWidth <= el.clientWidth) return;
+
+					isDown = true;
+					el.classList.add('is-dragging');
+					startX = e.pageX - el.offsetLeft;
+					scrollLeft = el.scrollLeft;
+					e.preventDefault();
+				});
+
+				el.addEventListener('mouseleave', () => {
+					isDown = false;
+					el.classList.remove('is-dragging');
+				});
+
+				el.addEventListener('mouseup', () => {
+					isDown = false;
+					el.classList.remove('is-dragging');
+				});
+
+				el.addEventListener('mousemove', (e) => {
+					if (!isDown) return;
+					e.preventDefault();
+					const x = e.pageX - el.offsetLeft;
+					const walk = (x - startX) * 1.4; /* drag speed multiplier */
+					el.scrollLeft = scrollLeft - walk;
+				});
+			})();
+
+			/* Toggle legend info box on mobile/tablet */
+			(function() {
+				const toggleBtn = document.getElementById('annotationToggle');
+				const legend = document.querySelector('.wf-annotation');
+				if (!toggleBtn || !legend) return;
+
+				toggleBtn.addEventListener('click', () => {
+					legend.classList.toggle('is-visible');
+					if (legend.classList.contains('is-visible')) {
+						toggleBtn.textContent = '×';
+					} else {
+						toggleBtn.textContent = '?';
+					}
+				});
+			})();
+
+			/* Assign tile and group indexes for staggered transition delay */
+			(function() {
+				const tiles = document.querySelectorAll('.tile');
+				tiles.forEach((tile, index) => {
+					tile.style.setProperty('--tile-index', index);
+				});
+
+				const groups = document.querySelectorAll('.tile-group');
+				groups.forEach((group, index) => {
+					group.style.setProperty('--group-index', index);
+				});
+			})();
+
+			/* Intercept clicks on same-origin internal page links for turnstile exit animation */
+			(function() {
+				const screen = document.querySelector('.metro-screen');
+				if (!screen) return;
+
+				screen.addEventListener('click', (e) => {
+					// Find nearest <a> parent
+					const link = e.target.closest('a');
+					if (!link) return;
+
+					const href = link.getAttribute('href');
+					const target = link.getAttribute('target');
+
+					// Intercept internal relative/same-origin links in the same tab, not downloads
+					if (
+						href && 
+						!href.startsWith('#') && 
+						!href.startsWith('javascript:') && 
+						target !== '_blank' && 
+						!link.hasAttribute('download')
+					) {
+						try {
+							const url = new URL(href, window.location.origin);
+							if (url.origin === window.location.origin) {
+								e.preventDefault();
+								screen.classList.add('is-exiting');
+
+								// Wait for the exit animation to finish before navigating
+								setTimeout(() => {
+									window.location.href = href;
+								}, 500);
+							}
+						} catch (err) {
+							// fallback
+						}
+					}
+				});
+			})();
+		</script>
+
+	</body>
+</html>
