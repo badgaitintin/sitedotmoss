@@ -918,6 +918,7 @@ import '@fontsource/google-sans-flex';
 	</head>
 	<body>
 
+
 		<!-- Toggle button for wireframe annotations (visible on mobile/tablet) -->
 		<button class="wf-annotation-toggle" id="annotationToggle" aria-label="Toggle annotations info">?</button>
 
@@ -1053,10 +1054,10 @@ import '@fontsource/google-sans-flex';
 
 						<!-- MD tiles after: dense packing backfills col5-6 -->
 
-						<!-- MD 1: Monolithic Det -->
-						<a href="/monolithic-det" class="tile tile--md" title="Monolithic Det — Swin + FCOS Object Detection">
+						<!-- MD 1: Monolithic Deep-Learning -->
+						<a href="/monolithic-detection" class="tile tile--md" title="Monolithic Deep-Learning">
 							<div class="tile__icon"><span class="tile__icon-line"></span></div>
-							<span class="tile__label">Monolithic Det</span>
+							<span class="tile__label">Monolithic Deep-Learning</span>
 						</a>
 
 						<!-- MD 2: Neural Net Viz -->
@@ -1075,140 +1076,102 @@ import '@fontsource/google-sans-flex';
 				</section>
 
 			<!-- =====================
-			     GROUP: Play and explore
+			     GROUP: today & tomorrow and the future
 			     Component: TileGroup
 			===================== -->
 			<section class="tile-group">
-				<h2 class="tile-group__title">Play and explore</h2>
+				<h2 class="tile-group__title">today & tomorrow and the future</h2>
 				<div class="tile-grid">
 
-					<!-- Tile: Circle — geometric shape (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Circle shape">
-						<div class="tile__geo"><div class="tile__geo-circle"></div></div>
-						<span class="tile__label">Circle</span>
-					</div>
-
-					<!-- Tile: Diamond — geometric shape (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Diamond shape">
-						<div class="tile__geo"><div class="tile__geo-diamond"></div></div>
-						<span class="tile__label">Diamond</span>
-					</div>
-
-					<!-- Tile: Hexagon — geometric shape (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Hexagon shape">
-						<div class="tile__geo"><div class="tile__geo-hex"></div></div>
-						<span class="tile__label">Hexagon</span>
-					</div>
-
-					<!-- Tile: Triangle — geometric shape (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Triangle shape">
-						<div class="tile__geo"><div class="tile__geo-triangle"></div></div>
-						<span class="tile__label">Triangle</span>
-					</div>
-
-					<!-- Tile: Ring — geometric shape (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Ring shape">
-						<div class="tile__geo"><div class="tile__geo-ring"></div></div>
-						<span class="tile__label">Ring</span>
-					</div>
-
-					<!-- Tile: Xbox (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
-						<div class="tile__icon"><span class="tile__icon-line"></span></div>
-						<span class="tile__label">Xbox</span>
-					</div>
-
-					<!-- Tile: Groove Music (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
-						<div class="tile__icon"><span class="tile__icon-line"></span></div>
-						<span class="tile__label">Groove Music</span>
-					</div>
-
-					<!-- Tile: Movies & TV (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
-						<div class="tile__icon"><span class="tile__icon-line"></span></div>
-						<span class="tile__label">Movies &amp; TV</span>
-					</div>
-
-					<!-- Tile: Solitaire — cards content (medium) -->
-					<div class="tile tile--md" title="Tile: medium (2×2) — Badge + cards graphic">
-						<div class="tile__badge">XBOX LIVE</div>
-						<div class="tile__cards">
-							<div class="tile__card"></div>
-							<div class="tile__card"></div>
-							<div class="tile__card"></div>
-						</div>
-						<span class="tile__label">Solitaire Collection</span>
-					</div>
-
-					</div>
-				</section>
-
-				<!-- =====================
-				     GROUP: Entertainment
-				     Component: TileGroup
-				===================== -->
-				<section class="tile-group">
-					<h2 class="tile-group__title">Entertainment</h2>
-					<div class="tile-grid">
-
-						<!-- Tile: Paint (medium) -->
-						<div class="tile tile--md" title="Tile: medium (2×2) — App icon + label">
-							<div class="tile__icon"><span class="tile__icon-line"></span></div>
-							<span class="tile__label">Paint</span>
-						</div>
-
-						<!-- Tile: Money — live finance content (medium) -->
-						<div class="tile tile--md" title="Tile: medium (2×2) — Live financial text">
-							<div class="tile__text-lines">
-								<div class="tile__line tile__line--full"></div>
-								<div class="tile__line tile__line--med"></div>
-								<div class="tile__line tile__line--short"></div>
+					<!-- Tile: FIRE plan (medium) -->
+					<div class="tile tile--md" title="FIRE plan">
+						<!-- Wireframe growth chart/bars -->
+						<div class="tile__content-block" style="display: flex; flex-direction: column; justify-content: flex-end; padding: 14px; box-sizing: border-box; background: none;">
+							<div class="tile__text-lines" style="position: static; display: flex; flex-direction: column; gap: 4px; margin-bottom: auto; width: 100%;">
+								<div class="tile__line tile__line--xs" style="background: var(--wf-stroke); margin: 0;"></div>
+								<div class="tile__line tile__line--med" style="margin: 0;"></div>
 							</div>
-							<span class="tile__label">Money</span>
+							<div style="display: flex; align-items: flex-end; gap: 6px; height: 45px; width: 100%;">
+								<div class="tile__line" style="width: 22%; height: 35%; background: var(--wf-icon); border-radius: 1px; margin: 0;"></div>
+								<div class="tile__line" style="width: 22%; height: 55%; background: var(--wf-icon); border-radius: 1px; margin: 0;"></div>
+								<div class="tile__line" style="width: 22%; height: 75%; background: var(--wf-icon); border-radius: 1px; margin: 0;"></div>
+								<div class="tile__line" style="width: 22%; height: 100%; background: var(--wf-stroke); border-radius: 1px; margin: 0;"></div>
+							</div>
 						</div>
+						<span class="tile__label">FIRE plan</span>
+					</div>
 
-						<!-- Tile: News — wide live headline tile (3D cube rotating) -->
-						<div class="tile tile--wide tile--cube" title="Tile: wide (4×2) — Live news headline (3D cube)">
-							<div class="tile__cube-perspective">
-								<div class="tile__cube-container">
-									<div class="tile__cube-face tile__cube-face--front">
-										<div class="tile__text-lines">
-											<div class="tile__line tile__line--med"></div>
-											<div class="tile__line tile__line--full"></div>
-											<div class="tile__line tile__line--short"></div>
-										</div>
-										<span class="tile__label">News — Breaking</span>
+					<!-- Tile: Paint (medium) -->
+				<div class="tile tile--md" title="Paint — Image Editor">
+					<!-- Wireframe: palette dots + brush stroke -->
+					<div class="tile__content-block" style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:12px;box-sizing:border-box;background:none;gap:6px;">
+						<!-- Brush stroke line -->
+						<div style="width:70%;height:3px;background:var(--wf-icon);border-radius:2px;transform:rotate(-15deg);margin-bottom:2px;"></div>
+						<!-- Color dots (palette) -->
+						<div style="display:flex;gap:5px;align-items:center;">
+							<div style="width:10px;height:10px;border-radius:50%;background:var(--wf-stroke);flex-shrink:0;"></div>
+							<div style="width:10px;height:10px;border-radius:50%;background:var(--wf-icon);flex-shrink:0;"></div>
+							<div style="width:10px;height:10px;border-radius:50%;background:var(--wf-stroke);flex-shrink:0;"></div>
+							<div style="width:10px;height:10px;border-radius:50%;background:var(--wf-icon);flex-shrink:0;opacity:0.5;"></div>
+						</div>
+						<!-- Canvas outline -->
+						<div style="width:65%;height:22px;border:1.5px solid var(--wf-icon);border-radius:2px;opacity:0.7;"></div>
+					</div>
+					<span class="tile__label">Paint</span>
+				</div>
+
+					<!-- Tile: Money — live finance content (medium) -->
+					<div class="tile tile--md" title="Tile: medium (2×2) — Live financial text">
+						<div class="tile__text-lines">
+							<div class="tile__line tile__line--full"></div>
+							<div class="tile__line tile__line--med"></div>
+							<div class="tile__line tile__line--short"></div>
+						</div>
+						<span class="tile__label">Money</span>
+					</div>
+
+					<!-- Tile: News — wide live headline tile (3D cube rotating) -->
+					<div class="tile tile--wide tile--cube" title="Tile: wide (4×2) — Live news headline (3D cube)">
+						<div class="tile__cube-perspective">
+							<div class="tile__cube-container">
+								<div class="tile__cube-face tile__cube-face--front">
+									<div class="tile__text-lines">
+										<div class="tile__line tile__line--med"></div>
+										<div class="tile__line tile__line--full"></div>
+										<div class="tile__line tile__line--short"></div>
 									</div>
-									<div class="tile__cube-face tile__cube-face--bottom">
-										<div class="tile__text-lines">
-											<div class="tile__line tile__line--full"></div>
-											<div class="tile__line tile__line--short"></div>
-											<div class="tile__line tile__line--med"></div>
-										</div>
-										<span class="tile__label">News — Tech</span>
+									<span class="tile__label">News — Breaking</span>
+								</div>
+								<div class="tile__cube-face tile__cube-face--bottom">
+									<div class="tile__text-lines">
+										<div class="tile__line tile__line--full"></div>
+										<div class="tile__line tile__line--short"></div>
+										<div class="tile__line tile__line--med"></div>
 									</div>
-									<div class="tile__cube-face tile__cube-face--back">
-										<div class="tile__text-lines">
-											<div class="tile__line tile__line--short"></div>
-											<div class="tile__line tile__line--med"></div>
-											<div class="tile__line tile__line--full"></div>
-										</div>
-										<span class="tile__label">News — Business</span>
+									<span class="tile__label">News — Tech</span>
+								</div>
+								<div class="tile__cube-face tile__cube-face--back">
+									<div class="tile__text-lines">
+										<div class="tile__line tile__line--short"></div>
+										<div class="tile__line tile__line--med"></div>
+										<div class="tile__line tile__line--full"></div>
 									</div>
-									<div class="tile__cube-face tile__cube-face--top">
-										<div class="tile__text-lines">
-											<div class="tile__line tile__line--full"></div>
-											<div class="tile__line tile__line--full"></div>
-											<div class="tile__line tile__line--short"></div>
-										</div>
-										<span class="tile__label">News — Weather</span>
+									<span class="tile__label">News — Business</span>
+								</div>
+								<div class="tile__cube-face tile__cube-face--top">
+									<div class="tile__text-lines">
+										<div class="tile__line tile__line--full"></div>
+										<div class="tile__line tile__line--full"></div>
+										<div class="tile__line tile__line--short"></div>
 									</div>
+									<span class="tile__label">News — Weather</span>
 								</div>
 							</div>
 						</div>
 					</div>
-				</section>
+
+				</div>
+			</section>
 
 			</div>
 		</main>
@@ -1320,6 +1283,8 @@ import '@fontsource/google-sans-flex';
 					}
 				});
 			})();
+
+
 		</script>
 
 	</body>

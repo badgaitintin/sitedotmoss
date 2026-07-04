@@ -1,5 +1,5 @@
 ---
-// cv.astro — Wireframe Layout with Windows 8 Tile Identity
+// cv.astro — Liquid Glass CV — inspired by nikdelvin/liquid-glass
 import '@fontsource/google-sans-flex';
 ---
 
@@ -10,671 +10,927 @@ import '@fontsource/google-sans-flex';
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="Curriculum Vitae — Tinnaphop Sonsang" />
 		<title>CV — Tinnaphop Sonsang</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
 		<style>
-			/* ===========================
-			   RESET & CORE WIREFRAME TOKENS
-			=========================== */
-			:root {
-				--wf-bg:            #f5f6f8; /* clean light-blue-grey background */
-				--wf-tile:          #ffffff; /* crisp white for tiles */
-				--wf-card:          #ffffff;
-				--wf-border:        #cdd3de; /* clean border color */
-				--wf-stroke:        #8c96a8; /* standard grey-blue stroke */
-				--wf-text:          #333a42; /* main text */
-				--wf-label:         #6c757d; /* secondary labels */
-				--wf-accent:        #0071e3; /* primary link/accent */
-				--wf-hover:         #f1f3f7; /* clean hover state */
-			}
+			/* ============================================================
+			   RESET & BASE
+			============================================================ */
+			*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-			*, *::before, *::after {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
+			:root {
+				--font: 'Inter', 'Google Sans Flex', system-ui, sans-serif;
+				--bg-from: #0a0015;
+				--bg-mid:  #050820;
+				--bg-to:   #000d0a;
+				--text:    rgba(255,255,255,0.92);
+				--text-dim: rgba(255,255,255,0.55);
+				--text-dimmer: rgba(255,255,255,0.32);
+				--accent:  #a8edea;
+				--accent2: #fed6e3;
 			}
 
 			html, body {
 				width: 100%;
 				min-height: 100vh;
-				background: var(--wf-bg);
-				font-family: 'Google Sans Flex', 'Segoe UI', Roboto, sans-serif;
-				color: var(--wf-text);
+				background: var(--bg-from);
+				font-family: var(--font);
+				color: var(--text);
+				overflow-x: hidden;
+				-webkit-font-smoothing: antialiased;
 			}
 
-			a {
-				color: var(--wf-accent);
-				text-decoration: none;
-			}
-			a:hover {
-				text-decoration: underline;
+			a { color: inherit; text-decoration: none; }
+
+			/* ============================================================
+			   ANIMATED GRADIENT BACKGROUND
+			============================================================ */
+			.bg-scene {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				overflow: hidden;
+				background-color: #030207;
 			}
 
-			/* ===========================
-			   PAGE TRANSITION SYSTEM
-			=========================== */
-			.cv-page {
-				animation: page-open 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) both;
-				will-change: transform, opacity;
+			/* Butterfly Wings */
+			.wing {
+				position: absolute;
+				bottom: -15vh;
+				width: 60vw;
+				height: 105vh; /* Expands to almost touch the top navbar */
+				filter: blur(95px);
+				mix-blend-mode: screen;
+				opacity: 0.9;
+				will-change: transform, background-position;
+				background-size: 150% 150%;
+			}
+			.wing-left {
+				right: 50%;
+				transform-origin: bottom right;
+				/* Red to Yellow (RY) */
+				background-image: radial-gradient(ellipse at 100% 100%, rgba(239, 68, 68, 0.75) 0%, rgba(234, 179, 8, 0.35) 45%, rgba(239, 68, 68, 0.1) 75%, transparent 100%);
+				background-position: 100% 100%;
+				animation: flap-left 10s ease-in-out infinite alternate;
+			}
+			.wing-right {
+				left: 50%;
+				transform-origin: bottom left;
+				/* Green to Blue (GB) */
+				background-image: radial-gradient(ellipse at 0% 100%, rgba(59, 130, 246, 0.7) 0%, rgba(34, 197, 94, 0.35) 45%, rgba(59, 130, 246, 0.1) 75%, transparent 100%);
+				background-position: 0% 100%;
+				animation: flap-right 10s ease-in-out infinite alternate;
 			}
 
-			@keyframes page-open {
-				0% {
-					opacity: 0;
-					transform: scale(0.98) translateY(10px);
-				}
-				100% {
-					opacity: 1;
-					transform: scale(1) translateY(0);
-				}
-			}
-
-			@keyframes page-close {
-				0% {
-					opacity: 1;
-					transform: scale(1) translateY(0);
-				}
-				100% {
-					opacity: 0;
-					transform: scale(0.98) translateY(10px);
-				}
-			}
-
-			body.is-exiting .cv-page {
-				animation: page-close 0.25s cubic-bezier(0.4, 0, 1, 1) both;
+			/* Center body highlight */
+			.butterfly-body {
+				position: absolute;
+				bottom: -50px;
+				left: 50%;
+				transform: translateX(-50%);
+				width: 200px;
+				height: 250px;
+				background: radial-gradient(ellipse at 50% 100%, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+				filter: blur(30px);
+				mix-blend-mode: screen;
 				pointer-events: none;
 			}
 
-			/* ===========================
-			   LAYOUT STRUCTURE
-			=========================== */
-			.cv-container {
-				max-width: 1000px;
-				margin: 0 auto;
-				padding: 56px 24px 80px;
-				display: grid;
-				grid-template-columns: 220px 1fr;
-				gap: 48px;
-				align-items: start;
+			@keyframes flap-left {
+				0% {
+					transform: rotate(-24deg) scale3d(0.95, 0.95, 1) skewX(-3deg);
+					background-position: 100% 100%;
+					opacity: 0.8;
+				}
+				100% {
+					transform: rotate(-16deg) scale3d(1.05, 1.05, 1) skewX(2deg);
+					background-position: 80% 90%;
+					opacity: 0.95;
+				}
+			}
+			@keyframes flap-right {
+				0% {
+					transform: rotate(24deg) scale3d(0.95, 0.95, 1) skewX(3deg);
+					background-position: 0% 100%;
+					opacity: 0.8;
+				}
+				100% {
+					transform: rotate(16deg) scale3d(1.05, 1.05, 1) skewX(-2deg);
+					background-position: 20% 90%;
+					opacity: 0.95;
+				}
 			}
 
-			/* ===========================
-			   SIDEBAR MENU
-			=========================== */
-			.cv-sidebar {
-				position: sticky;
-				top: 24px; /* stick to the top of viewport with clean offset */
-				display: flex;
-				flex-direction: column;
-				gap: 20px;
+
+
+
+
+			/* Vignette */
+			.bg-vignette {
+				position: absolute;
+				inset: 0;
+				background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 30%, rgba(0,0,0,.6) 80%, rgba(0,0,0,.95) 100%);
+				pointer-events: none;
 			}
 
-			/* Windows 8 style circular back button */
-			.sidebar-back-top {
-				display: flex;
+			/* ============================================================
+			   LIQUID GLASS — CSS + SVG Filter
+			   Based on nikdelvin/liquid-glass technique
+			============================================================ */
+
+			/* Hidden SVG filter definitions */
+			.lg-filters { position: absolute; width: 0; height: 0; pointer-events: none; }
+
+			/* Base glass element */
+			.lg {
+				position: relative;
+				overflow: hidden;
+				border-radius: 20px;
+				transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+			}
+
+			/* The SVG displacement layer */
+			.lg::before {
+				content: '';
+				position: absolute;
+				inset: -4px;
+				z-index: 2;
+				border-radius: inherit;
+				filter: url(#liquid-glass-distort);
+				/* This creates the refraction/distortion illusion */
+				background: transparent;
+				pointer-events: none;
+			}
+
+			/* Backdrop blur layer */
+			.lg-blur {
+				position: absolute;
+				inset: 0;
+				z-index: 0;
+				backdrop-filter: blur(24px) saturate(1.6) brightness(1.1);
+				-webkit-backdrop-filter: blur(24px) saturate(1.6) brightness(1.1);
+				border-radius: inherit;
+			}
+
+			/* Glass tint overlay */
+			.lg-tint {
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(255,255,255,0.06);
+				border-radius: inherit;
+			}
+
+			/* Border shimmer */
+			.lg-border {
+				position: absolute;
+				inset: 0;
+				z-index: 3;
+				border-radius: inherit;
+				border: 1px solid rgba(255,255,255,0.18);
+				/* Gradient border effect */
+				background: transparent;
+				/* Top-left bright corner shimmer */
+				box-shadow:
+					inset 0 1px 0 rgba(255,255,255,0.25),
+					inset 1px 0 0 rgba(255,255,255,0.12),
+					0 8px 40px rgba(0,0,0,0.4),
+					0 2px 8px rgba(0,0,0,0.3);
+				pointer-events: none;
+			}
+
+			/* Content sits above all layers */
+			.lg-content {
+				position: relative;
+				z-index: 4;
+			}
+
+			/* Hover lift effect */
+			.lg:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+			}
+			.lg:hover .lg-border {
+				border-color: rgba(255,255,255,0.28);
+				box-shadow:
+					inset 0 1px 0 rgba(255,255,255,0.35),
+					inset 1px 0 0 rgba(255,255,255,0.18),
+					0 16px 60px rgba(0,0,0,0.5),
+					0 2px 8px rgba(0,0,0,0.3);
+			}
+
+			/* Chromatic aberration shimmer on hover */
+			.lg::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				z-index: 5;
+				background: linear-gradient(135deg, rgba(168,237,234,0.08) 0%, transparent 40%, rgba(254,214,227,0.05) 100%);
+				border-radius: inherit;
+				opacity: 0;
+				transition: opacity .3s;
+				pointer-events: none;
+			}
+			.lg:hover::after { opacity: 1; }
+
+			/* ============================================================
+			   PILL GLASS — smaller variant for skills
+			============================================================ */
+			.lg-pill {
+				display: inline-flex;
 				align-items: center;
-				gap: 16px;
-				text-decoration: none;
-				color: var(--wf-text);
-				margin-bottom: 12px;
-				transition: color 0.15s;
+				padding: 4px 12px;
+				border-radius: 100px;
+				font-size: 11px;
+				font-weight: 500;
+				letter-spacing: 0.2px;
+				color: rgba(255,255,255,0.85);
+				position: relative;
+				overflow: hidden;
+				backdrop-filter: blur(12px) saturate(1.4);
+				-webkit-backdrop-filter: blur(12px) saturate(1.4);
+				background: rgba(255,255,255,0.07);
+				border: 1px solid rgba(255,255,255,0.14);
+				box-shadow: inset 0 1px 0 rgba(255,255,255,0.15), 0 2px 8px rgba(0,0,0,0.2);
+				transition: all .2s;
+			}
+			.lg-pill:hover {
+				background: rgba(255,255,255,0.13);
+				border-color: rgba(255,255,255,0.25);
+				transform: translateY(-1px);
 			}
 
-			.back-arrow-circle {
-				width: 36px;
-				height: 36px;
-				border-radius: 50%;
-				border: 2px solid var(--wf-text);
+			.cv-nav {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				z-index: 100;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				font-size: 1.1rem;
-				font-weight: bold;
-				transition: background 0.15s, color 0.15s, border-color 0.15s;
-			}
-			.sidebar-back-top:hover .back-arrow-circle {
-				background: var(--wf-text);
-				color: var(--wf-bg);
-			}
-			.sidebar-back-top:hover {
-				color: var(--wf-accent);
-				text-decoration: none;
-			}
-
-			.page-title {
-				font-size: 2rem;
-				font-weight: 300;
-				letter-spacing: -0.5px;
-				color: var(--wf-text);
-			}
-
-			.sidebar-group {
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-			}
-
-			.sidebar-item {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				padding: 6px 12px;
-				border-radius: 4px;
-				font-size: 0.85rem;
-				color: var(--wf-text);
-				transition: background 0.15s, color 0.15s;
-				cursor: pointer;
-				border-left: 2px solid transparent;
-			}
-			.sidebar-item:hover {
-				background: var(--wf-hover);
-				text-decoration: none;
-			}
-			.sidebar-item.is-active {
-				font-weight: 600;
-				color: var(--wf-accent);
-				border-left-color: var(--wf-stroke);
-				background: var(--wf-hover);
-			}
-
-			.sidebar-item svg {
-				opacity: 0.6;
-				flex-shrink: 0;
-			}
-			.sidebar-item.is-active svg {
-				opacity: 1;
-				color: var(--wf-accent);
-			}
-
-			/* ===========================
-			   CONTENT AREA & TILE PANELS
-			=========================== */
-			.cv-main {
-				display: flex;
-				flex-direction: column;
-				gap: 24px;
-			}
-
-			/* Styled as wireframe Metro UI content tiles */
-			.hero, .section {
-				background: var(--wf-card);
-				border: 1.5px solid var(--wf-border);
-				padding: 28px;
-				transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), border-color 0.2s, box-shadow 0.2s;
-			}
-			.hero:hover, .section:hover {
-				transform: translateY(-2px);
-				border-color: var(--wf-stroke);
-				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
-			}
-
-			.section {
-				scroll-margin-top: 24px; /* align with sticky sidebar offset */
-			}
-
-			.hero__name {
-				font-size: 2.2rem;
-				font-weight: 300;
-				color: var(--wf-text);
-				letter-spacing: -0.5px;
-				margin-bottom: 8px;
-			}
-
-			.hero__role {
-				font-size: 1rem;
-				color: var(--wf-label);
-				margin-bottom: 16px;
-			}
-
-			.hero__contact {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 4px 12px;
-				font-size: 0.8rem;
-				color: var(--wf-label);
-			}
-
-			.dot {
-				color: var(--wf-border);
-			}
-
-			.section-label {
-				font-size: 0.7rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				color: var(--wf-label);
-				margin-bottom: 20px;
-			}
-
-			.summary-text {
-				font-size: 0.9rem;
-				line-height: 1.6;
-				color: var(--wf-text);
-			}
-
-			.entries {
-				display: flex;
-				flex-direction: column;
-				gap: 24px;
-			}
-
-			.entry__head {
-				display: flex;
-				justify-content: space-between;
-				align-items: baseline;
-				gap: 12px;
-				margin-bottom: 4px;
-			}
-
-			.entry__title {
-				font-size: 0.9rem;
-				font-weight: 600;
-				color: var(--wf-text);
-			}
-
-			.entry__date {
-				font-size: 0.75rem;
-				color: var(--wf-label);
+				padding: 12px 24px;
+				border-radius: 0;
+				backdrop-filter: blur(32px) saturate(1.8) brightness(1.15);
+				-webkit-backdrop-filter: blur(32px) saturate(1.8) brightness(1.15);
+				background: rgba(10, 5, 20, 0.6);
+				border: none;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				box-shadow: 0 4px 30px rgba(0,0,0,0.5);
 				white-space: nowrap;
 			}
-
-			.entry__org {
-				font-size: 0.8rem;
-				color: var(--wf-label);
-				margin-bottom: 8px;
+			.nav-back-btn {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 5px 14px;
+				border-radius: 100px;
+				font-size: 12.5px;
+				font-weight: 500;
+				color: rgba(255,255,255,0.75);
+				transition: all .2s;
+				cursor: pointer;
+				text-decoration: none;
 			}
-
-			.entry__sub {
-				font-size: 0.8rem;
+			.nav-back-btn:hover {
+				background: rgba(255,255,255,0.1);
+				color: #fff;
+			}
+			.nav-back-btn svg { opacity: .7; }
+			.nav-divider { width: 1px; height: 16px; background: rgba(255,255,255,0.12); margin: 0 4px; }
+			.nav-brand {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 5px 14px;
+				font-size: 12.5px;
 				font-weight: 600;
-				color: var(--wf-text);
-				margin: 12px 0 6px;
+				color: rgba(255,255,255,0.9);
+				letter-spacing: -0.2px;
+			}
+			.nav-section-links {
+				display: flex;
+				align-items: center;
+				gap: 2px;
+				margin-left: 4px;
+			}
+			.nav-link {
+				padding: 5px 12px;
+				border-radius: 100px;
+				font-size: 12px;
+				color: rgba(255,255,255,0.55);
+				transition: all .2s;
+				cursor: pointer;
+			}
+			.nav-link:hover, .nav-link.active {
+				background: rgba(255,255,255,0.1);
+				color: rgba(255,255,255,0.9);
 			}
 
+			/* ============================================================
+			   LAYOUT
+			============================================================ */
+			.cv-page {
+				position: relative;
+				z-index: 1;
+				min-height: calc(100vh - 54px);
+				padding: 96px 24px 80px;
+				animation: page-open .45s cubic-bezier(.1,.9,.2,1) both;
+			}
+			@keyframes page-open {
+				from { opacity:0; transform: scale(.98) translateY(12px); }
+				to   { opacity:1; transform: scale(1) translateY(0); }
+			}
+
+			.cv-container {
+				max-width: 860px;
+				margin: 0 auto;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+			}
+
+			/* ============================================================
+			   HERO CARD
+			============================================================ */
+			.hero-card {
+				padding: 40px 40px 36px;
+			}
+			.hero-avatar-row {
+				display: flex;
+				align-items: center;
+				gap: 20px;
+				margin-bottom: 24px;
+			}
+			.hero-avatar {
+				width: 72px;
+				height: 72px;
+				border-radius: 50%;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 28px;
+				font-weight: 700;
+				color: #000;
+				letter-spacing: -1px;
+				flex-shrink: 0;
+				box-shadow: 0 4px 20px rgba(168,237,234,0.35);
+			}
+			.hero-title-block { flex: 1; }
+			.hero-name {
+				font-size: 2rem;
+				font-weight: 700;
+				letter-spacing: -0.8px;
+				line-height: 1.1;
+				background: linear-gradient(135deg, #fff 0%, rgba(168,237,234,.9) 60%, rgba(254,214,227,.8) 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+				margin-bottom: 6px;
+			}
+			.hero-role {
+				font-size: .95rem;
+				color: var(--text-dim);
+				font-weight: 400;
+			}
+			.hero-contact {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				align-items: center;
+			}
+			.contact-item {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 5px 14px;
+				border-radius: 100px;
+				font-size: 12px;
+				color: rgba(255,255,255,0.7);
+				backdrop-filter: blur(16px);
+				background: rgba(255,255,255,0.06);
+				border: 1px solid rgba(255,255,255,0.11);
+				transition: all .2s;
+				cursor: pointer;
+			}
+			.contact-item:hover {
+				background: rgba(255,255,255,0.12);
+				color: #fff;
+				border-color: rgba(255,255,255,0.22);
+			}
+			.contact-item svg { opacity: .6; flex-shrink: 0; }
+
+			/* ============================================================
+			   SECTION CARDS
+			============================================================ */
+			.section-card {
+				padding: 32px 36px;
+			}
+			.section-header {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 24px;
+			}
+			.section-icon {
+				width: 28px;
+				height: 28px;
+				border-radius: 8px;
+				background: rgba(255,255,255,0.08);
+				border: 1px solid rgba(255,255,255,0.12);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+			}
+			.section-icon svg { opacity: .75; }
+			.section-label {
+				font-size: 11px;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1.2px;
+				color: var(--text-dimmer);
+			}
+
+			/* ============================================================
+			   SUMMARY
+			============================================================ */
+			.summary-text {
+				font-size: .93rem;
+				line-height: 1.75;
+				color: var(--text-dim);
+				max-width: 640px;
+			}
+
+			/* ============================================================
+			   TIMELINE ENTRIES
+			============================================================ */
+			.entries { display: flex; flex-direction: column; gap: 0; }
+			.entry {
+				position: relative;
+				padding: 20px 0 20px 28px;
+				border-left: 1px solid rgba(255,255,255,0.1);
+			}
+			.entry:last-child { padding-bottom: 0; border-left: 1px solid transparent; }
+			.entry-dot {
+				position: absolute;
+				left: -4.5px;
+				top: 24px;
+				width: 9px;
+				height: 9px;
+				border-radius: 50%;
+				background: linear-gradient(135deg, var(--accent), var(--accent2));
+				box-shadow: 0 0 8px rgba(168,237,234,0.5);
+			}
+			.entry-head {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-start;
+				gap: 12px;
+				margin-bottom: 3px;
+			}
+			.entry-title {
+				font-size: .88rem;
+				font-weight: 600;
+				color: rgba(255,255,255,0.9);
+			}
+			.entry-date {
+				font-size: .75rem;
+				color: var(--text-dimmer);
+				white-space: nowrap;
+				background: rgba(255,255,255,0.06);
+				border: 1px solid rgba(255,255,255,0.08);
+				border-radius: 100px;
+				padding: 2px 10px;
+			}
+			.entry-org {
+				font-size: .8rem;
+				color: var(--accent);
+				margin-bottom: 10px;
+				opacity: .85;
+			}
+			.entry-sub {
+				font-size: .78rem;
+				font-weight: 600;
+				color: rgba(255,255,255,0.75);
+				margin: 10px 0 6px;
+			}
 			.bullets {
 				list-style: none;
-				padding-left: 0;
 				display: flex;
 				flex-direction: column;
 				gap: 4px;
 			}
 			.bullets li {
-				font-size: 0.8rem;
-				color: var(--wf-label);
-				line-height: 1.5;
-				position: relative;
+				font-size: .8rem;
+				color: var(--text-dim);
+				line-height: 1.55;
 				padding-left: 14px;
+				position: relative;
 			}
 			.bullets li::before {
-				content: "—";
+				content: '›';
 				position: absolute;
 				left: 0;
-				color: var(--wf-border);
+				color: rgba(168,237,234,0.6);
+				font-size: 1rem;
+				line-height: 1.3;
 			}
 
-			/* Skills grid format (Mini-Tiles) */
-			.skills-list {
+			/* ============================================================
+			   SKILLS
+			============================================================ */
+			.skills-grid {
 				display: grid;
-				grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-				gap: 16px;
+				grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+				gap: 12px;
 			}
-
-			.skill-group {
-				background: var(--wf-bg);
-				border: 1.5px solid var(--wf-border);
-				padding: 16px;
-				border-radius: 4px;
-				transition: border-color 0.2s, background 0.2s;
+			.skill-group-card {
+				padding: 16px 18px;
+				border-radius: 14px;
+				backdrop-filter: blur(20px);
+				background: rgba(255,255,255,0.04);
+				border: 1px solid rgba(255,255,255,0.09);
+				transition: all .25s;
 			}
-			.skill-group:hover {
-				border-color: var(--wf-stroke);
-				background: var(--wf-tile);
+			.skill-group-card:hover {
+				background: rgba(255,255,255,0.08);
+				border-color: rgba(255,255,255,0.16);
+				transform: translateY(-2px);
 			}
-
-			.skill-group__label {
-				font-size: 0.75rem;
+			.skill-group-label {
+				font-size: 11px;
 				font-weight: 600;
-				color: var(--wf-text);
-				margin-bottom: 8px;
-				display: block;
+				color: var(--text-dimmer);
+				text-transform: uppercase;
+				letter-spacing: .6px;
+				margin-bottom: 10px;
 			}
-
-			.skill-pills {
+			.pills-wrap {
 				display: flex;
 				flex-wrap: wrap;
-				gap: 6px;
+				gap: 5px;
 			}
 
-			.pill {
-				display: inline-block;
-				padding: 3px 8px;
-				border: 1.5px solid var(--wf-border);
-				border-radius: 4px;
-				background: var(--wf-card);
-				font-size: 0.72rem;
-				color: var(--wf-text);
+			/* Two-column layout for larger screens */
+			@media (min-width: 720px) {
+				.two-col {
+					display: grid;
+					grid-template-columns: 1fr 1fr;
+					gap: 16px;
+				}
+				.two-col .section-card:first-child { grid-column: 1; }
+				.two-col .section-card:last-child  { grid-column: 2; }
 			}
 
-			/* ===========================
-			   RESPONSIVE DESIGN
-			=========================== */
-			@media (max-width: 768px) {
-				.cv-container {
-					grid-template-columns: 1fr;
-					gap: 20px;
-					padding: 16px 16px 80px;
-				}
-
-				.cv-sidebar {
-					position: sticky;
-					top: 0;
-					background: var(--wf-bg);
-					z-index: 10;
-					padding: 12px 16px;
-					margin: -16px -16px 16px -16px; /* offset container padding */
-					border-bottom: 1.5px solid var(--wf-border);
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					gap: 12px;
-					overflow-x: auto;
-					scrollbar-width: none;
-					-ms-overflow-style: none;
-				}
-				.cv-sidebar::-webkit-scrollbar {
-					display: none;
-				}
-
-				.sidebar-group {
-					display: flex;
-					flex-direction: row;
-					gap: 8px;
-				}
-
-				.sidebar-back-top {
-					margin-bottom: 0;
-					padding: 4px 10px;
-					background: var(--wf-card);
-					border: 1.5px solid var(--wf-border);
-					border-radius: 20px;
-					white-space: nowrap;
-					gap: 8px;
-				}
-
-				.back-arrow-circle {
-					width: 24px;
-					height: 24px;
-					font-size: 0.9rem;
-					border-width: 1.5px;
-				}
-
-				.page-title {
-					font-size: 0.95rem;
-					font-weight: 500;
-				}
-
-				.sidebar-item {
-					white-space: nowrap;
-					padding: 6px 12px;
-					border: 1.5px solid var(--wf-border);
-					border-radius: 4px;
-					background: var(--wf-card);
-					font-size: 0.8rem;
-					border-left: 1.5px solid var(--wf-border);
-				}
-				.sidebar-item.is-active {
-					background: var(--wf-hover);
-					border-color: var(--wf-accent);
-				}
+			/* ============================================================
+			   RESPONSIVE
+			============================================================ */
+			@media (max-width: 640px) {
+				.cv-nav { padding: 8px 12px; }
+				.nav-section-links { display: none; }
+				.hero-card { padding: 28px 24px 24px; }
+				.section-card { padding: 24px 22px; }
+				.hero-name { font-size: 1.6rem; }
+				.skills-grid { grid-template-columns: 1fr; }
+				.entry-head { flex-direction: column; gap: 4px; }
 			}
 		</style>
+
+		<!-- SVG filter for Liquid Glass distortion -->
+		<svg class="lg-filters" xmlns="http://www.w3.org/2000/svg">
+			<defs>
+				<filter id="liquid-glass-distort" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+					<feTurbulence type="fractalNoise" baseFrequency="0.012 0.008" numOctaves="3" seed="2" result="noise" />
+					<feColorMatrix type="saturate" values="3" in="noise" result="coloredNoise" />
+					<feDisplacementMap in="SourceGraphic" in2="coloredNoise" scale="14" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+					<feGaussianBlur in="displaced" stdDeviation="0.5" result="blurred" />
+					<feComposite in="blurred" in2="SourceGraphic" operator="in" />
+				</filter>
+			</defs>
+		</svg>
 	</head>
+
 	<body>
+		<!-- Background scene -->
+		<div class="bg-scene">
+			<div class="wing wing-left"></div>
+			<div class="wing wing-right"></div>
+			<div class="butterfly-body"></div>
+			<div class="bg-vignette"></div>
+		</div>
+
+		<!-- Floating Nav -->
+		<nav class="cv-nav" id="cv-nav">
+			<a href="/" class="nav-back-btn" id="nav-back">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M19 12H5M12 5l-7 7 7 7"/>
+				</svg>
+				Back
+			</a>
+			<div class="nav-divider"></div>
+			<div class="nav-brand">
+				<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:.7">
+					<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/>
+				</svg>
+				CV
+			</div>
+			<div class="nav-divider"></div>
+			<div class="nav-section-links">
+				<a href="#hero"       class="nav-link active" data-section="hero">Overview</a>
+				<a href="#summary"    class="nav-link"        data-section="summary">Summary</a>
+				<a href="#education"  class="nav-link"        data-section="education">Education</a>
+				<a href="#skills"     class="nav-link"        data-section="skills">Skills</a>
+				<a href="#experience" class="nav-link"        data-section="experience">Experience</a>
+				<a href="#projects"   class="nav-link"        data-section="projects">Projects</a>
+			</div>
+		</nav>
 
 		<div class="cv-page">
 			<div class="cv-container">
-				<!-- Sidebar Menu -->
-				<aside class="cv-sidebar" aria-label="CV navigation">
-					<!-- Dashboard Back Link styled as Windows 8 Settings circle button -->
-					<a href="/" class="sidebar-back-top" id="sidebarBackTop" title="Back to Dashboard">
-						<span class="back-arrow-circle">←</span>
-						<span class="page-title">CV</span>
-					</a>
 
-					<div class="sidebar-group">
-						<a href="#hero" class="sidebar-item" data-section="hero">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="12" height="12" rx="1.5"/><circle cx="7" cy="6" r="2.5"/><path d="M2 13c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
-							Overview
-						</a>
-						<a href="#summary" class="sidebar-item" data-section="summary">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="4" x2="12" y2="4"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="10" x2="8" y2="10"/></svg>
-							Summary
-						</a>
-						<a href="#education" class="sidebar-item" data-section="education">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l6-3 6 3-6 3-6-3z"/><path d="M4 6.5V10c0 1 1.3 2 3 2s3-1 3-2V6.5"/><line x1="13" y1="5" x2="13" y2="9"/></svg>
-							Education
-						</a>
-						<a href="#skills" class="sidebar-item" data-section="skills">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="7,1 8.8,5.2 13.4,5.5 10,8.5 11.1,13 7,10.4 2.9,13 4,8.5 0.6,5.5 5.2,5.2"/></svg>
-							Skills
-						</a>
-						<a href="#experience" class="sidebar-item" data-section="experience">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="12" height="9" rx="1"/><path d="M4 4V3a1.5 1.5 0 013 0v1"/><path d="M7 4V3a1.5 1.5 0 013 0v1"/></svg>
-							Experience
-						</a>
-						<a href="#projects" class="sidebar-item" data-section="projects">
-							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3.5h4.5L7 2h6v10H1z"/></svg>
-							Projects
-						</a>
-					</div>
-				</aside>
-
-				<!-- Main CV Content -->
-				<main class="cv-main">
-					<!-- HERO -->
-					<section class="hero" id="hero">
-						<h1 class="hero__name">Tinnaphop Sonsang</h1>
-						<p class="hero__role">Computer Engineering &amp; AI Graduate</p>
-						<div class="hero__contact">
-							<a href="mailto:tinnaphop.moss@gmail.com">tinnaphop.moss@gmail.com</a>
-							<span class="dot" aria-hidden="true">·</span>
-							<span>064-948-1740</span>
-							<span class="dot" aria-hidden="true">·</span>
-							<a href="https://linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
-							<span class="dot" aria-hidden="true">·</span>
-							<a href="https://github.com/badgaitintin" target="_blank" rel="noopener">GitHub</a>
+				<!-- ====== HERO ====== -->
+				<div class="lg hero-card" id="hero">
+					<div class="lg-blur"></div>
+					<div class="lg-tint"></div>
+					<div class="lg-border"></div>
+					<div class="lg-content">
+						<div class="hero-avatar-row">
+							<div class="hero-avatar">TS</div>
+							<div class="hero-title-block">
+								<h1 class="hero-name">Tinnaphop Sonsang</h1>
+								<p class="hero-role">Computer Engineering &amp; AI Graduate</p>
+							</div>
 						</div>
-					</section>
+						<div class="hero-contact">
+							<a href="mailto:tinnaphop.moss@gmail.com" class="contact-item">
+								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+								tinnaphop.moss@gmail.com
+							</a>
+							<a href="tel:+66649481740" class="contact-item">
+								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16h.27"/></svg>
+								064-948-1740
+							</a>
+							<a href="https://linkedin.com" target="_blank" rel="noopener" class="contact-item">
+								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+								LinkedIn
+							</a>
+							<a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="contact-item">
+								<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+								GitHub
+							</a>
+						</div>
+					</div>
+				</div>
 
-					<!-- SUMMARY -->
-					<section class="section" id="summary">
-						<h2 class="section-label">Profile Summary</h2>
+				<!-- ====== SUMMARY ====== -->
+				<div class="lg section-card" id="summary">
+					<div class="lg-blur"></div>
+					<div class="lg-tint"></div>
+					<div class="lg-border"></div>
+					<div class="lg-content">
+						<div class="section-header">
+							<div class="section-icon">
+								<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="15" y2="18"/></svg>
+							</div>
+							<span class="section-label">Profile Summary</span>
+						</div>
 						<p class="summary-text">
 							A Computer Engineering and AI graduate with hands-on experience building end-to-end AI pipelines — from data engineering and model training to real-world deployment. Skilled in computer vision, data engineering, and full-stack web development, with a focus on making AI systems production-ready.
 						</p>
-					</section>
+					</div>
+				</div>
 
+				<!-- ====== EDUCATION + EXPERIENCE row ====== -->
+				<div class="two-col">
 					<!-- EDUCATION -->
-					<section class="section" id="education">
-						<h2 class="section-label">Education</h2>
-						<div class="entries">
-							<div class="entry">
-								<div class="entry__head">
-									<span class="entry__title">Walailak University</span>
-									<span class="entry__date">June 2022 – May 2026</span>
+					<div class="lg section-card" id="education">
+						<div class="lg-blur"></div>
+						<div class="lg-tint"></div>
+						<div class="lg-border"></div>
+						<div class="lg-content">
+							<div class="section-header">
+								<div class="section-icon">
+									<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c0 2 2.5 3 6 3s6-1 6-3v-5"/><line x1="22" y1="10" x2="22" y2="15"/></svg>
 								</div>
-								<p class="entry__org">B.Eng. Computer Engineering and Artificial Intelligence · Nakhon Si Thammarat</p>
-								<ul class="bullets">
-									<li>GPAX 3.65 — First-class honours</li>
-								</ul>
+								<span class="section-label">Education</span>
 							</div>
-						</div>
-					</section>
-
-					<!-- SKILLS -->
-					<section class="section" id="skills">
-						<h2 class="section-label">Key Skills</h2>
-						<div class="skills-list">
-							<div class="skill-group">
-								<span class="skill-group__label">End-to-End AI Pipeline Design</span>
-								<div class="skill-pills">
-									<span class="pill">Computer Vision</span>
-									<span class="pill">Object Detection</span>
-									<span class="pill">Depth Estimation</span>
-									<span class="pill">Pose Estimation</span>
-									<span class="pill">YOLO Models</span>
-								</div>
-							</div>
-							<div class="skill-group">
-								<span class="skill-group__label">Data Engineering &amp; Unsupervised Learning</span>
-								<div class="skill-pills">
-									<span class="pill">Spotify API Pipeline</span>
-									<span class="pill">K-Means</span>
-									<span class="pill">PCA / UMAP / t-SNE</span>
-									<span class="pill">Data Deduplication</span>
-								</div>
-							</div>
-							<div class="skill-group">
-								<span class="skill-group__label">Full-Stack Web Development</span>
-								<div class="skill-pills">
-									<span class="pill">Astro</span>
-									<span class="pill">Next.js</span>
-									<span class="pill">React</span>
-									<span class="pill">TypeScript</span>
-									<span class="pill">Tailwind CSS</span>
-									<span class="pill">PostgreSQL (Supabase)</span>
-									<span class="pill">SQLite / Drizzle ORM</span>
-								</div>
-							</div>
-							<div class="skill-group">
-								<span class="skill-group__label">Tools &amp; Productivity</span>
-								<div class="skill-pills">
-									<span class="pill">Figma</span>
-									<span class="pill">Adobe Photoshop</span>
-									<span class="pill">Canva</span>
-									<span class="pill">Microsoft Office Suite</span>
+							<div class="entries">
+								<div class="entry" style="border-left: none; padding-left: 0;">
+									<div class="entry-head">
+										<span class="entry-title">Walailak University</span>
+										<span class="entry-date">2022 – 2026</span>
+									</div>
+									<p class="entry-org">B.Eng. Computer Engineering &amp; AI · Nakhon Si Thammarat</p>
+									<ul class="bullets">
+										<li>GPAX 3.65 — First-class honours</li>
+									</ul>
 								</div>
 							</div>
 						</div>
-					</section>
+					</div>
 
 					<!-- EXPERIENCE -->
-					<section class="section" id="experience">
-						<h2 class="section-label">Work Experience</h2>
+					<div class="lg section-card" id="experience">
+						<div class="lg-blur"></div>
+						<div class="lg-tint"></div>
+						<div class="lg-border"></div>
+						<div class="lg-content">
+							<div class="section-header">
+								<div class="section-icon">
+									<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+								</div>
+								<span class="section-label">Work Experience</span>
+							</div>
+							<div class="entries">
+								<div class="entry" style="border-left: none; padding-left: 0;">
+									<div class="entry-head">
+										<span class="entry-title">Intern Developer</span>
+										<span class="entry-date">Sept '25 – Apr '26</span>
+									</div>
+									<p class="entry-org">ThaiDotRun · Bangkok</p>
+
+									<p class="entry-sub">Runner Highlight Extraction</p>
+									<ul class="bullets">
+										<li>End-to-end CV pipeline for runner tracking &amp; highlight generation</li>
+										<li>Automated post-event editing, cutting manual time significantly</li>
+									</ul>
+
+									<p class="entry-sub">Shoe Detection Pipeline</p>
+									<ul class="bullets">
+										<li>YOLO-based detection &amp; classification for runner footwear</li>
+										<li>Data deduplication &amp; validation for production reliability</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- ====== SKILLS ====== -->
+				<div class="lg section-card" id="skills">
+					<div class="lg-blur"></div>
+					<div class="lg-tint"></div>
+					<div class="lg-border"></div>
+					<div class="lg-content">
+						<div class="section-header">
+							<div class="section-icon">
+								<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+							</div>
+							<span class="section-label">Key Skills</span>
+						</div>
+						<div class="skills-grid">
+							<div class="skill-group-card">
+								<div class="skill-group-label">End-to-End AI Pipeline</div>
+								<div class="pills-wrap">
+									<span class="lg-pill">Computer Vision</span>
+									<span class="lg-pill">Object Detection</span>
+									<span class="lg-pill">Depth Estimation</span>
+									<span class="lg-pill">Pose Estimation</span>
+									<span class="lg-pill">YOLO Models</span>
+								</div>
+							</div>
+							<div class="skill-group-card">
+								<div class="skill-group-label">Data Engineering &amp; ML</div>
+								<div class="pills-wrap">
+									<span class="lg-pill">Spotify API Pipeline</span>
+									<span class="lg-pill">K-Means</span>
+									<span class="lg-pill">PCA / UMAP / t-SNE</span>
+									<span class="lg-pill">Data Deduplication</span>
+								</div>
+							</div>
+							<div class="skill-group-card">
+								<div class="skill-group-label">Full-Stack Web Dev</div>
+								<div class="pills-wrap">
+									<span class="lg-pill">Astro</span>
+									<span class="lg-pill">Next.js</span>
+									<span class="lg-pill">React</span>
+									<span class="lg-pill">TypeScript</span>
+									<span class="lg-pill">Tailwind CSS</span>
+									<span class="lg-pill">PostgreSQL</span>
+									<span class="lg-pill">SQLite / Drizzle</span>
+								</div>
+							</div>
+							<div class="skill-group-card">
+								<div class="skill-group-label">Tools &amp; Productivity</div>
+								<div class="pills-wrap">
+									<span class="lg-pill">Figma</span>
+									<span class="lg-pill">Photoshop</span>
+									<span class="lg-pill">Canva</span>
+									<span class="lg-pill">MS Office</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- ====== PROJECTS ====== -->
+				<div class="lg section-card" id="projects">
+					<div class="lg-blur"></div>
+					<div class="lg-tint"></div>
+					<div class="lg-border"></div>
+					<div class="lg-content">
+						<div class="section-header">
+							<div class="section-icon">
+								<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+							</div>
+							<span class="section-label">Projects &amp; Thesis</span>
+						</div>
 						<div class="entries">
 							<div class="entry">
-								<div class="entry__head">
-									<span class="entry__title">Intern Developer (Co-op / Internship)</span>
-									<span class="entry__date">Sept 2025 – Apr 2026</span>
+								<div class="entry-dot"></div>
+								<div class="entry-head">
+									<span class="entry-title">Madonna Discography Analysis</span>
+									<span class="entry-date">Mar 2026 – Present</span>
 								</div>
-								<p class="entry__org">ThaiDotRun · Bangkok</p>
-
-								<p class="entry__sub">Automated Runner Highlight Extraction System</p>
 								<ul class="bullets">
-									<li>Built an end-to-end pipeline detecting and tracking runners from race footage using computer vision</li>
-									<li>Automated highlight clip generation, significantly reducing post-event manual editing time</li>
+									<li>Spotify API pipeline to collect &amp; process full discography metadata</li>
+									<li>K-Means clustering with PCA / UMAP / t-SNE for audio feature visualization</li>
 								</ul>
-
-								<p class="entry__sub">Robustness Shoe Detection &amp; Classification Pipeline</p>
+							</div>
+							<div class="entry">
+								<div class="entry-dot"></div>
+								<div class="entry-head">
+									<span class="entry-title">Site(.)moss — Portfolio</span>
+									<span class="entry-date">Dec 2025 – Present</span>
+								</div>
 								<ul class="bullets">
-									<li>Developed a YOLO-based detection and classification system for runner footwear</li>
-									<li>Implemented data deduplication and validation checks for production-grade reliability</li>
+									<li>Personal portfolio built with Astro — Metro UI tile design system</li>
+									<li>Responsive with animated tiles, drag-to-scroll navigation &amp; Liquid Glass UI</li>
+								</ul>
+							</div>
+							<div class="entry">
+								<div class="entry-dot"></div>
+								<div class="entry-head">
+									<span class="entry-title">Capstone — WBC Detection in Raptors</span>
+									<span class="entry-date">Aug 2024 – Aug 2025</span>
+								</div>
+								<ul class="bullets">
+									<li>YOLO models for white blood cell detection in avian blood smear images</li>
+									<li>Addressed class imbalance &amp; domain-specific challenges in medical imaging</li>
 								</ul>
 							</div>
 						</div>
-					</section>
+					</div>
+				</div>
 
-					<!-- PROJECTS -->
-					<section class="section" id="projects">
-						<h2 class="section-label">Projects &amp; Thesis</h2>
-						<div class="entries">
-							<div class="entry">
-								<div class="entry__head">
-									<span class="entry__title">Madonna Discography Analysis</span>
-									<span class="entry__date">March 2026 – Present</span>
-								</div>
-								<ul class="bullets">
-									<li>Data pipeline using the Spotify API to collect and process full discography metadata</li>
-									<li>Applied K-Means clustering with PCA / UMAP / t-SNE for audio feature visualization</li>
-								</ul>
-							</div>
-
-							<div class="entry">
-								<div class="entry__head">
-									<span class="entry__title">Site(.)moss — Portfolio Site</span>
-									<span class="entry__date">December 2025 – Present</span>
-								</div>
-								<ul class="bullets">
-									<li>Personal portfolio built with Astro, featuring a Windows Metro-inspired tile UI</li>
-									<li>Responsive wireframe design system with animated live tiles and drag-to-scroll navigation</li>
-								</ul>
-							</div>
-
-							<div class="entry">
-								<div class="entry__head">
-									<span class="entry__title">Capstone Thesis — WBC Detection in Raptors</span>
-									<span class="entry__date">August 2024 – August 2025</span>
-								</div>
-								<ul class="bullets">
-									<li>Trained and evaluated YOLO models for white blood cell detection in avian blood smear images</li>
-									<li>Addressed class imbalance and domain-specific data challenges in a medical imaging context</li>
-								</ul>
-							</div>
-						</div>
-					</section>
-				</main>
 			</div>
 		</div>
 
 		<script>
 			// ==============================
-			// Sidebar active section tracking (Scroll-spy)
+			// Scroll-spy: highlight active nav section
 			// ==============================
-			const sections = document.querySelectorAll('.hero, .section');
-			const sideItems = document.querySelectorAll('.sidebar-item[data-section]');
+			const sections  = document.querySelectorAll('#hero, #summary, #education, #experience, #skills, #projects');
+			const navLinks  = document.querySelectorAll('.nav-link[data-section]');
 
-			const obs = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((e) => {
-						if (e.isIntersecting) {
-							sideItems.forEach((item) => {
-								item.classList.toggle('is-active', item.dataset.section === e.target.id);
-							});
-						}
-					});
-				},
-				{
-					root: null, // viewport level
-					rootMargin: '-20% 0px -60% 0px',
-					threshold: 0,
-				}
-			);
-
-			sections.forEach((s) => obs.observe(s));
-
-			// ==============================
-			// Smooth scroll to sections
-			// ==============================
-			document.querySelectorAll('a[href^="#"]').forEach((a) => {
-				a.addEventListener('click', (e) => {
-					const target = document.querySelector(a.getAttribute('href'));
-					if (target) {
-						e.preventDefault();
-						target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			const obs = new IntersectionObserver((entries) => {
+				entries.forEach(e => {
+					if (e.isIntersecting) {
+						navLinks.forEach(l => l.classList.toggle('active', l.dataset.section === e.target.id));
 					}
+				});
+			}, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+			sections.forEach(s => obs.observe(s));
+
+			// Smooth scroll
+			document.querySelectorAll('a[href^="#"]').forEach(a => {
+				a.addEventListener('click', e => {
+					const t = document.querySelector(a.getAttribute('href'));
+					if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 				});
 			});
 
+			// Back button transition
+			document.getElementById('nav-back').addEventListener('click', e => {
+				e.preventDefault();
+				document.querySelector('.cv-page').style.animation = 'none';
+				document.querySelector('.cv-page').style.opacity   = '0';
+				document.querySelector('.cv-page').style.transform = 'scale(0.98) translateY(10px)';
+				document.querySelector('.cv-page').style.transition = 'all .25s ease';
+				setTimeout(() => { window.location.href = '/'; }, 260);
+			});
+
 			// ==============================
-			// Page transition interceptor for back navigation
+			// Mouse-parallax on liquid glass cards
 			// ==============================
-			document.querySelectorAll('#sidebarBackTop').forEach((btn) => {
-				btn.addEventListener('click', (e) => {
-					e.preventDefault();
-					document.body.classList.add('is-exiting');
-					setTimeout(() => {
-						window.location.href = btn.getAttribute('href');
-					}, 250); // matches page-close transition duration
+			document.querySelectorAll('.lg').forEach(card => {
+				card.addEventListener('mousemove', e => {
+					const r = card.getBoundingClientRect();
+					const x = (e.clientX - r.left) / r.width  - 0.5;
+					const y = (e.clientY - r.top)  / r.height - 0.5;
+					card.style.setProperty('--rx', `${y * -6}deg`);
+					card.style.setProperty('--ry', `${x *  6}deg`);
+					card.style.transform = `translateY(-2px) rotateX(var(--rx)) rotateY(var(--ry))`;
+					card.style.transition = 'none';
+				});
+				card.addEventListener('mouseleave', () => {
+					card.style.transform = '';
+					card.style.transition = 'transform .4s cubic-bezier(.2,.8,.2,1)';
 				});
 			});
 		</script>

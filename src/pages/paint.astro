@@ -1,0 +1,3231 @@
+---
+// paint.astro — Image Editor · Glassmorphism UI · Lucide Icons · Photoshop-style menus
+---
+
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Paint — A powerful yet easy-to-use image editor with layers, brushes, shapes, and more." />
+	<title>Paint — Site(.)moss</title>
+
+	<!-- Lucide Icons -->
+	<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+	<!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Coral+Pixels&display=swap" rel="stylesheet" />
+
+	<style>
+		/* ============================================================
+		   DESIGN TOKENS
+		============================================================ */
+		:root {
+			--bg:           #0b0c10;
+			--glass-bg:     rgba(16, 18, 26, 0.72);
+			--glass-bg-2:   rgba(20, 22, 32, 0.82);
+			--glass-border: rgba(255, 255, 255, 0.09);
+			--glass-border-2: rgba(255, 255, 255, 0.15);
+			--glass-blur:   blur(20px) saturate(160%);
+
+			--surface:      rgba(22, 24, 34, 0.88);
+			--surface-2:    rgba(28, 30, 44, 0.92);
+			--surface-hover:rgba(40, 42, 60, 0.85);
+
+			--text:         #e6e8f0;
+			--text-dim:     #8890aa;
+			--text-dimmer:  #4e5468;
+			--accent:       #a78bfa;
+			--accent-dim:   rgba(167,139,250,0.25);
+			--accent-glow:  rgba(167,139,250,0.15);
+			--danger:       #f87171;
+			--success:      #34d399;
+
+			--radius-sm:    6px;
+			--radius-md:    10px;
+			--radius-lg:    14px;
+			--radius-xl:    18px;
+
+			--navbar-h:     38px;
+			--optbar-h:     36px;
+			--tray-h:       64px;
+
+			--font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+			--transition: 0.15s ease;
+		}
+
+		/* ============================================================
+		   RESET
+		============================================================ */
+		*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+		html, body {
+			width: 100%; height: 100%;
+			overflow: hidden;
+			background: var(--bg);
+			color: var(--text);
+			font-family: var(--font);
+			font-size: 12.5px;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		button, select, input, a {
+			font-family: inherit;
+			font-size: inherit;
+			color: inherit;
+			text-decoration: none;
+		}
+		button { cursor: pointer; }
+		input[type=range] { accent-color: var(--accent); }
+
+		/* ============================================================
+		   ROOT APP — CANVAS FILLS ENTIRE SCREEN
+		============================================================ */
+		#app {
+			position: relative;
+			width: 100vw;
+			height: 100vh;
+			overflow: hidden;
+		}
+
+		/* ============================================================
+		   CANVAS AREA — fills screen with rainbow orb bg + grid
+		============================================================ */
+		#canvas-area {
+			position: absolute;
+			inset: 0;
+			background: #000;
+			overflow: hidden;
+			cursor: crosshair;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		/* Rainbow orb layer */
+		#canvas-orbs {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			z-index: 0;
+			overflow: hidden;
+			isolation: isolate;
+		}
+		.co { position:absolute; border-radius:50%; mix-blend-mode:screen; will-change:transform,border-radius; }
+		.co-red   { width:300px;height:300px;top:8%;left:6%;filter:blur(65px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(239,68,68,.6) 30%,rgba(185,28,28,.1) 75%,transparent 100%);animation:co-d1 25s infinite ease-in-out,co-m1 14s infinite ease-in-out; }
+		.co-orange{ width:260px;height:260px;top:18%;left:38%;filter:blur(60px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(249,115,22,.55) 30%,rgba(194,65,12,.1) 75%,transparent 100%);animation:co-d2 28s infinite ease-in-out,co-m2 16s infinite ease-in-out;animation-delay:-2s; }
+		.co-yellow{ width:280px;height:280px;top:6%;right:14%;filter:blur(65px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(234,179,8,.5) 30%,rgba(161,98,7,.1) 75%,transparent 100%);animation:co-d3 22s infinite ease-in-out,co-m1 12s infinite ease-in-out;animation-delay:-4s; }
+		.co-green { width:240px;height:240px;top:45%;left:22%;filter:blur(55px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(34,197,94,.5) 30%,rgba(21,128,61,.1) 75%,transparent 100%);animation:co-d4 26s infinite ease-in-out,co-m2 15s infinite ease-in-out;animation-delay:-1s; }
+		.co-blue  { width:280px;height:280px;bottom:14%;left:10%;filter:blur(70px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(59,130,246,.55) 30%,rgba(29,78,216,.1) 75%,transparent 100%);animation:co-d1 30s infinite ease-in-out,co-m2 18s infinite ease-in-out;animation-delay:-6s; }
+		.co-indigo{ width:320px;height:320px;bottom:8%;left:44%;filter:blur(75px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(99,102,241,.55) 30%,rgba(67,56,202,.1) 75%,transparent 100%);animation:co-d3 32s infinite ease-in-out,co-m1 20s infinite ease-in-out;animation-delay:-3s; }
+		.co-violet{ width:260px;height:260px;bottom:20%;right:12%;filter:blur(65px);background:radial-gradient(circle at 35% 35%,rgba(255,255,255,.4) 0%,rgba(168,85,247,.55) 30%,rgba(126,34,206,.1) 75%,transparent 100%);animation:co-d2 24s infinite ease-in-out,co-m2 13s infinite ease-in-out;animation-delay:-5s; }
+		@keyframes co-d1{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(60px,50px) scale(1.07)}66%{transform:translate(-40px,-25px) scale(0.93)}}
+		@keyframes co-d2{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-80px,60px) scale(0.94)}66%{transform:translate(50px,-40px) scale(1.06)}}
+		@keyframes co-d3{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-60px) scale(1.06)}66%{transform:translate(-60px,30px) scale(0.92)}}
+		@keyframes co-d4{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(-50px,-50px) scale(1.08)}66%{transform:translate(60px,60px) scale(0.94)}}
+		@keyframes co-m1{0%,100%{border-radius:42% 58% 70% 30%/45% 45% 55% 55%}33%{border-radius:70% 30% 52% 48%/60% 40% 60% 40%}66%{border-radius:50% 50% 35% 65%/40% 60% 40% 60%}}
+		@keyframes co-m2{0%,100%{border-radius:50% 50% 30% 70%/50% 60% 40% 50%}33%{border-radius:40% 60% 60% 40%/40% 50% 50% 60%}66%{border-radius:60% 40% 40% 60%/60% 40% 60% 40%}}
+
+		/* Fine grid overlay */
+		#canvas-grid {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			z-index: 1;
+			background-image:
+				linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+				linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+			background-size: 18px 18px;
+		}
+
+		/* Vignette to darken edges */
+		#canvas-vignette {
+			position: absolute;
+			inset: 0;
+			pointer-events: none;
+			z-index: 2;
+			background: radial-gradient(ellipse 100% 100% at 50% 50%, transparent 25%, rgba(0,0,0,.45) 65%, rgba(0,0,0,.85) 100%);
+		}
+
+		#canvas-viewport {
+			position: absolute;
+			transform-origin: 0 0;
+		}
+
+		#main-canvas    { display: block; position: relative; z-index: 2; image-rendering: pixelated; }
+		#overlay-canvas { position: absolute; top:0; left:0; z-index:3; pointer-events:none; image-rendering:pixelated; }
+		#selection-canvas { position:absolute; top:0; left:0; z-index:4; pointer-events:none; image-rendering:pixelated; }
+		#checker-canvas { position:absolute; top:0; left:0; z-index:1; image-rendering:pixelated; }
+		#canvas-shadow  { position:absolute; top:0; left:0; z-index:0; pointer-events:none; box-shadow:0 0 0 1px rgba(255,255,255,0.10), 0 8px 60px rgba(0,0,0,0.8); }
+
+		/* ============================================================
+		   GLASS MIXIN — reused via class
+		============================================================ */
+		.glass {
+			background: var(--glass-bg);
+			backdrop-filter: var(--glass-blur);
+			-webkit-backdrop-filter: var(--glass-blur);
+			border: 1px solid var(--glass-border);
+		}
+		.glass-2 {
+			background: var(--glass-bg-2);
+			backdrop-filter: var(--glass-blur);
+			-webkit-backdrop-filter: var(--glass-blur);
+			border: 1px solid var(--glass-border-2);
+		}
+
+		/* ============================================================
+		   NAVBAR — floating top bar
+		============================================================ */
+		#navbar {
+			position: fixed;
+			top: 8px;
+			left: 50%;
+			transform: translateX(-50%);
+			height: var(--navbar-h);
+			z-index: 800;
+			display: flex;
+			align-items: center;
+			gap: 0;
+			padding: 0 6px;
+			border-radius: var(--radius-xl);
+			box-shadow: 0 4px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.06) inset;
+			min-width: fit-content;
+			max-width: calc(100vw - 120px);
+		}
+
+		.nav-logo {
+			font-family: 'Coral Pixels', monospace;
+			font-size: 13px;
+			color: var(--accent);
+			padding: 0 12px;
+			letter-spacing: 0.5px;
+			white-space: nowrap;
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+		.nav-logo svg { color: var(--accent); }
+
+		.nav-divider {
+			width: 1px; height: 18px;
+			background: var(--glass-border-2);
+			margin: 0 2px;
+			flex-shrink: 0;
+		}
+
+		/* ---------- MENU ---------- */
+		.nav-menu { position: relative; }
+
+		.nav-menu-btn {
+			background: none; border: none;
+			padding: 4px 10px;
+			border-radius: var(--radius-sm);
+			color: var(--text-dim);
+			font-size: 12px;
+			font-weight: 400;
+			transition: background var(--transition), color var(--transition);
+			white-space: nowrap;
+		}
+		.nav-menu-btn:hover { background: var(--surface-hover); color: var(--text); }
+		.nav-menu-btn.is-open { background: var(--accent-dim); color: var(--accent); }
+
+		.dropdown {
+			display: none;
+			position: absolute;
+			top: calc(100% + 8px);
+			left: 0;
+			min-width: 240px;
+			border-radius: var(--radius-md);
+			box-shadow: 0 12px 48px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4);
+			z-index: 9999;
+			overflow: hidden;
+			animation: dropdown-in 0.12s ease;
+		}
+		.dropdown.is-open { display: block; }
+
+		@keyframes dropdown-in {
+			from { opacity:0; transform:translateY(-6px) scale(0.97); }
+			to   { opacity:1; transform:translateY(0) scale(1); }
+		}
+
+		.dropdown-section-label {
+			padding: 6px 14px 3px;
+			font-size: 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: var(--text-dimmer);
+		}
+
+		.dropdown-item {
+			display: flex;
+			align-items: center;
+			gap: 9px;
+			padding: 7px 14px;
+			cursor: pointer;
+			color: var(--text);
+			font-size: 12px;
+			border: none;
+			background: none;
+			width: 100%;
+			text-align: left;
+			transition: background var(--transition);
+			border-radius: 0;
+		}
+		.dropdown-item:hover { background: var(--surface-hover); }
+		.dropdown-item .item-icon {
+			width: 14px; height: 14px;
+			color: var(--text-dim);
+			flex-shrink: 0;
+			display: flex; align-items: center; justify-content: center;
+		}
+		.dropdown-item .item-label { flex: 1; }
+		.dropdown-item .kbd {
+			margin-left: auto;
+			color: var(--text-dimmer);
+			font-size: 10px;
+			background: rgba(255,255,255,0.06);
+			padding: 1px 6px;
+			border-radius: 4px;
+			border: 1px solid var(--glass-border-2);
+			white-space: nowrap;
+			font-family: 'Consolas', monospace;
+		}
+		.dropdown-item.danger:hover { background: rgba(248,113,113,0.12); color: var(--danger); }
+		.dropdown-item.disabled { opacity: 0.35; pointer-events: none; }
+
+		.dropdown-divider {
+			height: 1px;
+			background: var(--glass-border);
+			margin: 4px 0;
+		}
+
+		/* Undo/Redo */
+		.nav-icon-btn {
+			background: none; border: none;
+			padding: 5px 7px; border-radius: var(--radius-sm);
+			color: var(--text-dim);
+			display: flex; align-items: center; justify-content: center;
+			transition: background var(--transition), color var(--transition);
+		}
+		.nav-icon-btn:hover:not(:disabled) { background: var(--surface-hover); color: var(--text); }
+		.nav-icon-btn:disabled { opacity: 0.25; cursor: default; }
+
+		.nav-info {
+			margin-left: auto;
+			color: var(--text-dimmer);
+			font-size: 10.5px;
+			padding: 0 8px;
+			display: flex; align-items: center; gap: 14px;
+			flex-shrink: 0;
+			font-variant-numeric: tabular-nums;
+		}
+
+		.nav-back {
+			display: flex; align-items: center; gap: 5px;
+			background: none; border: none;
+			padding: 4px 8px; border-radius: var(--radius-sm);
+			color: var(--text-dim); font-size: 12px;
+			transition: background var(--transition), color var(--transition);
+		}
+		.nav-back:hover { background: var(--surface-hover); color: var(--text); }
+
+		/* ============================================================
+		   OPTIONS BAR — now integrated into tray popup; legacy hidden
+		============================================================ */
+		#optbar {
+			display: none !important;
+		}
+
+		.opt-group {
+			display: flex; align-items: center; gap: 5px;
+			padding: 0 8px;
+			border-right: 1px solid var(--glass-border);
+			height: 100%;
+			flex-shrink: 0;
+		}
+		.opt-group:last-child { border-right: none; }
+
+		.opt-label {
+			color: var(--text-dimmer); font-size: 10.5px;
+			white-space: nowrap;
+		}
+		.opt-range { width: 80px; }
+		.opt-value {
+			color: var(--text-dim); font-size: 10.5px;
+			min-width: 28px; text-align: right;
+			font-variant-numeric: tabular-nums;
+		}
+		.opt-btn {
+			background: none;
+			border: 1px solid var(--glass-border);
+			padding: 3px 8px; border-radius: var(--radius-sm);
+			color: var(--text-dim); font-size: 11.5px;
+			transition: all var(--transition);
+			display: flex; align-items: center; gap: 4px;
+		}
+		.opt-btn:hover  { background: var(--surface-hover); color: var(--text); border-color: var(--glass-border-2); }
+		.opt-btn.active { background: var(--accent-dim); border-color: rgba(167,139,250,0.4); color: var(--accent); }
+
+		.opt-select {
+			background: rgba(255,255,255,0.05);
+			border: 1px solid var(--glass-border);
+			padding: 3px 7px; border-radius: var(--radius-sm);
+			color: var(--text); font-size: 11.5px; outline: none;
+			cursor: pointer;
+			transition: background var(--transition);
+		}
+		.opt-select:hover { background: var(--surface-hover); }
+
+		.opt-section { display: none; }
+		.opt-section.visible { display: contents; }
+
+		/* ============================================================
+		   TOOL TRAY (BOTTOM) — iPad-style floating pill
+		============================================================ */
+		#tool-tray {
+			position: fixed;
+			bottom: 14px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 700;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			padding: 6px 10px;
+			gap: 2px;
+			border-radius: 999px;
+			box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.07) inset;
+			max-width: calc(100vw - 280px);
+			height: var(--tray-h);
+		}
+
+		.tool-btn {
+			width: 42px; height: 42px;
+			background: none; border: none;
+			border-radius: 50%;
+			display: flex; align-items: center; justify-content: center;
+			color: var(--text-dim);
+			transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform 0.1s;
+			position: relative;
+			flex-shrink: 0;
+		}
+		.tool-btn:hover {
+			background: var(--surface-hover);
+			color: var(--text);
+			transform: scale(1.08);
+		}
+		.tool-btn.active {
+			background: var(--accent-dim);
+			color: var(--accent);
+			box-shadow: inset 0 0 0 1.5px rgba(167,139,250,0.45), 0 0 12px rgba(167,139,250,0.2);
+			transform: scale(1.0);
+		}
+		.tool-btn svg { width: 17px; height: 17px; stroke-width: 1.7px; }
+
+		.tray-divider {
+			width: 1px; height: 28px;
+			background: var(--glass-border);
+			margin: 0 4px;
+			flex-shrink: 0;
+		}
+
+		/* Tooltip above */
+		.tool-btn::after {
+			content: attr(data-tip);
+			position: absolute;
+			bottom: calc(100% + 10px);
+			left: 50%; transform: translateX(-50%);
+			background: var(--surface-2);
+			border: 1px solid var(--glass-border-2);
+			border-radius: var(--radius-sm);
+			color: var(--text);
+			font-size: 11px;
+			padding: 4px 10px;
+			white-space: nowrap;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.12s;
+			z-index: 1200;
+			box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+		}
+		.tool-btn:hover::after { opacity: 1; }
+
+		/* Color swatch in tray */
+		.tray-color-btn {
+			position: relative;
+			width: 42px; height: 42px;
+			background: none; border: none;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex; align-items: center; justify-content: center;
+			flex-shrink: 0;
+			transition: transform 0.1s;
+		}
+		.tray-color-btn:hover { transform: scale(1.08); }
+		.tray-color-swatch-bg {
+			position: absolute;
+			bottom: 5px; right: 5px;
+			width: 20px; height: 20px;
+			border-radius: 50%;
+			border: 2px solid rgba(0,0,0,0.4);
+			box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+			z-index: 1;
+		}
+		.tray-color-swatch-fg {
+			position: absolute;
+			top: 5px; left: 5px;
+			width: 22px; height: 22px;
+			border-radius: 50%;
+			border: 2.5px solid rgba(255,255,255,0.3);
+			box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+			z-index: 2;
+		}
+
+		/* Options popup above tray */
+		#tray-options {
+			position: fixed;
+			bottom: calc(var(--tray-h) + 28px);
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 710;
+			display: flex;
+			align-items: center;
+			padding: 6px 12px;
+			gap: 6px;
+			border-radius: var(--radius-xl);
+			box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+			height: 38px;
+			animation: opt-slide-up 0.15s ease;
+		}
+		@keyframes opt-slide-up {
+			from { opacity:0; transform: translateX(-50%) translateY(8px); }
+			to   { opacity:1; transform: translateX(-50%) translateY(0); }
+		}
+		#tray-options .opt-section { display: none; }
+		#tray-options .opt-section.visible { display: contents; }
+
+		/* ============================================================
+		   LAYER INDICATOR STRIP — collapsible, top-right
+		============================================================ */
+		#right-panel {
+			position: fixed;
+			right: 12px;
+			top: 56px;
+			width: 220px;
+			z-index: 700;
+			display: flex;
+			flex-direction: column;
+			gap: 6px;
+		}
+
+		/* Collapsed layer badge strip */
+		#layer-strip {
+			border-radius: var(--radius-xl);
+			box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+			overflow: hidden;
+		}
+		#layer-strip-header {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			padding: 6px 10px;
+			cursor: pointer;
+			user-select: none;
+			border-bottom: 1px solid transparent;
+			transition: border-color var(--transition);
+		}
+		#layer-strip-header.expanded { border-bottom-color: var(--glass-border); }
+		#layer-strip-header .ls-icon { color: var(--accent); }
+		#layer-strip-title {
+			flex: 1;
+			font-size: 11px;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			color: var(--text-dimmer);
+		}
+		#layer-active-badge {
+			max-width: 90px;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			font-size: 10.5px;
+			color: var(--accent);
+			background: var(--accent-dim);
+			border-radius: 4px;
+			padding: 1px 7px;
+			border: 1px solid rgba(167,139,250,0.25);
+		}
+		#layer-strip-toggle {
+			background: none; border: none;
+			color: var(--text-dimmer); padding: 2px;
+			display: flex; align-items: center;
+			transition: transform 0.2s, color var(--transition);
+		}
+		#layer-strip-toggle svg { width:12px;height:12px; }
+		#layer-strip-toggle.open { transform: rotate(180deg); }
+		#layer-strip-toggle:hover { color: var(--text); }
+
+		#layers-collapse {
+			display: none;
+			max-height: 300px;
+			overflow-y: auto;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(255,255,255,0.08) transparent;
+		}
+		#layers-collapse.open { display: block; }
+
+		#layer-strip-actions {
+			display: flex;
+			align-items: center;
+			gap: 1px;
+			padding: 4px 6px;
+			border-top: 1px solid var(--glass-border);
+			background: rgba(255,255,255,0.02);
+		}
+		#layer-opacity-row {
+			padding: 4px 10px 6px;
+			display: flex; align-items: center; gap: 6px;
+			border-top: 1px solid var(--glass-border);
+		}
+		#layer-opacity-row .opt-label { font-size: 10px; }
+		#layer-opacity-row input[type=range] { flex:1; }
+		#layer-opacity-row .opt-value { font-size: 10px; min-width: 28px; }
+
+		/* LAYERS panel */
+		#layers-panel {
+			flex: 1; min-height: 0;
+			display: flex; flex-direction: column;
+			border-radius: var(--radius-lg);
+			overflow: hidden;
+			box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+		}
+
+		.panel-hdr {
+			padding: 8px 10px;
+			font-size: 10.5px;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.8px;
+			color: var(--text-dimmer);
+			border-bottom: 1px solid var(--glass-border);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-shrink: 0;
+			background: rgba(255,255,255,0.03);
+		}
+		.panel-hdr-actions { display: flex; gap: 1px; }
+
+		.panel-icon-btn {
+			background: none; border: none;
+			padding: 3px 5px; border-radius: var(--radius-sm);
+			color: var(--text-dimmer);
+			display: flex; align-items: center;
+			transition: background var(--transition), color var(--transition);
+		}
+		.panel-icon-btn svg { width: 13px; height: 13px; }
+		.panel-icon-btn:hover { background: var(--surface-hover); color: var(--text); }
+		.panel-icon-btn.danger:hover { color: var(--danger); background: rgba(248,113,113,0.1); }
+
+		#layers-list {
+			flex: 1; overflow-y: auto; overflow-x: hidden;
+			padding: 4px;
+			display: flex; flex-direction: column; gap: 2px;
+			scrollbar-width: thin;
+			scrollbar-color: rgba(255,255,255,0.08) transparent;
+		}
+
+		.layer-item {
+			display: flex; align-items: center; gap: 7px;
+			padding: 5px 7px; border-radius: var(--radius-sm);
+			cursor: pointer;
+			transition: background var(--transition);
+			border: 1px solid transparent;
+		}
+		.layer-item:hover { background: var(--surface-hover); }
+		.layer-item.active {
+			background: var(--accent-dim);
+			border-color: rgba(167,139,250,0.25);
+		}
+		.layer-thumb {
+			width: 30px; height: 22px; border-radius: 3px;
+			border: 1px solid var(--glass-border-2);
+			flex-shrink: 0; image-rendering: pixelated;
+			background: repeating-conic-gradient(#2a2a2a 0% 25%, #1e1e1e 0% 50%) 0 0 / 6px 6px;
+		}
+		.layer-name {
+			flex: 1; font-size: 11.5px;
+			overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+		}
+		.layer-vis-btn {
+			background: none; border: none;
+			padding: 2px; border-radius: 3px;
+			color: var(--text-dimmer);
+			display: flex; align-items: center;
+			transition: color var(--transition);
+			flex-shrink: 0;
+		}
+		.layer-vis-btn svg { width: 12px; height: 12px; }
+		.layer-vis-btn:hover { color: var(--text); }
+		.layer-vis-btn.layer-hidden { opacity: 0.3; }
+
+		/* LAYER OPACITY MINI CONTROL */
+		#layer-opacity-row {
+			padding: 6px 10px;
+			border-top: 1px solid var(--glass-border);
+			display: flex; align-items: center; gap: 6px;
+			background: rgba(255,255,255,0.02);
+			flex-shrink: 0;
+		}
+		#layer-opacity-row .opt-label { font-size: 10px; }
+		#layer-opacity-row input[type=range] { flex:1; }
+		#layer-opacity-row .opt-value { font-size: 10px; min-width: 28px; }
+
+		/* ============================================================
+		   COLOR PANEL — glass floating bottom-right
+		============================================================ */
+		#color-panel {
+			border-radius: var(--radius-lg);
+			overflow: hidden;
+			box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+			flex-shrink: 0;
+		}
+
+		.color-pickers-row {
+			display: flex; align-items: center; gap: 10px;
+			padding: 8px 10px 5px;
+		}
+
+		/* ============================================================
+		   HSV COLOR PICKER
+		============================================================ */
+		/* FG/BG stack — PS-style overlapping squares */
+		.cp-fgbg-row {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 10px 6px;
+		}
+		.cp-swatch-pair {
+			position: relative;
+			width: 56px; height: 48px;
+			flex-shrink: 0;
+		}
+		.cp-bg-rect {
+			position: absolute;
+			bottom: 0; right: 0;
+			width: 30px; height: 30px;
+			border-radius: 5px;
+			border: 1.5px solid rgba(255,255,255,0.14);
+			background: #000;
+			cursor: pointer;
+			z-index: 1;
+			transition: box-shadow var(--transition);
+		}
+		.cp-fg-rect {
+			position: absolute;
+			top: 0; left: 0;
+			width: 34px; height: 34px;
+			border-radius: 7px;
+			border: 2px solid rgba(255,255,255,0.22);
+			background: #fff;
+			cursor: pointer;
+			z-index: 2;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.45);
+			transition: box-shadow var(--transition);
+		}
+		.cp-fg-rect:hover { box-shadow: 0 0 0 2px var(--accent), 0 2px 10px rgba(0,0,0,0.4); }
+		.cp-bg-rect:hover { box-shadow: 0 0 0 2px rgba(167,139,250,0.6); }
+		.cp-fg-rect.cp-active { box-shadow: 0 0 0 2.5px var(--accent), 0 2px 10px rgba(0,0,0,0.4); }
+		.cp-bg-rect.cp-active { box-shadow: 0 0 0 2px rgba(167,139,250,0.7); }
+
+		/* BW reset indicator (small overlapping squares, bottom-left) */
+		.cp-bw {
+			position: absolute;
+			bottom: -5px; left: -5px;
+			width: 18px; height: 18px;
+			cursor: pointer; z-index: 3;
+			title: 'Reset to Black/White';
+		}
+		.cp-bw-b {
+			position: absolute; bottom:0; right:0;
+			width: 11px; height: 11px;
+			background: #000; border: 1px solid rgba(255,255,255,0.25);
+			border-radius: 2px;
+		}
+		.cp-bw-w {
+			position: absolute; top:0; left:0;
+			width: 11px; height: 11px;
+			background: #fff; border: 1px solid rgba(0,0,0,0.3);
+			border-radius: 2px;
+		}
+		/* Swap button top-right */
+		.cp-swap {
+			position: absolute;
+			top: -5px; right: -5px;
+			width: 18px; height: 18px;
+			background: var(--glass-bg-2);
+			border: 1px solid var(--glass-border-2);
+			border-radius: 50%;
+			cursor: pointer; z-index: 3;
+			color: var(--text-dim);
+			display: flex; align-items: center; justify-content: center;
+			transition: color var(--transition), background var(--transition);
+		}
+		.cp-swap:hover { color: var(--text); background: var(--surface-hover); }
+		.cp-swap svg { width: 9px; height: 9px; }
+
+		/* FG/BG tabs + hex input */
+		.cp-hex-panel {
+			flex: 1;
+			display: flex; flex-direction: column; gap: 5px;
+		}
+		.cp-target-tabs {
+			display: flex; gap: 2px;
+		}
+		.cp-tab {
+			flex: 1;
+			background: rgba(255,255,255,0.04);
+			border: 1px solid var(--glass-border);
+			border-radius: 4px;
+			padding: 3px 0;
+			font-size: 10px; font-weight: 600; letter-spacing: 0.4px;
+			color: var(--text-dimmer);
+			cursor: pointer;
+			transition: all var(--transition);
+		}
+		.cp-tab.active { background: var(--accent-dim); border-color: rgba(167,139,250,0.4); color: var(--accent); }
+		.cp-tab:hover:not(.active) { background: var(--surface-hover); color: var(--text-dim); }
+		.cp-hex-row {
+			display: flex; align-items: center; gap: 4px;
+		}
+		.cp-hex-row span { font-size: 10px; color: var(--text-dimmer); }
+		.cp-hex-row input {
+			flex: 1;
+			background: rgba(255,255,255,0.05);
+			border: 1px solid var(--glass-border);
+			border-radius: 4px;
+			padding: 3px 6px;
+			font-size: 10.5px; color: var(--text);
+			font-family: 'Consolas', monospace;
+			outline: none;
+			transition: border-color var(--transition);
+		}
+		.cp-hex-row input:focus { border-color: var(--accent); }
+
+		/* SV square */
+		.cp-sq-wrap {
+			position: relative;
+			margin: 2px 10px 0;
+			border-radius: var(--radius-sm);
+			overflow: visible;
+			cursor: crosshair;
+		}
+		#cp-sq-canvas {
+			display: block;
+			width: 100%; height: 140px;
+			border-radius: var(--radius-sm);
+			border: 1px solid var(--glass-border);
+		}
+		#cp-sq-cursor {
+			position: absolute;
+			width: 11px; height: 11px;
+			border: 2px solid #fff;
+			border-radius: 50%;
+			box-shadow: 0 0 0 1.5px rgba(0,0,0,0.6), 0 1px 4px rgba(0,0,0,0.5);
+			transform: translate(-50%, -50%);
+			pointer-events: none;
+			top: 0; left: 100%;
+			transition: none;
+		}
+
+		/* Hue slider */
+		.cp-hue-wrap {
+			position: relative;
+			margin: 6px 10px 2px;
+			cursor: pointer;
+		}
+		#cp-hue-canvas {
+			display: block;
+			width: 100%; height: 12px;
+			border-radius: 6px;
+			border: 1px solid var(--glass-border);
+		}
+		#cp-hue-thumb {
+			position: absolute;
+			top: 50%; left: 0;
+			width: 14px; height: 14px;
+			border: 2px solid #fff;
+			border-radius: 50%;
+			box-shadow: 0 0 0 1.5px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.4);
+			transform: translate(-50%, -50%);
+			pointer-events: none;
+		}
+
+		/* RGB inputs */
+		.cp-rgb-row {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+			padding: 4px 10px 8px;
+		}
+		.cp-rgb-row label {
+			font-size: 9.5px;
+			color: var(--text-dimmer);
+			width: 9px; text-align: center;
+			flex-shrink: 0;
+		}
+		.cp-rgb-num {
+			width: 36px;
+			background: rgba(255,255,255,0.05);
+			border: 1px solid var(--glass-border);
+			border-radius: 4px;
+			padding: 2px 4px;
+			font-size: 10px; color: var(--text); text-align: right;
+			outline: none;
+			-moz-appearance: textfield;
+			transition: border-color var(--transition);
+		}
+		.cp-rgb-num::-webkit-inner-spin-button,
+		.cp-rgb-num::-webkit-outer-spin-button { -webkit-appearance: none; }
+		.cp-rgb-num:focus { border-color: var(--accent); }
+		.cp-rgb-sep { flex: 1; }
+
+		/* Palette swatches */
+		.swatch-grid {
+			display: grid;
+			grid-template-columns: repeat(14, 1fr);
+			gap: 2px;
+			padding: 0 10px 8px;
+		}
+		.swatch-cell {
+			width: 100%; aspect-ratio: 1;
+			border-radius: 2px; cursor: pointer;
+			border: 1px solid rgba(0,0,0,0.2);
+			transition: transform 0.1s, box-shadow 0.1s;
+		}
+		.swatch-cell:hover {
+			transform: scale(1.35);
+			box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+			z-index: 10; position: relative;
+		}
+		input[type=color] { display: none; }
+
+		/* ============================================================
+		   ZOOM & CURSOR INDICATORS
+		============================================================ */
+		#zoom-indicator {
+			position: fixed;
+			bottom: calc(var(--tray-h) + 28px);
+			right: 236px;
+			border-radius: var(--radius-lg);
+			padding: 4px 10px;
+			font-size: 11px;
+			color: var(--text-dim);
+			z-index: 600;
+			display: flex; align-items: center; gap: 7px;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+		}
+		#zoom-indicator button {
+			background: none; border: none; color: var(--text-dim);
+			font-size: 13px; padding: 0 2px;
+			transition: color var(--transition); line-height:1;
+		}
+		#zoom-indicator button:hover { color: var(--text); }
+
+		#cursor-indicator {
+			position: fixed;
+			bottom: calc(var(--tray-h) + 28px);
+			left: 14px;
+			border-radius: var(--radius-lg);
+			padding: 4px 10px;
+			font-size: 10.5px;
+			color: var(--text-dimmer);
+			z-index: 600;
+			font-family: 'Consolas', monospace;
+			box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+		}
+
+		/* Color picker popup (above tray) */
+		#color-popup {
+			position: fixed;
+			bottom: calc(var(--tray-h) + 28px);
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: 800;
+			width: 220px;
+			border-radius: var(--radius-xl);
+			box-shadow: 0 12px 48px rgba(0,0,0,0.7);
+			animation: opt-slide-up 0.15s ease;
+			display: none;
+		}
+		#color-popup.open { display: block; }
+		#color-popup .panel-hdr {
+			border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+		}
+
+		/* ============================================================
+		   MODALS
+		============================================================ */
+		.modal-overlay {
+			display: none;
+			position: fixed; inset:0; z-index:9000;
+			background: rgba(0,0,0,0.55);
+			backdrop-filter: blur(6px);
+			align-items: center; justify-content: center;
+		}
+		.modal-overlay.open { display: flex; }
+
+		.modal {
+			background: rgba(18,20,30,0.96);
+			backdrop-filter: blur(24px);
+			-webkit-backdrop-filter: blur(24px);
+			border: 1px solid var(--glass-border-2);
+			border-radius: var(--radius-xl);
+			padding: 24px;
+			min-width: 360px;
+			box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04) inset;
+			animation: modal-in 0.15s ease;
+		}
+		@keyframes modal-in {
+			from { opacity:0; transform:scale(0.93) translateY(10px); }
+			to   { opacity:1; transform:scale(1)   translateY(0); }
+		}
+
+		.modal-title {
+			font-size: 14px; font-weight: 600;
+			margin-bottom: 16px;
+			display: flex; align-items: center; gap: 8px;
+			color: var(--text);
+		}
+		.modal-title svg { color: var(--accent); width:16px; height:16px; }
+
+		.modal-row { display:flex; align-items:center; gap:10px; margin-bottom:10px; }
+		.modal-row label { font-size: 11.5px; color:var(--text-dim); min-width:80px; }
+
+		.modal-input {
+			flex:1;
+			background: rgba(255,255,255,0.06);
+			border: 1px solid var(--glass-border-2);
+			border-radius: var(--radius-sm);
+			padding: 6px 10px;
+			font-size: 12.5px; color: var(--text); outline:none;
+			transition: border-color var(--transition);
+		}
+		.modal-input:focus { border-color: var(--accent); }
+
+		.modal-preset-grid { display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:14px; }
+
+		.modal-preset {
+			background: rgba(255,255,255,0.04);
+			border: 1px solid var(--glass-border);
+			border-radius: var(--radius-sm);
+			padding: 6px 10px;
+			cursor: pointer; font-size: 11px; color: var(--text-dim);
+			transition: all var(--transition); text-align:center;
+		}
+		.modal-preset:hover { background: var(--accent-dim); border-color: rgba(167,139,250,0.4); color: var(--accent); }
+
+		.modal-actions { display:flex; gap:7px; justify-content:flex-end; margin-top:18px; }
+
+		.btn-primary {
+			background: linear-gradient(135deg, #7c3aed, #a78bfa);
+			border: none;
+			padding: 7px 18px; border-radius: var(--radius-md);
+			color: #fff; font-size: 12.5px; font-weight: 500;
+			transition: filter var(--transition), box-shadow var(--transition);
+			box-shadow: 0 2px 12px rgba(167,139,250,0.3);
+		}
+		.btn-primary:hover { filter: brightness(1.1); box-shadow: 0 4px 20px rgba(167,139,250,0.4); }
+
+		.btn-cancel {
+			background: rgba(255,255,255,0.05);
+			border: 1px solid var(--glass-border-2);
+			padding: 7px 18px; border-radius: var(--radius-md);
+			color: var(--text-dim); font-size: 12.5px;
+			transition: background var(--transition), color var(--transition);
+		}
+		.btn-cancel:hover { background: var(--surface-hover); color: var(--text); }
+
+		/* ============================================================
+		   TOAST
+		============================================================ */
+		#toast-container {
+			position: fixed; bottom: calc(var(--tray-h) + 80px); left: 50%; transform: translateX(-50%);
+			display: flex; flex-direction: column; gap: 7px;
+			z-index: 9999; pointer-events: none; align-items: center;
+		}
+		.toast {
+			background: rgba(18,20,30,0.95);
+			backdrop-filter: blur(16px);
+			border: 1px solid var(--glass-border-2);
+			border-radius: var(--radius-lg);
+			padding: 7px 18px;
+			font-size: 12px; color: var(--text);
+			box-shadow: 0 6px 24px rgba(0,0,0,0.55);
+			animation: toast-in 0.18s ease, toast-out 0.3s ease 1.9s forwards;
+			white-space: nowrap; display: flex; align-items: center; gap: 7px;
+		}
+		.toast svg { width: 13px; height: 13px; color: var(--accent); }
+		@keyframes toast-in  { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+		@keyframes toast-out { from { opacity:1; } to { opacity:0; transform:translateY(-6px); } }
+
+		/* ============================================================
+		   SCROLLBARS
+		============================================================ */
+		::-webkit-scrollbar { width: 5px; height: 5px; }
+		::-webkit-scrollbar-track { background: transparent; }
+		::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+	</style>
+</head>
+
+<body>
+<div id="app">
+
+	<!-- ====== CANVAS AREA (BACKGROUND) ====== -->
+	<div id="canvas-area">
+		<!-- Rainbow orbs -->
+		<div id="canvas-orbs">
+			<div class="co co-red"></div>
+			<div class="co co-orange"></div>
+			<div class="co co-yellow"></div>
+			<div class="co co-green"></div>
+			<div class="co co-blue"></div>
+			<div class="co co-indigo"></div>
+			<div class="co co-violet"></div>
+		</div>
+		<!-- Fine grid -->
+		<div id="canvas-grid"></div>
+		<!-- Vignette -->
+		<div id="canvas-vignette"></div>
+		<!-- Canvas viewport (z-index:3 so above orbs/grid) -->
+		<div id="canvas-viewport" style="z-index:3">
+			<canvas id="checker-canvas"></canvas>
+			<canvas id="main-canvas"></canvas>
+			<canvas id="overlay-canvas"></canvas>
+			<canvas id="selection-canvas"></canvas>
+			<div id="canvas-shadow"></div>
+		</div>
+	</div>
+
+	<!-- ====== NAVBAR ====== -->
+	<nav id="navbar" class="glass">
+
+		<a href="/" class="nav-back" title="Back to home">
+			<i data-lucide="chevron-left" style="width:14px;height:14px"></i>
+			Back
+		</a>
+		<div class="nav-divider"></div>
+
+		<span class="nav-logo">
+			<i data-lucide="palette" style="width:14px;height:14px"></i>
+			Paint
+		</span>
+		<div class="nav-divider"></div>
+
+		<!-- FILE -->
+		<div class="nav-menu" id="menu-file">
+			<button class="nav-menu-btn" id="btn-menu-file">File</button>
+			<div class="dropdown glass-2" id="dropdown-file">
+				<button class="dropdown-item" id="action-new">
+					<span class="item-icon"><i data-lucide="file-plus" style="width:14px;height:14px"></i></span>
+					<span class="item-label">New Canvas…</span>
+					<span class="kbd">Ctrl+N</span>
+				</button>
+				<button class="dropdown-item" id="action-open">
+					<span class="item-icon"><i data-lucide="folder-open" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Open Image…</span>
+					<span class="kbd">Ctrl+O</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Export</div>
+				<button class="dropdown-item" id="action-save-png">
+					<span class="item-icon"><i data-lucide="image" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Export as PNG</span>
+					<span class="kbd">Ctrl+S</span>
+				</button>
+				<button class="dropdown-item" id="action-save-jpg">
+					<span class="item-icon"><i data-lucide="file-image" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Export as JPEG</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" id="action-flatten">
+					<span class="item-icon"><i data-lucide="layers" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Flatten Image</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- EDIT -->
+		<div class="nav-menu" id="menu-edit">
+			<button class="nav-menu-btn" id="btn-menu-edit">Edit</button>
+			<div class="dropdown glass-2" id="dropdown-edit">
+				<button class="dropdown-item" id="action-undo">
+					<span class="item-icon"><i data-lucide="undo-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Undo</span>
+					<span class="kbd">Ctrl+Z</span>
+				</button>
+				<button class="dropdown-item" id="action-redo">
+					<span class="item-icon"><i data-lucide="redo-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Redo</span>
+					<span class="kbd">Ctrl+Y</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" id="action-copy">
+					<span class="item-icon"><i data-lucide="copy" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Copy</span>
+					<span class="kbd">Ctrl+C</span>
+				</button>
+				<button class="dropdown-item" id="action-paste">
+					<span class="item-icon"><i data-lucide="clipboard-paste" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Paste</span>
+					<span class="kbd">Ctrl+V</span>
+				</button>
+				<button class="dropdown-item" id="action-cut">
+					<span class="item-icon"><i data-lucide="scissors" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Cut</span>
+					<span class="kbd">Ctrl+X</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" id="action-clear">
+					<span class="item-icon"><i data-lucide="eraser" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Clear Layer</span>
+					<span class="kbd">Del</span>
+				</button>
+				<button class="dropdown-item" id="action-fill-canvas">
+					<span class="item-icon"><i data-lucide="paint-bucket" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Fill Layer</span>
+					<span class="kbd">Shift+F</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- IMAGE -->
+		<div class="nav-menu" id="menu-image">
+			<button class="nav-menu-btn" id="btn-menu-image">Image</button>
+			<div class="dropdown glass-2" id="dropdown-image">
+				<div class="dropdown-section-label">Canvas</div>
+				<button class="dropdown-item" id="action-resize">
+					<span class="item-icon"><i data-lucide="frame" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Resize Canvas…</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Transform</div>
+				<button class="dropdown-item" id="action-flip-h">
+					<span class="item-icon"><i data-lucide="flip-horizontal-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Flip Horizontal</span>
+				</button>
+				<button class="dropdown-item" id="action-flip-v">
+					<span class="item-icon"><i data-lucide="flip-vertical-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Flip Vertical</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Adjustments</div>
+				<button class="dropdown-item" id="action-grayscale">
+					<span class="item-icon"><i data-lucide="contrast" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Grayscale</span>
+				</button>
+				<button class="dropdown-item" id="action-invert">
+					<span class="item-icon"><i data-lucide="sun-moon" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Invert Colors</span>
+					<span class="kbd">Ctrl+I</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- LAYER -->
+		<div class="nav-menu" id="menu-layer">
+			<button class="nav-menu-btn" id="btn-menu-layer">Layer</button>
+			<div class="dropdown glass-2" id="dropdown-layer">
+				<button class="dropdown-item" id="ml-new">
+					<span class="item-icon"><i data-lucide="square-plus" style="width:14px;height:14px"></i></span>
+					<span class="item-label">New Layer</span>
+					<span class="kbd">Ctrl+Shift+N</span>
+				</button>
+				<button class="dropdown-item" id="ml-dup">
+					<span class="item-icon"><i data-lucide="copy" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Duplicate Layer</span>
+					<span class="kbd">Ctrl+J</span>
+				</button>
+				<button class="dropdown-item danger" id="ml-del">
+					<span class="item-icon"><i data-lucide="trash-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Delete Layer</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" id="ml-merge-down">
+					<span class="item-icon"><i data-lucide="arrow-down-to-line" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Merge Down</span>
+					<span class="kbd">Ctrl+E</span>
+				</button>
+				<button class="dropdown-item" id="ml-flatten">
+					<span class="item-icon"><i data-lucide="layers" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Flatten All</span>
+					<span class="kbd">Ctrl+Shift+E</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- SELECT -->
+		<div class="nav-menu" id="menu-select">
+			<button class="nav-menu-btn" id="btn-menu-select">Select</button>
+			<div class="dropdown glass-2" id="dropdown-select">
+				<button class="dropdown-item" id="sel-all">
+					<span class="item-icon"><i data-lucide="square-dashed" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Select All</span>
+					<span class="kbd">Ctrl+A</span>
+				</button>
+				<button class="dropdown-item" id="sel-deselect">
+					<span class="item-icon"><i data-lucide="x-square" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Deselect</span>
+					<span class="kbd">Ctrl+D</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<button class="dropdown-item" id="sel-copy">
+					<span class="item-icon"><i data-lucide="copy" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Copy Selection</span>
+				</button>
+				<button class="dropdown-item" id="sel-cut">
+					<span class="item-icon"><i data-lucide="scissors" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Cut Selection</span>
+				</button>
+				<button class="dropdown-item" id="sel-crop">
+					<span class="item-icon"><i data-lucide="crop" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Crop to Selection</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- FILTER -->
+		<div class="nav-menu" id="menu-filter">
+			<button class="nav-menu-btn" id="btn-menu-filter">Filter</button>
+			<div class="dropdown glass-2" id="dropdown-filter">
+				<div class="dropdown-section-label">Blur</div>
+				<button class="dropdown-item" id="filter-blur">
+					<span class="item-icon"><i data-lucide="wind" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Gaussian Blur…</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Sharpen</div>
+				<button class="dropdown-item" id="filter-sharpen">
+					<span class="item-icon"><i data-lucide="triangle" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Sharpen</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Noise</div>
+				<button class="dropdown-item" id="filter-noise">
+					<span class="item-icon"><i data-lucide="sparkles" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Add Noise…</span>
+				</button>
+				<div class="dropdown-divider"></div>
+				<div class="dropdown-section-label">Pixel</div>
+				<button class="dropdown-item" id="filter-pixelate">
+					<span class="item-icon"><i data-lucide="grid-2x2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Pixelate…</span>
+				</button>
+			</div>
+		</div>
+
+		<!-- VIEW -->
+		<div class="nav-menu" id="menu-view">
+			<button class="nav-menu-btn" id="btn-menu-view">View</button>
+			<div class="dropdown glass-2" id="dropdown-view">
+				<button class="dropdown-item" id="view-zoom-in">
+					<span class="item-icon"><i data-lucide="zoom-in" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Zoom In</span>
+					<span class="kbd">Ctrl++</span>
+				</button>
+				<button class="dropdown-item" id="view-zoom-out">
+					<span class="item-icon"><i data-lucide="zoom-out" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Zoom Out</span>
+					<span class="kbd">Ctrl+−</span>
+				</button>
+				<button class="dropdown-item" id="view-fit">
+					<span class="item-icon"><i data-lucide="maximize-2" style="width:14px;height:14px"></i></span>
+					<span class="item-label">Fit to Screen</span>
+					<span class="kbd">Ctrl+0</span>
+				</button>
+				<button class="dropdown-item" id="view-100">
+					<span class="item-icon"><i data-lucide="scan-search" style="width:14px;height:14px"></i></span>
+					<span class="item-label">100%</span>
+					<span class="kbd">Ctrl+1</span>
+				</button>
+			</div>
+		</div>
+
+		<div class="nav-divider"></div>
+
+		<!-- UNDO/REDO -->
+		<button class="nav-icon-btn" id="btn-undo" title="Undo (Ctrl+Z)" disabled>
+			<i data-lucide="undo-2" style="width:14px;height:14px"></i>
+		</button>
+		<button class="nav-icon-btn" id="btn-redo" title="Redo (Ctrl+Y)" disabled>
+			<i data-lucide="redo-2" style="width:14px;height:14px"></i>
+		</button>
+
+		<!-- INFO -->
+		<div class="nav-info">
+			<span id="info-size">800 × 600</span>
+		</div>
+	</nav>
+
+	<!-- ====== OPTIONS BAR ====== -->
+	<div id="optbar" class="glass">
+
+		<!-- Brush/Pencil/Eraser size & opacity -->
+		<div class="opt-section opt-group" id="opt-brush">
+			<i data-lucide="circle" style="width:11px;height:11px;color:var(--text-dimmer)"></i>
+			<input type="range" class="opt-range" id="brush-size" min="1" max="200" value="12" />
+			<span class="opt-value" id="brush-size-val">12px</span>
+			<span class="opt-label" style="margin-left:4px">Opacity</span>
+			<input type="range" class="opt-range" id="brush-opacity" min="1" max="100" value="100" />
+			<span class="opt-value" id="brush-opacity-val">100%</span>
+		</div>
+		<div class="opt-section opt-group" id="opt-brush-mode">
+			<button class="opt-btn active" id="mode-round" title="Round">
+				<i data-lucide="circle" style="width:11px;height:11px"></i>
+			</button>
+			<button class="opt-btn" id="mode-square" title="Square">
+				<i data-lucide="square" style="width:11px;height:11px"></i>
+			</button>
+			<button class="opt-btn" id="mode-soft" title="Soft">
+				<i data-lucide="disc" style="width:11px;height:11px"></i>
+			</button>
+		</div>
+
+		<!-- Shape options -->
+		<div class="opt-section opt-group" id="opt-shape">
+			<button class="opt-btn active" id="shape-fill">Fill</button>
+			<button class="opt-btn" id="shape-stroke">Stroke</button>
+			<button class="opt-btn" id="shape-both">Both</button>
+			<span class="opt-label" style="margin-left:4px">Stroke</span>
+			<input type="range" class="opt-range" style="width:60px" id="shape-stroke-size" min="1" max="50" value="3" />
+			<span class="opt-value" id="shape-stroke-val">3px</span>
+		</div>
+
+		<!-- Text options -->
+		<div class="opt-section opt-group" id="opt-text">
+			<span class="opt-label">Font</span>
+			<select class="opt-select" id="text-font">
+				<option>Inter</option><option>Arial</option><option>Georgia</option>
+				<option>Courier New</option><option>Impact</option><option>Verdana</option>
+			</select>
+			<input type="range" class="opt-range" id="text-size" min="8" max="200" value="24" />
+			<span class="opt-value" id="text-size-val">24px</span>
+			<button class="opt-btn" id="text-bold" style="font-weight:700">B</button>
+			<button class="opt-btn" id="text-italic" style="font-style:italic">I</button>
+		</div>
+
+		<!-- Select options -->
+		<div class="opt-section opt-group" id="opt-select">
+			<button class="opt-btn" id="action-crop-sel">
+				<i data-lucide="crop" style="width:11px;height:11px"></i> Crop
+			</button>
+			<button class="opt-btn" id="action-copy-sel">
+				<i data-lucide="copy" style="width:11px;height:11px"></i> Copy
+			</button>
+			<button class="opt-btn" id="action-cut-sel">
+				<i data-lucide="scissors" style="width:11px;height:11px"></i> Cut
+			</button>
+			<button class="opt-btn" id="action-deselect">
+				<i data-lucide="x" style="width:11px;height:11px"></i> Deselect
+			</button>
+		</div>
+
+		<!-- Gradient options -->
+		<div class="opt-section opt-group" id="opt-gradient">
+			<i data-lucide="blend" style="width:11px;height:11px;color:var(--text-dimmer)"></i>
+			<select class="opt-select" id="gradient-type">
+				<option value="linear">Linear</option>
+				<option value="radial">Radial</option>
+			</select>
+		</div>
+
+		<!-- Zoom options -->
+		<div class="opt-section opt-group" id="opt-zoom">
+			<button class="opt-btn" id="zoom-in-btn"><i data-lucide="zoom-in" style="width:11px;height:11px"></i></button>
+			<button class="opt-btn" id="zoom-out-btn"><i data-lucide="zoom-out" style="width:11px;height:11px"></i></button>
+			<button class="opt-btn" id="zoom-fit-btn">Fit</button>
+			<button class="opt-btn" id="zoom-100-btn">100%</button>
+		</div>
+
+		<!-- Filter options: blur radius -->
+		<div class="opt-section opt-group" id="opt-filter">
+			<span class="opt-label">Radius</span>
+			<input type="range" class="opt-range" id="filter-radius" min="1" max="40" value="3" />
+			<span class="opt-value" id="filter-radius-val">3px</span>
+			<button class="opt-btn active" id="apply-filter-btn">Apply</button>
+		</div>
+	</div>
+
+	<!-- ====== TOOL TRAY (BOTTOM) ====== -->
+	<div id="tray-options" class="glass">
+		<!-- Brush/Pencil/Eraser size & opacity -->
+		<div class="opt-section opt-group" id="opt-brush">
+			<i data-lucide="circle" style="width:11px;height:11px;color:var(--text-dimmer)"></i>
+			<input type="range" class="opt-range" id="brush-size" min="1" max="200" value="12" />
+			<span class="opt-value" id="brush-size-val">12px</span>
+			<span class="opt-label" style="margin-left:4px">Opacity</span>
+			<input type="range" class="opt-range" id="brush-opacity" min="1" max="100" value="100" />
+			<span class="opt-value" id="brush-opacity-val">100%</span>
+		</div>
+		<div class="opt-section opt-group" id="opt-brush-mode">
+			<button class="opt-btn active" id="mode-round" title="Round">
+				<i data-lucide="circle" style="width:11px;height:11px"></i>
+			</button>
+			<button class="opt-btn" id="mode-square" title="Square">
+				<i data-lucide="square" style="width:11px;height:11px"></i>
+			</button>
+			<button class="opt-btn" id="mode-soft" title="Soft">
+				<i data-lucide="disc" style="width:11px;height:11px"></i>
+			</button>
+		</div>
+		<!-- Shape options -->
+		<div class="opt-section opt-group" id="opt-shape">
+			<button class="opt-btn active" id="shape-fill">Fill</button>
+			<button class="opt-btn" id="shape-stroke">Stroke</button>
+			<button class="opt-btn" id="shape-both">Both</button>
+			<span class="opt-label" style="margin-left:4px">Stroke</span>
+			<input type="range" class="opt-range" style="width:60px" id="shape-stroke-size" min="1" max="50" value="3" />
+			<span class="opt-value" id="shape-stroke-val">3px</span>
+		</div>
+		<!-- Text options -->
+		<div class="opt-section opt-group" id="opt-text">
+			<span class="opt-label">Font</span>
+			<select class="opt-select" id="text-font">
+				<option>Inter</option><option>Arial</option><option>Georgia</option>
+				<option>Courier New</option><option>Impact</option><option>Verdana</option>
+			</select>
+			<input type="range" class="opt-range" id="text-size" min="8" max="200" value="24" />
+			<span class="opt-value" id="text-size-val">24px</span>
+			<button class="opt-btn" id="text-bold" style="font-weight:700">B</button>
+			<button class="opt-btn" id="text-italic" style="font-style:italic">I</button>
+		</div>
+		<!-- Select options -->
+		<div class="opt-section opt-group" id="opt-select">
+			<button class="opt-btn" id="action-crop-sel">
+				<i data-lucide="crop" style="width:11px;height:11px"></i> Crop
+			</button>
+			<button class="opt-btn" id="action-copy-sel">
+				<i data-lucide="copy" style="width:11px;height:11px"></i> Copy
+			</button>
+			<button class="opt-btn" id="action-cut-sel">
+				<i data-lucide="scissors" style="width:11px;height:11px"></i> Cut
+			</button>
+			<button class="opt-btn" id="action-deselect">
+				<i data-lucide="x" style="width:11px;height:11px"></i> Deselect
+			</button>
+		</div>
+		<!-- Gradient options -->
+		<div class="opt-section opt-group" id="opt-gradient">
+			<i data-lucide="blend" style="width:11px;height:11px;color:var(--text-dimmer)"></i>
+			<select class="opt-select" id="gradient-type">
+				<option value="linear">Linear</option>
+				<option value="radial">Radial</option>
+			</select>
+		</div>
+		<!-- Zoom options -->
+		<div class="opt-section opt-group" id="opt-zoom">
+			<button class="opt-btn" id="zoom-in-btn"><i data-lucide="zoom-in" style="width:11px;height:11px"></i></button>
+			<button class="opt-btn" id="zoom-out-btn"><i data-lucide="zoom-out" style="width:11px;height:11px"></i></button>
+			<button class="opt-btn" id="zoom-fit-btn">Fit</button>
+			<button class="opt-btn" id="zoom-100-btn">100%</button>
+		</div>
+		<!-- Filter options -->
+		<div class="opt-section opt-group" id="opt-filter">
+			<span class="opt-label">Radius</span>
+			<input type="range" class="opt-range" id="filter-radius" min="1" max="40" value="3" />
+			<span class="opt-value" id="filter-radius-val">3px</span>
+			<button class="opt-btn active" id="apply-filter-btn">Apply</button>
+		</div>
+	</div>
+
+	<div id="tool-tray" class="glass">
+
+		<button class="tool-btn active" data-tool="brush"      data-tip="Brush  [B]">
+			<i data-lucide="paintbrush"></i>
+		</button>
+		<button class="tool-btn" data-tool="pencil"     data-tip="Pencil  [P]">
+			<i data-lucide="pencil"></i>
+		</button>
+		<button class="tool-btn" data-tool="eraser"     data-tip="Eraser  [E]">
+			<i data-lucide="eraser"></i>
+		</button>
+		<div class="tray-divider"></div>
+
+		<button class="tool-btn" data-tool="fill"       data-tip="Fill  [G]">
+			<i data-lucide="paint-bucket"></i>
+		</button>
+		<button class="tool-btn" data-tool="eyedropper" data-tip="Eyedropper  [I]">
+			<i data-lucide="pipette"></i>
+		</button>
+		<button class="tool-btn" data-tool="gradient"   data-tip="Gradient  [D]">
+			<i data-lucide="blend"></i>
+		</button>
+		<div class="tray-divider"></div>
+
+		<button class="tool-btn" data-tool="rect"       data-tip="Rectangle  [R]">
+			<i data-lucide="rectangle-horizontal"></i>
+		</button>
+		<button class="tool-btn" data-tool="ellipse"    data-tip="Ellipse  [O]">
+			<i data-lucide="circle"></i>
+		</button>
+		<button class="tool-btn" data-tool="line"       data-tip="Line  [L]">
+			<i data-lucide="minus"></i>
+		</button>
+		<div class="tray-divider"></div>
+
+		<button class="tool-btn" data-tool="text"       data-tip="Text  [T]">
+			<i data-lucide="type"></i>
+		</button>
+		<button class="tool-btn" data-tool="select"     data-tip="Marquee Select  [M]">
+			<i data-lucide="square-dashed"></i>
+		</button>
+		<button class="tool-btn" data-tool="move"       data-tip="Move  [V]">
+			<i data-lucide="move"></i>
+		</button>
+		<button class="tool-btn" data-tool="lasso"      data-tip="Lasso  [Q]">
+			<i data-lucide="lasso"></i>
+		</button>
+		<div class="tray-divider"></div>
+
+		<button class="tool-btn" data-tool="zoom"       data-tip="Zoom  [Z]">
+			<i data-lucide="zoom-in"></i>
+		</button>
+		<button class="tool-btn" data-tool="hand"       data-tip="Pan  [H / Space]">
+			<i data-lucide="hand"></i>
+		</button>
+		<div class="tray-divider"></div>
+
+		<!-- Color swatch button -->
+		<button class="tray-color-btn" id="tray-color-btn" data-tip="Colors" title="Colors">
+			<div class="tray-color-swatch-bg" id="tray-swatch-bg"></div>
+			<div class="tray-color-swatch-fg" id="tray-swatch-fg"></div>
+		</button>
+	</div>
+
+	<!-- ====== RIGHT PANEL: LAYER STRIP ====== -->
+	<div id="right-panel">
+		<div id="layer-strip" class="glass">
+			<!-- Header (always visible) -->
+			<div id="layer-strip-header">
+				<i data-lucide="layers" style="width:12px;height:12px" class="ls-icon"></i>
+				<span id="layer-strip-title">Layers</span>
+				<span id="layer-active-badge">Background</span>
+				<button id="layer-strip-toggle">
+					<i data-lucide="chevron-down" style="width:12px;height:12px"></i>
+				</button>
+			</div>
+			<!-- Collapsible list -->
+			<div id="layers-collapse">
+				<div id="layers-list"></div>
+				<div id="layer-strip-actions">
+					<button class="panel-icon-btn" id="btn-layer-add" title="New Layer"><i data-lucide="plus"></i></button>
+					<button class="panel-icon-btn" id="btn-layer-dup" title="Duplicate"><i data-lucide="copy"></i></button>
+					<button class="panel-icon-btn danger" id="btn-layer-del" title="Delete Layer"><i data-lucide="trash-2"></i></button>
+				</div>
+				<div id="layer-opacity-row">
+					<span class="opt-label">Opacity</span>
+					<input type="range" id="layer-opacity" min="0" max="100" value="100" />
+					<span class="opt-value" id="layer-opacity-val">100%</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ====== COLOR POPUP (floating above tray) ====== -->
+	<div id="color-popup" class="glass">
+		<div class="panel-hdr">
+			<span style="display:flex;align-items:center;gap:5px">
+				<i data-lucide="pipette" style="width:11px;height:11px"></i>
+				Color
+			</span>
+			<button class="panel-icon-btn" id="color-popup-close" title="Close">
+				<i data-lucide="x" style="width:11px;height:11px"></i>
+			</button>
+		</div>
+
+		<!-- FG/BG Swatches row -->
+		<div class="cp-fgbg-row">
+			<div class="cp-swatch-pair">
+				<!-- BW reset -->
+				<div class="cp-bw" id="cp-reset" title="Reset Black/White (D)">
+					<div class="cp-bw-w"></div>
+					<div class="cp-bw-b"></div>
+				</div>
+				<!-- BG swatch -->
+				<div class="cp-bg-rect" id="cp-bg-swatch" title="Background color"></div>
+				<!-- FG swatch -->
+				<div class="cp-fg-rect cp-active" id="cp-fg-swatch" title="Foreground color"></div>
+				<!-- Swap -->
+				<button class="cp-swap" id="cp-swap" title="Swap colors (X)">
+					<i data-lucide="arrow-left-right"></i>
+				</button>
+			</div>
+			<div class="cp-hex-panel">
+				<div class="cp-target-tabs">
+					<button class="cp-tab active" id="cp-tab-fg">FG</button>
+					<button class="cp-tab" id="cp-tab-bg">BG</button>
+				</div>
+				<div class="cp-hex-row">
+					<span>#</span>
+					<input id="cp-hex" value="ffffff" maxlength="6" spellcheck="false" />
+				</div>
+			</div>
+		</div>
+
+		<!-- SV Square -->
+		<div class="cp-sq-wrap" id="cp-sq-wrap">
+			<canvas id="cp-sq-canvas"></canvas>
+			<div id="cp-sq-cursor"></div>
+		</div>
+
+		<!-- Hue slider -->
+		<div class="cp-hue-wrap" id="cp-hue-wrap">
+			<canvas id="cp-hue-canvas"></canvas>
+			<div id="cp-hue-thumb"></div>
+		</div>
+
+		<!-- RGB inputs -->
+		<div class="cp-rgb-row">
+			<label>R</label>
+			<input type="number" class="cp-rgb-num" id="cp-r" min="0" max="255" value="255" />
+			<div class="cp-rgb-sep"></div>
+			<label>G</label>
+			<input type="number" class="cp-rgb-num" id="cp-g" min="0" max="255" value="255" />
+			<div class="cp-rgb-sep"></div>
+			<label>B</label>
+			<input type="number" class="cp-rgb-num" id="cp-b" min="0" max="255" value="255" />
+		</div>
+
+		<!-- Palette swatches -->
+		<div class="swatch-grid" id="swatch-grid"></div>
+
+		<!-- Hidden native pickers -->
+		<input type="color" id="native-fg" value="#ffffff" />
+		<input type="color" id="native-bg" value="#000000" />
+	</div>
+
+	<!-- ====== ZOOM INDICATOR ====== -->
+	<div id="zoom-indicator" class="glass">
+		<button id="zoom-minus-ind"><i data-lucide="minus" style="width:11px;height:11px"></i></button>
+		<span id="zoom-label">100%</span>
+		<button id="zoom-plus-ind"><i data-lucide="plus" style="width:11px;height:11px"></i></button>
+	</div>
+
+	<!-- ====== CURSOR INDICATOR ====== -->
+	<div id="cursor-indicator" class="glass">0, 0</div>
+
+</div><!-- /#app -->
+
+<!-- ====== MODALS ====== -->
+
+<!-- New Canvas -->
+<div class="modal-overlay" id="modal-new">
+	<div class="modal">
+		<div class="modal-title">
+			<i data-lucide="file-plus"></i>
+			New Canvas
+		</div>
+		<div class="modal-preset-grid">
+			<button class="modal-preset" data-w="800"  data-h="600">800 × 600</button>
+			<button class="modal-preset" data-w="1280" data-h="720">1280 × 720 HD</button>
+			<button class="modal-preset" data-w="1920" data-h="1080">1920 × 1080 FHD</button>
+			<button class="modal-preset" data-w="500"  data-h="500">500 × 500 Square</button>
+			<button class="modal-preset" data-w="1080" data-h="1350">1080 × 1350 Portrait</button>
+			<button class="modal-preset" data-w="2560" data-h="1440">2560 × 1440 QHD</button>
+		</div>
+		<div class="modal-row">
+			<label>Width (px)</label>
+			<input type="number" class="modal-input" id="new-w" value="800" min="1" max="8000" />
+		</div>
+		<div class="modal-row">
+			<label>Height (px)</label>
+			<input type="number" class="modal-input" id="new-h" value="600" min="1" max="8000" />
+		</div>
+		<div class="modal-row">
+			<label>Background</label>
+			<select class="modal-input" id="new-bg">
+				<option value="white">White</option>
+				<option value="black">Black</option>
+				<option value="transparent">Transparent</option>
+			</select>
+		</div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-new-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-new-ok">Create</button>
+		</div>
+	</div>
+</div>
+
+<!-- Resize -->
+<div class="modal-overlay" id="modal-resize">
+	<div class="modal">
+		<div class="modal-title">
+			<i data-lucide="frame"></i>
+			Resize Canvas
+		</div>
+		<div class="modal-row"><label>Width (px)</label><input type="number" class="modal-input" id="resize-w" min="1" max="8000" /></div>
+		<div class="modal-row"><label>Height (px)</label><input type="number" class="modal-input" id="resize-h" min="1" max="8000" /></div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-resize-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-resize-ok">Resize</button>
+		</div>
+	</div>
+</div>
+
+<!-- Text -->
+<div class="modal-overlay" id="modal-text">
+	<div class="modal">
+		<div class="modal-title"><i data-lucide="type"></i> Add Text</div>
+		<div class="modal-row">
+			<label>Text</label>
+			<input type="text" class="modal-input" id="text-input-val" placeholder="Enter text…" />
+		</div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-text-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-text-ok">Place Text</button>
+		</div>
+	</div>
+</div>
+
+<!-- Blur filter -->
+<div class="modal-overlay" id="modal-blur">
+	<div class="modal">
+		<div class="modal-title"><i data-lucide="wind"></i> Gaussian Blur</div>
+		<div class="modal-row">
+			<label>Radius (px)</label>
+			<input type="range" id="blur-radius-slider" min="1" max="40" value="3" style="flex:1" />
+			<span id="blur-radius-val" style="min-width:28px;text-align:right;color:var(--text-dim)">3px</span>
+		</div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-blur-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-blur-ok">Apply</button>
+		</div>
+	</div>
+</div>
+
+<!-- Noise filter -->
+<div class="modal-overlay" id="modal-noise">
+	<div class="modal">
+		<div class="modal-title"><i data-lucide="sparkles"></i> Add Noise</div>
+		<div class="modal-row">
+			<label>Amount</label>
+			<input type="range" id="noise-amount" min="1" max="100" value="20" style="flex:1" />
+			<span id="noise-amount-val" style="min-width:28px;text-align:right;color:var(--text-dim)">20</span>
+		</div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-noise-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-noise-ok">Apply</button>
+		</div>
+	</div>
+</div>
+
+<!-- Pixelate filter -->
+<div class="modal-overlay" id="modal-pixelate">
+	<div class="modal">
+		<div class="modal-title"><i data-lucide="grid-2x2"></i> Pixelate</div>
+		<div class="modal-row">
+			<label>Block Size</label>
+			<input type="range" id="pixelate-size" min="2" max="64" value="8" style="flex:1" />
+			<span id="pixelate-size-val" style="min-width:28px;text-align:right;color:var(--text-dim)">8px</span>
+		</div>
+		<div class="modal-actions">
+			<button class="btn-cancel" id="modal-pixelate-cancel">Cancel</button>
+			<button class="btn-primary" id="modal-pixelate-ok">Apply</button>
+		</div>
+	</div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+<!-- Hidden file input -->
+<input type="file" id="file-input" accept="image/*" style="display:none" />
+
+<!-- ====== MAIN SCRIPT ====== -->
+<script>
+(function () {
+	'use strict';
+
+	// ============================================================
+	//  STATE
+	// ============================================================
+	const PALETTE = [
+		'#000000','#1a1a2e','#16213e','#0f3460','#533483',
+		'#e94560','#ff6b6b','#ff8e53','#ffd460','#06d6a0',
+		'#1b998b','#3a86ff','#8338ec','#fb5607','#f72585',
+		'#7209b7','#3f37c9','#4cc9f0','#52b788','#b7e4c7',
+		'#ffffff','#f8f9fa','#dee2e6','#adb5bd','#6c757d',
+		'#495057','#343a40','#212529','#ffe8d6','#ddbea9',
+		'#cb997e','#b7b7a4','#a5a58d','#6b705c','#3d405b',
+		'#f2cc8f','#e07a5f','#81b29a','#f4f1de','#264653',
+	];
+
+	let state = {
+		tool: 'brush', fgColor: '#ffffff', bgColor: '#000000',
+		brushSize: 12, brushOpacity: 100, brushMode: 'round',
+		shapeMode: 'fill', strokeSize: 3,
+		textFont: 'Inter', textSize: 24, textBold: false, textItalic: false,
+		gradientType: 'linear', zoom: 1, panX: 0, panY: 0,
+		canvasW: 800, canvasH: 600,
+		isDrawing: false, isPanning: false,
+		startX: 0, startY: 0, lastX: 0, lastY: 0,
+		spaceDown: false, selection: null,
+		clipboardData: null, layers: [], activeLayerIdx: 0,
+		undoStack: [], redoStack: [], MAX_UNDO: 40,
+		moveLayerSnapshot: null, textPos: null,
+		pendingFilterTool: null,
+	};
+
+	// ============================================================
+	//  DOM REFS
+	// ============================================================
+	const canvasArea      = document.getElementById('canvas-area');
+	const viewport        = document.getElementById('canvas-viewport');
+	const mainCanvas      = document.getElementById('main-canvas');
+	const overlayCanvas   = document.getElementById('overlay-canvas');
+	const selCanvas       = document.getElementById('selection-canvas');
+	const checkerCanvas   = document.getElementById('checker-canvas');
+	const shadowEl        = document.getElementById('canvas-shadow');
+	const zoomLabel       = document.getElementById('zoom-label');
+	const cursorIndicator = document.getElementById('cursor-indicator');
+	const infoSize        = document.getElementById('info-size');
+	const infoLayers      = { textContent: '' }; // dummy to avoid errors
+	const layersList      = document.getElementById('layers-list');
+	const toastContainer  = document.getElementById('toast-container');
+	const fileInput       = document.getElementById('file-input');
+
+	const ctx    = mainCanvas.getContext('2d');
+	const octx   = overlayCanvas.getContext('2d');
+	const sctx   = selCanvas.getContext('2d');
+	const chkctx = checkerCanvas.getContext('2d');
+
+	// ============================================================
+	//  UTILITY
+	// ============================================================
+	function toast(msg) {
+		const el = document.createElement('div');
+		el.className = 'toast';
+		el.innerHTML = msg;
+		toastContainer.appendChild(el);
+		setTimeout(() => el.remove(), 2400);
+	}
+	function hexToRgb(hex) {
+		hex = hex.replace('#','');
+		if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+		const n = parseInt(hex, 16);
+		return {r:(n>>16)&255, g:(n>>8)&255, b:n&255};
+	}
+	function rgbToHex(r,g,b) {
+		return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+	}
+	function clamp(v,mn,mx) { return Math.max(mn, Math.min(mx, v)); }
+	function evToCanvas(e) {
+		const rect = mainCanvas.getBoundingClientRect();
+		return {
+			x: Math.floor((e.clientX - rect.left) / state.zoom),
+			y: Math.floor((e.clientY - rect.top)  / state.zoom),
+		};
+	}
+
+	// ============================================================
+	//  CANVAS SETUP
+	// ============================================================
+	function initCanvas(w, h, bg='white') {
+		state.canvasW = w; state.canvasH = h;
+		[mainCanvas, overlayCanvas, selCanvas, checkerCanvas].forEach(c => { c.width=w; c.height=h; });
+		shadowEl.style.width=w+'px'; shadowEl.style.height=h+'px';
+		drawCheckerboard();
+		infoSize.textContent = `${w} × ${h}`;
+		state.layers = []; state.activeLayerIdx = 0;
+		addLayer('Background');
+		if(bg==='white') { ctx.fillStyle='#fff'; ctx.fillRect(0,0,w,h); activeCtx().fillStyle='#fff'; activeCtx().fillRect(0,0,w,h); }
+		if(bg==='black') { ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h); activeCtx().fillStyle='#000'; activeCtx().fillRect(0,0,w,h); }
+		updateLayerThumbs(); renderAllLayers(); fitToScreen();
+		state.undoStack=[]; state.redoStack=[]; updateUndoButtons();
+	}
+
+	function drawCheckerboard() {
+		const s=8, w=state.canvasW, h=state.canvasH;
+		for(let y=0; y<h; y+=s) for(let x=0; x<w; x+=s) {
+			chkctx.fillStyle=((x/s+y/s)%2===0)?'#383838':'#2c2c2c';
+			chkctx.fillRect(x,y,s,s);
+		}
+	}
+
+	// ============================================================
+	//  LAYERS
+	// ============================================================
+	function addLayer(name) {
+		const o = document.createElement('canvas');
+		o.width=state.canvasW; o.height=state.canvasH;
+		const layer={canvas:o, ctx:o.getContext('2d'), name, visible:true, opacity:100};
+		state.layers.unshift(layer); state.activeLayerIdx=0;
+		renderLayersPanel(); renderAllLayers(); updateInfo();
+	}
+
+	function renderLayersPanel() {
+		layersList.innerHTML='';
+		state.layers.forEach((layer,i) => {
+			const item=document.createElement('div');
+			item.className='layer-item'+(i===state.activeLayerIdx?' active':'');
+
+			const thumb=document.createElement('canvas');
+			thumb.className='layer-thumb'; thumb.width=60; thumb.height=44;
+			thumb.getContext('2d').drawImage(layer.canvas,0,0,60,44);
+
+			const nameEl=document.createElement('span');
+			nameEl.className='layer-name'; nameEl.textContent=layer.name;
+			nameEl.addEventListener('dblclick',()=>{
+				nameEl.contentEditable=true; nameEl.focus();
+				const r=document.createRange(); r.selectNodeContents(nameEl);
+				window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+			});
+			nameEl.addEventListener('blur',()=>{ nameEl.contentEditable=false; layer.name=nameEl.textContent.trim()||layer.name; });
+			nameEl.addEventListener('keydown',e=>{ if(e.key==='Enter') nameEl.blur(); e.stopPropagation(); });
+
+			const visBtn=document.createElement('button');
+			visBtn.className='layer-vis-btn'+(layer.visible?'':' layer-hidden');
+			// Lucide icon via innerHTML
+			visBtn.innerHTML=layer.visible
+				? '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>'
+				: '<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+			visBtn.title=layer.visible?'Hide':'Show';
+			visBtn.addEventListener('click',e=>{ e.stopPropagation(); layer.visible=!layer.visible; renderLayersPanel(); renderAllLayers(); });
+
+			item.appendChild(thumb); item.appendChild(nameEl); item.appendChild(visBtn);
+			item.addEventListener('click',()=>{
+				state.activeLayerIdx=i;
+				renderLayersPanel();
+				updateLayerOpacitySlider();
+				// Update badge
+				const badge = document.getElementById('layer-active-badge');
+				if(badge) badge.textContent = layer.name;
+			});
+			layersList.appendChild(item);
+		});
+	}
+
+	function updateLayerThumbs() { renderLayersPanel(); }
+	function activeLayer() { return state.layers[state.activeLayerIdx]; }
+	function activeCtx()   { return activeLayer().ctx; }
+
+	function renderAllLayers() {
+		ctx.clearRect(0,0,state.canvasW,state.canvasH);
+		for(let i=state.layers.length-1; i>=0; i--) {
+			if(!state.layers[i].visible) continue;
+			ctx.save();
+			ctx.globalAlpha = (state.layers[i].opacity||100)/100;
+			ctx.drawImage(state.layers[i].canvas,0,0);
+			ctx.restore();
+		}
+	}
+
+	function updateInfo() {
+		const n=state.layers.length;
+		// Update layer badge in strip
+		const badge = document.getElementById('layer-active-badge');
+		if(badge && state.layers[state.activeLayerIdx]) {
+			badge.textContent = state.layers[state.activeLayerIdx].name;
+		}
+	}
+
+	function updateLayerOpacitySlider() {
+		const op = activeLayer()?.opacity ?? 100;
+		document.getElementById('layer-opacity').value = op;
+		document.getElementById('layer-opacity-val').textContent = op + '%';
+	}
+	document.getElementById('layer-opacity').addEventListener('input', function() {
+		if(!activeLayer()) return;
+		activeLayer().opacity = +this.value;
+		document.getElementById('layer-opacity-val').textContent = this.value + '%';
+		renderAllLayers();
+	});
+
+	// ============================================================
+	//  VIEWPORT / ZOOM / PAN
+	// ============================================================
+	function applyViewport() {
+		viewport.style.transform = `translate(${state.panX}px,${state.panY}px) scale(${state.zoom})`;
+		viewport.style.transformOrigin = '0 0';
+		zoomLabel.textContent = Math.round(state.zoom*100)+'%';
+	}
+	function fitToScreen() {
+		const area=canvasArea.getBoundingClientRect();
+		// No left toolbar. Right strip=232px. Top navbar=52px. Tray+opts=112px.
+		const leftPad  = 14;
+		const rightPad = 236;
+		const topPad   = 52;
+		const botPad   = 112;
+		const usableW = area.width  - leftPad - rightPad;
+		const usableH = area.height - topPad  - botPad;
+		const zw = usableW / state.canvasW;
+		const zh = usableH / state.canvasH;
+		state.zoom = Math.min(zw, zh, 4) * 0.9;
+		state.panX = Math.floor(leftPad + (usableW - state.canvasW * state.zoom) / 2);
+		state.panY = Math.floor(topPad  + (usableH - state.canvasH * state.zoom) / 2);
+		applyViewport();
+	}
+	function zoomAt(factor,cx,cy) {
+		const rect=canvasArea.getBoundingClientRect();
+		const ax=cx-rect.left, ay=cy-rect.top;
+		const nz=clamp(state.zoom*factor, 0.04, 32);
+		state.panX=ax-(ax-state.panX)*(nz/state.zoom);
+		state.panY=ay-(ay-state.panY)*(nz/state.zoom);
+		state.zoom=nz;
+		applyViewport();
+	}
+
+	// ============================================================
+	//  UNDO / REDO
+	// ============================================================
+	function pushUndo() {
+		const snap=state.layers.map(l=>({
+			name:l.name, visible:l.visible, opacity:l.opacity,
+			data:l.ctx.getImageData(0,0,state.canvasW,state.canvasH),
+		}));
+		state.undoStack.push({snap, idx:state.activeLayerIdx});
+		if(state.undoStack.length>state.MAX_UNDO) state.undoStack.shift();
+		state.redoStack=[]; updateUndoButtons();
+	}
+	function undo() {
+		if(!state.undoStack.length) return;
+		const cur=state.layers.map(l=>({name:l.name,visible:l.visible,opacity:l.opacity,data:l.ctx.getImageData(0,0,state.canvasW,state.canvasH)}));
+		state.redoStack.push({snap:cur,idx:state.activeLayerIdx});
+		const {snap,idx}=state.undoStack.pop();
+		restoreSnap(snap,idx); updateUndoButtons();
+	}
+	function redo() {
+		if(!state.redoStack.length) return;
+		const cur=state.layers.map(l=>({name:l.name,visible:l.visible,opacity:l.opacity,data:l.ctx.getImageData(0,0,state.canvasW,state.canvasH)}));
+		state.undoStack.push({snap:cur,idx:state.activeLayerIdx});
+		const {snap,idx}=state.redoStack.pop();
+		restoreSnap(snap,idx); updateUndoButtons();
+	}
+	function restoreSnap(snap,idx) {
+		state.layers=snap.map(s=>{
+			const o=document.createElement('canvas'); o.width=state.canvasW; o.height=state.canvasH;
+			const c=o.getContext('2d'); c.putImageData(s.data,0,0);
+			return{canvas:o,ctx:c,name:s.name,visible:s.visible,opacity:s.opacity||100};
+		});
+		state.activeLayerIdx=idx;
+		renderLayersPanel(); renderAllLayers(); updateInfo(); updateLayerOpacitySlider();
+	}
+	function updateUndoButtons() {
+		document.getElementById('btn-undo').disabled=state.undoStack.length===0;
+		document.getElementById('btn-redo').disabled=state.redoStack.length===0;
+	}
+
+	// ============================================================
+	//  DRAWING
+	// ============================================================
+	function getDrawColor() { return state.fgColor; }
+
+	function setBrushStyle(c) {
+		c.globalAlpha=state.brushOpacity/100;
+		c.strokeStyle=getDrawColor(); c.fillStyle=getDrawColor();
+		c.lineWidth=state.brushSize;
+		c.lineCap=state.brushMode==='square'?'square':'round';
+		c.lineJoin=state.brushMode==='square'?'miter':'round';
+	}
+	function drawSoftBrush(c,x,y,size) {
+		const r=size/2; const col=hexToRgb(getDrawColor());
+		const grad=c.createRadialGradient(x,y,0,x,y,r);
+		grad.addColorStop(0,`rgba(${col.r},${col.g},${col.b},${state.brushOpacity/100})`);
+		grad.addColorStop(0.5,`rgba(${col.r},${col.g},${col.b},${state.brushOpacity/200})`);
+		grad.addColorStop(1,`rgba(${col.r},${col.g},${col.b},0)`);
+		c.save(); c.globalAlpha=1; c.fillStyle=grad;
+		c.beginPath(); c.arc(x,y,r,0,Math.PI*2); c.fill(); c.restore();
+	}
+	function drawLine(c,x1,y1,x2,y2) {
+		c.beginPath(); c.moveTo(x1+.5,y1+.5); c.lineTo(x2+.5,y2+.5); c.stroke();
+	}
+	function drawPencilSegment(c,x0,y0,x1,y1) {
+		c.fillStyle=getDrawColor(); c.globalAlpha=state.brushOpacity/100;
+		let dx=Math.abs(x1-x0),dy=Math.abs(y1-y0),sx=x0<x1?1:-1,sy=y0<y1?1:-1,err=dx-dy;
+		while(true){c.fillRect(x0,y0,1,1);if(x0===x1&&y0===y1)break;let e2=2*err;if(e2>-dy){err-=dy;x0+=sx;}if(e2<dx){err+=dx;y0+=sy;}}
+		c.globalAlpha=1;
+	}
+
+	// BFS flood fill
+	function floodFill(c,sx,sy,fillCol) {
+		const id=c.getImageData(0,0,state.canvasW,state.canvasH),d=id.data;
+		const w=state.canvasW,h=state.canvasH;
+		const idx=(x,y)=>(y*w+x)*4;
+		const si=idx(sx,sy);
+		const target=[d[si],d[si+1],d[si+2],d[si+3]];
+		const fc=hexToRgb(fillCol),fill=[fc.r,fc.g,fc.b,255];
+		if(target.every((v,i)=>v===fill[i])) return;
+		const queue=[[sx,sy]],visited=new Uint8Array(w*h);
+		visited[sy*w+sx]=1;
+		function match(i){return d[i]===target[0]&&d[i+1]===target[1]&&d[i+2]===target[2]&&d[i+3]===target[3];}
+		while(queue.length){
+			const [x,y]=queue.shift(),i=idx(x,y);
+			d[i]=fill[0];d[i+1]=fill[1];d[i+2]=fill[2];d[i+3]=fill[3];
+			[[x-1,y],[x+1,y],[x,y-1],[x,y+1]].forEach(([nx,ny])=>{
+				if(nx<0||nx>=w||ny<0||ny>=h)return;
+				const ni=ny*w+nx;
+				if(!visited[ni]&&match(idx(nx,ny))){visited[ni]=1;queue.push([nx,ny]);}
+			});
+		}
+		c.putImageData(id,0,0);
+	}
+
+	function drawShapeOverlay(x1,y1,x2,y2,tool) {
+		octx.clearRect(0,0,state.canvasW,state.canvasH);
+		octx.save(); octx.globalAlpha=state.brushOpacity/100;
+		const fc=state.fgColor,sm=state.shapeMode,sw=state.strokeSize;
+		if(tool==='rect'){
+			const rx=Math.min(x1,x2),ry=Math.min(y1,y2),rw=Math.abs(x2-x1),rh=Math.abs(y2-y1);
+			if(sm==='fill'||sm==='both'){octx.fillStyle=fc;octx.fillRect(rx,ry,rw,rh);}
+			if(sm==='stroke'||sm==='both'){octx.strokeStyle=fc;octx.lineWidth=sw;octx.strokeRect(rx+sw/2,ry+sw/2,rw-sw,rh-sw);}
+		}
+		if(tool==='ellipse'){
+			const cx=(x1+x2)/2,cy=(y1+y2)/2,rx=Math.abs(x2-x1)/2,ry=Math.abs(y2-y1)/2;
+			octx.beginPath();octx.ellipse(cx,cy,rx,ry,0,0,Math.PI*2);
+			if(sm==='fill'||sm==='both'){octx.fillStyle=fc;octx.fill();}
+			if(sm==='stroke'||sm==='both'){octx.strokeStyle=fc;octx.lineWidth=sw;octx.stroke();}
+		}
+		if(tool==='line'){
+			octx.strokeStyle=fc;octx.lineWidth=sw;octx.lineCap='round';
+			octx.beginPath();octx.moveTo(x1,y1);octx.lineTo(x2,y2);octx.stroke();
+		}
+		octx.restore();
+	}
+	function commitOverlay() {
+		activeCtx().drawImage(overlayCanvas,0,0);
+		octx.clearRect(0,0,state.canvasW,state.canvasH);
+		renderAllLayers(); updateLayerThumbs();
+	}
+
+	// SELECTION
+	let selAnimFrame;
+	function drawSelection() {
+		sctx.clearRect(0,0,state.canvasW,state.canvasH);
+		if(!state.selection) return;
+		const {x,y,w,h}=state.selection;
+		sctx.save();
+		sctx.setLineDash([5,3]); sctx.lineDashOffset=Date.now()/80; sctx.strokeStyle='#fff'; sctx.lineWidth=1;
+		sctx.strokeRect(x+.5,y+.5,w,h);
+		sctx.setLineDash([5,3]); sctx.lineDashOffset=Date.now()/80+5; sctx.strokeStyle='#000';
+		sctx.strokeRect(x+.5,y+.5,w,h);
+		sctx.restore();
+	}
+	function startSelectionAnim() {
+		cancelAnimationFrame(selAnimFrame);
+		function loop(){drawSelection();if(state.selection)selAnimFrame=requestAnimationFrame(loop);}
+		loop();
+	}
+
+	// GRADIENT
+	function drawGradient(x1,y1,x2,y2) {
+		const lctx=activeCtx(); let grad;
+		if(state.gradientType==='linear') grad=lctx.createLinearGradient(x1,y1,x2,y2);
+		else { const r=Math.hypot(x2-x1,y2-y1); grad=lctx.createRadialGradient(x1,y1,0,x1,y1,r); }
+		grad.addColorStop(0,state.fgColor); grad.addColorStop(1,state.bgColor);
+		lctx.save(); lctx.globalAlpha=state.brushOpacity/100; lctx.fillStyle=grad;
+		lctx.fillRect(0,0,state.canvasW,state.canvasH); lctx.restore();
+	}
+	function drawGradientOverlay(x1,y1,x2,y2) {
+		octx.clearRect(0,0,state.canvasW,state.canvasH);
+		octx.save(); octx.strokeStyle='rgba(255,255,255,0.7)'; octx.lineWidth=1.5; octx.setLineDash([4,3]);
+		octx.beginPath();octx.moveTo(x1,y1);octx.lineTo(x2,y2);octx.stroke();
+		octx.setLineDash([]); octx.fillStyle=state.fgColor; octx.beginPath();octx.arc(x1,y1,4,0,Math.PI*2);octx.fill();
+		octx.fillStyle=state.bgColor; octx.beginPath();octx.arc(x2,y2,4,0,Math.PI*2);octx.fill();
+		octx.restore();
+	}
+
+	// MOVE
+	function startMove(x,y) { state.moveLayerSnapshot={data:activeCtx().getImageData(0,0,state.canvasW,state.canvasH),ox:x,oy:y}; }
+	function doMove(x,y) {
+		if(!state.moveLayerSnapshot) return;
+		const dx=x-state.moveLayerSnapshot.ox,dy=y-state.moveLayerSnapshot.oy;
+		activeCtx().clearRect(0,0,state.canvasW,state.canvasH);
+		activeCtx().putImageData(state.moveLayerSnapshot.data,dx,dy);
+		renderAllLayers();
+	}
+
+	// TEXT
+	function placeText(text,x,y) {
+		const lctx=activeCtx(); lctx.save();
+		lctx.font=`${state.textBold?'bold ':''} ${state.textItalic?'italic ':''} ${state.textSize}px ${state.textFont}`;
+		lctx.fillStyle=state.fgColor; lctx.globalAlpha=state.brushOpacity/100;
+		lctx.fillText(text,x,y); lctx.restore();
+		renderAllLayers(); updateLayerThumbs();
+	}
+
+	// EYEDROPPER
+	function pickColor(x,y) {
+		const d=ctx.getImageData(x,y,1,1).data;
+		setFgColor(rgbToHex(d[0],d[1],d[2]));
+		toast(`<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8-2.1 2.1"/></svg> Color picked: ${state.fgColor}`);
+	}
+
+	// COLOR
+	function setFgColor(hex) {
+		if(hex && hex.replace('#','').length===6) { hex = '#'+hex.replace('#',''); }
+		if(!hex || hex.length < 4) return;
+		state.fgColor = hex;
+		const fgEl = document.getElementById('cp-fg-swatch');
+		if(fgEl) fgEl.style.background = hex;
+		const nfg = document.getElementById('native-fg');
+		if(nfg) nfg.value = hex;
+		// Update tray swatch
+		const ts = document.getElementById('tray-swatch-fg');
+		if(ts) ts.style.background = hex;
+		if(typeof picker !== 'undefined' && picker.target==='fg') syncPickerFromHex(hex);
+	}
+	function setBgColor(hex) {
+		if(hex && hex.replace('#','').length===6) { hex = '#'+hex.replace('#',''); }
+		if(!hex || hex.length < 4) return;
+		state.bgColor = hex;
+		const bgEl = document.getElementById('cp-bg-swatch');
+		if(bgEl) bgEl.style.background = hex;
+		const nbg = document.getElementById('native-bg');
+		if(nbg) nbg.value = hex;
+		// Update tray swatch
+		const ts = document.getElementById('tray-swatch-bg');
+		if(ts) ts.style.background = hex;
+		if(typeof picker !== 'undefined' && picker.target==='bg') syncPickerFromHex(hex);
+	}
+
+	// ============================================================
+	//  HSV COLOR PICKER
+	// ============================================================
+	const picker = { h:0, s:0, v:1, target:'fg', dragSq:false, dragHue:false };
+
+	const cpSqCanvas  = document.getElementById('cp-sq-canvas');
+	const cpHueCanvas = document.getElementById('cp-hue-canvas');
+	const cpSqCursor  = document.getElementById('cp-sq-cursor');
+	const cpHueThumb  = document.getElementById('cp-hue-thumb');
+	const cpSqCtx     = cpSqCanvas.getContext('2d');
+	const cpHueCtx    = cpHueCanvas.getContext('2d');
+
+	function hsvToRgb(h,s,v){
+		h/=360; let r,g,b;
+		const i=Math.floor(h*6),f=h*6-i,p=v*(1-s),q=v*(1-f*s),t=v*(1-(1-f)*s);
+		switch(i%6){case 0:r=v;g=t;b=p;break;case 1:r=q;g=v;b=p;break;case 2:r=p;g=v;b=t;break;case 3:r=p;g=q;b=v;break;case 4:r=t;g=p;b=v;break;case 5:r=v;g=p;b=q;break;}
+		return{r:Math.round(r*255),g:Math.round(g*255),b:Math.round(b*255)};
+	}
+	function rgbToHsv(r,g,b){
+		r/=255;g/=255;b/=255;
+		const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;
+		let h=0,s=max===0?0:d/max,val=max;
+		if(max!==min){switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;case b:h=((r-g)/d+4)/6;break;}}
+		return{h:h*360,s,v:val};
+	}
+
+	function drawSqGradient(){
+		const w=cpSqCanvas.offsetWidth||195, h=cpSqCanvas.offsetHeight||140;
+		cpSqCanvas.width=w; cpSqCanvas.height=h;
+		const rgb=hsvToRgb(picker.h,1,1);
+		const hStr=`rgb(${rgb.r},${rgb.g},${rgb.b})`;
+		const gH=cpSqCtx.createLinearGradient(0,0,w,0);
+		gH.addColorStop(0,'#fff'); gH.addColorStop(1,hStr);
+		cpSqCtx.fillStyle=gH; cpSqCtx.fillRect(0,0,w,h);
+		const gV=cpSqCtx.createLinearGradient(0,0,0,h);
+		gV.addColorStop(0,'rgba(0,0,0,0)'); gV.addColorStop(1,'#000');
+		cpSqCtx.fillStyle=gV; cpSqCtx.fillRect(0,0,w,h);
+		cpSqCursor.style.left=(picker.s*w)+'px';
+		cpSqCursor.style.top=((1-picker.v)*h)+'px';
+	}
+	function drawHueGradient(){
+		const w=cpHueCanvas.offsetWidth||195, h=12;
+		cpHueCanvas.width=w; cpHueCanvas.height=h;
+		const g=cpHueCtx.createLinearGradient(0,0,w,0);
+		['#f00','#ff0','#0f0','#0ff','#00f','#f0f','#f00'].forEach((c,i)=>g.addColorStop(i/6,c));
+		cpHueCtx.fillStyle=g; cpHueCtx.fillRect(0,0,w,h);
+		cpHueThumb.style.left=((picker.h/360)*w)+'px';
+		const hRgb=hsvToRgb(picker.h,1,1);
+		cpHueThumb.style.background=`rgb(${hRgb.r},${hRgb.g},${hRgb.b})`;
+	}
+
+	function applyPickerColor(){
+		const rgb=hsvToRgb(picker.h,picker.s,picker.v);
+		const hex=rgbToHex(rgb.r,rgb.g,rgb.b);
+		document.getElementById('cp-hex').value=hex.replace('#','');
+		document.getElementById('cp-r').value=rgb.r;
+		document.getElementById('cp-g').value=rgb.g;
+		document.getElementById('cp-b').value=rgb.b;
+		if(picker.target==='fg'){state.fgColor=hex;document.getElementById('cp-fg-swatch').style.background=hex;document.getElementById('native-fg').value=hex;}
+		else{state.bgColor=hex;document.getElementById('cp-bg-swatch').style.background=hex;document.getElementById('native-bg').value=hex;}
+		drawSqGradient();
+		drawHueGradient();
+	}
+	function syncPickerFromHex(hex){
+		const rgb=hexToRgb(hex);
+		const hsv=rgbToHsv(rgb.r,rgb.g,rgb.b);
+		picker.h=hsv.h; picker.s=hsv.s; picker.v=hsv.v;
+		document.getElementById('cp-hex').value=hex.replace('#','');
+		document.getElementById('cp-r').value=rgb.r;
+		document.getElementById('cp-g').value=rgb.g;
+		document.getElementById('cp-b').value=rgb.b;
+		drawSqGradient(); drawHueGradient();
+	}
+
+	function handleSqInteract(clientX, clientY){
+		const rect=cpSqCanvas.getBoundingClientRect();
+		picker.s=clamp((clientX-rect.left)/rect.width,0,1);
+		picker.v=1-clamp((clientY-rect.top)/rect.height,0,1);
+		applyPickerColor();
+	}
+	function handleHueInteract(clientX){
+		const rect=cpHueCanvas.getBoundingClientRect();
+		picker.h=clamp((clientX-rect.left)/rect.width,0,1)*360;
+		applyPickerColor();
+	}
+
+	// Mouse drag on SV square
+	cpSqCanvas.addEventListener('mousedown',e=>{e.stopPropagation();picker.dragSq=true;handleSqInteract(e.clientX,e.clientY);});
+	cpHueCanvas.addEventListener('mousedown',e=>{e.stopPropagation();picker.dragHue=true;handleHueInteract(e.clientX);});
+	document.addEventListener('mousemove',e=>{if(picker.dragSq)handleSqInteract(e.clientX,e.clientY);if(picker.dragHue)handleHueInteract(e.clientX);});
+	document.addEventListener('mouseup',()=>{picker.dragSq=false;picker.dragHue=false;});
+	// Touch on SV square
+	cpSqCanvas.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();picker.dragSq=true;const t=e.touches[0];handleSqInteract(t.clientX,t.clientY);},{passive:false});
+	cpSqCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(picker.dragSq){const t=e.touches[0];handleSqInteract(t.clientX,t.clientY);}},{passive:false});
+	cpSqCanvas.addEventListener('touchend',e=>{e.preventDefault();picker.dragSq=false;},{passive:false});
+	cpHueCanvas.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();picker.dragHue=true;const t=e.touches[0];handleHueInteract(t.clientX);},{passive:false});
+	cpHueCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(picker.dragHue){const t=e.touches[0];handleHueInteract(t.clientX);}},{passive:false});
+	cpHueCanvas.addEventListener('touchend',e=>{e.preventDefault();picker.dragHue=false;},{passive:false});
+
+	// FG/BG tabs
+	function setPickerTarget(target){
+		picker.target=target;
+		document.getElementById('cp-tab-fg').classList.toggle('active',target==='fg');
+		document.getElementById('cp-tab-bg').classList.toggle('active',target==='bg');
+		document.getElementById('cp-fg-swatch').classList.toggle('cp-active',target==='fg');
+		document.getElementById('cp-bg-swatch').classList.toggle('cp-active',target==='bg');
+		const hex=target==='fg'?state.fgColor:state.bgColor;
+		syncPickerFromHex(hex);
+	}
+	document.getElementById('cp-tab-fg').addEventListener('click',()=>setPickerTarget('fg'));
+	document.getElementById('cp-tab-bg').addEventListener('click',()=>setPickerTarget('bg'));
+	document.getElementById('cp-fg-swatch').addEventListener('click',()=>setPickerTarget('fg'));
+	document.getElementById('cp-bg-swatch').addEventListener('click',()=>setPickerTarget('bg'));
+
+	// Swap / Reset
+	document.getElementById('cp-swap').addEventListener('click',()=>{const t=state.fgColor;setFgColor(state.bgColor);setBgColor(t);});
+	document.getElementById('cp-reset').addEventListener('click',()=>{setFgColor('#ffffff');setBgColor('#000000');});
+
+	// Hex input
+	document.getElementById('cp-hex').addEventListener('change',e=>{
+		const v=e.target.value.replace('#','');
+		if(!/^[0-9a-fA-F]{6}$/.test(v))return;
+		if(picker.target==='fg')setFgColor('#'+v);else setBgColor('#'+v);
+	});
+	// RGB inputs
+	['cp-r','cp-g','cp-b'].forEach(id=>{
+		document.getElementById(id).addEventListener('change',()=>{
+			const r=clamp(+document.getElementById('cp-r').value,0,255);
+			const g=clamp(+document.getElementById('cp-g').value,0,255);
+			const b=clamp(+document.getElementById('cp-b').value,0,255);
+			const hex=rgbToHex(r,g,b);
+			if(picker.target==='fg')setFgColor(hex);else setBgColor(hex);
+		});
+	});
+
+	// Native pickers
+	document.getElementById('native-fg').addEventListener('input',e=>setFgColor(e.target.value));
+	document.getElementById('native-bg').addEventListener('input',e=>setBgColor(e.target.value));
+
+	// Long-press on FG/BG swatch opens native picker
+	let swatchHold=null;
+	['cp-fg-swatch','cp-bg-swatch'].forEach(id=>{
+		const el=document.getElementById(id);
+		el.addEventListener('mousedown',e=>{
+			swatchHold=setTimeout(()=>{
+				const nid=id==='cp-fg-swatch'?'native-fg':'native-bg';
+				document.getElementById(nid).click();
+			},400);
+		});
+		el.addEventListener('mouseup',()=>{clearTimeout(swatchHold);});
+		el.addEventListener('mouseleave',()=>{clearTimeout(swatchHold);});
+	});
+
+	// Palette
+	const swatchGrid=document.getElementById('swatch-grid');
+	PALETTE.forEach(col=>{
+		const cell=document.createElement('div');
+		cell.className='swatch-cell'; cell.style.background=col; cell.title=col;
+		cell.addEventListener('click',e=>{if(e.altKey||picker.target==='bg')setBgColor(col);else setFgColor(col);});
+		swatchGrid.appendChild(cell);
+	});
+
+	// Init picker
+	function initPicker(){
+		drawSqGradient();
+		drawHueGradient();
+	}
+	window.addEventListener('resize',()=>{drawSqGradient();drawHueGradient();});
+
+	// ============================================================
+	//  FILTERS
+	// ============================================================
+	function applyGaussianBlur(radius) {
+		pushUndo();
+		const lctx=activeCtx();
+		const w=state.canvasW, h=state.canvasH;
+		const src=lctx.getImageData(0,0,w,h);
+		const dst=lctx.createImageData(w,h);
+		const sd=src.data, dd=dst.data;
+		const r=Math.round(radius), size=2*r+1;
+		const kernel=[]; let sum=0;
+		for(let i=0;i<size;i++){const g=Math.exp(-(i-r)*(i-r)/(2*r*r));kernel.push(g);sum+=g;}
+		const k=kernel.map(v=>v/sum);
+		const tmp=new Float32Array(w*h*4);
+		// horizontal pass
+		for(let y=0;y<h;y++){
+			for(let x=0;x<w;x++){
+				let R=0,G=0,B=0,A=0;
+				for(let ki=0;ki<size;ki++){
+					const sx=clamp(x+ki-r,0,w-1);
+					const si=(y*w+sx)*4;
+					const kv=k[ki];
+					R+=sd[si]*kv; G+=sd[si+1]*kv; B+=sd[si+2]*kv; A+=sd[si+3]*kv;
+				}
+				const di=(y*w+x)*4;
+				tmp[di]=R; tmp[di+1]=G; tmp[di+2]=B; tmp[di+3]=A;
+			}
+		}
+		// vertical pass
+		for(let y=0;y<h;y++){
+			for(let x=0;x<w;x++){
+				let R=0,G=0,B=0,A=0;
+				for(let ki=0;ki<size;ki++){
+					const sy=clamp(y+ki-r,0,h-1);
+					const si=(sy*w+x)*4;
+					const kv=k[ki];
+					R+=tmp[si]*kv; G+=tmp[si+1]*kv; B+=tmp[si+2]*kv; A+=tmp[si+3]*kv;
+				}
+				const di=(y*w+x)*4;
+				dd[di]=R; dd[di+1]=G; dd[di+2]=B; dd[di+3]=A;
+			}
+		}
+		lctx.putImageData(dst,0,0);
+		renderAllLayers(); updateLayerThumbs();
+		toast('Blur applied');
+	}
+
+	function applySharpen() {
+		pushUndo();
+		const lctx=activeCtx();
+		const w=state.canvasW, h=state.canvasH;
+		const src=lctx.getImageData(0,0,w,h);
+		const dst=lctx.createImageData(w,h);
+		const sd=src.data, dd=dst.data;
+		const kernel=[0,-1,0,-1,5,-1,0,-1,0];
+		for(let y=1;y<h-1;y++){
+			for(let x=1;x<w-1;x++){
+				let R=0,G=0,B=0;
+				for(let ky=0;ky<3;ky++){
+					for(let kx=0;kx<3;kx++){
+						const si=((y+ky-1)*w+(x+kx-1))*4;
+						const kv=kernel[ky*3+kx];
+						R+=sd[si]*kv; G+=sd[si+1]*kv; B+=sd[si+2]*kv;
+					}
+				}
+				const di=(y*w+x)*4;
+				dd[di]=clamp(R,0,255); dd[di+1]=clamp(G,0,255); dd[di+2]=clamp(B,0,255); dd[di+3]=sd[di+3];
+			}
+		}
+		lctx.putImageData(dst,0,0);
+		renderAllLayers(); updateLayerThumbs();
+		toast('Sharpen applied');
+	}
+
+	function applyNoise(amount) {
+		pushUndo();
+		const lctx=activeCtx();
+		const id=lctx.getImageData(0,0,state.canvasW,state.canvasH);
+		const d=id.data;
+		for(let i=0;i<d.length;i+=4){
+			const n=(Math.random()-0.5)*amount*2;
+			d[i]=clamp(d[i]+n,0,255); d[i+1]=clamp(d[i+1]+n,0,255); d[i+2]=clamp(d[i+2]+n,0,255);
+		}
+		lctx.putImageData(id,0,0);
+		renderAllLayers(); updateLayerThumbs();
+		toast('Noise applied');
+	}
+
+	function applyPixelate(blockSize) {
+		pushUndo();
+		const lctx=activeCtx();
+		const w=state.canvasW, h=state.canvasH;
+		const id=lctx.getImageData(0,0,w,h);
+		const d=id.data;
+		for(let y=0;y<h;y+=blockSize){
+			for(let x=0;x<w;x+=blockSize){
+				const si=(y*w+x)*4;
+				const r=d[si],g=d[si+1],b=d[si+2],a=d[si+3];
+				for(let by=0;by<blockSize&&y+by<h;by++){
+					for(let bx=0;bx<blockSize&&x+bx<w;bx++){
+						const di=((y+by)*w+(x+bx))*4;
+						d[di]=r;d[di+1]=g;d[di+2]=b;d[di+3]=a;
+					}
+				}
+			}
+		}
+		lctx.putImageData(id,0,0);
+		renderAllLayers(); updateLayerThumbs();
+		toast('Pixelate applied');
+	}
+
+	// ============================================================
+	//  CANVAS EVENTS
+	// ============================================================
+	let lassoPoints=[];
+
+	canvasArea.addEventListener('mousedown', (e) => {
+		if(e.button===1||state.spaceDown) {
+			state.isPanning=true;
+			state.startX=e.clientX-state.panX;
+			state.startY=e.clientY-state.panY;
+			canvasArea.style.cursor='grabbing'; return;
+		}
+		if(e.button!==0) return;
+		const {x,y}=evToCanvas(e);
+		const t=state.tool;
+		state.isDrawing=true; state.startX=x; state.startY=y; state.lastX=x; state.lastY=y;
+
+		if(t==='brush'||t==='pencil'||t==='eraser') {
+			pushUndo();
+			const lctx=activeCtx(); lctx.save();
+			if(t==='eraser') {
+				lctx.globalCompositeOperation='destination-out';
+				lctx.globalAlpha=state.brushOpacity/100;
+				if(state.brushMode==='soft') drawSoftBrush(lctx,x,y,state.brushSize);
+				else { lctx.fillStyle='rgba(0,0,0,1)'; lctx.beginPath(); if(state.brushMode==='square') lctx.fillRect(x-state.brushSize/2,y-state.brushSize/2,state.brushSize,state.brushSize); else {lctx.arc(x,y,state.brushSize/2,0,Math.PI*2);lctx.fill();} }
+			} else if(t==='pencil') {
+				lctx.globalCompositeOperation='source-over'; drawPencilSegment(lctx,x,y,x,y);
+			} else {
+				lctx.globalCompositeOperation='source-over'; setBrushStyle(lctx);
+				if(state.brushMode==='soft') drawSoftBrush(lctx,x,y,state.brushSize);
+				else { lctx.beginPath(); lctx.arc(x,y,state.brushSize/2,0,Math.PI*2); lctx.fill(); }
+			}
+			lctx.restore(); renderAllLayers();
+		}
+		if(t==='fill')       { pushUndo(); floodFill(activeCtx(),x,y,state.fgColor); renderAllLayers(); updateLayerThumbs(); }
+		if(t==='eyedropper') { pickColor(x,y); }
+		if(t==='move')       { pushUndo(); startMove(x,y); }
+		if(t==='zoom')       { zoomAt(e.altKey?1/1.3:1.3, e.clientX, e.clientY); }
+		if(t==='lasso')      { pushUndo(); lassoPoints=[{x,y}]; state.selection=null; sctx.clearRect(0,0,state.canvasW,state.canvasH); }
+	});
+
+	canvasArea.addEventListener('mousemove', (e) => {
+		const {x,y}=evToCanvas(e);
+		cursorIndicator.textContent=`${clamp(x,0,state.canvasW-1)}, ${clamp(y,0,state.canvasH-1)}`;
+
+		if(state.isPanning) {
+			state.panX=e.clientX-state.startX;
+			state.panY=e.clientY-state.startY;
+			applyViewport(); return;
+		}
+		if(!state.isDrawing) { updateCursorStyle(e); return; }
+		const t=state.tool;
+
+		if(t==='brush'||t==='eraser') {
+			const lctx=activeCtx(); lctx.save();
+			if(t==='eraser') {
+				lctx.globalCompositeOperation='destination-out'; lctx.globalAlpha=state.brushOpacity/100;
+				if(state.brushMode==='soft') {
+					const steps=Math.ceil(Math.hypot(x-state.lastX,y-state.lastY));
+					for(let s=0;s<=steps;s++) drawSoftBrush(lctx,state.lastX+(x-state.lastX)*s/steps,state.lastY+(y-state.lastY)*s/steps,state.brushSize);
+				} else { lctx.strokeStyle='rgba(0,0,0,1)'; lctx.lineWidth=state.brushSize; lctx.lineCap=state.brushMode==='square'?'square':'round'; drawLine(lctx,state.lastX,state.lastY,x,y); }
+			} else {
+				lctx.globalCompositeOperation='source-over';
+				if(state.brushMode==='soft') {
+					const steps=Math.ceil(Math.hypot(x-state.lastX,y-state.lastY));
+					for(let s=0;s<=steps;s++) drawSoftBrush(lctx,state.lastX+(x-state.lastX)*s/steps,state.lastY+(y-state.lastY)*s/steps,state.brushSize);
+				} else { setBrushStyle(lctx); drawLine(lctx,state.lastX,state.lastY,x,y); }
+			}
+			lctx.restore(); renderAllLayers();
+		}
+		if(t==='pencil')  { drawPencilSegment(activeCtx(),state.lastX,state.lastY,x,y); renderAllLayers(); }
+		if(t==='rect'||t==='ellipse'||t==='line') { drawShapeOverlay(state.startX,state.startY,x,y,t); renderAllLayers(); ctx.drawImage(overlayCanvas,0,0); }
+		if(t==='select')  { const rx=Math.min(state.startX,x),ry=Math.min(state.startY,y); state.selection={x:rx,y:ry,w:Math.abs(x-state.startX),h:Math.abs(y-state.startY)}; drawSelection(); }
+		if(t==='move')    { doMove(x,y); }
+		if(t==='lasso')   {
+			lassoPoints.push({x,y}); sctx.clearRect(0,0,state.canvasW,state.canvasH); sctx.save();
+			sctx.strokeStyle='rgba(255,255,255,0.8)'; sctx.lineWidth=1; sctx.setLineDash([4,3]);
+			sctx.beginPath(); lassoPoints.forEach((p,i)=>i===0?sctx.moveTo(p.x,p.y):sctx.lineTo(p.x,p.y)); sctx.stroke(); sctx.restore();
+		}
+		if(t==='gradient') { drawGradientOverlay(state.startX,state.startY,x,y); renderAllLayers(); ctx.drawImage(overlayCanvas,0,0); }
+		state.lastX=x; state.lastY=y;
+	});
+
+	canvasArea.addEventListener('mouseup', (e) => {
+		if(state.isPanning) { state.isPanning=false; updateCursorStyle(e); return; }
+		if(!state.isDrawing) return;
+		state.isDrawing=false;
+		const {x,y}=evToCanvas(e); const t=state.tool;
+
+		if(t==='rect'||t==='ellipse'||t==='line') { drawShapeOverlay(state.startX,state.startY,x,y,t); commitOverlay(); }
+		if(t==='gradient') {
+			if(Math.hypot(x-state.startX,y-state.startY)>2) { pushUndo(); drawGradient(state.startX,state.startY,x,y); renderAllLayers(); updateLayerThumbs(); }
+			octx.clearRect(0,0,state.canvasW,state.canvasH);
+		}
+		if(t==='move')    { state.moveLayerSnapshot=null; updateLayerThumbs(); }
+		if(t==='lasso'&&lassoPoints.length>3) {
+			const xs=lassoPoints.map(p=>p.x),ys=lassoPoints.map(p=>p.y);
+			const sx=Math.min(...xs),sy=Math.min(...ys);
+			state.selection={x:sx,y:sy,w:Math.max(...xs)-sx,h:Math.max(...ys)-sy};
+			lassoPoints=[]; startSelectionAnim();
+		}
+		if(t==='select') {
+			if(state.selection&&state.selection.w>2&&state.selection.h>2) startSelectionAnim();
+			else { state.selection=null; sctx.clearRect(0,0,state.canvasW,state.canvasH); }
+		}
+		if(t==='brush'||t==='pencil'||t==='eraser') updateLayerThumbs();
+	});
+
+	canvasArea.addEventListener('click', (e) => {
+		const {x,y}=evToCanvas(e);
+		if(state.tool==='text') { state.textPos={x,y}; openModal('modal-text'); }
+	});
+
+	canvasArea.addEventListener('mouseleave',()=>{ if(state.isPanning){state.isPanning=false; updateCursorStyle();} });
+	canvasArea.addEventListener('wheel',(e)=>{
+		e.preventDefault();
+		zoomAt(e.deltaY<0?1.12:1/1.12, e.clientX, e.clientY);
+	},{passive:false});
+	canvasArea.addEventListener('contextmenu',e=>e.preventDefault());
+
+	// ============================================================
+	//  TOUCH EVENTS — single finger = draw, two fingers = pan + pinch zoom
+	// ============================================================
+	let activeTouches = {};
+	let lastPinchDist = null;
+	let touchStartCX = 0, touchStartCY = 0;
+
+	function clientToCanvas(clientX, clientY) {
+		const rect = mainCanvas.getBoundingClientRect();
+		return { x: Math.floor((clientX-rect.left)/state.zoom), y: Math.floor((clientY-rect.top)/state.zoom) };
+	}
+	function getTouches() { return Object.values(activeTouches); }
+
+	canvasArea.addEventListener('touchstart', e => {
+		e.preventDefault();
+		Array.from(e.changedTouches).forEach(t => { activeTouches[t.identifier] = {x:t.clientX,y:t.clientY}; });
+		const count = getTouches().length;
+		if(count === 1) {
+			const t = e.changedTouches[0];
+			const evt = { clientX:t.clientX, clientY:t.clientY, button:0, altKey:false, stopPropagation:()=>{} };
+			// Simulate mousedown
+			const md = new MouseEvent('mousedown', {clientX:t.clientX, clientY:t.clientY, button:0, bubbles:true});
+			canvasArea.dispatchEvent(md);
+		} else if(count === 2) {
+			// End single-touch drawing if in progress
+			if(state.isDrawing) { state.isDrawing = false; }
+			const touches = getTouches();
+			lastPinchDist = Math.hypot(touches[1].x-touches[0].x, touches[1].y-touches[0].y);
+			touchStartCX = (touches[0].x+touches[1].x)/2 - state.panX;
+			touchStartCY = (touches[0].y+touches[1].y)/2 - state.panY;
+			state.isPanning = false; // will handle manually below
+		}
+	}, {passive:false});
+
+	canvasArea.addEventListener('touchmove', e => {
+		e.preventDefault();
+		Array.from(e.changedTouches).forEach(t => { if(activeTouches[t.identifier]) activeTouches[t.identifier] = {x:t.clientX,y:t.clientY}; });
+		const count = getTouches().length;
+		if(count === 1 && lastPinchDist === null) {
+			const t = e.changedTouches[0];
+			const mm = new MouseEvent('mousemove', {clientX:t.clientX, clientY:t.clientY, buttons:1, bubbles:true});
+			canvasArea.dispatchEvent(mm);
+		} else if(count >= 2) {
+			const touches = getTouches();
+			const cx = (touches[0].x+touches[1].x)/2;
+			const cy = (touches[0].y+touches[1].y)/2;
+			const dist = Math.hypot(touches[1].x-touches[0].x, touches[1].y-touches[0].y);
+			// Pan
+			state.panX = cx - touchStartCX;
+			state.panY = cy - touchStartCY;
+			// Pinch zoom
+			if(lastPinchDist && dist > 0) {
+				const factor = dist / lastPinchDist;
+				const rect = canvasArea.getBoundingClientRect();
+				const ax = cx - rect.left, ay = cy - rect.top;
+				const nz = clamp(state.zoom*factor, 0.04, 32);
+				state.panX = ax - (ax-state.panX)*(nz/state.zoom);
+				state.panY = ay - (ay-state.panY)*(nz/state.zoom);
+				state.zoom = nz;
+				touchStartCX = cx - state.panX;
+				touchStartCY = cy - state.panY;
+			}
+			lastPinchDist = dist;
+			applyViewport();
+		}
+	}, {passive:false});
+
+	canvasArea.addEventListener('touchend', e => {
+		e.preventDefault();
+		Array.from(e.changedTouches).forEach(t => { delete activeTouches[t.identifier]; });
+		const count = getTouches().length;
+		if(count === 0) {
+			lastPinchDist = null;
+			if(state.isDrawing) {
+				const t = e.changedTouches[0];
+				const mu = new MouseEvent('mouseup', {clientX:t.clientX, clientY:t.clientY, button:0, bubbles:true});
+				canvasArea.dispatchEvent(mu);
+			}
+		}
+	}, {passive:false});
+	canvasArea.addEventListener('touchcancel', e => {
+		Array.from(e.changedTouches).forEach(t => { delete activeTouches[t.identifier]; });
+		lastPinchDist = null; state.isDrawing = false; state.isPanning = false;
+	}, {passive:false});
+
+	function updateCursorStyle(e) {
+		const m={brush:'crosshair',pencil:'crosshair',eraser:'crosshair',fill:'cell',
+			eyedropper:'crosshair',gradient:'crosshair',rect:'crosshair',ellipse:'crosshair',
+			line:'crosshair',text:'text',select:'crosshair',move:'move',
+			lasso:'crosshair',zoom:e&&e.altKey?'zoom-out':'zoom-in',hand:'grab'};
+		canvasArea.style.cursor=m[state.tool]||'default';
+	}
+
+	// ============================================================
+	//  TOOLS
+	// ============================================================
+	const optMap={
+		brush:['opt-brush','opt-brush-mode'], pencil:['opt-brush'],
+		eraser:['opt-brush','opt-brush-mode'],
+		rect:['opt-shape'], ellipse:['opt-shape'], line:['opt-shape'],
+		text:['opt-text'], select:['opt-select'], lasso:['opt-select'],
+		gradient:['opt-gradient'], zoom:['opt-zoom'],
+		fill:[], eyedropper:[], move:[], hand:[],
+	};
+	const trayOptions = document.getElementById('tray-options');
+	function selectTool(tool) {
+		state.tool=tool;
+		document.querySelectorAll('.tool-btn').forEach(b=>b.classList.toggle('active',b.dataset.tool===tool));
+		document.querySelectorAll('.opt-section').forEach(s=>s.classList.remove('visible'));
+		const sections = optMap[tool]||[];
+		(sections).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('visible');});
+		// Show/hide the tray-options bar
+		trayOptions.style.display = sections.length > 0 ? 'flex' : 'none';
+		updateCursorStyle();
+	}
+	document.querySelectorAll('.tool-btn').forEach(btn=>btn.addEventListener('click',()=>selectTool(btn.dataset.tool)));
+
+	// ============================================================
+	//  OPTION BAR CONTROLS
+	// ============================================================
+	const brushSizeEl=document.getElementById('brush-size');
+	const brushSizeVal=document.getElementById('brush-size-val');
+	brushSizeEl.addEventListener('input',()=>{state.brushSize=+brushSizeEl.value;brushSizeVal.textContent=state.brushSize+'px';});
+
+	const brushOpacEl=document.getElementById('brush-opacity');
+	const brushOpacVal=document.getElementById('brush-opacity-val');
+	brushOpacEl.addEventListener('input',()=>{state.brushOpacity=+brushOpacEl.value;brushOpacVal.textContent=state.brushOpacity+'%';});
+
+	const shapeStrokeSz=document.getElementById('shape-stroke-size');
+	const shapeStrokeVal=document.getElementById('shape-stroke-val');
+	shapeStrokeSz.addEventListener('input',()=>{state.strokeSize=+shapeStrokeSz.value;shapeStrokeVal.textContent=state.strokeSize+'px';});
+
+	const textSizeEl=document.getElementById('text-size');
+	const textSizeVal=document.getElementById('text-size-val');
+	textSizeEl.addEventListener('input',()=>{state.textSize=+textSizeEl.value;textSizeVal.textContent=state.textSize+'px';});
+
+	['round','square','soft'].forEach(m=>{
+		document.getElementById('mode-'+m).addEventListener('click',()=>{
+			state.brushMode=m;
+			['round','square','soft'].forEach(n=>document.getElementById('mode-'+n).classList.toggle('active',n===m));
+		});
+	});
+	['fill','stroke','both'].forEach(m=>{
+		document.getElementById('shape-'+m).addEventListener('click',()=>{
+			state.shapeMode=m;
+			['fill','stroke','both'].forEach(n=>document.getElementById('shape-'+n).classList.toggle('active',n===m));
+		});
+	});
+	document.getElementById('text-font').addEventListener('change',e=>{state.textFont=e.target.value;});
+	document.getElementById('text-bold').addEventListener('click',function(){state.textBold=!state.textBold;this.classList.toggle('active',state.textBold);});
+	document.getElementById('text-italic').addEventListener('click',function(){state.textItalic=!state.textItalic;this.classList.toggle('active',state.textItalic);});
+	document.getElementById('gradient-type').addEventListener('change',e=>{state.gradientType=e.target.value;});
+
+	// Zoom btns
+	const zca=()=>{const r=canvasArea.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};};
+	document.getElementById('zoom-in-btn').addEventListener('click',()=>{const c=zca();zoomAt(1.3,c.x,c.y);});
+	document.getElementById('zoom-out-btn').addEventListener('click',()=>{const c=zca();zoomAt(1/1.3,c.x,c.y);});
+	document.getElementById('zoom-fit-btn').addEventListener('click',fitToScreen);
+	document.getElementById('zoom-100-btn').addEventListener('click',()=>{const r=canvasArea.getBoundingClientRect();const cx=r.left+r.width/2,cy=r.top+r.height/2;state.zoom=1;state.panX=cx-state.canvasW/2;state.panY=cy-state.canvasH/2;applyViewport();});
+	document.getElementById('zoom-plus-ind').addEventListener('click',()=>{const c=zca();zoomAt(1.25,c.x,c.y);});
+	document.getElementById('zoom-minus-ind').addEventListener('click',()=>{const c=zca();zoomAt(1/1.25,c.x,c.y);});
+
+	// Select opts
+	document.getElementById('action-crop-sel').addEventListener('click',()=>{if(state.selection)cropToSelection();});
+	document.getElementById('action-copy-sel').addEventListener('click',()=>{if(!state.selection)return;const{x,y,w,h}=state.selection;state.clipboardData=ctx.getImageData(x,y,w,h);toast('Copied selection');});
+	document.getElementById('action-cut-sel').addEventListener('click',()=>{
+		if(!state.selection)return;const{x,y,w,h}=state.selection;
+		state.clipboardData=ctx.getImageData(x,y,w,h);pushUndo();activeCtx().clearRect(x,y,w,h);renderAllLayers();updateLayerThumbs();toast('Cut selection');
+	});
+	document.getElementById('action-deselect').addEventListener('click',()=>{state.selection=null;sctx.clearRect(0,0,state.canvasW,state.canvasH);cancelAnimationFrame(selAnimFrame);});
+
+	function cropToSelection() {
+		const{x,y,w,h}=state.selection;pushUndo();
+		state.layers=state.layers.map(l=>{
+			const o=document.createElement('canvas');o.width=w;o.height=h;
+			const c=o.getContext('2d');c.drawImage(l.canvas,-x,-y);
+			return{canvas:o,ctx:c,name:l.name,visible:l.visible,opacity:l.opacity||100};
+		});
+		state.canvasW=w;state.canvasH=h;
+		[mainCanvas,overlayCanvas,selCanvas,checkerCanvas].forEach(c=>{c.width=w;c.height=h;});
+		shadowEl.style.width=w+'px';shadowEl.style.height=h+'px';
+		drawCheckerboard();state.selection=null;sctx.clearRect(0,0,w,h);
+		renderLayersPanel();renderAllLayers();fitToScreen();
+		infoSize.textContent=`${w} × ${h}`;toast(`Cropped to ${w}×${h}`);
+	}
+
+	// ============================================================
+	//  MENUS
+	// ============================================================
+	function setupMenu(btnId,dropId) {
+		const btn=document.getElementById(btnId),drop=document.getElementById(dropId);
+		btn.addEventListener('click',e=>{
+			e.stopPropagation();
+			const isOpen=drop.classList.toggle('is-open');
+			btn.classList.toggle('is-open',isOpen);
+			document.querySelectorAll('.dropdown').forEach(d=>{if(d!==drop)d.classList.remove('is-open');});
+			document.querySelectorAll('.nav-menu-btn').forEach(b=>{if(b!==btn)b.classList.remove('is-open');});
+		});
+	}
+	['file','edit','image','layer','select','filter','view'].forEach(m=>setupMenu('btn-menu-'+m,'dropdown-'+m));
+	document.addEventListener('click',()=>{
+		document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('is-open'));
+		document.querySelectorAll('.nav-menu-btn').forEach(b=>b.classList.remove('is-open'));
+	});
+	document.querySelectorAll('.dropdown').forEach(d=>d.addEventListener('click',e=>e.stopPropagation()));
+	function closeDropdowns(){document.querySelectorAll('.dropdown').forEach(d=>d.classList.remove('is-open'));document.querySelectorAll('.nav-menu-btn').forEach(b=>b.classList.remove('is-open'));}
+
+	// FILE
+	document.getElementById('action-new').addEventListener('click',()=>{openModal('modal-new');closeDropdowns();});
+	document.getElementById('action-open').addEventListener('click',()=>{fileInput.click();closeDropdowns();});
+	document.getElementById('action-save-png').addEventListener('click',()=>{exportImage('png');closeDropdowns();});
+	document.getElementById('action-save-jpg').addEventListener('click',()=>{exportImage('jpeg');closeDropdowns();});
+	document.getElementById('action-flatten').addEventListener('click',()=>{flattenLayers();closeDropdowns();});
+
+	fileInput.addEventListener('change',e=>{
+		const file=e.target.files[0];if(!file)return;
+		const url=URL.createObjectURL(file);
+		const img=new Image();
+		img.onload=()=>{
+			state.layers=[];state.activeLayerIdx=0;state.canvasW=img.width;state.canvasH=img.height;
+			[mainCanvas,overlayCanvas,selCanvas,checkerCanvas].forEach(c=>{c.width=img.width;c.height=img.height;});
+			shadowEl.style.width=img.width+'px';shadowEl.style.height=img.height+'px';
+			drawCheckerboard();addLayer('Background');activeCtx().drawImage(img,0,0);
+			renderAllLayers();updateLayerThumbs();fitToScreen();
+			infoSize.textContent=`${img.width} × ${img.height}`;
+			state.undoStack=[];state.redoStack=[];updateUndoButtons();
+			toast(`Opened: ${file.name}`);URL.revokeObjectURL(url);
+		};img.src=url;e.target.value='';
+	});
+
+	function exportImage(format) {
+		flattenToTemp(temp=>{
+			const a=document.createElement('a');
+			a.download='paint-export.'+(format==='jpeg'?'jpg':'png');
+			a.href=temp.toDataURL('image/'+format,format==='jpeg'?0.95:1);
+			a.click();toast(`Exported as ${format.toUpperCase()}`);
+		});
+	}
+	function flattenToTemp(cb) {
+		const t=document.createElement('canvas');t.width=state.canvasW;t.height=state.canvasH;
+		const tc=t.getContext('2d');
+		for(let i=state.layers.length-1;i>=0;i--){if(state.layers[i].visible){tc.save();tc.globalAlpha=(state.layers[i].opacity||100)/100;tc.drawImage(state.layers[i].canvas,0,0);tc.restore();}}
+		cb(t);
+	}
+	function flattenLayers() {
+		pushUndo();flattenToTemp(temp=>{
+			const o=document.createElement('canvas');o.width=state.canvasW;o.height=state.canvasH;
+			const c=o.getContext('2d');c.drawImage(temp,0,0);
+			state.layers=[{canvas:o,ctx:c,name:'Flattened',visible:true,opacity:100}];
+			state.activeLayerIdx=0;
+			renderLayersPanel();renderAllLayers();updateLayerThumbs();updateInfo();toast('Layers flattened');
+		});
+	}
+
+	// EDIT
+	document.getElementById('action-undo').addEventListener('click',()=>{undo();closeDropdowns();});
+	document.getElementById('action-redo').addEventListener('click',()=>{redo();closeDropdowns();});
+	document.getElementById('btn-undo').addEventListener('click',undo);
+	document.getElementById('btn-redo').addEventListener('click',redo);
+	document.getElementById('action-copy').addEventListener('click',()=>{
+		if(state.selection){const{x,y,w,h}=state.selection;state.clipboardData=ctx.getImageData(x,y,w,h);}
+		else state.clipboardData=activeCtx().getImageData(0,0,state.canvasW,state.canvasH);
+		toast('Copied');closeDropdowns();
+	});
+	document.getElementById('action-paste').addEventListener('click',()=>{
+		if(!state.clipboardData){toast('Nothing to paste');return;}
+		pushUndo();addLayer('Pasted');activeCtx().putImageData(state.clipboardData,0,0);
+		renderAllLayers();updateLayerThumbs();toast('Pasted');closeDropdowns();
+	});
+	document.getElementById('action-cut').addEventListener('click',()=>{
+		if(state.selection){const{x,y,w,h}=state.selection;state.clipboardData=ctx.getImageData(x,y,w,h);pushUndo();activeCtx().clearRect(x,y,w,h);}
+		else{state.clipboardData=activeCtx().getImageData(0,0,state.canvasW,state.canvasH);pushUndo();activeCtx().clearRect(0,0,state.canvasW,state.canvasH);}
+		renderAllLayers();updateLayerThumbs();toast('Cut');closeDropdowns();
+	});
+	document.getElementById('action-clear').addEventListener('click',()=>{pushUndo();activeCtx().clearRect(0,0,state.canvasW,state.canvasH);renderAllLayers();updateLayerThumbs();closeDropdowns();});
+	document.getElementById('action-fill-canvas').addEventListener('click',()=>{
+		pushUndo();const lctx=activeCtx();lctx.save();lctx.fillStyle=state.fgColor;lctx.globalAlpha=state.brushOpacity/100;
+		lctx.fillRect(0,0,state.canvasW,state.canvasH);lctx.restore();renderAllLayers();updateLayerThumbs();closeDropdowns();
+	});
+
+	// IMAGE
+	document.getElementById('action-resize').addEventListener('click',()=>{document.getElementById('resize-w').value=state.canvasW;document.getElementById('resize-h').value=state.canvasH;openModal('modal-resize');closeDropdowns();});
+	document.getElementById('action-flip-h').addEventListener('click',()=>{
+		pushUndo();state.layers.forEach(l=>{
+			const t=document.createElement('canvas');t.width=state.canvasW;t.height=state.canvasH;
+			const tc=t.getContext('2d');tc.save();tc.scale(-1,1);tc.drawImage(l.canvas,-state.canvasW,0);tc.restore();
+			l.ctx.clearRect(0,0,state.canvasW,state.canvasH);l.ctx.drawImage(t,0,0);
+		});renderAllLayers();updateLayerThumbs();closeDropdowns();toast('Flipped Horizontal');
+	});
+	document.getElementById('action-flip-v').addEventListener('click',()=>{
+		pushUndo();state.layers.forEach(l=>{
+			const t=document.createElement('canvas');t.width=state.canvasW;t.height=state.canvasH;
+			const tc=t.getContext('2d');tc.save();tc.scale(1,-1);tc.drawImage(l.canvas,0,-state.canvasH);tc.restore();
+			l.ctx.clearRect(0,0,state.canvasW,state.canvasH);l.ctx.drawImage(t,0,0);
+		});renderAllLayers();updateLayerThumbs();closeDropdowns();toast('Flipped Vertical');
+	});
+	document.getElementById('action-grayscale').addEventListener('click',()=>{
+		pushUndo();state.layers.forEach(l=>{
+			const id=l.ctx.getImageData(0,0,state.canvasW,state.canvasH),d=id.data;
+			for(let i=0;i<d.length;i+=4){const g=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];d[i]=d[i+1]=d[i+2]=g;}
+			l.ctx.putImageData(id,0,0);
+		});renderAllLayers();updateLayerThumbs();closeDropdowns();toast('Grayscale applied');
+	});
+	document.getElementById('action-invert').addEventListener('click',()=>{
+		pushUndo();state.layers.forEach(l=>{
+			const id=l.ctx.getImageData(0,0,state.canvasW,state.canvasH),d=id.data;
+			for(let i=0;i<d.length;i+=4){d[i]=255-d[i];d[i+1]=255-d[i+1];d[i+2]=255-d[i+2];}
+			l.ctx.putImageData(id,0,0);
+		});renderAllLayers();updateLayerThumbs();closeDropdowns();toast('Colors inverted');
+	});
+
+	// LAYER MENU
+	document.getElementById('ml-new').addEventListener('click',()=>{addLayer('Layer '+(state.layers.length+1));closeDropdowns();});
+	document.getElementById('ml-dup').addEventListener('click',()=>{
+		pushUndo();const src=activeLayer();
+		const o=document.createElement('canvas');o.width=state.canvasW;o.height=state.canvasH;
+		const c=o.getContext('2d');c.drawImage(src.canvas,0,0);
+		state.layers.splice(state.activeLayerIdx,0,{canvas:o,ctx:c,name:src.name+' copy',visible:true,opacity:src.opacity||100});
+		renderLayersPanel();renderAllLayers();updateLayerThumbs();updateInfo();closeDropdowns();
+	});
+	document.getElementById('ml-del').addEventListener('click',()=>{
+		if(state.layers.length<=1){toast('Cannot delete the last layer');return;}
+		pushUndo();state.layers.splice(state.activeLayerIdx,1);
+		state.activeLayerIdx=Math.min(state.activeLayerIdx,state.layers.length-1);
+		renderLayersPanel();renderAllLayers();updateInfo();closeDropdowns();
+	});
+	document.getElementById('ml-merge-down').addEventListener('click',()=>{
+		const i=state.activeLayerIdx;
+		if(i>=state.layers.length-1){toast('No layer below to merge');return;}
+		pushUndo();
+		const top=state.layers[i],bot=state.layers[i+1];
+		bot.ctx.save();bot.ctx.globalAlpha=(top.opacity||100)/100;bot.ctx.drawImage(top.canvas,0,0);bot.ctx.restore();
+		state.layers.splice(i,1);state.activeLayerIdx=i<state.layers.length?i:i-1;
+		renderLayersPanel();renderAllLayers();updateInfo();closeDropdowns();toast('Merged down');
+	});
+	document.getElementById('ml-flatten').addEventListener('click',()=>{flattenLayers();closeDropdowns();});
+
+	// SELECT MENU
+	document.getElementById('sel-all').addEventListener('click',()=>{state.selection={x:0,y:0,w:state.canvasW,h:state.canvasH};startSelectionAnim();selectTool('select');closeDropdowns();});
+	document.getElementById('sel-deselect').addEventListener('click',()=>{state.selection=null;sctx.clearRect(0,0,state.canvasW,state.canvasH);cancelAnimationFrame(selAnimFrame);closeDropdowns();});
+	document.getElementById('sel-copy').addEventListener('click',()=>{document.getElementById('action-copy-sel').click();closeDropdowns();});
+	document.getElementById('sel-cut').addEventListener('click',()=>{document.getElementById('action-cut-sel').click();closeDropdowns();});
+	document.getElementById('sel-crop').addEventListener('click',()=>{if(state.selection)cropToSelection();closeDropdowns();});
+
+	// FILTER MENU
+	document.getElementById('filter-blur').addEventListener('click',()=>{openModal('modal-blur');closeDropdowns();});
+	document.getElementById('filter-sharpen').addEventListener('click',()=>{applySharpen();closeDropdowns();});
+	document.getElementById('filter-noise').addEventListener('click',()=>{openModal('modal-noise');closeDropdowns();});
+	document.getElementById('filter-pixelate').addEventListener('click',()=>{openModal('modal-pixelate');closeDropdowns();});
+
+	// VIEW MENU
+	document.getElementById('view-zoom-in').addEventListener('click',()=>{const c=zca();zoomAt(1.3,c.x,c.y);closeDropdowns();});
+	document.getElementById('view-zoom-out').addEventListener('click',()=>{const c=zca();zoomAt(1/1.3,c.x,c.y);closeDropdowns();});
+	document.getElementById('view-fit').addEventListener('click',()=>{fitToScreen();closeDropdowns();});
+	document.getElementById('view-100').addEventListener('click',()=>{document.getElementById('zoom-100-btn').click();closeDropdowns();});
+
+	// LAYER PANEL BTNS
+	document.getElementById('btn-layer-add').addEventListener('click',()=>addLayer('Layer '+(state.layers.length+1)));
+	document.getElementById('btn-layer-dup').addEventListener('click',()=>document.getElementById('ml-dup').click());
+	document.getElementById('btn-layer-del').addEventListener('click',()=>{
+		if(state.layers.length<=1){toast('Cannot delete the last layer');return;}
+		pushUndo();state.layers.splice(state.activeLayerIdx,1);
+		state.activeLayerIdx=Math.min(state.activeLayerIdx,state.layers.length-1);
+		renderLayersPanel();renderAllLayers();updateInfo();
+	});
+
+	// ============================================================
+	//  COLOR
+	// ============================================================
+	// (Picker setup and palette setup are done above, near setFgColor/setBgColor)
+	// Old hex/swap event handlers — replaced by picker system above
+	// Swap via keyboard still works (see keyboard section below)
+
+	// ============================================================
+	//  MODALS
+	// ============================================================
+	function openModal(id){document.getElementById(id).classList.add('open');}
+	function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+	document.querySelectorAll('.modal-preset').forEach(btn=>btn.addEventListener('click',()=>{
+		document.getElementById('new-w').value=btn.dataset.w;
+		document.getElementById('new-h').value=btn.dataset.h;
+	}));
+	document.getElementById('modal-new-cancel').addEventListener('click',()=>closeModal('modal-new'));
+	document.getElementById('modal-new-ok').addEventListener('click',()=>{
+		const w=clamp(+document.getElementById('new-w').value,1,8000);
+		const h=clamp(+document.getElementById('new-h').value,1,8000);
+		const bg=document.getElementById('new-bg').value;
+		closeModal('modal-new');initCanvas(w,h,bg);toast(`New ${w}×${h} canvas`);
+	});
+
+	document.getElementById('modal-resize-cancel').addEventListener('click',()=>closeModal('modal-resize'));
+	document.getElementById('modal-resize-ok').addEventListener('click',()=>{
+		const nw=clamp(+document.getElementById('resize-w').value,1,8000);
+		const nh=clamp(+document.getElementById('resize-h').value,1,8000);
+		pushUndo();
+		state.layers=state.layers.map(l=>{
+			const o=document.createElement('canvas');o.width=nw;o.height=nh;
+			const c=o.getContext('2d');c.drawImage(l.canvas,0,0);
+			return{canvas:o,ctx:c,name:l.name,visible:l.visible,opacity:l.opacity||100};
+		});
+		state.canvasW=nw;state.canvasH=nh;
+		[mainCanvas,overlayCanvas,selCanvas,checkerCanvas].forEach(c=>{c.width=nw;c.height=nh;});
+		shadowEl.style.width=nw+'px';shadowEl.style.height=nh+'px';
+		drawCheckerboard();renderLayersPanel();renderAllLayers();fitToScreen();
+		infoSize.textContent=`${nw} × ${nh}`;closeModal('modal-resize');toast(`Resized to ${nw}×${nh}`);
+	});
+
+	document.getElementById('modal-text-cancel').addEventListener('click',()=>closeModal('modal-text'));
+	document.getElementById('modal-text-ok').addEventListener('click',()=>{
+		const text=document.getElementById('text-input-val').value;
+		if(!text.trim()){closeModal('modal-text');return;}
+		const pos=state.textPos||{x:20,y:state.textSize+20};
+		pushUndo();placeText(text,pos.x,pos.y+state.textSize);
+		closeModal('modal-text');document.getElementById('text-input-val').value='';toast('Text placed');
+	});
+	document.getElementById('text-input-val').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('modal-text-ok').click();});
+
+	// Blur modal
+	const blurSlider=document.getElementById('blur-radius-slider');
+	const blurVal=document.getElementById('blur-radius-val');
+	blurSlider.addEventListener('input',()=>blurVal.textContent=blurSlider.value+'px');
+	document.getElementById('modal-blur-cancel').addEventListener('click',()=>closeModal('modal-blur'));
+	document.getElementById('modal-blur-ok').addEventListener('click',()=>{applyGaussianBlur(+blurSlider.value);closeModal('modal-blur');});
+
+	// Noise modal
+	const noiseAmt=document.getElementById('noise-amount');
+	const noiseVal=document.getElementById('noise-amount-val');
+	noiseAmt.addEventListener('input',()=>noiseVal.textContent=noiseAmt.value);
+	document.getElementById('modal-noise-cancel').addEventListener('click',()=>closeModal('modal-noise'));
+	document.getElementById('modal-noise-ok').addEventListener('click',()=>{applyNoise(+noiseAmt.value);closeModal('modal-noise');});
+
+	// Pixelate modal
+	const pixSz=document.getElementById('pixelate-size');
+	const pixVal=document.getElementById('pixelate-size-val');
+	pixSz.addEventListener('input',()=>pixVal.textContent=pixSz.value+'px');
+	document.getElementById('modal-pixelate-cancel').addEventListener('click',()=>closeModal('modal-pixelate'));
+	document.getElementById('modal-pixelate-ok').addEventListener('click',()=>{applyPixelate(+pixSz.value);closeModal('modal-pixelate');});
+
+	document.querySelectorAll('.modal-overlay').forEach(ov=>ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('open');}));
+
+	// ============================================================
+	//  KEYBOARD
+	// ============================================================
+	document.addEventListener('keydown',e=>{
+		const tgt=e.target;
+		if(tgt.tagName==='INPUT'||tgt.tagName==='TEXTAREA'||tgt.tagName==='SELECT'||tgt.isContentEditable)return;
+		if(e.code==='Space'){state.spaceDown=true;canvasArea.style.cursor='grab';e.preventDefault();return;}
+		if(e.ctrlKey||e.metaKey){
+			switch(e.key.toLowerCase()){
+				case 'z':e.shiftKey?redo():undo();e.preventDefault();break;
+				case 'y':redo();e.preventDefault();break;
+				case 's':exportImage('png');e.preventDefault();break;
+				case 'n':openModal('modal-new');e.preventDefault();break;
+				case 'o':fileInput.click();e.preventDefault();break;
+				case 'c':document.getElementById('action-copy').click();break;
+				case 'v':document.getElementById('action-paste').click();break;
+				case 'x':document.getElementById('action-cut').click();break;
+				case 'a':document.getElementById('sel-all').click();e.preventDefault();break;
+				case 'd':state.selection=null;sctx.clearRect(0,0,state.canvasW,state.canvasH);cancelAnimationFrame(selAnimFrame);e.preventDefault();break;
+				case 'i':document.getElementById('action-invert').click();e.preventDefault();break;
+				case 'j':document.getElementById('ml-dup').click();e.preventDefault();break;
+				case 'e':if(e.shiftKey)document.getElementById('ml-flatten').click();else document.getElementById('ml-merge-down').click();e.preventDefault();break;
+				case '0':fitToScreen();e.preventDefault();break;
+				case '1':{const r=canvasArea.getBoundingClientRect();state.zoom=1;state.panX=r.left+r.width/2-state.canvasW/2;state.panY=r.top+r.height/2-state.canvasH/2;applyViewport();e.preventDefault();break;}
+			}
+			return;
+		}
+		const toolKeys={b:'brush',p:'pencil',e:'eraser',g:'fill',i:'eyedropper',d:'gradient',r:'rect',o:'ellipse',l:'line',t:'text',m:'select',v:'move',q:'lasso',z:'zoom',h:'hand'};
+		if(toolKeys[e.key.toLowerCase()]){selectTool(toolKeys[e.key.toLowerCase()]);return;}
+		if(e.key==='x'){const t=state.fgColor;setFgColor(state.bgColor);setBgColor(t);}
+		if(e.key==='Escape'){
+			state.selection=null;sctx.clearRect(0,0,state.canvasW,state.canvasH);cancelAnimationFrame(selAnimFrame);
+			document.querySelectorAll('.modal-overlay').forEach(m=>m.classList.remove('open'));
+		}
+		if(e.key==='Delete'){pushUndo();if(state.selection){const{x,y,w,h}=state.selection;activeCtx().clearRect(x,y,w,h);}else{activeCtx().clearRect(0,0,state.canvasW,state.canvasH);}renderAllLayers();updateLayerThumbs();}
+		if(e.key==='+'||e.key==='='){const c=zca();zoomAt(1.25,c.x,c.y);}
+		if(e.key==='-'){const c=zca();zoomAt(1/1.25,c.x,c.y);}
+		if(e.key==='['){state.brushSize=Math.max(1,state.brushSize-2);brushSizeEl.value=state.brushSize;brushSizeVal.textContent=state.brushSize+'px';}
+		if(e.key===']'){state.brushSize=Math.min(200,state.brushSize+2);brushSizeEl.value=state.brushSize;brushSizeVal.textContent=state.brushSize+'px';}
+	});
+	document.addEventListener('keyup',e=>{if(e.code==='Space'){state.spaceDown=false;updateCursorStyle();}});
+
+	// ============================================================
+	//  INIT
+	// ============================================================
+	setFgColor('#ffffff');
+	setBgColor('#000000');
+	selectTool('brush');
+	// Init the HSV picker (draws gradients on first load)
+	setTimeout(()=>{ initPicker(); syncPickerFromHex('#ffffff'); }, 50);
+	initCanvas(800,600,'white');
+
+	// Color popup toggle
+	const colorPopup = document.getElementById('color-popup');
+	document.getElementById('tray-color-btn').addEventListener('click', (e) => {
+		e.stopPropagation();
+		colorPopup.classList.toggle('open');
+		if(colorPopup.classList.contains('open')) {
+			setTimeout(()=>{ drawSqGradient(); drawHueGradient(); }, 30);
+		}
+	});
+	document.getElementById('color-popup-close').addEventListener('click', () => {
+		colorPopup.classList.remove('open');
+	});
+	document.addEventListener('click', (e) => {
+		if(!colorPopup.contains(e.target) && e.target.id !== 'tray-color-btn') {
+			colorPopup.classList.remove('open');
+		}
+	});
+	colorPopup.addEventListener('click', e => e.stopPropagation());
+
+	// Initial tray-options visibility
+	trayOptions.style.display = 'flex'; // brush is initial tool, has options
+
+	// Layer strip toggle
+	const layerStripHeader = document.getElementById('layer-strip-header');
+	const layersCollapse   = document.getElementById('layers-collapse');
+	const layerStripToggle = document.getElementById('layer-strip-toggle');
+	if(layerStripHeader) {
+		layerStripHeader.addEventListener('click', () => {
+			const isOpen = layersCollapse.classList.toggle('open');
+			layerStripHeader.classList.toggle('expanded', isOpen);
+			layerStripToggle.classList.toggle('open', isOpen);
+		});
+	}
+
+	// Init Lucide icons
+	if(typeof lucide !== 'undefined') lucide.createIcons();
+
+})();
+</script>
+</body>
+</html>

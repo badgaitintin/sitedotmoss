@@ -1,0 +1,796 @@
+---
+// fire-plan.astro — FIRE Plan Wireframe Layout with Windows 8 Tile Identity & Rainbow Glow Background
+import '@fontsource/google-sans-flex';
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Financial Independence, Retire Early (FIRE) Plan — Phase-Based Strategy" />
+		<title>FIRE Plan — Site(.)moss</title>
+
+		<!-- Google Fonts for Coral Pixels and Google Sans -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Coral+Pixels&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet" />
+
+		<style>
+			/* ===========================
+			   RESET & CORE WIREFRAME TOKENS (DARK THEME)
+			=========================== */
+			:root {
+				--wf-bg:            #000000; /* dark background for glowing orbs */
+				--wf-tile:          #0d0f12; /* dark surface */
+				--wf-card:          #111318; /* card background */
+				--wf-border:        rgba(255, 255, 255, 0.08); /* clean border color */
+				--wf-stroke:        rgba(255, 255, 255, 0.3); /* standard grey-blue stroke */
+				--wf-text:          #e8eaf0; /* main text */
+				--wf-label:         #9ca3af; /* secondary labels */
+				--wf-accent:        #38bdf8; /* light blue link/accent */
+				--wf-hover:         #1e293b; /* slate hover state */
+			}
+
+			*, *::before, *::after {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			html, body {
+				width: 100%;
+				min-height: 100vh;
+				background: var(--wf-bg);
+				font-family: 'Google Sans Flex', 'Segoe UI', Roboto, sans-serif;
+				color: var(--wf-text);
+				overflow-x: hidden;
+			}
+
+			a {
+				color: var(--wf-accent);
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+
+			/* ===========================
+			   BACKGROUND & 7 RAINBOW ORBS
+			=========================== */
+			.bh-bg {
+				position: fixed;
+				inset: 0;
+				pointer-events: none;
+				z-index: 0;
+				overflow: hidden;
+				background: #000;
+			}
+
+			.bh-bg-theme {
+				position: absolute;
+				inset: 0;
+				isolation: isolate;
+			}
+
+			.bh-glow-orb {
+				position: absolute;
+				border-radius: 50%;
+				mix-blend-mode: screen;
+				will-change: transform, border-radius;
+			}
+
+			/* 7 Orbs in Rainbow Colors */
+			.bh-glow-orb--red {
+				width: 360px;
+				height: 360px;
+				top: 5%;
+				left: 5%;
+				filter: blur(75px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(239, 68, 68, 0.7) 30%, rgba(185, 28, 28, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-1 25s infinite ease-in-out, morph-1 14s infinite ease-in-out;
+			}
+
+			.bh-glow-orb--orange {
+				width: 320px;
+				height: 320px;
+				top: 15%;
+				left: 35%;
+				filter: blur(70px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(249, 115, 22, 0.65) 30%, rgba(194, 65, 12, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-2 28s infinite ease-in-out, morph-2 16s infinite ease-in-out;
+				animation-delay: -2s;
+			}
+
+			.bh-glow-orb--yellow {
+				width: 340px;
+				height: 340px;
+				top: 8%;
+				right: 12%;
+				filter: blur(75px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(234, 179, 8, 0.6) 30%, rgba(161, 98, 7, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-3 22s infinite ease-in-out, morph-1 12s infinite ease-in-out;
+				animation-delay: -4s;
+			}
+
+			.bh-glow-orb--green {
+				width: 300px;
+				height: 300px;
+				top: 42%;
+				left: 20%;
+				filter: blur(65px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(34, 197, 94, 0.6) 30%, rgba(21, 128, 61, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-4 26s infinite ease-in-out, morph-2 15s infinite ease-in-out;
+				animation-delay: -1s;
+			}
+
+			.bh-glow-orb--blue {
+				width: 350px;
+				height: 350px;
+				bottom: 12%;
+				left: 8%;
+				filter: blur(80px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(59, 130, 246, 0.65) 30%, rgba(29, 78, 216, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-1 30s infinite ease-in-out, morph-2 18s infinite ease-in-out;
+				animation-delay: -6s;
+			}
+
+			.bh-glow-orb--indigo {
+				width: 380px;
+				height: 380px;
+				bottom: 6%;
+				left: 42%;
+				filter: blur(85px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(99, 102, 241, 0.65) 30%, rgba(67, 56, 202, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-3 32s infinite ease-in-out, morph-1 20s infinite ease-in-out;
+				animation-delay: -3s;
+			}
+
+			.bh-glow-orb--violet {
+				width: 330px;
+				height: 330px;
+				bottom: 18%;
+				right: 10%;
+				filter: blur(75px);
+				background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.5) 0%, rgba(168, 85, 247, 0.65) 30%, rgba(126, 34, 206, 0.15) 75%, rgba(0, 0, 0, 0) 100%);
+				animation: drift-2 24s infinite ease-in-out, morph-2 13s infinite ease-in-out;
+				animation-delay: -5s;
+			}
+
+			.bh-vignette {
+				position: absolute;
+				inset: 0;
+				z-index: 4;
+				background: radial-gradient(
+					ellipse 100% 100% at 50% 50%,
+					transparent 20%,
+					rgba(0, 0, 0, 0.5) 60%,
+					rgba(0, 0, 0, 0.9) 100%
+				);
+			}
+
+			/* Animations */
+			@keyframes drift-1 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(80px, 60px) scale(1.08); }
+				66% { transform: translate(-50px, -30px) scale(0.92); }
+			}
+			@keyframes drift-2 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(-100px, 80px) scale(0.94); }
+				66% { transform: translate(60px, -50px) scale(1.06); }
+			}
+			@keyframes drift-3 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(50px, -80px) scale(1.06); }
+				66% { transform: translate(-80px, 40px) scale(0.92); }
+			}
+			@keyframes drift-4 {
+				0%, 100% { transform: translate(0, 0) scale(1); }
+				33% { transform: translate(-60px, -60px) scale(1.08); }
+				66% { transform: translate(80px, 80px) scale(0.94); }
+			}
+
+			@keyframes morph-1 {
+				0%, 100% { border-radius: 42% 58% 70% 30% / 45% 45% 55% 55%; }
+				33% { border-radius: 70% 30% 52% 48% / 60% 40% 60% 40%; }
+				66% { border-radius: 50% 50% 35% 65% / 40% 60% 40% 60%; }
+			}
+
+			@keyframes morph-2 {
+				0%, 100% { border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%; }
+				33% { border-radius: 40% 60% 60% 40% / 40% 50% 50% 60%; }
+				66% { border-radius: 60% 40% 40% 60% / 60% 40% 60% 40%; }
+			}
+
+			/* ===========================
+			   PAGE TRANSITION SYSTEM
+			=========================== */
+			.page-wrap {
+				position: relative;
+				z-index: 10;
+				animation: page-open 0.35s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				will-change: transform, opacity;
+			}
+
+			@keyframes page-open {
+				0% {
+					opacity: 0;
+					transform: scale(0.98) translateY(10px);
+				}
+				100% {
+					opacity: 1;
+					transform: scale(1) translateY(0);
+				}
+			}
+
+			@keyframes page-close {
+				0% {
+					opacity: 1;
+					transform: scale(1) translateY(0);
+				}
+				100% {
+					opacity: 0;
+					transform: scale(0.98) translateY(10px);
+				}
+			}
+
+			body.is-exiting .page-wrap {
+				animation: page-close 0.25s cubic-bezier(0.4, 0, 1, 1) both;
+				pointer-events: none;
+			}
+
+			/* ===========================
+			   LAYOUT STRUCTURE
+			=========================== */
+			.page-container {
+				max-width: 1000px;
+				margin: 0 auto;
+				padding: 56px 24px 80px;
+				display: grid;
+				grid-template-columns: 240px 1fr;
+				gap: 48px;
+				align-items: start;
+			}
+
+			@media (max-width: 768px) {
+				.page-container {
+					grid-template-columns: 1fr;
+					gap: 32px;
+					padding-top: 32px;
+				}
+				.sidebar-sticky {
+					position: relative !important;
+					top: 0 !important;
+				}
+			}
+
+			/* ===========================
+			   SIDEBAR MENU
+			=========================== */
+			.sidebar-sticky {
+				position: sticky;
+				top: 56px;
+				align-self: start; /* critical for position: sticky inside CSS Grid */
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+			}
+
+			.sidebar-back-link {
+				display: flex;
+				align-items: center;
+				gap: 16px;
+				text-decoration: none;
+				color: var(--wf-text);
+				margin-bottom: 12px;
+				transition: color 0.15s;
+			}
+
+			.back-arrow-circle {
+				width: 36px;
+				height: 36px;
+				border-radius: 50%;
+				border: 2px solid var(--wf-text);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.1rem;
+				font-weight: bold;
+				transition: background 0.15s, color 0.15s, border-color 0.15s;
+			}
+
+			.sidebar-back-link:hover .back-arrow-circle {
+				background: var(--wf-text);
+				color: #000;
+				border-color: var(--wf-text);
+			}
+			.sidebar-back-link:hover {
+				color: var(--wf-accent);
+				text-decoration: none;
+			}
+
+			.page-title {
+				font-size: 2rem;
+				font-weight: 300;
+				letter-spacing: -0.5px;
+				color: var(--wf-text);
+			}
+
+			.sidebar-group {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+
+			.sidebar-item {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 6px 12px;
+				border-radius: 4px;
+				font-size: 0.85rem;
+				color: var(--wf-text);
+				transition: background 0.15s, color 0.15s;
+				cursor: pointer;
+				border-left: 2px solid transparent;
+			}
+			.sidebar-item:hover {
+				background: var(--wf-hover);
+				text-decoration: none;
+			}
+			.sidebar-item.is-active {
+				font-weight: 600;
+				color: var(--wf-accent);
+				border-left-color: var(--wf-stroke);
+				background: var(--wf-hover);
+			}
+
+			.sidebar-item svg {
+				opacity: 0.6;
+				flex-shrink: 0;
+			}
+			.sidebar-item.is-active svg {
+				opacity: 1;
+				color: var(--wf-accent);
+			}
+
+			/* ===========================
+			   HEADER MONOLITHIC LAYOUT
+			=========================== */
+			.page-header {
+				margin-bottom: 28px;
+				margin-left: 4px;
+			}
+
+			.page-main-title {
+				display: flex;
+				align-items: baseline;
+				gap: 10px;
+				font-size: clamp(2.4rem, 6vw, 3.8rem);
+				font-weight: 900;
+				line-height: 1.1;
+				letter-spacing: -1px;
+				margin-bottom: 8px;
+				color: #fff;
+			}
+
+			.title-my {
+				font-family: 'Google Sans', 'Google Sans Flex', sans-serif;
+				font-weight: 300;
+				color: #ffffff;
+			}
+
+			.title-fire {
+				font-family: 'Coral Pixels', sans-serif;
+				font-size: 1.1em;
+				font-weight: normal;
+				color: var(--wf-accent);
+			}
+
+			.title-plan {
+				font-family: 'Google Sans', 'Google Sans Flex', sans-serif;
+				font-weight: 700;
+				background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				background-clip: text;
+			}
+
+			.updated-date {
+				font-family: 'Google Sans', 'Google Sans Flex', sans-serif;
+				font-size: 0.72rem;
+				color: var(--wf-label);
+				text-transform: uppercase;
+				letter-spacing: 1.2px;
+				margin-top: 4px;
+			}
+
+			/* ===========================
+			   CONTENT AREA & TILE PANELS
+			=========================== */
+			.main-content {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+			}
+
+			.card-panel {
+				background: var(--wf-card);
+				border: 1.5px solid var(--wf-border);
+				padding: 28px;
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				scroll-margin-top: 56px;
+				transition: transform 0.2s cubic-bezier(0.1, 0.9, 0.2, 1), border-color 0.2s, box-shadow 0.2s;
+			}
+			.card-panel:hover {
+				transform: translateY(-2px);
+				border-color: var(--wf-stroke);
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+			}
+
+			.section-label {
+				font-size: 0.7rem;
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--wf-label);
+				margin-bottom: 20px;
+			}
+
+			.card-panel__title {
+				font-size: 1.25rem;
+				font-weight: 400;
+				color: var(--wf-text);
+				margin-bottom: 16px;
+				letter-spacing: -0.3px;
+			}
+
+			/* Phase Grid (2-column layout for roadmap phases) */
+			.phase-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+				gap: 24px;
+				margin-top: 16px;
+			}
+
+			.phase-card {
+				border: 1.5px solid var(--wf-border);
+				padding: 20px;
+				background: rgba(255, 255, 255, 0.01);
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+			}
+
+			.phase-card__header {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				font-size: 0.95rem;
+				font-weight: 600;
+				color: #fff;
+			}
+
+			.phase-card__tag {
+				font-size: 0.65rem;
+				text-transform: uppercase;
+				background: rgba(56, 189, 248, 0.1);
+				color: var(--wf-accent);
+				padding: 2px 6px;
+				border-radius: 3px;
+				letter-spacing: 0.5px;
+			}
+
+			/* Metrics Grid styled as small wireframe blocks */
+			.metrics-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+				gap: 12px;
+				margin-bottom: 20px;
+			}
+
+			.metric-tile {
+				border: 1.5px solid var(--wf-border);
+				padding: 16px;
+				background: rgba(255, 255, 255, 0.02);
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 95px;
+			}
+
+			.metric-value {
+				font-size: 1.15rem;
+				font-weight: 300;
+				color: var(--wf-text);
+				line-height: 1.2;
+			}
+
+			.metric-label {
+				font-size: 0.62rem;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				color: var(--wf-label);
+				margin-top: 4px;
+			}
+
+			/* List Details style */
+			.bullet-list {
+				list-style: none;
+				padding: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				margin-bottom: 16px;
+			}
+
+			.bullet-list li {
+				font-size: 0.88rem;
+				line-height: 1.6;
+				color: var(--wf-text);
+				display: flex;
+				gap: 10px;
+				align-items: flex-start;
+			}
+
+			.bullet-list li::before {
+				content: "—";
+				color: var(--wf-accent);
+				font-weight: bold;
+				flex-shrink: 0;
+			}
+
+			/* Text placeholders */
+			.text-placeholder {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+			}
+			.line {
+				height: 8px;
+				background: var(--wf-border);
+				border-radius: 2px;
+			}
+			.line--med { width: 75%; }
+			.line--short { width: 50%; }
+			.line--xs { width: 25%; }
+		</style>
+	</head>
+	<body>
+
+		<!-- Fluid Ambient Orb Background (7 Rainbow Orbs) -->
+		<div class="bh-bg" aria-hidden="true">
+			<div class="bh-bg-theme">
+				<div class="bh-glow-orb bh-glow-orb--red"></div>
+				<div class="bh-glow-orb bh-glow-orb--orange"></div>
+				<div class="bh-glow-orb bh-glow-orb--yellow"></div>
+				<div class="bh-glow-orb bh-glow-orb--green"></div>
+				<div class="bh-glow-orb bh-glow-orb--blue"></div>
+				<div class="bh-glow-orb bh-glow-orb--indigo"></div>
+				<div class="bh-glow-orb bh-glow-orb--violet"></div>
+			</div>
+			<!-- Shared Vignette -->
+			<div class="bh-vignette"></div>
+		</div>
+
+		<div class="page-wrap">
+			<div class="page-container">
+				<!-- Sidebar Menu -->
+				<aside class="sidebar-sticky" aria-label="FIRE plan navigation">
+					<a href="/" class="sidebar-back-link" id="sidebarBackTop" title="Back to Dashboard">
+						<span class="back-arrow-circle">←</span>
+						<span class="page-title">Back</span>
+					</a>
+
+					<div class="sidebar-group">
+						<a href="#overview" class="sidebar-item is-active" data-section="overview">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="12" height="12" rx="1.5"/><circle cx="7" cy="6" r="2.5"/><path d="M2 13c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
+							Overview
+						</a>
+						<a href="#roadmap" class="sidebar-item" data-section="roadmap">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 5l6-3 6 3-6 3-6-3z"/><path d="M4 6.5V10c0 1 1.3 2 3 2s3-1 3-2V6.5"/><line x1="13" y1="5" x2="13" y2="9"/></svg>
+							Life-Phase Roadmap
+						</a>
+						<a href="#plan-a" class="sidebar-item" data-section="plan-a">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="7,1 8.8,5.2 13.4,5.5 10,8.5 11.1,13 7,10.4 2.9,13 4,8.5 0.6,5.5 5.2,5.2"/></svg>
+							Plan A (High Farm)
+						</a>
+						<a href="#plan-b" class="sidebar-item" data-section="plan-b">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="12" height="9" rx="1"/><path d="M4 4V3a1.5 1.5 0 013 0v1"/><path d="M7 4V3a1.5 1.5 0 013 0v1"/></svg>
+							Plan B (Safety Switch)
+						</a>
+						<a href="#plan-c" class="sidebar-item" data-section="plan-c">
+							<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 3.5h4.5L7 2h6v10H1z"/></svg>
+							Plan C (Windfall)
+						</a>
+					</div>
+				</aside>
+
+				<!-- Main Content Area -->
+				<main class="main-content">
+					<!-- Page Header (Monolithic-inspired Layout) -->
+					<header class="page-header">
+						<h1 class="page-main-title">
+							<span class="title-my">My</span>
+							<span class="title-fire">Fire</span>
+							<span class="title-plan">Plan</span>
+						</h1>
+						<p class="updated-date">Last Updated: June 25, 2026</p>
+					</header>
+
+					<!-- SECTION: OVERVIEW -->
+					<section class="card-panel" id="overview">
+						<h2 class="section-label">Core Objective</h2>
+						<h3 class="card-panel__title">บริหารจัดการ "ที่อยู่อาศัยถาวร" และ "กระแสเงินสด"</h3>
+						<ul class="bullet-list">
+							<li>แบ่งเฟสชีวิตตามกำลังและศักยภาพของช่วงอายุ เพื่อไม่ให้กดดันตัวเองหนักเกินไปในวัยเริ่มต้น</li>
+							<li>มุ่งสร้างรากฐานความมั่นคงด้านสวัสดิการควบคู่กับการขยายทรัพย์สินอย่างปลอดภัย</li>
+						</ul>
+					</section>
+
+					<!-- SECTION: LIFE-PHASE ROADMAP -->
+					<section class="card-panel" id="roadmap">
+						<h2 class="section-label">⏳ Life-Phase Roadmap</h2>
+						<h3 class="card-panel__title">การแบ่งเฟสตามช่วงอายุ</h3>
+						
+						<div class="phase-grid">
+							<!-- Phase 1 -->
+							<div class="phase-card">
+								<div class="phase-card__header">
+									<span>🛠️ Phase 1: สั่งสมพลัง</span>
+									<span class="phase-card__tag">อายุ &lt; 30 ปี</span>
+								</div>
+								<ul class="bullet-list" style="margin: 0;">
+									<li><strong>โฟกัส:</strong> Skill & Experience Investment (ไม่เน้นหาเงินจนร่างพัง)</li>
+									<li><strong>Action:</strong> มุ่งเน้นการอัปเกรดทักษะเฉพาะทาง ประสบการณ์ และสร้างโปรไฟล์ให้แข็งแกร่ง (อัปสกิลพร้อมกับเก็บเงินไปตามสัดส่วนที่เหมาะสม)</li>
+									<li><strong>Goal:</strong> ทำให้ตัวเองกลายเป็นสินทรัพย์ที่มีมูลค่าสูง เพื่อเตรียมพร้อมสำหรับเฟสถัดไป</li>
+								</ul>
+							</div>
+
+							<!-- Phase 2 -->
+							<div class="phase-card">
+								<div class="phase-card__header">
+									<span>🚜 Phase 2: ฟาร์มเต็มกำลัง</span>
+									<span class="phase-card__tag">อายุ 30 - 40/45 ปี</span>
+								</div>
+								<ul class="bullet-list" style="margin: 0;">
+									<li><strong>โฟกัส:</strong> High-Velocity Accumulation (ใช้สกิลที่สุกงอมมาเปลี่ยนเป็นเงินทุน)</li>
+									<li><strong>Action:</strong> ช่วงนี้คือเวลาลงมือ "ฟาร์มเงิน" อย่างจริงจัง นำความเชี่ยวชาญที่มีไปสร้างรายได้สูงสุด เร่งเก็บออมและดันพอร์ตลงทุนให้เติบโตอย่างรวดเร็ว</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<!-- SECTION: PLAN A -->
+					<section class="card-panel" id="plan-a">
+						<h2 class="section-label">⚡ Plan A — High-Velocity Peak</h2>
+						<h3 class="card-panel__title">ใช้เมื่อ: เฟสฟาร์มเงินช่วงอายุ 30-40 ปี ประสบความสำเร็จอย่างสูง</h3>
+						<div class="metrics-grid">
+							<div class="metric-tile">
+								<div class="metric-value">&gt; 10,000,000 THB</div>
+								<div class="metric-label">Financial Target</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">&le; 2,000,000 THB</div>
+								<div class="metric-label">Property Budget</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">Age &lt; 40 Years</div>
+								<div class="metric-label">Milestone</div>
+							</div>
+						</div>
+						<ul class="bullet-list">
+							<li><strong>Financial Target:</strong> ดันพอร์ตการลงทุนให้เกิน 10,000,000 บาท เพื่อสร้างกระแสเงินสดหล่อเลี้ยงชีพ</li>
+							<li><strong>Property:</strong> จัดหาที่อยู่อาศัยถาวรในงบไม่เกิน 2,000,000 บาท ให้สำเร็จก่อนอายุ 40 ปี</li>
+							<li><strong>Outcome:</strong> เข้าสู่อิสระทางการเงินเต็มตัวด้วยพอร์ตและบ้านที่มั่นคง</li>
+						</ul>
+					</section>
+
+					<!-- SECTION: PLAN B -->
+					<section class="card-panel" id="plan-b">
+						<h2 class="section-label">🛡️ Plan B — Safety Switch</h2>
+						<h3 class="card-panel__title">ใช้เมื่อ: เข้าสู่ช่วงอายุ 40-45 ปีแล้ว ผลลัพธ์ใน Plan A ยังไม่เป็นไปตามเป้า หรือต้องการลดความเสี่ยง</h3>
+						<div class="metrics-grid">
+							<div class="metric-tile">
+								<div class="metric-value">40 - 45 Years</div>
+								<div class="metric-label">Transition Period</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">Civil Service</div>
+								<div class="metric-label">Action Path</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">Gov. Benefits</div>
+								<div class="metric-label">Safety switch</div>
+							</div>
+						</div>
+						<ul class="bullet-list">
+							<li><strong>Action:</strong> เปลี่ยนผ่านสายงานไป <strong>รับราชการ</strong> ในช่วงอายุ 40 - 45 ปี</li>
+							<li><strong>Benefit:</strong> ลดความกดดันเรื่องการทำเงิน สลับมาใช้สวัสดิการระยะยาวและสิทธิเบิกจ่ายพยาบาลของรัฐมาช่วยลดค่าใช้จ่ายรักษาพยาบาล</li>
+							<li><strong>Property:</strong> ยังคงเงื่อนไขสำคัญคือ ต้องจัดหาที่อยู่อาศัยถาวร (ไม่เกิน 2,000,000 บาท) ให้สำเร็จ</li>
+						</ul>
+					</section>
+
+					<!-- SECTION: PLAN C -->
+					<section class="card-panel" id="plan-c">
+						<h2 class="section-label">🎲 Plan C — Windfall Accelerator</h2>
+						<h3 class="card-panel__title">ใช้เมื่อ: ถูกรางวัลที่ 1 ก่อนอายุ 40 ปี</h3>
+						<div class="metrics-grid">
+							<div class="metric-tile">
+								<div class="metric-value">1st Prize Win</div>
+								<div class="metric-label">Trigger Event</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">Low Pressure</div>
+								<div class="metric-label">Work Style</div>
+							</div>
+							<div class="metric-tile">
+								<div class="metric-value">A Complement</div>
+								<div class="metric-label">Accumulation Strategy</div>
+							</div>
+						</div>
+						<ul class="bullet-list">
+							<li><strong>Action:</strong> ไม่ต้องรอให้ถึงอายุ 30 หรือ 40 เพื่อฟาร์มเงินหนัก ๆ อีกต่อไป สามารถทำงานประจำหรือทำโปรเจกต์ที่ชอบได้เรื่อย ๆ แบบไม่กดดัน</li>
+							<li><strong>Strategy:</strong> นำเงินรางวัลมาเป็นทุนตั้งต้น ผสมกับเงินออมจากการอัปสกิล เพื่อข้ามไปสำเร็จเป้าหมายพอร์ตของ Plan A ได้ทันทีก่อนกำหนด</li>
+						</ul>
+					</section>
+				</main>
+			</div>
+		</div>
+
+		<script>
+			// ==============================
+			// Sidebar active section tracking (Scroll-spy)
+			// ==============================
+			const sections = document.querySelectorAll('.card-panel');
+			const sideItems = document.querySelectorAll('.sidebar-item[data-section]');
+
+			const obs = new IntersectionObserver(
+				(entries) => {
+					entries.forEach((e) => {
+						if (e.isIntersecting) {
+							sideItems.forEach((item) => {
+								item.classList.toggle('is-active', item.dataset.section === e.target.id);
+							});
+						}
+					});
+				},
+				{
+					root: null, // viewport level
+					rootMargin: '-20% 0px -60% 0px',
+					threshold: 0,
+				}
+			);
+
+			sections.forEach((s) => obs.observe(s));
+
+			// ==============================
+			// Smooth scroll to sections
+			// ==============================
+			document.querySelectorAll('a[href^="#"]').forEach((a) => {
+				a.addEventListener('click', (e) => {
+					const target = document.querySelector(a.getAttribute('href'));
+					if (target) {
+						e.preventDefault();
+						target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
+				});
+			});
+
+			// ==============================
+			// Page transition interceptor for back navigation
+			// ==============================
+			document.querySelectorAll('#sidebarBackTop').forEach((btn) => {
+				btn.addEventListener('click', (e) => {
+					e.preventDefault();
+					document.body.classList.add('is-exiting');
+					setTimeout(() => {
+						window.location.href = btn.getAttribute('href');
+					}, 250); // matches page-close transition duration
+				});
+			});
+		</script>
+	</body>
+</html>
