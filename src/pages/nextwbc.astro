@@ -1055,7 +1055,7 @@ import '@fontsource/google-sans-flex';
 					const clientInstance = await getClient();
 					
 					statusText.innerText = 'Running detection...';
-					const job = clientInstance.submit("/predict", { image: file });
+					const job = clientInstance.submit("/predict", [file]);
 					
 					let gotResult = false;
 					for await (const event of job) {
