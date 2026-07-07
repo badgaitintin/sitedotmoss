@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fontsource/google-sans-flex": "^5.2.4",
+    "@gradio/client": "^2.3.0",
     "astro": "^6.4.7"
   }
 }

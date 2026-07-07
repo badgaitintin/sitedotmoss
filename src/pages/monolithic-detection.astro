@@ -43,7 +43,7 @@
 				--bh-muted: #6b7280;
 				--bh-accent: #818cf8; /* slate blue */
 				--bh-accent2: #a78bfa; /* violet */
-				--bh-accent3: #34d399; /* emerald (gap badges) */
+				--bh-accent3: #34d399; /* emerald */
 				--bh-danger: #f87171;
 				--bh-glow: transparent;
 				--bh-glow-sm: transparent;
@@ -56,7 +56,7 @@
 			body {
 				width: 100%;
 				min-height: 100vh;
-				background: #000;
+				background: #000000;
 				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 				color: var(--bh-text);
 				line-height: 1.6;
@@ -274,38 +274,63 @@
 				box-sizing: border-box;
 			}
 
+			.bh-main-card {
+				background: rgba(17, 19, 24, 0.78);
+				backdrop-filter: blur(24px);
+				-webkit-backdrop-filter: blur(24px);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 24px;
+				padding: 64px 48px;
+				box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+			}
+
+			@media (max-width: 768px) {
+				.bh-main-card {
+					padding: 40px 24px;
+					border-radius: 16px;
+				}
+			}
+
 			/* ===========================
 			   TOP NAV BAR
 			=========================== */
 			.bh-topbar {
+				position: sticky;
+				top: 24px;
+				z-index: 100;
 				display: flex;
 				align-items: center;
 				gap: 16px;
-				margin-bottom: 24px;
+				padding: 10px 20px;
+				background: rgba(17, 19, 24, 0.75);
+				backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 99px;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+				margin-bottom: 40px;
 			}
 
 			.bh-back {
 				display: inline-flex;
 				align-items: center;
-				gap: 8px;
-				padding: 7px 14px;
-				border: 1px solid var(--bh-border-hi);
-				border-radius: 4px;
+				gap: 6px;
 				font-size: 0.82rem;
 				font-weight: 500;
-				color: var(--bh-muted);
-				background: var(--bh-card);
-				transition:
-					color 0.2s,
-					border-color 0.2s,
-					background 0.2s;
+				color: var(--bh-text);
+				transition: color 0.2s;
 				cursor: pointer;
+				text-decoration: none;
 			}
 			.bh-back:hover {
-				color: var(--bh-text);
-				border-color: var(--bh-accent);
-				background: rgba(124, 156, 255, 0.06);
+				color: var(--bh-accent);
 				text-decoration: none;
+			}
+
+			.bh-topbar-sep {
+				width: 1px;
+				height: 14px;
+				background: rgba(255, 255, 255, 0.12);
 			}
 
 			.bh-breadcrumb {
@@ -482,13 +507,13 @@
 				gap: 4px;
 			}
 
-			.title-monolithic,
+			.title-monolithic {
+				font-family: "Google Sans", sans-serif;
+				color: #ffffff;
+			}
 			.title-deep-learning {
 				font-family: "Google Sans", sans-serif;
-				background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				background-clip: text;
+				color: var(--bh-accent);
 			}
 
 			.bh-subtitle {
@@ -1003,414 +1028,146 @@
 					gap: 12px;
 				}
 			}
+
+			/* ── Dot Matrix Halftone Canvas ── */
+			.bh-dotmatrix-canvas {
+				position: fixed;
+				inset: 0;
+				z-index: 0;
+				pointer-events: none;
+				width: 100%;
+				height: 100%;
+			}
+
+			/* ── Minimalist Back Button ── */
+			.wbc-back-btn {
+				position: absolute;
+				top: 32px;
+				left: 32px;
+				z-index: 100;
+				width: 40px;
+				height: 40px;
+				background: #ffffff;
+				color: #000000;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: none;
+				border-radius: 0px;
+				cursor: pointer;
+				transition: background-color 0.2s, transform 0.2s;
+			}
+			.wbc-back-btn:hover {
+				background: #f3f4f6;
+				transform: scale(1.05);
+			}
+
+			/* ── Animated Soon Text ── */
+			.soon-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: calc(100vh - 120px);
+				text-align: center;
+				font-family: "Google Sans", sans-serif;
+				z-index: 10;
+				position: relative;
+			}
+			.soon-text {
+				font-size: clamp(1.8rem, 4.5vw, 3rem);
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				color: #ffffff;
+			}
 		</style>
 	</head>
 
 	<body>
-		<!-- Fluid Ambient Orb Background -->
-		<div class="bh-bg" aria-hidden="true">
-			<!-- RGB Theme with Dynamic Scroll Color Inversion -->
-			<div class="bh-bg-theme">
-				<div class="bh-glow-orb bh-glow-orb--1"></div>
-				<div class="bh-glow-orb bh-glow-orb--2"></div>
-				<div class="bh-glow-orb bh-glow-orb--3"></div>
-			</div>
-			<!-- Shared Vignette -->
-			<div class="bh-vignette"></div>
-		</div>
+		<!-- Fluid Ambient Orb Background Removed -->
+
+		<!-- Dot Matrix Halftone Background Canvas -->
+		<canvas id="dotmatrixCanvas" class="bh-dotmatrix-canvas" aria-hidden="true"></canvas>
 
 		<div class="page-wrap">
+			<!-- Floating Square White Back Button -->
+			<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
+				<svg
+					width="14"
+					height="14"
+					viewBox="0 0 14 14"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M9 12L4 7l5-5"></path>
+				</svg>
+			</a>
+
 			<div class="bh-page">
-				<!-- TOP NAV -->
-				<nav class="bh-topbar">
-					<a href="/" class="bh-back" id="backBtn">
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 14 14"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M9 12L4 7l5-5"></path>
-						</svg>
-						Back
-					</a>
-					<div class="bh-breadcrumb">
-						Dashboard / <span>Monolithic Deep-Learning</span>
-					</div>
-				</nav>
-
-				<!-- HEADER (Title, Summary) -->
-				<header class="bh-header">
-					<h1 class="bh-title">
-						<span class="title-monolithic">Monolithic</span>
-						<span class="title-deep-learning">Deep-Learning</span>
-					</h1>
-				</header>
-
-				<!-- Scrollable Content Container -->
-				<div class="bh-content-scroll">
-					<!-- 2D Pixel City Street + Card (seamlessly joined) -->
-						<div class="scene-card-wrapper">
-
-							<!-- ── STREET SCENE ── -->
-							<div class="road-container">
-
-								<!-- Clouds -->
-								<div class="px-cloud px-cloud--1"></div>
-								<div class="px-cloud px-cloud--2"></div>
-								<div class="px-cloud px-cloud--3"></div>
-								<div class="px-cloud px-cloud--4"></div>
-
-								<!-- Background Trees (behind buildings) -->
-								<svg class="bg-tree" style="left:12%;bottom:60px;" width="52" height="130" viewBox="0 0 52 130">
-									<rect x="23" y="70" width="7" height="60" fill="#5c3d1e"/>
-									<ellipse cx="26" cy="60" rx="24" ry="30" fill="#2d6a2d"/>
-									<ellipse cx="18" cy="50" rx="18" ry="22" fill="#3a8a3a"/>
-									<ellipse cx="34" cy="52" rx="16" ry="20" fill="#2d6a2d"/>
-									<ellipse cx="26" cy="38" rx="14" ry="18" fill="#4CAF50"/>
-								</svg>
-								<svg class="bg-tree" style="left:52%;bottom:60px;" width="44" height="110" viewBox="0 0 44 110">
-									<rect x="19" y="60" width="6" height="50" fill="#5c3d1e"/>
-									<ellipse cx="22" cy="50" rx="20" ry="26" fill="#2d6a2d"/>
-									<ellipse cx="14" cy="40" rx="16" ry="20" fill="#3a8a3a"/>
-									<ellipse cx="30" cy="42" rx="14" ry="18" fill="#2d6a2d"/>
-									<ellipse cx="22" cy="30" rx="12" ry="16" fill="#4CAF50"/>
-								</svg>
-								<svg class="bg-tree" style="right:3%;bottom:60px;" width="60" height="160" viewBox="0 0 60 160">
-									<rect x="27" y="90" width="8" height="70" fill="#5c3d1e"/>
-									<ellipse cx="30" cy="78" rx="27" ry="36" fill="#2d6a2d"/>
-									<ellipse cx="18" cy="62" rx="22" ry="28" fill="#3a8a3a"/>
-									<ellipse cx="42" cy="65" rx="20" ry="25" fill="#2d6a2d"/>
-									<ellipse cx="30" cy="46" rx="18" ry="24" fill="#4CAF50"/>
-								</svg>
-
-								<!-- Buildings strip (bottom anchored) -->
-								<div class="buildings-strip">
-									<!-- Building A: Tall Red brick -->
-									<svg width="90" height="180" viewBox="0 0 90 180" fill="none">
-										<rect x="0" y="0" width="90" height="180" fill="#c0392b"/>
-										<!-- Brick texture -->
-										<rect x="0" y="0" width="90" height="180"
-											fill="none"
-											style="background: repeating-linear-gradient(0deg,transparent,transparent 10px,rgba(0,0,0,0.1) 10px,rgba(0,0,0,0.1) 12px)"/>
-										<!-- Roof -->
-										<rect x="0" y="0" width="90" height="12" fill="#7f1d1d"/>
-										<!-- Windows row 1 -->
-										<rect x="10" y="22" width="22" height="18" rx="1" fill="#bfdbfe" opacity="0.8"/>
-										<rect x="58" y="22" width="22" height="18" rx="1" fill="#bfdbfe" opacity="0.8"/>
-										<!-- Windows row 2 -->
-										<rect x="10" y="52" width="22" height="18" rx="1" fill="#93c5fd" opacity="0.7"/>
-										<rect x="58" y="52" width="22" height="18" rx="1" fill="#93c5fd" opacity="0.7"/>
-										<!-- Windows row 3 -->
-										<rect x="10" y="82" width="22" height="18" rx="1" fill="#bfdbfe" opacity="0.8"/>
-										<rect x="58" y="82" width="22" height="18" rx="1" fill="#bfdbfe" opacity="0.8"/>
-										<!-- Windows row 4 -->
-										<rect x="10" y="112" width="22" height="18" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="58" y="112" width="22" height="18" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<!-- Door -->
-										<rect x="30" y="148" width="30" height="32" rx="1" fill="#7c2d12"/>
-										<rect x="37" y="155" width="7" height="10" rx="1" fill="#a16207"/>
-										<rect x="46" y="155" width="7" height="10" rx="1" fill="#a16207"/>
-									</svg>
-									<!-- Gap with sign -->
-									<svg width="28" height="100" viewBox="0 0 28 100" fill="none">
-										<rect x="12" y="0" width="4" height="100" fill="#374151"/>
-										<rect x="2" y="10" width="24" height="16" rx="1" fill="#1d4ed8"/>
-										<rect x="4" y="12" width="20" height="12" fill="#3b82f6" opacity="0.6"/>
-									</svg>
-									<!-- Building B: Medium gray shop -->
-									<svg width="100" height="140" viewBox="0 0 100 140" fill="none">
-										<rect x="0" y="0" width="100" height="140" fill="#9ca3af"/>
-										<rect x="0" y="0" width="100" height="10" fill="#6b7280"/>
-										<!-- Awning -->
-										<rect x="0" y="80" width="100" height="18" fill="#dc2626"/>
-										<rect x="0" y="80" width="100" height="4" fill="#991b1b"/>
-										<!-- Windows -->
-										<rect x="8"  y="20" width="26" height="22" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="66" y="20" width="26" height="22" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="8"  y="52" width="26" height="22" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="66" y="52" width="26" height="22" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<!-- Door -->
-										<rect x="36" y="100" width="28" height="40" rx="1" fill="#374151"/>
-										<rect x="40" y="105" width="9"  height="14" rx="1" fill="#6b7280" opacity="0.5"/>
-										<rect x="51" y="105" width="9"  height="14" rx="1" fill="#6b7280" opacity="0.5"/>
-										<!-- Sign text placeholder -->
-										<rect x="20" y="83" width="60" height="10" rx="1" fill="rgba(255,255,255,0.15)"/>
-									</svg>
-									<!-- Building C: shorter warm beige with red tiles -->
-									<svg width="80" height="100" viewBox="0 0 80 100" fill="none">
-										<rect x="0" y="0" width="80" height="100" fill="#d97706"/>
-										<!-- Tiled roof -->
-										<rect x="0" y="0" width="80" height="20" fill="#b45309"/>
-										<rect x="0" y="0" width="80" height="8" fill="#ef4444"/>
-										<rect x="0" y="8" width="80" height="6" fill="#dc2626"/>
-										<!-- Windows -->
-										<rect x="8"  y="30" width="22" height="20" rx="1" fill="#fef9c3" opacity="0.6"/>
-										<rect x="50" y="30" width="22" height="20" rx="1" fill="#fef9c3" opacity="0.6"/>
-										<!-- Door -->
-										<rect x="25" y="68" width="30" height="32" rx="1" fill="#92400e"/>
-										<rect x="31" y="74" width="8"  height="12" rx="1" fill="#a16207" opacity="0.6"/>
-										<rect x="41" y="74" width="8"  height="12" rx="1" fill="#a16207" opacity="0.6"/>
-									</svg>
-									<!-- Small gap sign board -->
-									<svg width="20" height="80" viewBox="0 0 20 80" fill="none">
-										<rect x="8" y="0" width="4" height="80" fill="#374151"/>
-									</svg>
-									<!-- Building D: Modern white/blue -->
-									<svg width="110" height="160" viewBox="0 0 110 160" fill="none">
-										<rect x="0" y="0" width="110" height="160" fill="#f1f5f9"/>
-										<rect x="0" y="0" width="110" height="8"   fill="#e2e8f0"/>
-										<!-- Blue accent top -->
-										<rect x="0" y="0" width="110" height="4" fill="#2563eb"/>
-										<!-- Windows grid -->
-										<rect x="8"  y="18" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.8"/>
-										<rect x="34" y="18" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.8"/>
-										<rect x="60" y="18" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.8"/>
-										<rect x="86" y="18" width="16" height="16" rx="1" fill="#93c5fd" opacity="0.8"/>
-										<rect x="8"  y="44" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="34" y="44" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="60" y="44" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="86" y="44" width="16" height="16" rx="1" fill="#bfdbfe" opacity="0.7"/>
-										<rect x="8"  y="70" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="34" y="70" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="60" y="70" width="20" height="16" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="86" y="70" width="16" height="16" rx="1" fill="#93c5fd" opacity="0.6"/>
-										<rect x="8"  y="96" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.5"/>
-										<rect x="34" y="96" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.5"/>
-										<rect x="60" y="96" width="20" height="16" rx="1" fill="#bfdbfe" opacity="0.5"/>
-										<!-- Lobby entrance -->
-										<rect x="30" y="128" width="50" height="32" rx="1" fill="#1e40af"/>
-										<rect x="34" y="132" width="18" height="22" rx="1" fill="#3b82f6" opacity="0.5"/>
-										<rect x="58" y="132" width="18" height="22" rx="1" fill="#3b82f6" opacity="0.5"/>
-									</svg>
-								</div>
-
-								<!-- Street Lamp -->
-								<svg class="street-lamp" style="left:42%;" width="20" height="100" viewBox="0 0 20 100">
-									<rect x="8" y="20" width="4" height="80" fill="#374151"/>
-									<rect x="6" y="18" width="8" height="4"  rx="1" fill="#4b5563"/>
-									<!-- Lamp head -->
-									<rect x="0" y="8"  width="20" height="12" rx="2" fill="#1f2937"/>
-									<rect x="2" y="10" width="16" height="8"  rx="1" fill="#fde68a" opacity="0.9"/>
-									<ellipse cx="10" cy="14" rx="7" ry="4" fill="#fef08a" opacity="0.6"/>
-									<!-- Glow -->
-									<ellipse cx="10" cy="18" rx="10" ry="6" fill="#fde68a" opacity="0.15"/>
-								</svg>
-
-								<!-- Back pavement strip -->
-								<div class="back-pavement"></div>
-
-								<!-- Road strip -->
-								<div class="road-strip">
-									<div class="lane-dashes"></div>
-									<div class="crosswalk"></div>
-								</div>
-
-								<!-- Front kerb -->
-								<div class="front-kerb"></div>
-
-								<!-- Milestone signs on road -->
-								<div class="road-milestone active" style="left:18%;--accent-color:#f59e0b;--accent-rgb:245,158,11;" data-index="0" data-accent="#f59e0b">
-									<div class="milestone-pin"></div>
-									<div class="milestone-label">Past</div>
-								</div>
-								<div class="road-milestone" style="left:50%;--accent-color:#8b5cf6;--accent-rgb:139,92,246;" data-index="1" data-accent="#8b5cf6">
-									<div class="milestone-pin"></div>
-									<div class="milestone-label">Present</div>
-								</div>
-								<div class="road-milestone" style="left:80%;--accent-color:#06b6d4;--accent-rgb:6,182,212;" data-index="2" data-accent="#06b6d4">
-									<div class="milestone-pin"></div>
-									<div class="milestone-label">Future</div>
-								</div>
-
-								<!-- Walker -->
-								<div class="road-walker" id="roadWalker" style="left:18%;--accent-color:#f59e0b;transform:translateX(-50%) scaleX(1);">
-									<svg width="44" height="52" viewBox="0 0 44 52" fill="none" class="walker-svg">
-										<rect x="14" y="3"  width="18" height="9" rx="2" fill="#3b2d1f"/>
-										<rect x="17" y="8"  width="14" height="13" rx="2" fill="#fcd9b6"/>
-										<rect x="20" y="12" width="3"  height="3" rx="1" fill="#1e1b4b"/>
-										<rect x="25" y="12" width="3"  height="3" rx="1" fill="#1e1b4b"/>
-										<rect x="19" y="11" width="6"  height="5" rx="1" fill="none" stroke="#1e293b" stroke-width="1.5"/>
-										<rect x="26" y="11" width="6"  height="5" rx="1" fill="none" stroke="#1e293b" stroke-width="1.5"/>
-										<line x1="25" y1="13" x2="26" y2="13" stroke="#1e293b" stroke-width="1"/>
-										<rect x="13" y="21" width="18" height="16" rx="2" fill="var(--accent-color)" style="transition:fill 0.3s;"/>
-										<rect x="19" y="21" width="6"  height="3"  rx="1" fill="rgba(255,255,255,0.3)"/>
-										<rect x="13" y="35" width="18" height="4"  fill="#1e1b4b"/>
-										<g class="walker-leg-l"><rect x="14" y="39" width="6" height="10" rx="1" fill="#1e1b4b"/><rect x="13" y="47" width="8" height="3" rx="1" fill="#000"/></g>
-										<g class="walker-leg-r"><rect x="24" y="39" width="6" height="10" rx="1" fill="#1e1b4b"/><rect x="23" y="47" width="8" height="3" rx="1" fill="#000"/></g>
-										<g class="walker-arm-l"><rect x="7"  y="21" width="6" height="14" rx="2" fill="#fcd9b6"/><rect x="7"  y="23" width="6" height="10" rx="2" fill="var(--accent-color)" style="transition:fill 0.3s;"/></g>
-										<g class="walker-arm-r"><rect x="31" y="21" width="6" height="14" rx="2" fill="#fcd9b6"/><rect x="31" y="23" width="6" height="10" rx="2" fill="var(--accent-color)" style="transition:fill 0.3s;"/></g>
-									</svg>
-								</div>
-
-								<!-- Car -->
-								<div class="road-car" id="roadCar">
-									<svg width="72" height="40" viewBox="0 0 72 40" fill="none">
-										<ellipse cx="18" cy="34" rx="9" ry="6" fill="#1e293b"/>
-										<ellipse cx="54" cy="34" rx="9" ry="6" fill="#1e293b"/>
-										<ellipse cx="18" cy="34" rx="5" ry="4" fill="#334155"/>
-										<ellipse cx="54" cy="34" rx="5" ry="4" fill="#334155"/>
-										<rect x="4"  y="18" width="64" height="16" rx="3" fill="#b91c1c"/>
-										<rect x="10" y="8"  width="52" height="12" rx="2" fill="#991b1b"/>
-										<rect x="14" y="9"  width="18" height="9"  rx="1" fill="#0e7490"/>
-										<rect x="36" y="9"  width="16" height="9"  rx="1" fill="#0e7490"/>
-										<rect x="14" y="9"  width="18" height="3"  rx="1" fill="#22d3ee" opacity="0.5"/>
-										<rect x="62" y="20" width="7"  height="6"  rx="1" fill="#fef08a"/>
-										<rect x="3"  y="20" width="6"  height="5"  rx="1" fill="#f87171"/>
-									</svg>
-								</div>
-
-							</div><!-- end road-container -->
-
-							<!-- ── SLIDING INFO PANELS — directly touching scene ── -->
-							<div class="evolution-panels-window">
-								<div class="evolution-panels-track" id="panelsTrack" style="transform:translateX(0%);">
-
-									<!-- Panel 0: Past -->
-									<div class="evolution-panel evolution-panel--det" id="panel-0">
-										<div class="card-glow"></div>
-										<div class="panel-layout">
-											<div class="panel-main">
-												<span class="bh-variant-badge">Past / Completed</span>
-												<h3 class="panel-title">Monolithic Det</h3>
-												<p class="panel-desc">Our inaugural entry into anchor-free object detection. By utilizing a Swin Transformer backbone paired with a custom FPN and FCOS head, it predicts bounding boxes directly from pixel locations, eliminating complex anchors and achieving remarkable performance on Pascal VOC.</p>
-											</div>
-											<div class="panel-side">
-												<ul class="bh-variant-spec-list">
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Task</span><span class="bh-variant-spec-value">Object Detection</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Backbone</span><span class="bh-variant-spec-value">Swin-T / MobileNet</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Dataset</span><span class="bh-variant-spec-value">Pascal VOC</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Status</span><span class="bh-variant-spec-value" style="color:var(--accent-color)"><span class="status-dot"></span>Completed</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-
-									<!-- Panel 1: Present -->
-									<div class="evolution-panel evolution-panel--dape" id="panel-1">
-										<div class="card-glow"></div>
-										<div class="panel-layout">
-											<div class="panel-main">
-												<span class="bh-variant-badge">Present / Active</span>
-												<h3 class="panel-title">Monolithic d-Ape</h3>
-												<p class="panel-desc">Expanding computer vision boundaries into temporal sequences and spatial structures. d-Ape introduces advanced skeleton-based pose estimation and action recognition modules. Powered by dual Swin/ViT backbones, it delivers robust real-time human behavior analysis.</p>
-											</div>
-											<div class="panel-side">
-												<ul class="bh-variant-spec-list">
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Task</span><span class="bh-variant-spec-value">Pose &amp; Action</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Backbone</span><span class="bh-variant-spec-value">Swin / ViT</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Framework</span><span class="bh-variant-spec-value">PyTorch</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Status</span><span class="bh-variant-spec-value" style="color:var(--accent-color)"><span class="status-dot"></span>In Progress</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-
-									<!-- Panel 2: Future -->
-									<div class="evolution-panel evolution-panel--soon" id="panel-2">
-										<div class="card-glow"></div>
-										<div class="panel-layout">
-											<div class="panel-main">
-												<span class="bh-variant-badge">Future / Research</span>
-												<h3 class="panel-title">... soon</h3>
-												<p class="panel-desc">The roadmap points towards generative architectures and self-supervised representation models. Planned integrations include deformable attention in FPN necks, TensorRT optimizations for edge acceleration, and unified multi-modal encoders.</p>
-											</div>
-											<div class="panel-side">
-												<ul class="bh-variant-spec-list">
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Task</span><span class="bh-variant-spec-value">Generative Model</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Roadmap</span><span class="bh-variant-spec-value">Deformable Neck</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Optimization</span><span class="bh-variant-spec-value">TensorRT Engine</span></li>
-													<li class="bh-variant-spec-item"><span class="bh-variant-spec-label">Status</span><span class="bh-variant-spec-value" style="color:var(--accent-color)"><span class="status-dot"></span>Planned</span></li>
-												</ul>
-											</div>
-										</div>
-									</div>
-
-								</div>
-							</div><!-- end evolution-panels-window -->
-
-						</div><!-- end scene-card-wrapper -->
+				<div class="soon-container">
+					<h2 class="soon-text">Update Soon</h2>
 				</div>
-				<!-- Close bh-content-scroll -->
 			</div>
 			<!-- Close bh-page -->
 		</div>
 		<!-- Close page-wrap -->
 
 		<script>
-			// ── Interactive Road Timeline Logic ──
+			// ── Font and Language Cycling for Soon Text ──
 			(function() {
-				const milestones = document.querySelectorAll('.road-milestone');
-				const walker = document.getElementById('roadWalker');
-				const track = document.getElementById('panelsTrack');
-				const car = document.getElementById('roadCar');
-				let currentIndex = 0;
-
-				if (!walker || milestones.length === 0 || !track) return;
-
-				milestones.forEach((milestone) => {
-					milestone.addEventListener('click', () => {
-						const nextIndex = parseInt(milestone.getAttribute('data-index'), 10);
-						if (nextIndex === currentIndex) return;
-
-						const nextLeft = milestone.style.left;
-						const nextAccent = milestone.getAttribute('data-accent');
-
-						// Flip walker direction depending on movement
-						let flipX = 1;
-						if (nextIndex < currentIndex) {
-							flipX = -1; // face left
-						} else {
-							flipX = 1;  // face right
-						}
-
-						// Trigger walking animation classes
-						walker.classList.add('is-walking');
-						
-						// Move and flip the walker sprite (no scaling or vertical displacement needed)
-						walker.style.left = nextLeft;
-						walker.style.transform = `translateX(-50%) scaleX(${flipX})`;
-						
-						// Transition active accent color variable
-						walker.style.setProperty('--accent-color', nextAccent);
-
-						// Switch active classes on milestones
-						milestones[currentIndex].classList.remove('active');
-						milestone.classList.add('active');
-
-						// Shift the cards track horizontally
-						const translatePct = -33.3333 * nextIndex;
-						track.style.transform = `translateX(${translatePct}%)`;
-
-						// Remove walking animation once reached destination (1.2s transition time)
-						setTimeout(() => {
-							walker.classList.remove('is-walking');
-						}, 1200);
-
-						currentIndex = nextIndex;
-					});
-				});
-
-				// Drive the pixel car automatically every 10 seconds
-				if (car) {
-					function launchCar() {
-						car.classList.add('drive');
-						setTimeout(() => {
-							car.classList.remove('drive');
-						}, 3000);
-					}
-					// Launch once at start
-					setTimeout(launchCar, 2000);
-					// Set loop every 10s
-					setInterval(launchCar, 10000);
-				}
+				const soonText = document.querySelector('.soon-text');
+				if (!soonText) return;
+				const fonts = [
+					'"Google Sans", sans-serif',
+					'"DM Sans", sans-serif',
+					'"Trirong", serif',
+					'"Courier New", monospace',
+					'Georgia, serif',
+					'Arial, sans-serif',
+					'"Times New Roman", serif',
+					'"Trebuchet MS", sans-serif',
+					'Verdana, sans-serif',
+					'Impact, sans-serif',
+					'"Lucida Console", monospace'
+				];
+				const translations = [
+					'Soon',                    // English
+					'เร็วๆ นี้',                 // Thai
+					'まもなく',                  // Japanese
+					'조만간',                   // Korean
+					'即将',                    // Chinese (Simplified)
+					'Pronto',                  // Spanish
+					'Bientôt',                 // French
+					'Bald',                    // German
+					'Скоро',                   // Russian
+					'قريباً',                  // Arabic
+					'शीघ्र',                   // Hindi
+					'Presto',                  // Italian
+					'Breve',                   // Portuguese
+					'Sớm',                     // Vietnamese
+					'Segera',                  // Indonesian
+					'Yakında',                 // Turkish
+					'Snel',                    // Dutch
+					'Snart',                   // Swedish
+					'Wkrótce',                 // Polish
+					'Σύντομα'                  // Greek
+				];
+				let fontIndex = 0;
+				let langIndex = 0;
+				setInterval(() => {
+					soonText.textContent = translations[langIndex];
+					soonText.style.fontFamily = fonts[fontIndex];
+					
+					langIndex = (langIndex + 1) % translations.length;
+					fontIndex = (fontIndex + 1) % fonts.length;
+				}, 450);
 			})();
 
-			// ── Page exit transition ──// ── Page exit transition ──
+			// ── Page exit transition ──
 			const backBtn = document.getElementById("backBtn");
 			if (backBtn) {
 				backBtn.addEventListener("click", (e) => {
@@ -1422,37 +1179,122 @@
 				});
 			}
 
-			// ── Dynamic Fluid Bubble Generator ──
-			const bgContainer = document.querySelector(".bh-bg");
-			if (bgContainer) {
-				const bubblesContainer = document.createElement("div");
-				bubblesContainer.className = "bh-bubbles";
-				bgContainer.appendChild(bubblesContainer);
-
-				const bubbleCount = 20;
-				for (let i = 0; i < bubbleCount; i++) {
-					const bubble = document.createElement("div");
-					bubble.className = "bh-bubble";
-
-					const size = Math.random() * 40 + 10; // 10px to 50px
-					const left = Math.random() * 100; // 0% to 100%
-					const delay = Math.random() * 12; // 0s to 12s delay
-					const duration = Math.random() * 12 + 8; // 8s to 20s speed
-					const sway =
-						(Math.random() * 60 + 20) *
-						(Math.random() > 0.5 ? 1 : -1); // sway left or right
-					const opacity = Math.random() * 0.12 + 0.04; // subtle aesthetic
-
-					bubble.style.setProperty("--size", `${size}px`);
-					bubble.style.setProperty("--left", `${left}%`);
-					bubble.style.setProperty("--delay", `${delay}s`);
-					bubble.style.setProperty("--duration", `${duration}s`);
-					bubble.style.setProperty("--sway", `${sway}px`);
-					bubble.style.setProperty("--opacity", opacity.toString());
-
-					bubblesContainer.appendChild(bubble);
+			(function() {
+				const canvas = document.getElementById('dotmatrixCanvas');
+				if (!canvas) return;
+				const ctx = canvas.getContext('2d');
+				
+				const img = new Image();
+				img.src = '/frutiger-aero-wallpaper-i-whipped-up-in-a-few-hours-hoping-v0-jcaq7gsamypc1.webp';
+				
+				let imgLoaded = false;
+				let animationFrameId = null;
+				let cols = 0;
+				let rows = 0;
+				let cachedPixels = null;
+				const spacing = 8; // Grid spacing
+				
+				img.onload = function() {
+					imgLoaded = true;
+					resize();
+				};
+				
+				function resize() {
+					canvas.width = window.innerWidth;
+					canvas.height = window.innerHeight;
+					if (imgLoaded) {
+						cols = Math.ceil(canvas.width / spacing);
+						rows = Math.ceil(canvas.height / spacing);
+						
+						// Render scaled image once to offscreen canvas to cache pixels (boosts performance to 60fps)
+						const tempCanvas = document.createElement('canvas');
+						const tempCtx = tempCanvas.getContext('2d');
+						tempCanvas.width = cols;
+						tempCanvas.height = rows;
+						
+						const imgRatio = img.width / img.height;
+						const canvasRatio = canvas.width / canvas.height;
+						let drawW, drawH, drawX, drawY;
+						
+						if (imgRatio > canvasRatio) {
+							drawH = rows;
+							drawW = rows * imgRatio;
+							drawX = (cols - drawW) / 2;
+							drawY = 0;
+						} else {
+							drawW = cols;
+							drawH = cols / imgRatio;
+							drawX = 0;
+							drawY = (rows - drawH) / 2;
+						}
+						
+						tempCtx.drawImage(img, drawX, drawY, drawW, drawH);
+						cachedPixels = tempCtx.getImageData(0, 0, cols, rows).data;
+						
+						// Fire the tick loop
+						if (!animationFrameId) {
+							tick();
+						}
+					}
 				}
-			}
+				
+				function tick() {
+					draw();
+					animationFrameId = requestAnimationFrame(tick);
+				}
+				
+				function draw() {
+					if (!cachedPixels) return;
+					ctx.clearRect(0, 0, canvas.width, canvas.height);
+					ctx.fillStyle = 'rgba(255, 255, 255, 0.52)'; // Higher contrast white dots
+					
+					const time = Date.now() * 0.0004; // Extremely slow, comfortable movement
+					
+					for (let r = 0; r < rows; r++) {
+						for (let c = 0; c < cols; c++) {
+							// Gentle coordinate shift for micro-ripples
+							const shiftX = Math.sin(r * 0.06 + time) * 0.6;
+							const shiftY = Math.cos(c * 0.06 + time) * 0.6;
+							
+							const sampleC = Math.max(0, Math.min(cols - 1, Math.round(c + shiftX)));
+							const sampleR = Math.max(0, Math.min(rows - 1, Math.round(r + shiftY)));
+							
+							const idx = (sampleR * cols + sampleC) * 4;
+							const R = cachedPixels[idx];
+							const G = cachedPixels[idx + 1];
+							const B = cachedPixels[idx + 2];
+							
+							const x = c * spacing + spacing / 2;
+							const y = r * spacing + spacing / 2;
+							
+							// Brightness calculation
+							const brightness = 0.299 * R + 0.587 * G + 0.114 * B;
+							
+							// For white dots on a black background, brighter pixels = larger dots
+							let norm = brightness / 255;
+							norm = Math.pow(norm, 1.8); // Higher contrast scale to make contours pop more
+							
+							// Add a very subtle pulse
+							const pulse = Math.sin(c * 0.04 + r * 0.04 + time) * 0.02;
+							norm = Math.max(0, Math.min(1, norm + pulse));
+							
+							const minRadius = 0.5;
+							const maxRadius = 3.4;
+							const radius = minRadius + norm * (maxRadius - minRadius);
+							
+							ctx.beginPath();
+							ctx.arc(x, y, radius, 0, Math.PI * 2);
+							ctx.fill();
+						}
+					}
+				}
+				
+				window.addEventListener('resize', resize);
+				if (img.complete) {
+					imgLoaded = true;
+					resize();
+				}
+			})();
 		</script>
 	</body>
 </html>

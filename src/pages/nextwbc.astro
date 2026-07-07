@@ -1,0 +1,1173 @@
+---
+import '@fontsource/google-sans-flex';
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content="NextWBC white blood cell classification dashboard." />
+		<title>NextWBC</title>
+
+		<style is:global>
+			/* ===========================
+			   BLACKHOLE TOKEN SYSTEM
+			=========================== */
+			:root {
+				--bh-void: #ffffff;
+				--bh-deep: #f9fafb;
+				--bh-surface: #f3f4f6;
+				--bh-card: #ffffff;
+				--bh-border: rgba(0, 0, 0, 0.08);
+				--bh-border-hi: rgba(0, 0, 0, 0.16);
+				--bh-text: #1f2937;
+				--bh-muted: #6b7280;
+				--bh-accent: #4f46e5; /* indigo */
+				--bh-accent2: #7c3aed; /* violet */
+				--bh-accent3: #10b981; /* emerald */
+				--bh-danger: #ef4444;
+				--bh-glow: transparent;
+				--bh-glow-sm: transparent;
+			}
+
+			/* ===========================
+			   BASE
+			=========================== */
+			html,
+			body {
+				width: 100%;
+				height: 100vh;
+				overflow: hidden;
+				background: transparent;
+				font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+				color: var(--bh-text);
+				line-height: 1.5;
+				margin: 0;
+				padding: 0;
+				position: relative;
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: -40px; /* Expands to hide the blurred edges */
+				z-index: -1;
+				background-image: url('/frutiger-aero-wallpaper-i-whipped-up-in-a-few-hours-hoping-v0-jcaq7gsamypc1.webp');
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				filter: blur(24px);
+				background-color: rgba(255, 255, 255, 0.1); /* Very light overlay to not wash it out too much */
+				background-blend-mode: overlay;
+			}
+
+			a {
+				color: var(--bh-accent);
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+
+			.page-wrap {
+				animation: bh-enter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+			}
+			@keyframes bh-enter {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			body.is-exiting .page-wrap {
+				animation: bh-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+				pointer-events: none;
+			}
+			@keyframes bh-exit {
+				from {
+					opacity: 1;
+					transform: translateY(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+			}
+
+			/* ===========================
+			   LAYOUT CONTAINER
+			=========================== */
+			.bh-page {
+				position: relative;
+				z-index: 1;
+				max-width: 1040px;
+				margin: 0 auto;
+				height: 100vh;
+				padding: 32px 24px;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.bh-main-card {
+				position: relative;
+				background: rgba(255, 255, 255, 0.88);
+				backdrop-filter: blur(48px);
+				-webkit-backdrop-filter: blur(48px);
+				border: 1px solid rgba(0, 0, 0, 0.05);
+				border-radius: 0px;
+				padding: 32px;
+				box-shadow: 0 32px 80px rgba(0, 0, 0, 0.08), 0 0 32px rgba(0, 0, 0, 0.02);
+				display: flex;
+				gap: 32px;
+				height: calc(100vh - 80px);
+				align-items: stretch;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+
+			/* ===========================
+			   DASHBOARD SPLIT LAYOUT
+			=========================== */
+			.wbc-sidebar {
+				width: 300px;
+				flex-shrink: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 20px;
+				border-right: 1px solid var(--bh-border);
+				padding-right: 32px;
+				padding-top: 24px;
+				overflow-y: auto;
+			}
+			.wbc-workspace {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+				height: 100%;
+				overflow-y: auto;
+				padding-right: 8px;
+			}
+			.wbc-workspace::-webkit-scrollbar {
+				width: 6px;
+			}
+			.wbc-workspace::-webkit-scrollbar-track {
+				background: rgba(0, 0, 0, 0.02);
+			}
+			.wbc-workspace::-webkit-scrollbar-thumb {
+				background: rgba(0, 0, 0, 0.1);
+				border-radius: 0px;
+			}
+			.wbc-workspace::-webkit-scrollbar-thumb:hover {
+				background: rgba(0, 0, 0, 0.2);
+			}
+
+			.wbc-sidebar::-webkit-scrollbar {
+				width: 4px;
+			}
+			.wbc-sidebar::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.wbc-sidebar::-webkit-scrollbar-thumb {
+				background: rgba(0, 0, 0, 0.08);
+				border-radius: 0px;
+			}
+
+			.wbc-nav {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				padding: 8px 16px;
+				background: rgba(0, 0, 0, 0.03);
+				border: 1px solid rgba(0, 0, 0, 0.06);
+				border-radius: 0px;
+				width: fit-content;
+			}
+
+			.wbc-empty-state {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				flex: 1;
+				text-align: center;
+				padding: 48px 24px;
+				color: var(--bh-muted);
+			}
+			.wbc-empty-icon {
+				width: 80px;
+				height: 80px;
+				border-radius: 0px;
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: var(--bh-accent);
+				margin-bottom: 24px;
+				animation: wbc-pulse 3s infinite ease-in-out;
+			}
+			@keyframes wbc-pulse {
+				0%, 100% { transform: scale(1); opacity: 0.7; }
+				50% { transform: scale(1.05); opacity: 1; }
+			}
+			.wbc-empty-title {
+				font-size: 1.4rem;
+				font-weight: 300;
+				color: var(--bh-text);
+				margin: 0 0 12px 0;
+			}
+			.wbc-empty-subtitle {
+				font-size: 0.9rem;
+				max-width: 420px;
+				margin: 0;
+				line-height: 1.6;
+			}
+
+			@media (max-width: 900px) {
+				.bh-page {
+					height: auto;
+					padding: 16px;
+				}
+				.bh-main-card {
+					flex-direction: column;
+					padding: 24px;
+					gap: 24px;
+					height: auto;
+					overflow: visible;
+				}
+				.wbc-sidebar {
+					width: 100% !important;
+					border-right: none !important;
+					padding-right: 0 !important;
+					padding-bottom: 24px;
+					border-bottom: 1px solid var(--bh-border);
+					overflow: visible;
+				}
+				.wbc-workspace {
+					overflow: visible;
+					height: auto;
+					padding-right: 0;
+				}
+			}
+
+			/* ===========================
+			   TOP NAV BAR (legacy / fallback)
+			=========================== */
+			.bh-topbar {
+				display: none;
+			}
+
+			.wbc-back-btn {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 10;
+				width: 40px;
+				height: 40px;
+				background: #f97316; /* Vibrant Orange */
+				color: #ffffff;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: none;
+				border-radius: 0px; /* Square */
+				cursor: pointer;
+				transition: background-color 0.2s, transform 0.2s;
+			}
+			.wbc-back-btn:hover {
+				background: #ea580c; /* Darker orange */
+				transform: scale(1.05);
+			}
+
+			.bh-content-scroll {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+			}
+
+			/* ===========================
+			   HEADER & TITLE
+			=========================== */
+			.bh-header {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				margin-bottom: 8px;
+				width: 100%;
+				align-items: flex-start;
+				text-align: left;
+			}
+
+			.bh-title {
+				font-size: 2.2rem;
+				font-weight: 900;
+				line-height: 1.1;
+				letter-spacing: -0.5px;
+				margin: 0 0 4px 0;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 8px;
+				flex-wrap: wrap;
+			}
+
+			.title-nextwbc {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				color: var(--bh-text);
+			}
+			.title-classifier {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				color: var(--bh-accent);
+			}
+
+			.bh-subtitle {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				font-size: 0.85rem;
+				color: var(--bh-muted);
+				font-weight: 400;
+				margin: 0;
+				line-height: 1.5;
+				max-width: 100%;
+			}
+
+			/* ===========================
+			   WBC DEMO COMPONENTS
+			=========================== */
+			#wbcUploadPrompt {
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+			}
+			.wbc-upload-zone {
+				position: relative;
+				border: 2px dashed rgba(0, 0, 0, 0.15);
+				border-radius: 0px;
+				background: rgba(0, 0, 0, 0.02);
+				transition: border-color 0.2s, background-color 0.2s;
+				cursor: pointer;
+				text-align: center;
+				padding: 64px 24px;
+				margin-top: 0;
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				min-height: 320px;
+			}
+			.wbc-upload-zone:hover {
+				border-color: var(--bh-accent);
+				background: rgba(0, 0, 0, 0.04);
+			}
+			.wbc-upload-zone.dragging {
+				border-color: var(--bh-accent);
+				background: rgba(79, 70, 229, 0.05);
+			}
+
+			/* ── User Guide Styling ── */
+			.wbc-guide {
+				margin-top: 12px;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+			}
+			.wbc-guide-title {
+				font-size: 0.95rem;
+				font-weight: 500;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: var(--bh-text);
+				margin: 0;
+				border-bottom: 1px solid var(--bh-border);
+				padding-bottom: 8px;
+			}
+			.wbc-guide-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+			}
+			.wbc-guide-list li {
+				display: flex;
+				gap: 12px;
+				align-items: flex-start;
+			}
+			.wbc-step-num {
+				width: 20px;
+				height: 20px;
+				border-radius: 0px;
+				background: var(--bh-accent);
+				color: #ffffff;
+				font-size: 0.75rem;
+				font-weight: bold;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				flex-shrink: 0;
+				margin-top: 2px;
+			}
+			.wbc-step-text {
+				font-size: 0.82rem;
+				color: var(--bh-muted);
+				line-height: 1.4;
+			}
+			.wbc-guide-note {
+				font-size: 0.75rem;
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				padding: 12px;
+				color: var(--bh-muted);
+				line-height: 1.4;
+			}
+			.wbc-upload-icon-wrapper {
+				width: 56px;
+				height: 56px;
+				border-radius: 0px;
+				background: rgba(0, 0, 0, 0.04);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0 auto 16px;
+				color: rgba(0, 0, 0, 0.4);
+			}
+			.wbc-upload-text {
+				font-size: 0.9rem;
+				color: rgba(0, 0, 0, 0.7);
+				margin: 0 0 8px 0;
+			}
+			.wbc-upload-subtext {
+				font-size: 0.72rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				color: rgba(0, 0, 0, 0.4);
+				margin: 0;
+			}
+
+			.wbc-preview-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 16px;
+				padding: 24px;
+				background: rgba(0, 0, 0, 0.01);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				margin-top: 16px;
+			}
+			.wbc-preview-img {
+				max-height: 280px;
+				max-width: 100%;
+				border-radius: 0px;
+				object-fit: contain;
+				border: 1px solid var(--bh-border-hi);
+			}
+			.wbc-progress-bar-wrapper {
+				width: 100%;
+				max-width: 400px;
+				height: 6px;
+				background: rgba(0, 0, 0, 0.08);
+				border-radius: 0px;
+				overflow: hidden;
+				margin-top: 8px;
+			}
+			.wbc-progress-bar-fill {
+				height: 100%;
+				width: 0%;
+				background: var(--bh-accent);
+				border-radius: 0px;
+				transition: width 0.4s ease-out;
+			}
+			.wbc-status-text {
+				font-size: 0.8rem;
+				color: var(--bh-accent);
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				justify-content: center;
+				margin-top: 8px;
+			}
+
+			.wbc-error-msg {
+				padding: 16px;
+				border-radius: 0px;
+				background: rgba(239, 68, 68, 0.08);
+				border: 1px solid rgba(239, 68, 68, 0.15);
+				color: var(--bh-danger);
+				font-size: 0.85rem;
+				margin-top: 16px;
+				text-align: center;
+			}
+
+			/* Results structure */
+			.wbc-results-container {
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				margin-top: 16px;
+			}
+			.wbc-results-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-bottom: 1px solid var(--bh-border);
+				padding-bottom: 12px;
+			}
+			.wbc-results-heading {
+				font-size: 1.1rem;
+				font-weight: 300;
+				margin: 0;
+			}
+			.wbc-results-top {
+				display: flex;
+				gap: 24px;
+				flex-wrap: wrap;
+			}
+			.wbc-image-panel {
+				flex: 1;
+				min-width: 320px;
+				background: rgba(0, 0, 0, 0.03);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				overflow: hidden;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				min-height: 360px;
+			}
+			@media (max-width: 500px) {
+				.wbc-image-panel {
+					min-width: 100%;
+					min-height: 280px;
+				}
+			}
+			.wbc-image-panel img {
+				max-width: 100%;
+				max-height: 420px;
+				object-fit: contain;
+			}
+			.wbc-panel-badge {
+				position: absolute;
+				top: 12px;
+				left: 12px;
+				z-index: 2;
+				font-size: 0.65rem;
+				font-weight: bold;
+				background: rgba(0, 0, 0, 0.8);
+				color: #fff;
+				padding: 4px 8px;
+				border-radius: 0px;
+				letter-spacing: 1px;
+				text-transform: uppercase;
+				border: 1px solid rgba(255,255,255,0.1);
+			}
+
+			.wbc-stats-panel {
+				width: 280px;
+				display: flex;
+				flex-direction: column;
+				gap: 16px;
+				flex-shrink: 0;
+			}
+			@media (max-width: 768px) {
+				.wbc-stats-panel {
+					width: 100%;
+				}
+			}
+
+			.wbc-count-card {
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				padding: 20px;
+				text-align: center;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.wbc-count-number {
+				font-size: 3.2rem;
+				font-weight: 300;
+				color: var(--bh-text);
+				line-height: 1;
+			}
+			.wbc-count-label {
+				font-size: 0.72rem;
+				text-transform: uppercase;
+				letter-spacing: 1.5px;
+				color: var(--bh-muted);
+				margin-top: 8px;
+			}
+
+			.wbc-chart-card {
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				padding: 20px;
+			}
+			.wbc-chart-title {
+				font-size: 0.72rem;
+				text-transform: uppercase;
+				letter-spacing: 1.2px;
+				color: var(--bh-muted);
+				margin: 0 0 16px 0;
+			}
+
+			.wbc-count-bar-item {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 10px;
+			}
+			.wbc-bar-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 0px;
+				flex-shrink: 0;
+			}
+			.wbc-bar-label {
+				width: 76px;
+				font-size: 0.7rem;
+				font-weight: bold;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				color: var(--bh-text);
+				opacity: 0.8;
+			}
+			.wbc-bar-track {
+				flex: 1;
+				height: 6px;
+				background: rgba(0, 0, 0, 0.06);
+				border-radius: 0px;
+				overflow: hidden;
+			}
+			.wbc-bar-fill {
+				height: 100%;
+				border-radius: 0px;
+				transition: width 0.8s ease-out;
+			}
+			.wbc-bar-val {
+				width: 24px;
+				text-align: right;
+				font-size: 0.75rem;
+				font-weight: bold;
+				font-family: monospace;
+			}
+
+			/* Crops grid */
+			.wbc-crops-panel {
+				margin-top: 12px;
+			}
+			.wbc-crops-title {
+				font-size: 0.72rem;
+				text-transform: uppercase;
+				letter-spacing: 1.2px;
+				color: var(--bh-muted);
+				margin: 0 0 12px 0;
+			}
+			.wbc-crops-grid {
+				display: grid;
+				grid-template-cols: repeat(auto-fill, minmax(80px, 1fr));
+				gap: 10px;
+			}
+			.wbc-crop-card {
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+			}
+			.wbc-crop-img-wrap {
+				aspect-ratio: 1 / 1;
+				background: rgba(0, 0, 0, 0.2);
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.wbc-crop-img-wrap img {
+				max-width: 100%;
+				max-height: 100%;
+				object-fit: contain;
+			}
+			.wbc-crop-info {
+				padding: 4px 6px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.62rem;
+				font-weight: bold;
+			}
+			.wbc-crop-label {
+				text-transform: uppercase;
+				font-size: 0.58rem;
+				letter-spacing: 0.3px;
+			}
+			.wbc-crop-conf {
+				color: rgba(255, 255, 255, 0.5);
+				font-family: monospace;
+			}
+
+			.wbc-toggle-btn {
+				display: block;
+				margin: 16px auto 0;
+				background: none;
+				border: none;
+				color: var(--bh-muted);
+				font-size: 0.75rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				cursor: pointer;
+				padding: 6px 12px;
+				transition: color 0.2s;
+			}
+			.wbc-toggle-btn:hover {
+				color: var(--bh-text);
+			}
+
+			.wbc-reset-btn {
+				background: none;
+				border: none;
+				color: var(--bh-muted);
+				cursor: pointer;
+				padding: 8px;
+				border-radius: 0px;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				transition: background-color 0.2s, color 0.2s;
+			}
+			.wbc-reset-btn:hover {
+				background: rgba(0, 0, 0, 0.05);
+				color: var(--bh-text);
+			}
+
+			.hidden {
+				display: none !important;
+			}
+
+			.animate-spin {
+				animation: spin 1s linear infinite;
+			}
+			@keyframes spin {
+				from { transform: rotate(0deg); }
+				to { transform: rotate(360deg); }
+			}
+		</style>
+	</head>
+
+	<body>
+
+		<div class="page-wrap">
+			<div class="bh-page">
+				<!-- MAIN CONTENT CARD (Split Columns) -->
+				<div class="bh-main-card">
+					<!-- Floating Square Orange Back Button -->
+					<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
+						<svg
+							width="14"
+							height="14"
+							viewBox="0 0 14 14"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<path d="M9 12L4 7l5-5"></path>
+						</svg>
+					</a>
+					
+					<!-- LEFT SIDEBAR -->
+					<aside class="wbc-sidebar">
+
+						<!-- HEADER (Title, Summary) -->
+						<header class="bh-header">
+							<h1 class="bh-title">
+								<span class="title-nextwbc">NextWBC</span>
+								<span class="title-classifier">Classifier</span>
+							</h1>
+							<p class="bh-subtitle">
+								Avian white blood cell classification using YOLO12. Connects to badgaitintin/hawkwbc models.
+							</p>
+						</header>
+
+						<!-- User Guide Section -->
+						<div class="wbc-guide">
+							<h3 class="wbc-guide-title">How to Use</h3>
+							<ul class="wbc-guide-list">
+								<li>
+									<span class="wbc-step-num">1</span>
+									<span class="wbc-step-text">Drag and drop or click the workspace area on the right to select an avian blood smear image.</span>
+								</li>
+								<li>
+									<span class="wbc-step-num">2</span>
+									<span class="wbc-step-text">Wait for the YOLO12 pipeline to connect to Hugging Face Spaces and analyze the cell contours.</span>
+								</li>
+								<li>
+									<span class="wbc-step-num">3</span>
+									<span class="wbc-step-text">Review the overall counts, cell type distribution, and inspect individual cell crops.</span>
+								</li>
+							</ul>
+							<div class="wbc-guide-note">
+								<strong>Note:</strong> Supported formats are JPG and PNG up to 20MB.
+							</div>
+						</div>
+
+						<!-- Error Message Pane -->
+						<div id="wbcError" class="wbc-error-msg hidden"></div>
+					</aside>
+
+					<!-- RIGHT WORKSPACE CONTENT -->
+					<main class="wbc-workspace">
+						<!-- Upload Prompt Area (Acting as Empty State) -->
+						<div id="wbcUploadPrompt">
+							<div class="wbc-upload-zone" id="wbcDropzone">
+								<input type="file" id="wbcFileInput" accept="image/*" class="hidden" />
+								<div class="wbc-upload-icon-wrapper">
+									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+									</svg>
+								</div>
+								<p class="wbc-upload-text">Drop a blood smear image here or click to upload</p>
+								<p class="wbc-upload-subtext">JPG, PNG — Max 20MB</p>
+							</div>
+						</div>
+
+						<!-- Connection / Progress Preview Area -->
+						<div id="wbcPreview" class="wbc-preview-container hidden">
+							<img id="wbcPreviewImg" class="wbc-preview-img" src="" alt="Smear Preview" />
+							<div class="wbc-progress-bar-wrapper">
+								<div class="wbc-progress-bar-fill" id="wbcProgressFill"></div>
+							</div>
+							<div class="wbc-status-text" id="wbcStatusText">Connecting to model...</div>
+						</div>
+
+						<!-- Inference Results Panel -->
+						<div id="wbcResult" class="wbc-results-container hidden">
+							<div class="wbc-results-header">
+								<h3 class="wbc-results-heading">Inference Result</h3>
+								<button id="wbcResetBtn" class="wbc-reset-btn" title="Upload New Image">
+									<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+										<path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+									</svg>
+								</button>
+							</div>
+
+							<div class="wbc-results-top">
+								<!-- Annotated Detection Image -->
+								<div class="wbc-image-panel">
+									<span class="wbc-panel-badge">Detection</span>
+									<img id="wbcAnnotatedImg" src="" alt="Annotated Detections" />
+								</div>
+
+								<!-- Side statistics counts -->
+								<div class="wbc-stats-panel">
+									<div class="wbc-count-card">
+										<span class="wbc-count-number" id="wbcCellCountNum">0</span>
+										<span class="wbc-count-label">Cells Detected</span>
+									</div>
+
+									<div class="wbc-chart-card">
+										<h4 class="wbc-chart-title">Distribution</h4>
+										<div id="wbcDistributionContainer">
+											<!-- Dynamic Distribution Bars Injected Here -->
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- Individual Cell Crops Panel -->
+							<div class="wbc-crops-panel">
+								<h4 class="wbc-crops-title">Detected Cell Crops</h4>
+								<div class="wbc-crops-grid" id="wbcCropsGrid">
+									<!-- Dynamic crops Injected Here -->
+								</div>
+								<button id="wbcToggleBtn" class="wbc-toggle-btn hidden">Show All</button>
+							</div>
+						</div>
+					</main>
+
+				</div>
+			</div>
+		</div>
+
+		<script>
+			// ── Page exit transition ──
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.addEventListener("click", (e) => {
+					e.preventDefault();
+					document.body.classList.add("is-exiting");
+					setTimeout(() => {
+						window.location.href = backBtn.getAttribute("href");
+					}, 280);
+				});
+			}
+		</script>
+
+		<!-- ── NextWBC WebSocket inference integration client ── -->
+		<script type="module">
+			import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@2.3.0/dist/index.js";
+
+			const CLASSES = [
+				'heterophil',
+				'eosinophil',
+				'basophil',
+				'lymphocyte',
+				'monocyte',
+				'thrombocyte',
+			];
+
+			const CLASS_COLORS = {
+				heterophil:  '#FFC800',
+				eosinophil:  '#FF0000',
+				basophil:    '#8000FF',
+				lymphocyte:  '#00C8FF',
+				monocyte:    '#00FF00',
+				thrombocyte: '#C8C8C8',
+			};
+
+			const CLASS_LABELS = {
+				heterophil:  'Heterophil',
+				eosinophil:  'Eosinophil',
+				basophil:    'Basophil',
+				lymphocyte:  'Lymphocyte',
+				monocyte:    'Monocyte',
+				thrombocyte: 'Thrombocyte',
+			};
+
+			const HF_REPO_ID = "badgaitintin/nextwbc";
+
+			const dropzone = document.getElementById('wbcDropzone');
+			const fileInput = document.getElementById('wbcFileInput');
+			const errorContainer = document.getElementById('wbcError');
+			const resultContainer = document.getElementById('wbcResult');
+			const previewContainer = document.getElementById('wbcPreview');
+			const progressFill = document.getElementById('wbcProgressFill');
+			const statusText = document.getElementById('wbcStatusText');
+			const uploadPrompt = document.getElementById('wbcUploadPrompt');
+			const resetBtn = document.getElementById('wbcResetBtn');
+			const toggleBtn = document.getElementById('wbcToggleBtn');
+
+			let loading = false;
+			let client = null;
+			let currentResultData = null;
+			let showAll = false;
+
+			async function getClient() {
+				if (client) return client;
+				statusText.innerText = 'Connecting to Hugging Face...';
+				client = await Client.connect(HF_REPO_ID);
+				return client;
+			}
+
+			function resetState() {
+				previewContainer.classList.add('hidden');
+				resultContainer.classList.add('hidden');
+				uploadPrompt.classList.remove('hidden');
+				errorContainer.classList.add('hidden');
+				errorContainer.innerText = '';
+				progressFill.style.width = '0%';
+				fileInput.value = '';
+				loading = false;
+				currentResultData = null;
+				showAll = false;
+			}
+
+			resetBtn.addEventListener('click', resetState);
+
+			// Setup click-to-upload
+			dropzone.addEventListener('click', () => {
+				if (loading) return;
+				fileInput.click();
+			});
+
+			dropzone.addEventListener('dragover', (e) => {
+				e.preventDefault();
+				if (loading) return;
+				dropzone.classList.add('dragging');
+			});
+
+			dropzone.addEventListener('dragleave', () => {
+				dropzone.classList.remove('dragging');
+			});
+
+			dropzone.addEventListener('drop', (e) => {
+				e.preventDefault();
+				dropzone.classList.remove('dragging');
+				if (loading) return;
+				const file = e.dataTransfer.files[0];
+				if (file) processFile(file);
+			});
+
+			fileInput.addEventListener('change', (e) => {
+				const file = e.target.files[0];
+				if (file) processFile(file);
+			});
+
+			function showError(msg) {
+				errorContainer.innerText = msg;
+				errorContainer.classList.remove('hidden');
+				previewContainer.classList.add('hidden');
+				uploadPrompt.classList.remove('hidden');
+				loading = false;
+			}
+
+			async function processFile(file) {
+				if (!file.type.startsWith('image/')) {
+					showError('Please upload an image file (JPG, PNG, etc.)');
+					return;
+				}
+				if (file.size > 20 * 1024 * 1024) {
+					showError('Image too large. Maximum 20MB.');
+					return;
+				}
+
+				loading = true;
+				errorContainer.classList.add('hidden');
+				uploadPrompt.classList.add('hidden');
+				previewContainer.classList.remove('hidden');
+				progressFill.style.width = '0%';
+				
+				// Set image preview
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					document.getElementById('wbcPreviewImg').src = e.target.result;
+				};
+				reader.readAsDataURL(file);
+
+				try {
+					statusText.innerText = 'Connecting to Hugging Face...';
+					const clientInstance = await getClient();
+					
+					statusText.innerText = 'Running detection...';
+					const job = clientInstance.submit("/predict", { image: file });
+					
+					let gotResult = false;
+					for await (const event of job) {
+						if (event.type === "status") {
+							if (event.stage === "error") {
+								throw new Error("Detection pipeline failed");
+							}
+							if (event.progress_data && event.progress_data.length > 0) {
+								const p = event.progress_data[0];
+								progressFill.style.width = `${Math.round(p.progress * 100)}%`;
+								if (p.desc) {
+									statusText.innerText = p.desc;
+								}
+							}
+						} else if (event.type === "data" && event.data) {
+							if (event.data[0]) {
+								const data = event.data[0];
+								if (data.error) {
+									throw new Error(data.error);
+								}
+								renderResult(data);
+								gotResult = true;
+							}
+						}
+					}
+					if (!gotResult) {
+						throw new Error('No result returned from model');
+					}
+				} catch (err) {
+					showError(`Detection failed: ${err.message || 'Unknown error'}`);
+				} finally {
+					loading = false;
+				}
+			}
+
+			function renderResult(data) {
+				currentResultData = data;
+				previewContainer.classList.add('hidden');
+				resultContainer.classList.remove('hidden');
+				
+				// Set annotated image
+				document.getElementById('wbcAnnotatedImg').src = data.annotated_image;
+				
+				// Set total count
+				document.getElementById('wbcCellCountNum').innerText = data.total_cells;
+				
+				// Render distribution
+				const counts = data.class_counts || {};
+				const total = data.total_cells || 0;
+				
+				let distributionHTML = '';
+				CLASSES.forEach(cls => {
+					const count = counts[cls] || 0;
+					const pct = total > 0 ? (count / total) * 100 : 0;
+					const color = CLASS_COLORS[cls];
+					const label = CLASS_LABELS[cls];
+					
+					distributionHTML += `
+						<div class="wbc-count-bar-item">
+							<div class="wbc-bar-dot" style="background-color: ${color}"></div>
+							<span class="wbc-bar-label">${label}</span>
+							<div class="wbc-bar-track">
+								<div class="wbc-bar-fill" style="width: ${pct}%; background-color: ${color}; opacity: ${count > 0 ? 0.85 : 0.15}"></div>
+							</div>
+							<span class="wbc-bar-val" style="color: ${count > 0 ? color : 'rgba(255,255,255,0.3)'}">${count}</span>
+						</div>
+					`;
+				});
+				document.getElementById('wbcDistributionContainer').innerHTML = distributionHTML;
+				
+				renderCrops();
+			}
+
+			function renderCrops() {
+				if (!currentResultData) return;
+				const cells = currentResultData.cells || [];
+				const limit = showAll ? cells.length : 8;
+				const visibleCells = cells.slice(0, limit);
+				
+				let cropsHTML = '';
+				visibleCells.forEach(cell => {
+					const color = CLASS_COLORS[cell.class] || '#888';
+					const label = CLASS_LABELS[cell.class] || cell.class;
+					const confPct = Math.round(cell.confidence * 100);
+					
+					cropsHTML += `
+						<div class="wbc-crop-card">
+							<div class="wbc-crop-img-wrap">
+								<img src="${cell.crop_base64}" alt="${label}" />
+							</div>
+							<div class="wbc-crop-info" style="background-color: ${color}15">
+								<span class="wbc-crop-label" style="color: ${color}">${label}</span>
+								<span class="wbc-crop-conf">${confPct}%</span>
+							</div>
+						</div>
+					`;
+				});
+				
+				document.getElementById('wbcCropsGrid').innerHTML = cropsHTML;
+				
+				if (cells.length > 8) {
+					toggleBtn.classList.remove('hidden');
+					toggleBtn.innerText = showAll ? 'Show Less' : `Show All ${cells.length} Cells`;
+				} else {
+					toggleBtn.classList.add('hidden');
+				}
+			}
+
+			toggleBtn.addEventListener('click', () => {
+				showAll = !showAll;
+				renderCrops();
+			});
+		</script>
+	</body>
+</html>

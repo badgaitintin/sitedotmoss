@@ -125,11 +125,8 @@ const ICONS = {
               <!-- About Me 2×1 — opens modal -->
               <button class="tile t-2x1 tile-has-image" id="tile-about" onclick="openAboutModal()">
                 <div class="tile-bg-img" style="background-image: url('/IMG_1405.PNG'); background-position: center top;"></div>
-                <div class="tile-bg-overlay" style="background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.05) 55%);"></div>
-                <div class="about-tile-text">
-                  <span class="about-tile-name">About Me</span>
-                  <span class="about-tile-sub">Tinnaphop Sonsang</span>
-                </div>
+                <div class="tile-bg-overlay"></div>
+                <span class="tile-label tile-label-light">About Me</span>
               </button>
 
             </div>
@@ -150,16 +147,10 @@ const ICONS = {
               </a>
 
               <!-- Next WBC 2×1 -->
-              <a href="/monolithic-detection" class="tile t-2x1 tile-accent-primary" id="tile-nextwbc">
-                <div class="tile-2x1-inner">
-                  <div class="tile-icon-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                  </div>
-                  <div class="tile-2x1-text">
-                    <span class="tile-2x1-title">Next WBC</span>
-                    <span class="tile-2x1-sub">White Blood Cell</span>
-                  </div>
-                </div>
+              <a href="/nextwbc" class="tile t-2x1 tile-has-image" id="tile-nextwbc">
+                <div class="tile-bg-img" style="background-image: url('/raptor_wbc_00001.jpeg'); background-position: center;"></div>
+                <div class="tile-bg-overlay"></div>
+                <span class="tile-label tile-label-light">Next WBC</span>
               </a>
 
             </div>
@@ -545,7 +536,7 @@ const ICONS = {
   }
   .about-tile-name {
     font-family: 'Google Sans Flex', sans-serif;
-    font-size: 14px;
+    font-size: 10.5px;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: #fff;
