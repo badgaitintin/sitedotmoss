@@ -1,0 +1,201 @@
+---
+// src/components/Tile.astro
+interface Props {
+  size?: '1x1' | '2x1' | '2x2' | '2x3' | '3x2';
+  label?: string;
+  accentType?: 'primary' | 'secondary';
+  opacity?: number;
+  bgImage?: string;
+  bgClass?: string;
+  className?: string;
+  href?: string;
+}
+
+const {
+  size = '1x1',
+  label,
+  accentType,
+  opacity,
+  bgImage,
+  bgClass = '',
+  className = '',
+  href,
+} = Astro.props;
+
+const effectiveOpacity = opacity !== undefined ? opacity / 100 : 0.45;
+const textClass = bgImage ? 'text-white' : 'text-tile';
+
+const sizeClasses = {
+  '1x1': 'tile-1x1 row-span-1 col-span-1',
+  '2x1': 'tile-2x1 row-span-1 col-span-2',
+  '2x2': 'tile-2x2 row-span-2 col-span-2',
+  '2x3': 'tile-2x3 row-span-3 col-span-2',
+  '3x2': 'tile-3x2 row-span-2 col-span-3',
+};
+
+const isSmall = size === '1x1' || size === '2x1';
+
+const Tag = href ? 'a' : 'div';
+const extraProps = href ? { href } : {};
+---
+
+<Tag
+  class={`tile relative overflow-hidden group ${sizeClasses[size]} flex flex-col ${isSmall ? 'justify-center items-center' : 'justify-end items-start'} p-2 text-left border cursor-pointer ${textClass} ${className}`}
+  {...extraProps}
+>
+  {/* Base Color Background (from Palette) */}
+  {accentType && (
+    <div
+      class="absolute inset-0 z-0 transition-colors duration-500"
+      style={`background-color: var(--accent-${accentType}); opacity: ${bgImage ? 0.35 : effectiveOpacity};`}
+    ></div>
+  )}
+
+  {/* Manual bgClass overlay (if provided) */}
+  {bgClass && <div class={`absolute inset-0 z-0 ${bgClass}`}></div>}
+
+  {/* Background Image */}
+  {bgImage && (
+    <div
+      class="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 tile-bg-img blur-[1px]"
+      style={`background-image: url('${bgImage}')`}
+    ></div>
+  )}
+  {/* Dark Overlay for Image */}
+  {bgImage && <div class="absolute inset-0 z-0 bg-black-40 transition-colors duration-500 tile-bg-overlay"></div>}
+
+  {/* Hover Glow Effect */}
+  <div class="pointer-events-none absolute inset-0 opacity-0 z-0 tile-glow transition-opacity duration-300"></div>
+
+  <div class={`relative z-10 flex-1 w-full flex items-center justify-center ${isSmall ? 'gap-2' : ''}`}>
+    <slot name="icon" />
+    <slot />
+  </div>
+
+  {!isSmall && label && (
+    <span class="relative z-10 text-xs uppercase tracking-widest font-bold mt-auto opacity-80 drop-shadow-sm">
+      {label}
+    </span>
+  )}
+</Tag>
+
+<style>
+  .tile {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+    font-weight: 500;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateZ(0);
+    will-change: transform, box-shadow, border-color;
+    backface-visibility: hidden;
+    transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease, filter 0.3s ease;
+    text-decoration: none;
+    color: inherit;
+    /* ensure content sizing */
+    box-sizing: border-box;
+  }
+
+  .tile:active {
+    transform: scale(0.95) translateZ(-10px);
+    transition: transform 0.05s ease-out;
+    box-shadow: none;
+  }
+
+  /* Hover state */
+  .tile:hover {
+    transform: translateY(-4px) scale(1.01);
+    filter: brightness(1.1);
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .tile:hover .tile-bg-overlay {
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+
+  .tile:hover .tile-glow {
+    opacity: 1;
+  }
+  
+  .tile:hover .tile-bg-img {
+    transform: scale(1.1);
+  }
+
+  /* Text Colors */
+  .text-white { color: #fff; }
+  .text-tile { color: var(--tile-text); }
+
+  /* Sizing Constraints (matching reference) */
+  .tile-1x1 { width: 4rem; height: 4rem; grid-column: span 1; grid-row: span 1; }
+  .tile-2x1 { width: 8.375rem; height: 4rem; grid-column: span 2; grid-row: span 1; }
+  .tile-2x2 { width: 8.375rem; height: 8.375rem; grid-column: span 2; grid-row: span 2; }
+  .tile-2x3 { width: 8.375rem; height: 12.75rem; grid-column: span 2; grid-row: span 3; }
+  .tile-3x2 { width: 12.75rem; height: 8.375rem; grid-column: span 3; grid-row: span 2; }
+
+  /* Utility classes mapped from Tailwind */
+  .flex-1 { flex: 1 1 0%; }
+  .w-full { width: 100%; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .justify-end { justify-content: flex-end; }
+  .items-start { align-items: flex-start; }
+  .gap-2 { gap: 0.5rem; }
+  .p-2 { padding: 0.5rem; }
+  .text-left { text-align: left; }
+  .absolute { position: absolute; }
+  .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+  .z-0 { z-index: 0; }
+  .z-10 { z-index: 10; }
+  .relative { position: relative; }
+  .overflow-hidden { overflow: hidden; }
+  .cursor-pointer { cursor: pointer; }
+  .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+  .transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+  .duration-500 { transition-duration: 500ms; }
+  .duration-700 { transition-duration: 700ms; }
+  .bg-cover { background-size: cover; }
+  .bg-center { background-position: center; }
+  .bg-black-40 { background-color: rgba(0, 0, 0, 0.4); }
+  .pointer-events-none { pointer-events: none; }
+  .opacity-0 { opacity: 0; }
+  .uppercase { text-transform: uppercase; }
+  .tracking-widest { letter-spacing: 0.1em; }
+  .font-bold { font-weight: 700; }
+  .mt-auto { margin-top: auto; }
+  .opacity-80 { opacity: 0.8; }
+  .drop-shadow-sm { filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05)); }
+  .blur-\[1px\] { filter: blur(1px); }
+  .text-xs { font-size: 0.45rem; line-height: 1rem; }
+
+  /* Glow effect */
+  .tile-glow {
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4) 0%, transparent 60%);
+    filter: blur(20px);
+  }
+</style>
+
+<script>
+  // Script to track mouse for the glow effect
+  document.addEventListener('astro:page-load', () => {
+    const tiles = document.querySelectorAll('.tile') as NodeListOf<HTMLElement>;
+    tiles.forEach(tile => {
+      tile.addEventListener('mousemove', (e) => {
+        const rect = tile.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const glow = tile.querySelector('.tile-glow') as HTMLElement;
+        if (glow) {
+          glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.4) 0%, transparent 60%)`;
+        }
+      });
+    });
+  });
+</script>

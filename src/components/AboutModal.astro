@@ -1,0 +1,273 @@
+---
+// AboutModal.astro
+---
+
+<!-- ===== ABOUT ME MODAL ===== -->
+<div id="about-modal" class="modal-backdrop" onclick="closeAboutModal(event)" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-label="About Tinnaphop Sonsang">
+
+    <!-- Close button -->
+    <button class="modal-close" onclick="closeAboutModal()" aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    </button>
+
+    <!-- Photo + name header -->
+    <div class="modal-hero">
+      <div class="modal-photo-wrap">
+        <img src="/IMG_1405.PNG" alt="Tinnaphop Sonsang" class="modal-photo" />
+      </div>
+      <div class="modal-hero-text">
+        <h2 class="modal-name">Tinnaphop Sonsang</h2>
+        <p class="modal-handle">@badgaitintin</p>
+        <a href="/cv" class="modal-cv-btn">View Full CV
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <hr class="modal-divider" />
+
+    <!-- Bio -->
+    <p class="modal-bio">Computer Engineering & AI Graduate. Building things at the intersection of AI and design.</p>
+
+    <!-- Contact Info -->
+    <div class="modal-contact-info">
+      <a href="mailto:tinnaphop.moss@gmail.com" class="contact-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+        <span>tinnaphop.moss@gmail.com</span>
+      </a>
+      <a href="tel:+66649481740" class="contact-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16h.27"/></svg>
+        <span>064-948-1740</span>
+      </a>
+    </div>
+
+    <hr class="modal-divider" />
+
+    <!-- Socials -->
+    <div class="modal-socials">
+      <a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        <span>badgaitintin</span>
+      </a>
+      <a href="https://instagram.com/badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+        <span>badgaitintin</span>
+      </a>
+      <a href="https://tiktok.com/@badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+        <span>badgaitintin</span>
+      </a>
+      <a href="https://tiktok.com/@badgaitintin_gaming" target="_blank" rel="noopener" class="modal-social-pill">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+        <span>badgaitintin_gaming</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(26, 20, 16, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .modal-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(0,0,0,0.08);
+    /* No border-radius -> sharp corners */
+    border-radius: 0; 
+    box-shadow: 0 32px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 380px;
+    padding: 32px;
+    position: relative;
+    transform: scale(0.92) translateY(16px);
+    transition: transform 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
+  }
+  .modal-backdrop.is-open .modal-card {
+    transform: scale(1) translateY(0);
+  }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    /* sharp close button too */
+    border-radius: 0;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(0,0,0,0.04);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(26,20,16,0.6);
+    transition: background 0.2s, color 0.2s;
+  }
+  .modal-close:hover { background: rgba(0,0,0,0.08); color: #1A1410; }
+
+  /* Hero row */
+  .modal-hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .modal-photo-wrap {
+    width: 76px;
+    height: 76px;
+    /* sharp corner image */
+    border-radius: 0;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 2px solid rgba(148,155,123,0.4);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  }
+  .modal-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .modal-hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .modal-name {
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #1A1410;
+    line-height: 1.2;
+  }
+  .modal-handle {
+    font-size: 12px;
+    color: rgba(26,20,16,0.5);
+    letter-spacing: 0.02em;
+  }
+  .modal-cv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #949B7B;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .modal-cv-btn:hover { opacity: 0.7; }
+
+  .modal-divider {
+    border: none;
+    border-top: 1px solid rgba(0,0,0,0.07);
+    margin: 0 0 20px 0;
+  }
+
+  /* Bio */
+  .modal-bio {
+    font-size: 13px;
+    line-height: 1.6;
+    color: rgba(26,20,16,0.7);
+    margin-bottom: 20px;
+  }
+
+  /* Contact Info */
+  .modal-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .contact-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #1A1410;
+    text-decoration: none;
+  }
+  .contact-row svg {
+    opacity: 0.5;
+  }
+  .contact-row:hover {
+    text-decoration: underline;
+  }
+
+  /* Socials */
+  .modal-socials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .modal-social-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    /* sharp corner pills */
+    border-radius: 0;
+    background: rgba(148,155,123,0.1);
+    border: 1px solid rgba(148,155,123,0.2);
+    text-decoration: none;
+    color: #1A1410;
+    font-size: 11.5px;
+    font-weight: 500;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .modal-social-pill:hover {
+    background: rgba(148,155,123,0.18);
+    border-color: rgba(148,155,123,0.35);
+    transform: translateY(-2px);
+  }
+  .modal-social-pill svg { opacity: 0.6; flex-shrink: 0; }
+</style>
+
+<script is:inline>
+  // ── About Me Modal ──
+  function openAboutModal() {
+    const modal = document.getElementById('about-modal');
+    if (!modal) return;
+    modal.removeAttribute('aria-hidden');
+    modal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeAboutModal(e) {
+    // Close only when clicking backdrop or close button (not the card itself)
+    if (e && e.target && e.target.closest && e.target.closest('.modal-card')) return;
+    const modal = document.getElementById('about-modal');
+    if (!modal) return;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAboutModal();
+  });
+
+  // Expose to window for onclick handlers
+  window.openAboutModal = openAboutModal;
+  window.closeAboutModal = closeAboutModal;
+</script>
