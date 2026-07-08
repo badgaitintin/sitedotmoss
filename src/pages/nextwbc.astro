@@ -153,7 +153,7 @@ import '@fontsource/google-sans-flex';
 				flex-direction: column;
 				min-width: 0;
 				height: 100%;
-				overflow-y: auto;
+				overflow: hidden;
 				padding-right: 8px;
 			}
 			.wbc-workspace::-webkit-scrollbar {
@@ -515,11 +515,14 @@ import '@fontsource/google-sans-flex';
 				flex-direction: column;
 				gap: 24px;
 				margin-top: 16px;
+				flex: 1;
+				min-height: 0;
 			}
 			.wbc-results-header {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				flex-wrap: wrap;
 				border-bottom: 1px solid var(--bh-border);
 				padding-bottom: 12px;
 			}
@@ -530,32 +533,47 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-results-top {
 				display: flex;
+				flex-direction: row;
 				gap: 24px;
-				flex-wrap: wrap;
+				flex: 1;
+				align-items: stretch;
+				min-height: 0;
+			}
+			@media (max-width: 560px) {
+				.wbc-results-top {
+					flex-direction: column;
+				}
+				.wbc-image-panel {
+					height: 280px;
+					flex: none;
+				}
 			}
 			.wbc-image-panel {
 				flex: 1;
-				min-width: 320px;
 				background: rgba(0, 0, 0, 0.03);
 				border: 1px solid var(--bh-border);
 				border-radius: 0px;
 				overflow: hidden;
 				position: relative;
+				min-width: 0;
+				min-height: 0;
+			}
+			.wbc-image-wrapper {
+				position: absolute;
+				top: 0; left: 0; right: 0; bottom: 0;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				min-height: 360px;
+				overflow: hidden;
 			}
-			@media (max-width: 500px) {
-				.wbc-image-panel {
-					min-width: 100%;
-					min-height: 280px;
-				}
-			}
-			.wbc-image-panel img {
+			.wbc-image-wrapper img {
 				max-width: 100%;
-				max-height: 420px;
+				max-height: 100%;
+				width: 100%;
+				height: 100%;
 				object-fit: contain;
+				cursor: pointer;
+				border-radius: 0px;
 			}
 			.wbc-panel-badge {
 				position: absolute;
@@ -574,15 +592,21 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-stats-panel {
-				width: 280px;
+				width: 240px;
 				display: flex;
 				flex-direction: column;
 				gap: 16px;
 				flex-shrink: 0;
 			}
-			@media (max-width: 768px) {
+			@media (max-width: 560px) {
 				.wbc-stats-panel {
 					width: 100%;
+					flex-direction: row;
+					flex-wrap: wrap;
+				}
+				.wbc-count-card, .wbc-chart-card {
+					flex: 1;
+					min-width: 140px;
 				}
 			}
 
@@ -590,7 +614,7 @@ import '@fontsource/google-sans-flex';
 				background: rgba(0, 0, 0, 0.02);
 				border: 1px solid var(--bh-border);
 				border-radius: 0px;
-				padding: 20px;
+				padding: 12px;
 				text-align: center;
 				display: flex;
 				flex-direction: column;
@@ -598,7 +622,7 @@ import '@fontsource/google-sans-flex';
 				justify-content: center;
 			}
 			.wbc-count-number {
-				font-size: 3.2rem;
+				font-size: 1.8rem;
 				font-weight: 300;
 				color: var(--bh-text);
 				line-height: 1;
@@ -615,21 +639,21 @@ import '@fontsource/google-sans-flex';
 				background: rgba(0, 0, 0, 0.02);
 				border: 1px solid var(--bh-border);
 				border-radius: 0px;
-				padding: 20px;
+				padding: 12px;
 			}
 			.wbc-chart-title {
 				font-size: 0.72rem;
 				text-transform: uppercase;
 				letter-spacing: 1.2px;
 				color: var(--bh-muted);
-				margin: 0 0 16px 0;
+				margin: 0 0 12px 0;
 			}
 
 			.wbc-count-bar-item {
 				display: flex;
 				align-items: center;
 				gap: 8px;
-				margin-bottom: 10px;
+				margin-bottom: 8px;
 			}
 			.wbc-bar-dot {
 				width: 8px;
@@ -668,57 +692,120 @@ import '@fontsource/google-sans-flex';
 
 			/* Crops grid */
 			.wbc-crops-panel {
-				margin-top: 12px;
+				margin-top: 16px;
 			}
 			.wbc-crops-title {
-				font-size: 0.72rem;
-				text-transform: uppercase;
-				letter-spacing: 1.2px;
-				color: var(--bh-muted);
+				font-size: 0.95rem;
+				font-weight: 300;
 				margin: 0 0 12px 0;
 			}
 			.wbc-crops-grid {
-				display: grid;
-				grid-template-cols: repeat(auto-fill, minmax(80px, 1fr));
-				gap: 10px;
+				display: flex;
+				flex-direction: row;
+				overflow-x: auto;
+				gap: 16px;
+				padding: 4px;
+			}
+			.wbc-crops-grid::-webkit-scrollbar {
+				height: 8px;
+			}
+			.wbc-crops-grid::-webkit-scrollbar-thumb {
+				background: rgba(0,0,0,0.2);
+				border-radius: 4px;
 			}
 			.wbc-crop-card {
-				background: rgba(0, 0, 0, 0.02);
-				border: 1px solid var(--bh-border);
+				flex: 0 0 auto;
+				width: 84px;
+				background: #fff;
 				border-radius: 0px;
 				overflow: hidden;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 				display: flex;
 				flex-direction: column;
+				border: 1px solid var(--bh-border);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+			.wbc-crop-card:hover {
+				transform: scale(1.05);
+				box-shadow: 0 6px 16px rgba(0,0,0,0.1);
 			}
 			.wbc-crop-img-wrap {
-				aspect-ratio: 1 / 1;
-				background: rgba(0, 0, 0, 0.2);
-				overflow: hidden;
+				width: 100%;
+				height: 84px;
+				background: #f8f9fa;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				padding: 4px;
 			}
 			.wbc-crop-img-wrap img {
 				max-width: 100%;
 				max-height: 100%;
-				object-fit: contain;
+				object-fit: cover;
 			}
 			.wbc-crop-info {
-				padding: 4px 6px;
+				padding: 6px;
 				display: flex;
-				align-items: center;
 				justify-content: space-between;
-				font-size: 0.62rem;
+				align-items: center;
+				font-size: 0.65rem;
 				font-weight: bold;
 			}
-			.wbc-crop-label {
-				text-transform: uppercase;
-				font-size: 0.58rem;
-				letter-spacing: 0.3px;
+
+			/* Quick Try Sample Image */
+			.wbc-sample-section {
+				margin-top: 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
 			}
-			.wbc-crop-conf {
-				color: rgba(255, 255, 255, 0.5);
-				font-family: monospace;
+			.wbc-sample-btn {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				padding: 8px;
+				background: rgba(0, 0, 0, 0.02);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				cursor: pointer;
+				text-align: left;
+				width: 100%;
+				transition: background-color 0.2s, border-color 0.2s;
+			}
+			.wbc-sample-btn:hover:not(:disabled) {
+				background: rgba(0, 0, 0, 0.05);
+				border-color: var(--bh-accent);
+			}
+			.wbc-sample-btn:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+			.wbc-sample-thumb {
+				width: 48px;
+				height: 48px;
+				object-fit: cover;
+				border: 1px solid var(--bh-border);
+				flex-shrink: 0;
+				border-radius: 0px;
+			}
+			.wbc-sample-info {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				min-width: 0;
+			}
+			.wbc-sample-name {
+				font-size: 0.78rem;
+				font-weight: bold;
+				color: var(--bh-text);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.wbc-sample-desc {
+				font-size: 0.65rem;
+				color: var(--bh-muted);
+				line-height: 1.2;
 			}
 
 			.wbc-toggle-btn {
@@ -739,20 +826,27 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-reset-btn {
-				background: none;
-				border: none;
-				color: var(--bh-muted);
+				background: rgba(0, 0, 0, 0.03);
+				border: 1px solid rgba(0,0,0,0.06);
+				color: var(--bh-text);
 				cursor: pointer;
-				padding: 8px;
-				border-radius: 0px;
+				padding: 6px 12px;
+				border-radius: 4px;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
-				transition: background-color 0.2s, color 0.2s;
+				gap: 8px;
+				transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 			}
 			.wbc-reset-btn:hover {
-				background: rgba(0, 0, 0, 0.05);
-				color: var(--bh-text);
+				background: rgba(239, 68, 68, 0.1);
+				color: #EF4444;
+				border-color: rgba(239, 68, 68, 0.3);
+			}
+			.wbc-reset-btn span {
+				font-size: 0.8rem;
+				font-weight: bold;
+				letter-spacing: 0.5px;
 			}
 
 			.hidden {
@@ -827,6 +921,18 @@ import '@fontsource/google-sans-flex';
 							</div>
 						</div>
 
+						<!-- Quick Try Sample Image -->
+						<div class="wbc-sample-section">
+							<h3 class="wbc-guide-title">Quick Try</h3>
+							<button id="wbcSampleBtn" class="wbc-sample-btn" title="Click to test with raptor_wbc_00001.jpeg">
+								<img src="/raptor_wbc_00001.jpeg" alt="Sample Smear" class="wbc-sample-thumb" />
+								<div class="wbc-sample-info">
+									<span class="wbc-sample-name">raptor_wbc_00001.jpeg</span>
+									<span class="wbc-sample-desc">Click to try with this sample avian blood smear</span>
+								</div>
+							</button>
+						</div>
+
 						<!-- Error Message Pane -->
 						<div id="wbcError" class="wbc-error-msg hidden"></div>
 					</aside>
@@ -861,17 +967,20 @@ import '@fontsource/google-sans-flex';
 							<div class="wbc-results-header">
 								<h3 class="wbc-results-heading">Inference Result</h3>
 								<button id="wbcResetBtn" class="wbc-reset-btn" title="Upload New Image">
-									<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
 										<path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
 									</svg>
+									<span>New Image</span>
 								</button>
 							</div>
 
 							<div class="wbc-results-top">
 								<!-- Annotated Detection Image -->
 								<div class="wbc-image-panel">
-									<span class="wbc-panel-badge">Detection</span>
-									<img id="wbcAnnotatedImg" src="" alt="Annotated Detections" />
+									<span class="wbc-panel-badge" id="panelBadge">Detection</span>
+									<div class="wbc-image-wrapper">
+										<img id="wbcAnnotatedImg" src="" alt="Annotated Detections" title="Click to toggle boxes" />
+									</div>
 								</div>
 
 								<!-- Side statistics counts -->
@@ -896,7 +1005,6 @@ import '@fontsource/google-sans-flex';
 								<div class="wbc-crops-grid" id="wbcCropsGrid">
 									<!-- Dynamic crops Injected Here -->
 								</div>
-								<button id="wbcToggleBtn" class="wbc-toggle-btn hidden">Show All</button>
 							</div>
 						</div>
 					</main>
@@ -921,8 +1029,6 @@ import '@fontsource/google-sans-flex';
 
 		<!-- ── NextWBC WebSocket inference integration client ── -->
 		<script type="module">
-			import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client@2.3.0/dist/index.js";
-
 			const CLASSES = [
 				'heterophil',
 				'eosinophil',
@@ -950,7 +1056,12 @@ import '@fontsource/google-sans-flex';
 				thrombocyte: 'Thrombocyte',
 			};
 
-			const HF_REPO_ID = "badgaitintin/nextwbc";
+			const SPACE_URL = "https://badgaitintin-nextwbc.hf.space";
+
+			let loading = false;
+			let currentResultData = null;
+			let bboxVisible = true;
+			let uploadedImageBase64 = null;
 
 			const dropzone = document.getElementById('wbcDropzone');
 			const fileInput = document.getElementById('wbcFileInput');
@@ -961,18 +1072,93 @@ import '@fontsource/google-sans-flex';
 			const statusText = document.getElementById('wbcStatusText');
 			const uploadPrompt = document.getElementById('wbcUploadPrompt');
 			const resetBtn = document.getElementById('wbcResetBtn');
-			const toggleBtn = document.getElementById('wbcToggleBtn');
+			const annotatedImg = document.getElementById('wbcAnnotatedImg');
+			const panelBadge = document.getElementById('panelBadge');
+			const sampleBtn = document.getElementById('wbcSampleBtn');
 
-			let loading = false;
-			let client = null;
-			let currentResultData = null;
-			let showAll = false;
+			async function wakeSpace() {
+				await fetch(SPACE_URL + '/gradio_api/info').catch(() => {});
+			}
 
-			async function getClient() {
-				if (client) return client;
-				statusText.innerText = 'Connecting to Hugging Face...';
-				client = await Client.connect(HF_REPO_ID);
-				return client;
+			async function uploadFile(file) {
+				const formData = new FormData();
+				formData.append('files', file);
+				const res = await fetch(SPACE_URL + '/gradio_api/upload', {
+					method: 'POST',
+					body: formData
+				});
+				if (!res.ok) throw new Error('Upload failed');
+				const data = await res.json();
+				return data[0]; 
+			}
+
+			async function runPredict(filePath) {
+				const res = await fetch(SPACE_URL + '/gradio_api/call/predict', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						data: [{ path: filePath, meta: { _type: "gradio.FileData" } }]
+					})
+				});
+				if (!res.ok) throw new Error('Run failed');
+				const data = await res.json();
+				return data.event_id;
+			}
+
+			async function pollResult(eventId) {
+				const res = await fetch(SPACE_URL + '/gradio_api/call/predict/' + eventId);
+				if (!res.ok) throw new Error('Poll failed (' + res.status + ')');
+				const reader = res.body.getReader();
+				const decoder = new TextDecoder();
+				let buffer = '';
+				let lastEvent = null;
+				
+				while (true) {
+					const { done, value } = await reader.read();
+					if (done) {
+						if (buffer.trim()) {
+							if (buffer.startsWith('data:') && lastEvent === 'complete') {
+								try {
+									const payload = JSON.parse(buffer.slice(5).trim());
+									return Array.isArray(payload) ? payload[0] : payload;
+								} catch (_) {}
+							}
+						}
+						break;
+					}
+					
+					buffer += decoder.decode(value, { stream: true });
+					const lines = buffer.split('\n');
+					buffer = lines.pop(); 
+					
+					for (const line of lines) {
+						const trimmed = line.trim();
+						if (!trimmed) continue;
+						
+						if (trimmed.startsWith('event:')) {
+							lastEvent = trimmed.slice(6).trim();
+						} else if (trimmed.startsWith('data:')) {
+							const raw = trimmed.slice(5).trim();
+							if (lastEvent === 'complete') {
+								try {
+									const payload = JSON.parse(raw);
+									reader.cancel();
+									return Array.isArray(payload) ? payload[0] : payload;
+								} catch (e) {
+									reader.cancel();
+									throw new Error('Failed to parse result');
+								}
+							}
+							if (lastEvent === 'error') {
+								reader.cancel();
+								let msg = raw;
+								try { msg = JSON.parse(raw); } catch (_) {}
+								throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
+							}
+						}
+					}
+				}
+				throw new Error('Stream ended without result');
 			}
 
 			function resetState() {
@@ -985,12 +1171,11 @@ import '@fontsource/google-sans-flex';
 				fileInput.value = '';
 				loading = false;
 				currentResultData = null;
-				showAll = false;
+				uploadedImageBase64 = null;
 			}
 
 			resetBtn.addEventListener('click', resetState);
 
-			// Setup click-to-upload
 			dropzone.addEventListener('click', () => {
 				if (loading) return;
 				fileInput.click();
@@ -1019,12 +1204,39 @@ import '@fontsource/google-sans-flex';
 				if (file) processFile(file);
 			});
 
+			if (sampleBtn) {
+				sampleBtn.addEventListener('click', async () => {
+					if (loading) return;
+					try {
+						sampleBtn.disabled = true;
+						const res = await fetch('/raptor_wbc_00001.jpeg');
+						if (!res.ok) throw new Error('Could not fetch sample image');
+						const blob = await res.blob();
+						const file = new File([blob], 'raptor_wbc_00001.jpeg', { type: 'image/jpeg' });
+						processFile(file);
+					} catch (e) {
+						showError('Failed to load sample image: ' + e.message);
+					} finally {
+						sampleBtn.disabled = false;
+					}
+				});
+			}
+
 			function showError(msg) {
 				errorContainer.innerText = msg;
 				errorContainer.classList.remove('hidden');
 				previewContainer.classList.add('hidden');
 				uploadPrompt.classList.remove('hidden');
 				loading = false;
+			}
+
+			function readAsBase64(file) {
+				return new Promise((resolve, reject) => {
+					const reader = new FileReader();
+					reader.onload = () => resolve(reader.result);
+					reader.onerror = error => reject(error);
+					reader.readAsDataURL(file);
+				});
 			}
 
 			async function processFile(file) {
@@ -1043,47 +1255,30 @@ import '@fontsource/google-sans-flex';
 				previewContainer.classList.remove('hidden');
 				progressFill.style.width = '0%';
 				
-				// Set image preview
-				const reader = new FileReader();
-				reader.onload = (e) => {
-					document.getElementById('wbcPreviewImg').src = e.target.result;
-				};
-				reader.readAsDataURL(file);
+				uploadedImageBase64 = await readAsBase64(file);
+				document.getElementById('wbcPreviewImg').src = uploadedImageBase64;
 
 				try {
-					statusText.innerText = 'Connecting to Hugging Face...';
-					const clientInstance = await getClient();
+					statusText.innerText = 'Waking up Space...';
+					progressFill.style.width = '5%';
+					await wakeSpace();
+
+					statusText.innerText = 'Uploading image...';
+					progressFill.style.width = '20%';
+					const filePath = await uploadFile(file);
+
+					statusText.innerText = 'Submitting detection task...';
+					progressFill.style.width = '40%';
+					const eventId = await runPredict(filePath);
+
+					statusText.innerText = 'Waiting for model (this may take a moment)...';
+					progressFill.style.width = '65%';
+					const result = await pollResult(eventId);
+
+					statusText.innerText = 'Processing result...';
+					progressFill.style.width = '100%';
 					
-					statusText.innerText = 'Running detection...';
-					const job = clientInstance.submit("/predict", [file]);
-					
-					let gotResult = false;
-					for await (const event of job) {
-						if (event.type === "status") {
-							if (event.stage === "error") {
-								throw new Error("Detection pipeline failed");
-							}
-							if (event.progress_data && event.progress_data.length > 0) {
-								const p = event.progress_data[0];
-								progressFill.style.width = `${Math.round(p.progress * 100)}%`;
-								if (p.desc) {
-									statusText.innerText = p.desc;
-								}
-							}
-						} else if (event.type === "data" && event.data) {
-							if (event.data[0]) {
-								const data = event.data[0];
-								if (data.error) {
-									throw new Error(data.error);
-								}
-								renderResult(data);
-								gotResult = true;
-							}
-						}
-					}
-					if (!gotResult) {
-						throw new Error('No result returned from model');
-					}
+					renderResult(result);
 				} catch (err) {
 					showError(`Detection failed: ${err.message || 'Unknown error'}`);
 				} finally {
@@ -1096,13 +1291,12 @@ import '@fontsource/google-sans-flex';
 				previewContainer.classList.add('hidden');
 				resultContainer.classList.remove('hidden');
 				
-				// Set annotated image
-				document.getElementById('wbcAnnotatedImg').src = data.annotated_image;
+				bboxVisible = true;
+				panelBadge.textContent = 'Detection';
+				annotatedImg.src = data.annotated_image;
 				
-				// Set total count
 				document.getElementById('wbcCellCountNum').innerText = data.total_cells;
 				
-				// Render distribution
 				const counts = data.class_counts || {};
 				const total = data.total_cells || 0;
 				
@@ -1132,41 +1326,34 @@ import '@fontsource/google-sans-flex';
 			function renderCrops() {
 				if (!currentResultData) return;
 				const cells = currentResultData.cells || [];
-				const limit = showAll ? cells.length : 8;
-				const visibleCells = cells.slice(0, limit);
 				
 				let cropsHTML = '';
-				visibleCells.forEach(cell => {
+				cells.forEach(cell => {
 					const color = CLASS_COLORS[cell.class] || '#888';
 					const label = CLASS_LABELS[cell.class] || cell.class;
 					const confPct = Math.round(cell.confidence * 100);
 					
 					cropsHTML += `
-						<div class="wbc-crop-card">
+						<div class="wbc-crop-card" style="border-left: 3px solid ${color};">
 							<div class="wbc-crop-img-wrap">
 								<img src="${cell.crop_base64}" alt="${label}" />
 							</div>
-							<div class="wbc-crop-info" style="background-color: ${color}15">
-								<span class="wbc-crop-label" style="color: ${color}">${label}</span>
-								<span class="wbc-crop-conf">${confPct}%</span>
+							<div class="wbc-crop-info" style="background-color: ${color}">
+								<span class="wbc-crop-label" style="color: #fff;">${label}</span>
+								<span class="wbc-crop-conf" style="color: rgba(255,255,255,0.75);">${confPct}%</span>
 							</div>
 						</div>
 					`;
 				});
 				
 				document.getElementById('wbcCropsGrid').innerHTML = cropsHTML;
-				
-				if (cells.length > 8) {
-					toggleBtn.classList.remove('hidden');
-					toggleBtn.innerText = showAll ? 'Show Less' : `Show All ${cells.length} Cells`;
-				} else {
-					toggleBtn.classList.add('hidden');
-				}
 			}
 
-			toggleBtn.addEventListener('click', () => {
-				showAll = !showAll;
-				renderCrops();
+			annotatedImg.addEventListener('click', () => {
+				if (!currentResultData || !uploadedImageBase64) return;
+				bboxVisible = !bboxVisible;
+				annotatedImg.src = bboxVisible ? currentResultData.annotated_image : uploadedImageBase64;
+				panelBadge.textContent = bboxVisible ? 'Detection' : 'Original';
 			});
 		</script>
 	</body>

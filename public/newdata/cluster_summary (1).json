@@ -1,0 +1,53 @@
+[
+  {
+    "cluster": 0,
+    "name": "Vocal-driven & Uplifting",
+    "description": "Tracks that are centered on the vocal and bright, feel-good energy.",
+    "color": "#FF4D8D",
+    "image": "/assets/spotify/thediscodynamo-1.jpg",
+    "danceability": 0.6830068493150685,
+    "energy": 0.6469034246575343,
+    "valence": 0.6297678082191781,
+    "acousticness": 0.24762246575342467,
+    "speechiness": 0.050544520547945206,
+    "loudness": -9.672678082191782,
+    "tempo": 118.33954794520548,
+    "instrumentalness": 0.00834195787671233,
+    "liveness": 0.14391575342465754,
+    "size": 146
+  },
+  {
+    "cluster": 1,
+    "name": "Instrumental & Melancholic",
+    "description": "Tracks that are largely wordless soundscapes and wistful and bittersweet.",
+    "color": "#22C55E",
+    "image": "/assets/spotify/thediscodynamo-2.png",
+    "danceability": 0.6832727272727273,
+    "energy": 0.6611818181818182,
+    "valence": 0.36672727272727274,
+    "acousticness": 0.07905772727272727,
+    "speechiness": 0.0802,
+    "loudness": -12.080818181818183,
+    "tempo": 109.06727272727272,
+    "instrumentalness": 0.7529090909090909,
+    "liveness": 0.12393636363636364,
+    "size": 11
+  },
+  {
+    "cluster": 2,
+    "name": "Instrumental & Melodic",
+    "description": "Tracks that are largely wordless soundscapes and led by melody over words.",
+    "color": "#FACC15",
+    "image": "/assets/spotify/thediscodynamo-3.jpg",
+    "danceability": 0.661,
+    "energy": 0.6655833333333333,
+    "valence": 0.5639166666666667,
+    "acousticness": 0.22891716666666664,
+    "speechiness": 0.04149166666666667,
+    "loudness": -9.490166666666667,
+    "tempo": 116.59583333333335,
+    "instrumentalness": 0.29433333333333334,
+    "liveness": 0.12186666666666668,
+    "size": 12
+  }
+]

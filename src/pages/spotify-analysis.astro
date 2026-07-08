@@ -1,0 +1,1301 @@
+---
+// spotify-analysis.astro — Spotify Sonic Atlas Page matching cv.astro theme
+import '@fontsource/google-sans-flex';
+import clusterSummary from '../../public/assets/spotify/cluster_summary.json';
+import musicGalaxy from '../../public/assets/spotify/music_galaxy.json';
+import personalRating from '../../public/assets/spotify/personal_rating.json';
+
+const rawTracks = musicGalaxy.filter(t => t.release_year <= 2020);
+const uniqueNames = new Set(rawTracks.map(t => t.name.toLowerCase().trim()));
+const tracksCount = uniqueNames.size;
+const clustersCount = clusterSummary.length;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard" />
+		<title>Madonna Sonic Atlas — site(.)moss</title>
+
+		<style is:global>
+			/* ===========================
+			   GLASSMORPHISM TOKEN SYSTEM
+			=========================== */
+			:root {
+				--bh-void: #ffffff;
+				--bh-deep: #f9fafb;
+				--bh-surface: #f3f4f6;
+				--bh-card: transparent;
+				--bh-border: rgba(0, 0, 0, 0.08);
+				--bh-border-hi: rgba(0, 0, 0, 0.16);
+				--bh-text: #111827;
+				--bh-muted: #374151;
+				--bh-accent: #0f172a; /* Dark Slate Accent */
+				--bh-accent2: #4b5563;
+				--bh-accent3: #9ca3af;
+				--bh-danger: #374151;
+				--bh-glow: transparent;
+				--bh-glow-sm: transparent;
+			}
+
+			/* ===========================
+			   BASE
+			=========================== */
+			html,
+			body {
+				width: 100%;
+				height: 100vh;
+				overflow: hidden;
+				background: transparent;
+				font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+				color: var(--bh-text);
+				line-height: 1.5;
+				margin: 0;
+				padding: 0;
+				position: relative;
+			}
+
+			body::before {
+				content: "";
+				position: fixed;
+				inset: -40px; /* Expands to hide the blurred edges */
+				z-index: -1;
+				background-image: url('/frutiger-aero-wallpaper-i-whipped-up-in-a-few-hours-hoping-v0-jcaq7gsamypc1.webp');
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+				filter: blur(12px);
+				background-color: rgba(255, 255, 255, 0.05);
+				background-blend-mode: overlay;
+			}
+
+			a {
+				color: var(--bh-accent);
+				text-decoration: none;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+
+			.page-wrap {
+				animation: bh-enter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				height: 100%;
+			}
+			@keyframes bh-enter {
+				from {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+				to {
+					opacity: 1;
+					transform: translateY(0);
+				}
+			}
+			body.is-exiting .page-wrap {
+				animation: bh-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+				pointer-events: none;
+			}
+			@keyframes bh-exit {
+				from {
+					opacity: 1;
+					transform: translateY(0);
+				}
+				to {
+					opacity: 0;
+					transform: translateY(20px);
+				}
+			}
+
+			/* ===========================
+			   LAYOUT CONTAINER
+			=========================== */
+			.bh-page {
+				position: relative;
+				z-index: 1;
+				max-width: 1120px;
+				margin: 0 auto;
+				height: 100vh;
+				padding: 32px 24px;
+				box-sizing: border-box;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+
+			.bh-main-card {
+				position: relative;
+				display: flex;
+				gap: 24px;
+				height: calc(100vh - 80px);
+				align-items: stretch;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+
+			/* ===========================
+			   SIDEBAR
+			=========================== */
+			.wbc-sidebar {
+				width: 260px;
+				flex-shrink: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 24px;
+				padding: 24px;
+				position: relative;
+				background: rgba(255, 255, 255, 0.85); /* Increased opacity for visibility */
+				backdrop-filter: blur(24px) saturate(180%);
+				-webkit-backdrop-filter: blur(24px) saturate(180%);
+				border: 1px solid rgba(255, 255, 255, 0.7);
+				border-radius: 20px;
+				box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+				box-sizing: border-box;
+				overflow-y: auto;
+				height: 100%;
+			}
+			.wbc-sidebar::-webkit-scrollbar { width: 3px; }
+			.wbc-sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.08); border-radius: 99px; }
+
+			.wbc-sidebar .bh-header {
+				margin-top: 44px;
+			}
+
+			.wbc-workspace {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+				height: 100%;
+				overflow: hidden;
+			}
+
+			/* ===========================
+			   BACK BUTTON
+			=========================== */
+			.wbc-back-btn {
+				position: absolute;
+				top: 16px;
+				left: 16px;
+				z-index: 10;
+				width: 36px;
+				height: 36px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.1) 51%, rgba(255, 255, 255, 0.45) 100%);
+				color: var(--bh-text);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 50%;
+				cursor: pointer;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+				transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+			}
+			.wbc-back-btn:hover {
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.18) 51%, rgba(255, 255, 255, 0.6) 100%);
+				transform: scale(1.06);
+				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+			}
+
+			/* ===========================
+			   HEADER & TITLE
+			=========================== */
+			.bh-header {
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+				margin-bottom: 8px;
+				width: 100%;
+				align-items: flex-start;
+				text-align: left;
+			}
+
+			.title-tag {
+				font-size: 0.65rem;
+				font-weight: 700;
+				letter-spacing: 0.18em;
+				color: #1a1410;
+				opacity: 0.65;
+				text-transform: uppercase;
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				margin-bottom: 2px;
+			}
+
+			.bh-title {
+				font-size: 1.8rem;
+				font-weight: 900;
+				line-height: 1.1;
+				letter-spacing: -0.5px;
+				margin: 0;
+				display: flex;
+				flex-direction: row;
+				align-items: center;
+				justify-content: flex-start;
+				gap: 6px;
+				flex-wrap: wrap;
+			}
+			.title-nextwbc {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				color: var(--bh-accent);
+			}
+			.title-classifier {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				color: var(--bh-muted);
+			}
+
+			.bh-subtitle {
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				font-size: 0.82rem;
+				color: var(--bh-muted);
+				font-weight: 500;
+				margin: 0;
+				line-height: 1.4;
+				max-width: 100%;
+			}
+
+			/* ===========================
+			   NAV MENU
+			=========================== */
+			.wbc-nav-menu {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				margin-top: 8px;
+			}
+			.nav-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				padding: 10px 14px;
+				font-size: 0.82rem;
+				font-weight: 600;
+				color: var(--bh-muted);
+				background: transparent;
+				border: 1px solid transparent;
+				border-radius: 8px;
+				cursor: pointer;
+				text-align: left;
+				transition: all 0.2s ease;
+				font-family: inherit;
+			}
+			.nav-item:hover {
+				background: rgba(0,0,0,0.03);
+				color: var(--bh-text);
+			}
+			.nav-item.active {
+				background: rgba(255, 255, 255, 0.45);
+				border: 1px solid var(--bh-border);
+				color: var(--bh-accent);
+				box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+			}
+
+			.sidebar-footer {
+				margin-top: auto;
+				padding-top: 12px;
+				border-top: 1px solid var(--bh-border);
+			}
+			.footer-meta {
+				font-size: 0.7rem;
+				text-transform: uppercase;
+				letter-spacing: 0.1em;
+				color: var(--bh-accent3);
+				font-weight: bold;
+			}
+
+			/* ===========================
+			   WORKSPACE / TABS
+			=========================== */
+			.tab-content {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 20px;
+				height: 100%;
+				min-height: 0;
+			}
+			@media (min-width: 768px) {
+				.tab-content {
+					grid-template-columns: 1fr 280px;
+				}
+				.tab-content.wide-left {
+					grid-template-columns: 1.4fr 1fr;
+				}
+				.tab-content.equal-split {
+					grid-template-columns: 1fr 1fr;
+				}
+			}
+
+			.panel {
+				background: rgba(255, 255, 255, 0.85); /* Increased opacity for visibility */
+				backdrop-filter: blur(24px) saturate(180%);
+				-webkit-backdrop-filter: blur(24px) saturate(180%);
+				border: 1px solid rgba(255, 255, 255, 0.7);
+				border-radius: 20px;
+				padding: 24px;
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				min-height: 0;
+				box-sizing: border-box;
+				position: relative;
+				box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+				transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1), box-shadow 0.3s ease;
+				overflow: hidden; /* Fix scrollbar overflow stripes */
+			}
+			.panel:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+			}
+
+			/* Personas Tab styling */
+			.cluster-rail {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				margin-top: 12px;
+			}
+			.cluster-btn {
+				position: relative;
+				width: 100%;
+				padding: 12px 16px;
+				background: rgba(255,255,255,0.4);
+				border: 1px solid rgba(255,255,255,0.5);
+				border-radius: 8px;
+				text-align: left;
+				cursor: pointer;
+				transition: all 0.2s ease;
+				font-family: inherit;
+			}
+			.cluster-btn:hover {
+				background: rgba(255,255,255,0.65);
+				transform: translateY(-1px);
+			}
+			.cluster-btn.active {
+				background: #ffffff;
+				border-color: var(--bh-border-hi);
+				box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+			}
+			.cluster-color-bar {
+				position: absolute;
+				top: 0; bottom: 0; left: 0;
+				width: 4px;
+				border-top-left-radius: 8px;
+				border-bottom-left-radius: 8px;
+			}
+			.cluster-title-wrap {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.8rem;
+				font-weight: 700;
+			}
+			.cluster-dot {
+				width: 8px; height: 8px;
+				border-radius: 50%;
+				display: inline-block;
+				margin-right: 6px;
+			}
+
+			/* Detailed cluster card */
+			.cluster-detail-card {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				justify-content: space-between;
+				position: relative;
+				overflow: hidden;
+			}
+			.cluster-bg-image {
+				position: absolute;
+				inset: 0;
+				background-size: cover;
+				background-position: center;
+				opacity: 0.22;
+				z-index: 0;
+				pointer-events: none;
+				transition: opacity 0.5s ease, background-image 0.5s ease;
+			}
+			.cluster-detail-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				z-index: 1;
+			}
+			.cluster-badge {
+				background: rgba(255,255,255,0.5);
+				border: 1px solid rgba(255,255,255,0.6);
+				padding: 3px 10px;
+				border-radius: 20px;
+				font-size: 0.65rem;
+				font-weight: 700;
+				letter-spacing: 0.05em;
+			}
+			.cluster-desc {
+				font-size: 0.8rem;
+				color: var(--bh-muted);
+				margin-top: 6px;
+				z-index: 1;
+			}
+
+			.metrics-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 10px;
+				margin-top: 14px;
+				z-index: 1;
+			}
+			.metric-box {
+				background: rgba(255,255,255,0.45);
+				border: 1px solid rgba(255,255,255,0.5);
+				padding: 8px 12px;
+				border-radius: 8px;
+			}
+			.metric-box.wide {
+				grid-column: span 2;
+			}
+			.metric-meta {
+				display: flex;
+				justify-content: space-between;
+				font-size: 0.72rem;
+				font-weight: bold;
+				color: var(--bh-muted);
+				margin-bottom: 4px;
+			}
+			.metric-bar {
+				height: 5px;
+				background: rgba(0,0,0,0.06);
+				border-radius: 4px;
+				overflow: hidden;
+			}
+			.metric-fill {
+				height: 100%;
+				border-radius: 4px;
+				transition: width 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
+			}
+
+			/* Scrollable List for Tracks */
+			.list-scroll {
+				flex: 1;
+				overflow-y: auto;
+				margin-top: 8px;
+				padding-right: 4px;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				min-height: 0;
+			}
+			.list-scroll::-webkit-scrollbar { width: 3px; }
+			.list-scroll::-webkit-scrollbar-track { background: transparent; }
+			.list-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+
+			.track-list-item {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 8px 12px;
+				background: rgba(255,255,255,0.3);
+				border: 1px solid rgba(255,255,255,0.4);
+				border-radius: 6px;
+				font-size: 0.78rem;
+				cursor: pointer;
+				text-align: left;
+				transition: all 0.15s ease;
+				font-family: inherit;
+			}
+			.track-list-item:hover {
+				background: rgba(255,255,255,0.6);
+			}
+			.track-list-item.selected {
+				background: #ffffff;
+				border-color: rgba(0,0,0,0.12);
+				font-weight: bold;
+			}
+
+			/* Galaxy Tab styling */
+			.galaxy-svg-container {
+				width: 100%;
+				height: 100%;
+				min-height: 0;
+				background: rgba(0,0,0,0.02);
+				border-radius: 12px;
+				overflow: hidden;
+				position: relative;
+			}
+			.galaxy-svg {
+				width: 100%;
+				height: 100%;
+				display: block;
+			}
+
+			/* Custom timeline slider input */
+			.timeline-slider-box {
+				background: rgba(255,255,255,0.45);
+				border: 1px solid rgba(255,255,255,0.5);
+				border-radius: 12px;
+				padding: 16px;
+				margin-top: 10px;
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+			}
+			.timeline-input {
+				-webkit-appearance: none;
+				width: 100%;
+				height: 6px;
+				background: rgba(0, 0, 0, 0.08);
+				border-radius: 99px;
+				outline: none;
+				margin-top: 12px;
+				cursor: pointer;
+			}
+			.timeline-input::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				width: 16px;
+				height: 16px;
+				border-radius: 50%;
+				background: var(--bh-accent);
+				border: 2px solid #fff;
+				cursor: pointer;
+				box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+				transition: transform 0.1s ease;
+			}
+			.timeline-input::-webkit-slider-thumb:hover {
+				transform: scale(1.2);
+			}
+
+			.neighbors-grid {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 8px;
+				margin-top: 8px;
+			}
+			.neighbor-card {
+				background: rgba(255,255,255,0.4);
+				border: 1px solid rgba(255,255,255,0.5);
+				border-radius: 8px;
+				padding: 10px 12px;
+				font-size: 0.7rem;
+				transition: background 0.15s;
+			}
+			.neighbor-card:hover {
+				background: rgba(255,255,255,0.55);
+			}
+			.neighbor-header {
+				display: flex;
+				justify-content: space-between;
+				font-weight: bold;
+				font-size: 0.75rem;
+				margin-bottom: 6px;
+			}
+
+			.neighbor-stats {
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+				opacity: 0.7;
+			}
+			.neighbor-stat-row {
+				display: flex;
+				justify-content: space-between;
+			}
+
+			.section-title {
+				font-size: 0.65rem;
+				text-transform: uppercase;
+				letter-spacing: 0.15em;
+				color: var(--bh-muted);
+				font-weight: bold;
+				margin-bottom: 6px;
+			}
+
+			.panel-header-title {
+				font-size: 1rem;
+				font-weight: bold;
+				margin: 0 0 2px 0;
+			}
+
+			.hidden { display: none !important; }
+		</style>
+	</head>
+
+	<body>
+		<div class="page-wrap">
+			<div class="bh-page">
+				<div class="bh-main-card">
+					<!-- LEFT SIDEBAR -->
+					<aside class="wbc-sidebar">
+						<!-- Floating Back Button inside sidebar card -->
+						<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M9 12L4 7l5-5"></path>
+							</svg>
+						</a>
+						<header class="bh-header">
+							<span class="title-tag">
+								<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+								AI LAB PROJECT
+							</span>
+							<h1 class="bh-title">
+								<span class="title-nextwbc">Sonic</span>
+								<span class="title-classifier" style="color: #1DB954;">Atlas</span>
+							</h1>
+							<p class="bh-subtitle">
+								t-SNE manifold & clustering analysis of Madonna's audio dna.
+							</p>
+						</header>
+
+						<nav class="wbc-nav-menu">
+							<button class="nav-item active" data-tab="personas" id="nav-personas">
+								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.886L4.2 10.8 10.088 12.71 12 18.6l1.912-5.89 5.888-1.91-5.888-1.912Z"/></svg>
+								Sonic Personas
+							</button>
+							<button class="nav-item" data-tab="galaxy" id="nav-galaxy">
+								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+								Music Galaxy
+							</button>
+							<button class="nav-item" data-tab="rating" id="nav-rating">
+								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+								Personal Rating
+							</button>
+						</nav>
+
+						<div class="sidebar-footer">
+							<span class="footer-meta">Tracks: {tracksCount} • Clusters: {clustersCount}</span>
+						</div>
+					</aside>
+
+					<!-- RIGHT WORKSPACE -->
+					<main class="wbc-workspace">
+
+						<!-- ── TAB 1: SONIC PERSONAS ── -->
+						<div id="tab-personas" class="tab-content wide-left">
+							<div class="panel">
+								<div class="cluster-detail-card">
+									<div class="cluster-bg-image" id="cluster-bg"></div>
+									<div style="z-index: 1;">
+										<div class="cluster-detail-header">
+											<h3 class="panel-header-title" id="cluster-name" style="font-size: 1.15rem;">The Disco Dynamo</h3>
+											<span class="cluster-badge" id="cluster-share">45% share</span>
+										</div>
+										<p class="cluster-desc" id="cluster-desc">High energy, danceable pop hits</p>
+
+										<div class="metrics-grid" id="cluster-metrics">
+											<!-- Dynamic features populated by script -->
+										</div>
+									</div>
+
+									<div style="z-index: 1; margin-top: 14px; display: flex; flex-direction: column; min-height: 0; flex: 1;">
+										<span class="section-title">Tracks in cluster</span>
+										<div class="search-box-wrap" style="position: relative; margin-bottom: 8px;">
+											<input type="text" id="personas-search" placeholder="Search tracks..." style="width: 100%; padding: 7px 10px; font-size: 0.72rem; background: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.5); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--bh-text); outline: none;" />
+										</div>
+										<div class="list-scroll" id="cluster-tracks-list">
+											<!-- Dynamic tracks in cluster -->
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="panel">
+								<span class="section-title">Sonic Personas</span>
+								<p style="font-size: 0.72rem; color: var(--bh-muted); margin: 0 0 10px 0; line-height: 1.3;">
+									AI groups Madonna's tracks by feel, not by release year.
+								</p>
+								<div class="cluster-rail" id="cluster-rail-list">
+									<!-- Rail buttons -->
+								</div>
+							</div>
+						</div>
+
+						<!-- ── TAB 2: MUSIC GALAXY ── -->
+						<div id="tab-galaxy" class="tab-content hidden" style="grid-template-columns: 1fr; position: relative;">
+							<div class="panel" style="padding: 0; position: relative;">
+								<div class="galaxy-svg-container" id="galaxy-container" style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: rgba(13, 17, 30, 0.55); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);">
+									<svg class="galaxy-svg" id="galaxy-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet">
+										<!-- Background grid and points populated by script -->
+									</svg>
+									<!-- Map Hover Tooltip -->
+									<div id="galaxy-tooltip" style="position: absolute; display: none; background: rgba(15, 23, 42, 0.95); color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; pointer-events: none; z-index: 100; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 16px rgba(0,0,0,0.25); white-space: nowrap; line-height: 1.35; font-family: inherit;"></div>
+								</div>
+							</div>
+
+							<!-- FLOATING PANEL FOR SELECTED TRACK (Breaks the 1-1-1 grid) -->
+							<div class="panel" style="position: absolute; top: 14px; right: 14px; bottom: 14px; width: 300px; z-index: 10; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(28px); box-shadow: -10px 0 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); display: flex; flex-direction: column; padding: 20px;">
+								<div class="selected-track-card" style="display: flex; flex-direction: column; height: 100%;">
+									<span class="section-title">Selected Track</span>
+									<div style="margin-bottom: 12px;">
+										<h4 class="panel-header-title" id="galaxy-track-name" style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text); margin-bottom: 4px;">-</h4>
+										<p style="font-size: 0.72rem; color: var(--bh-muted); margin: 0;" id="galaxy-track-year">-</p>
+									</div>
+
+									<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;" id="galaxy-track-metrics">
+										<!-- Track metrics progress bars -->
+									</div>
+
+									<div style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 12px;">
+										<span class="section-title">Closest Wormholes</span>
+										<div class="list-scroll" id="galaxy-wormholes-list">
+											<!-- Wormhole similarities -->
+										</div>
+									</div>
+
+									<!-- Mini Music Player Mockup -->
+									<div class="mini-player" style="margin-top: auto; padding: 12px; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.8); border-radius: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+										<div class="player-disc-wrapper" style="position: relative; width: 38px; height: 38px; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; flex-shrink: 0; animation: player-spin 12s linear infinite; animation-play-state: paused; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" id="player-disc">
+											<div style="width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; border: 3px solid #111;"></div>
+										</div>
+										<div style="flex: 1; min-width: 0;">
+											<div style="font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text);" id="player-track-name">Hung Up</div>
+											<div style="font-size: 0.6rem; color: var(--bh-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Madonna</div>
+										</div>
+										<button id="player-play-btn" style="background: var(--bh-accent); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, background 0.2s;" title="Play Mockup">
+											<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" id="player-play-icon"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- ── TAB 3: PERSONAL RATING ── -->
+						<div id="tab-rating" class="tab-content hidden" style="grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 24px; display: flex; flex-direction: column;">
+							<div class="panel" style="flex: none; padding: 24px;">
+								<span class="section-title">Personal Rating</span>
+								<h3 class="panel-header-title">Album Track Clustering</h3>
+								<p style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 0;">Audio features and bias score clustering using GMM & PCA mapping.</p>
+							</div>
+							<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; flex: 1; min-height: 0;">
+								<div class="panel" style="border-top: 5px solid #10B981; padding: 18px;">
+									<h4 style="margin: 0 0 16px 0; color: #10B981; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
+										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10B981;"></span> My Favorite
+									</h4>
+									<div id="rating-col-fav" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
+								</div>
+								<div class="panel" style="border-top: 5px solid #F59E0B; padding: 18px;">
+									<h4 style="margin: 0 0 16px 0; color: #F59E0B; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
+										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #F59E0B;"></span> So Far, So Good
+									</h4>
+									<div id="rating-col-good" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
+								</div>
+								<div class="panel" style="border-top: 5px solid #EF4444; padding: 18px;">
+									<h4 style="margin: 0 0 16px 0; color: #EF4444; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
+										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #EF4444;"></span> Not My Favorite
+									</h4>
+									<div id="rating-col-notfav" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
+								</div>
+							</div>
+						</div>
+
+					</main>
+				</div>
+			</div>
+		</div>
+
+		<!-- Script to handle page exits -->
+		<script>
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.addEventListener("click", (e) => {
+					e.preventDefault();
+					document.body.classList.add("is-exiting");
+					setTimeout(() => { window.location.href = backBtn.getAttribute("href"); }, 280);
+				});
+			}
+		</script>
+
+		<!-- Pass server data variables to Client JavaScript -->
+		<script define:vars={{ clusterSummary, musicGalaxy, personalRating }}>
+			window.CLUSTER_SUMMARY = clusterSummary;
+			window.MUSIC_GALAXY = musicGalaxy;
+			window.PERSONAL_RATING = personalRating;
+		</script>
+
+		<!-- Client interactivity module -->
+		<script type="module">
+			const CLUSTERS = window.CLUSTER_SUMMARY;
+			
+			// Deduplicate tracks by canonical name
+			const RAW_TRACKS = window.MUSIC_GALAXY.filter(t => t.release_year <= 2020);
+			const TRACKS = [];
+			const seenNames = new Set();
+			for (const t of RAW_TRACKS) {
+				const canonicalName = t.name.toLowerCase().trim();
+				if (!seenNames.has(canonicalName)) {
+					seenNames.add(canonicalName);
+					TRACKS.push(t);
+				}
+			}
+
+			// ── Dynamically build cluster metadata from json ──
+			const CLUSTER_META = {};
+			CLUSTERS.forEach(c => {
+				CLUSTER_META[c.cluster] = {
+					name: c.name || `Cluster ${c.cluster}`,
+					description: c.description || '',
+					color: c.color || '#888',
+					image: c.image || '/assets/spotify/thediscodynamo-1.jpg'
+				};
+			});
+
+			const AUDIO_FEATURE_KEYS = ['danceability', 'energy', 'valence', 'acousticness', 'speechiness'];
+
+			// ── Track similarity engine ──
+			class FeatureSpace {
+				constructor(tracks) {
+					this.tracks = tracks;
+					const vectors = tracks.map(t => AUDIO_FEATURE_KEYS.map(k => Number(t[k])));
+					const norms = vectors.map(v => Math.sqrt(v.reduce((sum, val) => sum + val * val, 0)));
+					const size = tracks.length;
+
+					this.matrix = Array.from({ length: size }, (_, r) =>
+						Array.from({ length: size }, (_, c) => (r === c ? 1 : 0))
+					);
+
+					for (let r = 0; r < size; r++) {
+						for (let c = r + 1; c < size; c++) {
+							const rNorm = norms[r];
+							const cNorm = norms[c];
+							if (rNorm === 0 || cNorm === 0) continue;
+
+							let dot = 0;
+							const rVec = vectors[r];
+							const cVec = vectors[c];
+							for (let i = 0; i < rVec.length; i++) dot += rVec[i] * cVec[i];
+
+							const sim = dot / (rNorm * cNorm);
+							this.matrix[r][c] = sim;
+							this.matrix[c][r] = sim;
+						}
+					}
+				}
+
+				getCentrality() {
+					const size = this.matrix.length;
+					if (size <= 1) return Array.from({ length: size }, () => 0);
+					return this.matrix.map((row, rIdx) => {
+						const sum = row.reduce((total, val) => total + val, 0) - row[rIdx];
+						return sum / (size - 1);
+					});
+				}
+
+				getTopSimilar(trackIndex, limit = 5) {
+					const row = this.matrix[trackIndex];
+					if (!row) return [];
+					return row
+						.map((similarity, index) => ({ index, similarity }))
+						.filter(item => item.index !== trackIndex)
+						.sort((a, b) => b.similarity - a.similarity)
+						.slice(0, limit);
+				}
+			}
+
+			// Precompute all values
+			const space = new FeatureSpace(TRACKS);
+			const centrality = space.getCentrality();
+
+			// Clamp min-max centrality
+			const minCentrality = Math.min(...centrality);
+			const maxCentrality = Math.max(...centrality);
+			const popularityProxy = centrality.map(val => {
+				if (maxCentrality === minCentrality) return 0.5;
+				return Math.min(1, Math.max(0, (val - minCentrality) / (maxCentrality - minCentrality)));
+			});
+
+			// Weighted impact computed dynamically
+			const clusterWeightedImpact = (() => {
+				const map = {};
+				CLUSTERS.forEach(c => {
+					map[c.cluster] = { sum: 0, count: 0 };
+				});
+				TRACKS.forEach((t, i) => {
+					if (map[t.cluster]) {
+						const weight = popularityProxy[i] * 0.85 + 0.15;
+						map[t.cluster].sum += weight;
+						map[t.cluster].count += 1;
+					}
+				});
+				const total = Object.values(map).reduce((sum, item) => sum + item.sum, 0) || 1;
+				return Object.keys(map).reduce((res, key) => {
+					res[key] = {
+						share: map[key].sum / total,
+						count: map[key].count
+					};
+					return res;
+				}, {});
+			})();
+
+			// CSS spin animation keyframes injected dynamically
+			const styleSheet = document.createElement("style");
+			styleSheet.innerText = `
+				@keyframes player-spin {
+					from { transform: rotate(0deg); }
+					to { transform: rotate(360deg); }
+				}
+			`;
+			document.head.appendChild(styleSheet);
+
+			// DOM Elements
+			const navItems = document.querySelectorAll('.nav-item');
+			const tabs = {
+				personas: document.getElementById('tab-personas'),
+				galaxy: document.getElementById('tab-galaxy'),
+				rating: document.getElementById('tab-rating')
+			};
+
+			// Active state
+			let state = {
+				tab: 'personas',
+				cluster: 0,
+				trackIndex: 0
+			};
+
+			// ── Nav switching ──
+			navItems.forEach(btn => {
+				btn.addEventListener('click', () => {
+					const targetTab = btn.dataset.tab;
+					navItems.forEach(n => n.classList.remove('active'));
+					btn.classList.add('active');
+
+					Object.keys(tabs).forEach(k => {
+						if (k === targetTab) tabs[k].classList.remove('hidden');
+						else tabs[k].classList.add('hidden');
+					});
+					state.tab = targetTab;
+
+					if (targetTab === 'galaxy') {
+						renderGalaxy();
+					}
+				});
+			});
+
+			// Search filtering logic
+			const searchInput = document.getElementById('personas-search');
+			if (searchInput) {
+				searchInput.addEventListener('input', () => {
+					renderPersonasTab();
+				});
+			}
+
+			// Play button mockup behavior
+			const playBtn = document.getElementById('player-play-btn');
+			const playIcon = document.getElementById('player-play-icon');
+			const disc = document.getElementById('player-disc');
+			let isPlaying = false;
+
+			if (playBtn) {
+				playBtn.addEventListener('click', () => {
+					isPlaying = !isPlaying;
+					if (isPlaying) {
+						disc.style.animationPlayState = 'running';
+						playIcon.innerHTML = `<rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/>`;
+					} else {
+						disc.style.animationPlayState = 'paused';
+						playIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>`;
+					}
+				});
+			}
+
+			// ── TAB 1: Sonic Personas render ──
+			function renderPersonasTab() {
+				// Rail buttons
+				const railList = document.getElementById('cluster-rail-list');
+				railList.innerHTML = CLUSTERS.map(c => {
+					const meta = CLUSTER_META[c.cluster];
+					const count = clusterWeightedImpact[c.cluster].count;
+					const active = state.cluster === c.cluster;
+					return `
+						<button class="cluster-btn ${active ? 'active' : ''}" data-cluster="${c.cluster}">
+							${active ? `<div class="cluster-color-bar" style="background-color: ${meta.color}"></div>` : ''}
+							<div class="cluster-title-wrap">
+								<span><span class="cluster-dot" style="background-color: ${meta.color}"></span>${meta.name}</span>
+								<span style="opacity: 0.6; font-size: 0.7rem;">${count} tracks</span>
+							</div>
+						</button>
+					`;
+				}).join('');
+
+				// Register click listeners
+				document.querySelectorAll('.cluster-btn').forEach(btn => {
+					btn.addEventListener('click', () => {
+						state.cluster = Number(btn.dataset.cluster);
+						// Auto select first track in cluster
+						const trackIdx = TRACKS.findIndex(t => t.cluster === state.cluster);
+						if (trackIdx !== -1) state.trackIndex = trackIdx;
+						renderPersonasTab();
+					});
+				});
+
+				// Detailed card
+				const cMeta = CLUSTER_META[state.cluster];
+				const clusterData = CLUSTERS[state.cluster];
+				document.getElementById('cluster-name').innerText = cMeta.name;
+				document.getElementById('cluster-desc').innerText = cMeta.description;
+				document.getElementById('cluster-share').innerText = `${Math.round(clusterWeightedImpact[state.cluster].share * 100)}% share`;
+				// Overlay linear gradient so cover fades cleanly into background and remains readable
+				document.getElementById('cluster-bg').style.backgroundImage = `linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.95) 100%), url(${cMeta.image})`;
+
+				// Metrics grid (danceability, energy, valence, acousticness + average tempo and loudness)
+				let metricsHTML = [
+					{ label: 'Danceability', val: clusterData.danceability },
+					{ label: 'Energy', val: clusterData.energy },
+					{ label: 'Valence', val: clusterData.valence },
+					{ label: 'Acousticness', val: clusterData.acousticness }
+				].map(m => `
+					<div class="metric-box">
+						<div class="metric-meta">
+							<span>${m.label}</span>
+							<span>${Math.round(m.val * 100)}%</span>
+						</div>
+						<div class="metric-bar">
+							<div class="metric-fill" style="width: ${m.val * 100}%; background-color: ${cMeta.color};"></div>
+						</div>
+					</div>
+				`).join('');
+
+				const avgTempo = Math.round(clusterData.tempo || 115);
+				const avgLoudness = (clusterData.loudness || 0).toFixed(1);
+				metricsHTML += `
+					<div class="metric-box" style="padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.45);">
+						<span style="font-size: 0.65rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Avg Tempo</span>
+						<span style="font-size: 0.8rem; font-weight: bold; color: var(--bh-text);">${avgTempo} BPM</span>
+					</div>
+					<div class="metric-box" style="padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.45);">
+						<span style="font-size: 0.65rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Avg Loudness</span>
+						<span style="font-size: 0.8rem; font-weight: bold; color: var(--bh-text);">${avgLoudness} dB</span>
+					</div>
+				`;
+				document.getElementById('cluster-metrics').innerHTML = metricsHTML;
+
+				// Tracks list filtered by query
+				const query = (document.getElementById('personas-search')?.value || '').toLowerCase().trim();
+				const clusterTracks = TRACKS.filter(t => t.cluster === state.cluster)
+					.sort((a,b) => b.release_year - a.release_year);
+				const tracksHTML = clusterTracks.map(t => {
+					const globalIdx = TRACKS.findIndex(gt => gt.name === t.name && gt.release_year === t.release_year);
+					const active = state.trackIndex === globalIdx;
+					const matches = t.name.toLowerCase().includes(query);
+					return `
+						<button class="track-list-item ${active ? 'selected' : ''} ${matches ? '' : 'hidden'}" data-idx="${globalIdx}">
+							<span>${t.name}</span>
+							<span style="opacity: 0.6; font-size: 0.7rem;">${t.release_year}</span>
+						</button>
+					`;
+				}).join('');
+				document.getElementById('cluster-tracks-list').innerHTML = tracksHTML;
+
+				document.querySelectorAll('#cluster-tracks-list .track-list-item').forEach(btn => {
+					btn.addEventListener('click', () => {
+						state.trackIndex = Number(btn.dataset.idx);
+						renderPersonasTab();
+					});
+				});
+			}
+
+			// ── TAB 2: Music Galaxy render ──
+			const tsneBounds = (() => {
+				const xs = TRACKS.map(t => t.tsne_x);
+				const ys = TRACKS.map(t => t.tsne_y);
+				return { minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys) };
+			})();
+
+			function project(val, min, max, size, padding = 40) {
+				if (max === min) return size / 2;
+				const norm = (val - min) / (max - min);
+				return padding + norm * (size - padding * 2);
+			}
+
+			function renderGalaxy() {
+				const svg = document.getElementById('galaxy-svg');
+				const selTrack = TRACKS[state.trackIndex];
+
+				// Detail Card
+				document.getElementById('galaxy-track-name').innerText = selTrack ? selTrack.name : '-';
+				document.getElementById('galaxy-track-name').title = selTrack ? selTrack.name : '';
+				document.getElementById('galaxy-track-year').innerText = selTrack ? `${selTrack.release_year} • ${CLUSTER_META[selTrack.cluster].name}` : '-';
+
+				// Update mockup player info
+				if (selTrack) {
+					document.getElementById('player-track-name').innerText = selTrack.name;
+				}
+
+				// Selected track metrics progress bars + secondary metrics (popular, tempo, loudness)
+				let featuresHTML = AUDIO_FEATURE_KEYS.map(k => {
+					const val = selTrack ? Number(selTrack[k]) : 0;
+					return `
+						<div>
+							<div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 1px; color: var(--bh-muted);">
+								<span style="text-transform: capitalize;">${k}</span>
+								<span style="font-weight: bold; color: var(--bh-text);">${Math.round(val * 100)}%</span>
+							</div>
+							<div class="metric-bar" style="height: 4px;">
+								<div class="metric-fill" style="width: ${val * 100}%; background-color: ${CLUSTER_META[selTrack.cluster].color};"></div>
+							</div>
+						</div>
+					`;
+				}).join('');
+
+				if (selTrack) {
+					const tempo = Math.round(selTrack.tempo || 120);
+					const loudness = (selTrack.loudness || 0).toFixed(1);
+					const popularity = selTrack.popularity || 0;
+					featuresHTML += `
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 8px;">
+							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Pop</div>
+								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${popularity}%</div>
+							</div>
+							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Tempo</div>
+								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${tempo} <span style="font-size:0.5rem;font-weight:normal;">BPM</span></div>
+							</div>
+							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Loud</div>
+								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${loudness} <span style="font-size:0.5rem;font-weight:normal;">dB</span></div>
+							</div>
+						</div>
+					`;
+				}
+				document.getElementById('galaxy-track-metrics').innerHTML = featuresHTML;
+
+				// Wormholes list
+				const wormholes = space.getTopSimilar(state.trackIndex, 5);
+				const wormholesHTML = wormholes.map(w => {
+					const track = TRACKS[w.index];
+					return `
+						<button class="track-list-item" data-idx="${w.index}">
+							<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${track.name}</span>
+							<span style="opacity: 0.6; font-size: 0.7rem;">${Math.round(w.similarity * 100)}%</span>
+						</button>
+					`;
+				}).join('');
+				document.getElementById('galaxy-wormholes-list').innerHTML = wormholesHTML;
+				document.querySelectorAll('#galaxy-wormholes-list .track-list-item').forEach(btn => {
+					btn.addEventListener('click', () => {
+						state.trackIndex = Number(btn.dataset.idx);
+						renderGalaxy();
+					});
+				});
+
+				// Draw SVG
+				let linesHTML = '';
+				if (selTrack) {
+					const sX = project(selTrack.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
+					const sY = project(selTrack.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
+
+					wormholes.forEach(link => {
+						const target = TRACKS[link.index];
+						const tX = project(target.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
+						const tY = project(target.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
+						const opacity = Math.min(0.95, Math.max(0.2, (link.similarity - 0.85) / 0.15));
+
+						linesHTML += `
+							<line x1="${sX}" y1="${sY}" x2="${tX}" y2="${tY}" 
+								stroke="rgba(125,211,252,0.9)" 
+								stroke-width="${1 + opacity * 2.5}" 
+								stroke-opacity="${opacity}" 
+								stroke-dasharray="3 4" />
+						`;
+					});
+				}
+
+				const pointsHTML = TRACKS.map((t, idx) => {
+					const x = project(t.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
+					const y = project(t.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
+					const meta = CLUSTER_META[t.cluster];
+					const isActive = state.trackIndex === idx;
+					const isDimmed = state.cluster !== t.cluster;
+					return `
+						<g class="galaxy-point" data-idx="${idx}" data-name="${t.name}" data-year="${t.release_year}" data-pop="${t.popularity || 0}" style="cursor: pointer; opacity: ${isDimmed ? 0.35 : 1};">
+							<circle cx="${x}" cy="${y}" r="${isActive ? 16 : 8}" fill="${meta.color}" opacity="${isActive ? 0.16 : 0.08}" />
+							<circle cx="${x}" cy="${y}" r="${isActive ? 10 : 5}" fill="${meta.color}" opacity="${isActive ? 0.25 : 0.15}" />
+							<circle cx="${x}" cy="${y}" r="${isActive ? 5 : 2.5}" fill="${meta.color}" stroke="#fff" stroke-width="${isActive ? 1.5 : 0.5}" />
+						</g>
+					`;
+				}).join('');
+
+				// Generate coordinate grid lines inside the galaxy t-SNE plot
+				let gridLines = '';
+				for (let i = 100; i < 1000; i += 100) {
+					gridLines += `<line x1="${i}" y1="0" x2="${i}" y2="620" stroke="rgba(255,255,255,0.03)" stroke-width="0.7" />`;
+				}
+				for (let j = 62; j < 620; j += 62) {
+					gridLines += `<line x1="0" y1="${j}" x2="1000" y2="${j}" stroke="rgba(255,255,255,0.03)" stroke-width="0.7" />`;
+				}
+
+				svg.innerHTML = `
+					<rect width="1000" height="620" fill="none" />
+					${gridLines}
+					<circle cx="500" cy="310" r="140" fill="rgba(255,255,255,0.01)" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
+					${linesHTML}
+					${pointsHTML}
+				`;
+
+				// Mouse Hover Tooltip coordinates tracking
+				const tooltip = document.getElementById('galaxy-tooltip');
+				const container = document.getElementById('galaxy-container');
+
+				// Point click and hover hooks
+				document.querySelectorAll('.galaxy-point').forEach(g => {
+					g.addEventListener('click', () => {
+						state.trackIndex = Number(g.dataset.idx);
+						renderGalaxy();
+					});
+					g.addEventListener('mouseenter', () => {
+						const name = g.dataset.name;
+						const year = g.dataset.year;
+						const pop = g.dataset.pop;
+						tooltip.innerHTML = `<strong>${name}</strong> (${year})<br/><span style="opacity:0.8;font-size:0.65rem;">Popularity: ${pop}%</span>`;
+						tooltip.style.display = 'block';
+					});
+					g.addEventListener('mousemove', (e) => {
+						const rect = container.getBoundingClientRect();
+						const x = e.clientX - rect.left + 12;
+						const y = e.clientY - rect.top + 12;
+						tooltip.style.left = x + 'px';
+						tooltip.style.top = y + 'px';
+					});
+					g.addEventListener('mouseleave', () => {
+						tooltip.style.display = 'none';
+					});
+				});
+			}
+
+			// ── TAB 3: Personal Rating render ──
+			function renderRatingTab() {
+				const favDiv = document.getElementById('rating-col-fav');
+				const goodDiv = document.getElementById('rating-col-good');
+				const notfavDiv = document.getElementById('rating-col-notfav');
+				if(!favDiv) return;
+
+				let favHtml = '';
+				let goodHtml = '';
+				let notfavHtml = '';
+
+				// Make a copy and sort by bias score descending
+				const ratings = [...(window.PERSONAL_RATING || [])].sort((a, b) => b.bias_score - a.bias_score);
+
+				ratings.forEach(t => {
+					const html = `
+						<div style="background: rgba(255,255,255,0.45); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+							<div style="font-weight: 800; font-size: 0.8rem; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text);" title="${t.track}">${t.track}</div>
+							<div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--bh-muted);">
+								<span>Bias Score: <strong style="color: var(--bh-text); font-size: 0.7rem;">${t.bias_score}</strong></span>
+								<span>Energy: <strong>${t.energy}</strong></span>
+							</div>
+						</div>
+					`;
+					if (t.label === 'My Favorite') favHtml += html;
+					else if (t.label === 'So Far, So Good') goodHtml += html;
+					else notfavHtml += html;
+				});
+
+				favDiv.innerHTML = favHtml;
+				goodDiv.innerHTML = goodHtml;
+				notfavDiv.innerHTML = notfavHtml;
+			}
+
+			// Initialize default rendering
+			renderPersonasTab();
+			renderRatingTab();
+		</script>
+	</body>
+</html>
