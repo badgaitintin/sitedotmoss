@@ -18,6 +18,7 @@ const clustersCount = clusterSummary.length;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard" />
 		<title>Madonna Sonic Atlas — site(.)moss</title>
+		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline></script>
 
 		<style is:global>
 			/* ===========================
@@ -708,7 +709,7 @@ const clustersCount = clusterSummary.length;
 						</div>
 
 						<!-- ── TAB 2: MUSIC GALAXY ── -->
-						<div id="tab-galaxy" class="tab-content hidden" style="grid-template-columns: 1fr; position: relative;">
+						<div id="tab-galaxy" class="tab-content wide-left hidden">
 							<div class="panel" style="padding: 0; position: relative;">
 								<div class="galaxy-svg-container" id="galaxy-container" style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: rgba(13, 17, 30, 0.55); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);">
 									<svg class="galaxy-svg" id="galaxy-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet">
@@ -719,8 +720,8 @@ const clustersCount = clusterSummary.length;
 								</div>
 							</div>
 
-							<!-- FLOATING PANEL FOR SELECTED TRACK (Breaks the 1-1-1 grid) -->
-							<div class="panel" style="position: absolute; top: 14px; right: 14px; bottom: 14px; width: 300px; z-index: 10; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(28px); box-shadow: -10px 0 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8); display: flex; flex-direction: column; padding: 20px;">
+							<!-- DETAILS PANEL FOR SELECTED TRACK (Grid item, matches other tabs) -->
+							<div class="panel" style="display: flex; flex-direction: column; padding: 20px;">
 								<div class="selected-track-card" style="display: flex; flex-direction: column; height: 100%;">
 									<span class="section-title">Selected Track</span>
 									<div style="margin-bottom: 12px;">
@@ -757,30 +758,28 @@ const clustersCount = clusterSummary.length;
 						</div>
 
 						<!-- ── TAB 3: PERSONAL RATING ── -->
-						<div id="tab-rating" class="tab-content hidden" style="grid-template-columns: 1fr; grid-template-rows: auto 1fr; gap: 24px; display: flex; flex-direction: column;">
-							<div class="panel" style="flex: none; padding: 24px;">
+						<div id="tab-rating" class="tab-content wide-left hidden">
+							<div class="panel" style="display: flex; flex-direction: column; height: 100%;">
 								<span class="section-title">Personal Rating</span>
 								<h3 class="panel-header-title">Album Track Clustering</h3>
-								<p style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 0;">Audio features and bias score clustering using GMM & PCA mapping.</p>
+								<p style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 12px;">Audio features and bias score clustering using GMM & PCA mapping.</p>
+								<div id="plotly-3d-map" style="flex: 1; min-height: 0; width: 100%;"></div>
 							</div>
-							<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 24px; flex: 1; min-height: 0;">
-								<div class="panel" style="border-top: 5px solid #10B981; padding: 18px;">
-									<h4 style="margin: 0 0 16px 0; color: #10B981; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
-										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #10B981;"></span> My Favorite
-									</h4>
-									<div id="rating-col-fav" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
-								</div>
-								<div class="panel" style="border-top: 5px solid #F59E0B; padding: 18px;">
-									<h4 style="margin: 0 0 16px 0; color: #F59E0B; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
-										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #F59E0B;"></span> So Far, So Good
-									</h4>
-									<div id="rating-col-good" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
-								</div>
-								<div class="panel" style="border-top: 5px solid #EF4444; padding: 18px;">
-									<h4 style="margin: 0 0 16px 0; color: #EF4444; text-transform: uppercase; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px;">
-										<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #EF4444;"></span> Not My Favorite
-									</h4>
-									<div id="rating-col-notfav" style="display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding-right: 4px;"></div>
+							<div class="panel" style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;">
+								<span class="section-title">Tracks by Cluster Group</span>
+								<div style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; flex: 1; padding-right: 4px;">
+									<div style="border-left: 4px solid #10B981; padding-left: 10px;">
+										<h4 style="margin: 0 0 6px 0; color: #10B981; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">My Favorite</h4>
+										<div id="rating-col-fav" style="display: flex; flex-direction: column; gap: 6px;"></div>
+									</div>
+									<div style="border-left: 4px solid #F59E0B; padding-left: 10px;">
+										<h4 style="margin: 0 0 6px 0; color: #F59E0B; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">So Far, So Good</h4>
+										<div id="rating-col-good" style="display: flex; flex-direction: column; gap: 6px;"></div>
+									</div>
+									<div style="border-left: 4px solid #EF4444; padding-left: 10px;">
+										<h4 style="margin: 0 0 6px 0; color: #EF4444; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">Not My Favorite</h4>
+										<div id="rating-col-notfav" style="display: flex; flex-direction: column; gap: 6px;"></div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -810,7 +809,145 @@ const clustersCount = clusterSummary.length;
 		</script>
 
 		<!-- Client interactivity module -->
+		<!-- Client interactivity module -->
 		<script type="module">
+			// Jacobi algorithm for 3x3 symmetric matrix eigenvalues & eigenvectors
+			function jacobi3x3(A) {
+				let V = [[1,0,0], [0,1,0], [0,0,1]];
+				let d = [A[0][0], A[1][1], A[2][2]];
+				let A_mut = [
+					[A[0][0], A[0][1], A[0][2]],
+					[A[1][0], A[1][1], A[1][2]],
+					[A[2][0], A[2][1], A[2][2]]
+				];
+				for (let iter = 0; iter < 50; iter++) {
+					let p = 0, q = 1;
+					let maxVal = Math.abs(A_mut[0][1]);
+					if (Math.abs(A_mut[0][2]) > maxVal) { p = 0; q = 2; maxVal = Math.abs(A_mut[0][2]); }
+					if (Math.abs(A_mut[1][2]) > maxVal) { p = 1; q = 2; maxVal = Math.abs(A_mut[1][2]); }
+					if (maxVal < 1e-9) break;
+
+					let theta = 0.5 * (d[q] - d[p]) / A_mut[p][q];
+					let t = 1.0 / (Math.abs(theta) + Math.sqrt(1.0 + theta*theta));
+					if (theta < 0) t = -t;
+					let c = 1.0 / Math.sqrt(1.0 + t*t);
+					let s = t * c;
+					let tau = s / (1.0 + c);
+
+					let h = t * A_mut[p][q];
+					d[p] -= h;
+					d[q] += h;
+					A_mut[p][q] = 0;
+
+					for (let i = 0; i < 3; i++) {
+						if (i !== p && i !== q) {
+							let g = A_mut[i][p];
+							let j = A_mut[i][q];
+							A_mut[i][p] = c * g - s * j;
+							A_mut[i][q] = s * g + c * j;
+							A_mut[p][i] = A_mut[i][p];
+							A_mut[q][i] = A_mut[i][q];
+						}
+					}
+					for (let i = 0; i < 3; i++) {
+						let g = V[i][p];
+						let j = V[i][q];
+						V[i][p] = c * g - s * j;
+						V[i][q] = s * g + c * j;
+					}
+				}
+				return { eigenvalues: d, eigenvectors: V };
+			}
+
+			function getEllipsoidTrace(clusterTracks, color) {
+				if (clusterTracks.length < 3) return null;
+				
+				const mean = [0, 0, 0];
+				clusterTracks.forEach(t => {
+					mean[0] += t.pc1;
+					mean[1] += t.pc2;
+					mean[2] += t.bias_score;
+				});
+				mean[0] /= clusterTracks.length;
+				mean[1] /= clusterTracks.length;
+				mean[2] /= clusterTracks.length;
+				
+				const cov = [
+					[0, 0, 0],
+					[0, 0, 0],
+					[0, 0, 0]
+				];
+				clusterTracks.forEach(t => {
+					const dx = t.pc1 - mean[0];
+					const dy = t.pc2 - mean[1];
+					const dz = t.bias_score - mean[2];
+					cov[0][0] += dx * dx;
+					cov[0][1] += dx * dy;
+					cov[0][2] += dx * dz;
+					cov[1][1] += dy * dy;
+					cov[1][2] += dy * dz;
+					cov[2][2] += dz * dz;
+				});
+				cov[1][0] = cov[0][1];
+				cov[2][0] = cov[0][2];
+				cov[2][1] = cov[1][2];
+				
+				const n = clusterTracks.length;
+				for (let r = 0; r < 3; r++) {
+					for (let c = 0; c < 3; c++) {
+						cov[r][c] /= (n - 1);
+					}
+				}
+				
+				const { eigenvalues, eigenvectors } = jacobi3x3(cov);
+				
+				const scale = 1.6;
+				const s0 = scale * Math.sqrt(Math.max(0, eigenvalues[0]));
+				const s1 = scale * Math.sqrt(Math.max(0, eigenvalues[1]));
+				const s2 = scale * Math.sqrt(Math.max(0, eigenvalues[2]));
+				
+				const uSteps = 15;
+				const vSteps = 15;
+				const xArr = [];
+				const yArr = [];
+				const zArr = [];
+				
+				for (let i = 0; i <= uSteps; i++) {
+					const theta = (i / uSteps) * 2 * Math.PI;
+					for (let j = 0; j <= vSteps; j++) {
+						const phi = (j / vSteps) * Math.PI;
+						
+						const ux = Math.cos(theta) * Math.sin(phi);
+						const uy = Math.sin(theta) * Math.sin(phi);
+						const uz = Math.cos(phi);
+						
+						const sx = ux * s0;
+						const sy = uy * s1;
+						const sz = uz * s2;
+						
+						const rx = eigenvectors[0][0] * sx + eigenvectors[0][1] * sy + eigenvectors[0][2] * sz;
+						const ry = eigenvectors[1][0] * sx + eigenvectors[1][1] * sy + eigenvectors[1][2] * sz;
+						const rz = eigenvectors[2][0] * sx + eigenvectors[2][1] * sy + eigenvectors[2][2] * sz;
+						
+						xArr.push(mean[0] + rx);
+						yArr.push(mean[1] + ry);
+						zArr.push(mean[2] + rz);
+					}
+				}
+				
+				return {
+					type: 'mesh3d',
+					x: xArr,
+					y: yArr,
+					z: zArr,
+					alphahull: 0,
+					opacity: 0.08,
+					color: color,
+					showlegend: false,
+					hoverinfo: 'skip'
+				};
+			}
+
 			const CLUSTERS = window.CLUSTER_SUMMARY;
 			
 			// Deduplicate tracks by canonical name
@@ -963,6 +1100,13 @@ const clustersCount = clusterSummary.length;
 
 					if (targetTab === 'galaxy') {
 						renderGalaxy();
+					}
+					if (targetTab === 'rating') {
+						renderRatingTab();
+						const gd = document.getElementById('plotly-3d-map');
+						if (gd && window.Plotly) {
+							window.Plotly.Plots.resize(gd);
+						}
 					}
 				});
 			});
@@ -1260,6 +1404,8 @@ const clustersCount = clusterSummary.length;
 			}
 
 			// ── TAB 3: Personal Rating render ──
+			let selectedRatingAlbum = null;
+
 			function renderRatingTab() {
 				const favDiv = document.getElementById('rating-col-fav');
 				const goodDiv = document.getElementById('rating-col-good');
@@ -1270,8 +1416,35 @@ const clustersCount = clusterSummary.length;
 				let goodHtml = '';
 				let notfavHtml = '';
 
-				// Make a copy and sort by bias score descending
-				const ratings = [...(window.PERSONAL_RATING || [])].sort((a, b) => b.bias_score - a.bias_score);
+				// Map to ensure every track has an album field, fallback to "Confessions i"
+				const allTracksWithAlbum = (window.PERSONAL_RATING || []).map(t => ({
+					...t,
+					album: t.album || 'Confessions i'
+				}));
+
+				// Extract unique albums
+				const albums = Array.from(new Set(allTracksWithAlbum.map(t => t.album)));
+
+				// Populate album select dropdown if it's empty
+				const select = document.getElementById('rating-album-select');
+				if (select && select.children.length === 0) {
+					select.innerHTML = albums.map(a => `<option value="${a}">${a}</option>`).join('');
+					selectedRatingAlbum = albums[0];
+					
+					select.addEventListener('change', (e) => {
+						selectedRatingAlbum = e.target.value;
+						renderRatingTab();
+					});
+				}
+
+				if (!selectedRatingAlbum && albums.length > 0) {
+					selectedRatingAlbum = albums[0];
+				}
+
+				// Filter by selected album and sort by bias score descending
+				const ratings = allTracksWithAlbum
+					.filter(t => t.album === selectedRatingAlbum)
+					.sort((a, b) => b.bias_score - a.bias_score);
 
 				ratings.forEach(t => {
 					const html = `
@@ -1291,6 +1464,106 @@ const clustersCount = clusterSummary.length;
 				favDiv.innerHTML = favHtml;
 				goodDiv.innerHTML = goodHtml;
 				notfavDiv.innerHTML = notfavHtml;
+
+				// Render 3D Plotly Map
+				const gd = document.getElementById('plotly-3d-map');
+				if (gd && window.Plotly) {
+					const groups = [
+						{ label: 'My Favorite', color: '#10B981', border: '#047857' },
+						{ label: 'So Far, So Good', color: '#F59E0B', border: '#B45309' },
+						{ label: 'Not My Favorite', color: '#EF4444', border: '#B91C1C' }
+					];
+
+					const traces = [];
+
+					groups.forEach(g => {
+						const groupTracks = ratings.filter(t => t.label === g.label);
+						if (groupTracks.length === 0) return;
+
+						// Scatter trace
+						traces.push({
+							x: groupTracks.map(t => t.pc1),
+							y: groupTracks.map(t => t.pc2),
+							z: groupTracks.map(t => t.bias_score),
+							mode: 'markers+text',
+							type: 'scatter3d',
+							name: g.label,
+							text: groupTracks.map(t => t.track),
+							textposition: 'top center',
+							textfont: { size: 8, color: '#374151' },
+							marker: {
+								size: 5,
+								color: g.color,
+								line: { color: g.border, width: 1 }
+							},
+							hoverinfo: 'text',
+							hovertext: groupTracks.map(t => `${t.track}<br>PC1: ${t.pc1.toFixed(3)}<br>PC2: ${t.pc2.toFixed(3)}<br>Bias Score: ${t.bias_score}`)
+						});
+
+						// Ellipsoid mesh trace
+						const meshTrace = getEllipsoidTrace(groupTracks, g.color);
+						if (meshTrace) {
+							traces.push(meshTrace);
+						}
+					});
+
+					const layout = {
+						margin: { l: 0, r: 0, b: 0, t: 0 },
+						paper_bgcolor: 'rgba(0,0,0,0)',
+						plot_bgcolor: 'rgba(0,0,0,0)',
+						scene: {
+							xaxis: {
+								title: 'PC1 - style (84% var)',
+								gridcolor: 'rgba(0, 0, 0, 0.08)',
+								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
+								backgroundcolor: 'rgba(0,0,0,0)',
+								showbackground: false,
+								tickcolor: '#374151',
+								titlefont: { size: 10, color: '#374151' },
+								tickfont: { size: 9, color: '#6b7280' }
+							},
+							yaxis: {
+								title: 'PC2 - style (8% var)',
+								gridcolor: 'rgba(0, 0, 0, 0.08)',
+								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
+								backgroundcolor: 'rgba(0,0,0,0)',
+								showbackground: false,
+								tickcolor: '#374151',
+								titlefont: { size: 10, color: '#374151' },
+								tickfont: { size: 9, color: '#6b7280' }
+							},
+							zaxis: {
+								title: 'Personal Bias Score',
+								gridcolor: 'rgba(0, 0, 0, 0.08)',
+								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
+								backgroundcolor: 'rgba(0,0,0,0)',
+								showbackground: false,
+								tickcolor: '#374151',
+								titlefont: { size: 10, color: '#374151' },
+								tickfont: { size: 9, color: '#6b7280' }
+							},
+							camera: {
+								eye: { x: 1.5, y: 1.5, z: 1.2 }
+							}
+						},
+						showlegend: true,
+						legend: {
+							x: 0,
+							y: 1,
+							font: { size: 9, color: '#374151' },
+							bgcolor: 'rgba(255,255,255,0.6)',
+							bordercolor: 'rgba(0,0,0,0.08)',
+							borderwidth: 1
+						}
+					};
+
+					const config = {
+						responsive: true,
+						displayModeBar: false
+					};
+
+					window.Plotly.newPlot('plotly-3d-map', traces, layout, config);
+				}
 			}
 
 			// Initialize default rendering
