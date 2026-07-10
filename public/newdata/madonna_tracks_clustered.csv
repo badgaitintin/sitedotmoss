@@ -1,170 +1,170 @@
 name,artists,release_year,popularity,cluster,danceability,energy,loudness,speechiness,acousticness,instrumentalness,liveness,valence,tempo,cluster_name
-Hung Up,['Madonna'],2005,75,2,0.649,0.647,-7.695,0.0452,0.0039,0.161,0.0686,0.405,125.02,Instrumental & Melodic
-Material Girl,['Madonna'],2009,74,0,0.742,0.883,-3.419,0.0329,0.333,7.51e-06,0.0964,0.978,136.506,Vocal-driven & Uplifting
-Like a Prayer,['Madonna'],2009,73,0,0.624,0.842,-5.285,0.0376,0.264,2.11e-05,0.181,0.257,111.037,Vocal-driven & Uplifting
-Like a Virgin,['Madonna'],1984,73,0,0.771,0.655,-10.842,0.0372,0.152,0.00197,0.0685,0.97,119.747,Vocal-driven & Uplifting
-La Isla Bonita,['Madonna'],1986,72,0,0.725,0.612,-10.706,0.0372,0.302,1.63e-05,0.0548,0.965,99.978,Vocal-driven & Uplifting
-4 Minutes (feat. Justin Timberlake & Timbaland),"['Madonna', 'Justin Timberlake', 'Timbaland']",2009,71,0,0.753,0.931,-4.922,0.0652,0.00994,0.00696,0.234,0.767,113.029,Vocal-driven & Uplifting
-Vogue,['Madonna'],2009,68,0,0.737,0.88,-6.449,0.0433,0.00379,0.00351,0.417,0.329,115.998,Vocal-driven & Uplifting
-Like a Prayer,['Madonna'],1989,66,0,0.66,0.629,-12.359,0.0387,0.432,7.3e-05,0.172,0.324,111.926,Vocal-driven & Uplifting
-Papa Don't Preach,['Madonna'],1986,66,0,0.807,0.906,-8.973,0.0371,0.311,0.000791,0.0248,0.971,121.54,Vocal-driven & Uplifting
-Crazy for You,['Madonna'],2009,65,0,0.662,0.719,-6.606,0.0298,0.107,0.0,0.102,0.511,95.001,Vocal-driven & Uplifting
-Into the Groove,['Madonna'],2009,64,0,0.729,0.856,-4.164,0.035,0.0658,0.00832,0.0691,0.804,116.467,Vocal-driven & Uplifting
-Holiday,['Madonna'],2009,63,0,0.854,0.796,-5.567,0.0399,0.0542,0.00184,0.151,0.946,115.625,Vocal-driven & Uplifting
-Frozen,['Madonna'],1998,63,0,0.602,0.616,-10.917,0.0353,0.662,0.0153,0.149,0.31,108.017,Vocal-driven & Uplifting
-Me Against the Music (feat. Madonna) - LP Version / Video Mix,"['Britney Spears', 'Madonna']",2003,62,0,0.804,0.836,-6.635,0.089,0.32,0.0,0.213,0.85,120.046,Vocal-driven & Uplifting
-Sorry,['Madonna'],2005,62,0,0.589,0.877,-6.229,0.046,0.00121,0.013,0.169,0.443,132.971,Vocal-driven & Uplifting
-Bitch I'm Madonna,"['Madonna', 'Nicki Minaj']",2015,62,0,0.722,0.63,-5.784,0.132,0.0485,0.000294,0.179,0.519,150.023,Vocal-driven & Uplifting
-Vogue,['Madonna'],1990,62,0,0.748,0.84,-7.701,0.0421,0.00348,0.00647,0.44,0.304,115.997,Vocal-driven & Uplifting
-American Pie,['Madonna'],2000,61,0,0.631,0.734,-7.48,0.036,0.348,0.0,0.135,0.591,124.036,Vocal-driven & Uplifting
-Holiday,['Madonna'],1983,61,0,0.813,0.699,-8.656,0.0458,0.0251,0.0135,0.0527,0.732,117.548,Vocal-driven & Uplifting
-True Blue,['Madonna'],1986,60,0,0.799,0.773,-10.035,0.0393,0.261,2.58e-06,0.044,0.896,118.045,Vocal-driven & Uplifting
-Music,['Madonna'],2000,60,0,0.736,0.802,-8.527,0.0663,0.00149,0.0876,0.14,0.871,119.854,Vocal-driven & Uplifting
-Ray of Light,['Madonna'],1998,60,2,0.561,0.909,-7.878,0.0312,0.00118,0.46,0.0713,0.71,127.172,Instrumental & Melodic
-Live to Tell,['Madonna'],1986,59,0,0.673,0.314,-14.156,0.0279,0.411,0.0334,0.107,0.27,109.841,Vocal-driven & Uplifting
-Jump,['Madonna'],2005,59,0,0.629,0.839,-7.061,0.0899,0.0018,0.0859,0.251,0.449,118.979,Vocal-driven & Uplifting
-Hung Up,['Madonna'],2009,59,2,0.64,0.646,-7.572,0.0497,0.00364,0.165,0.0912,0.415,124.992,Instrumental & Melodic
-Give It 2 Me,['Madonna'],2008,59,0,0.837,0.954,-3.512,0.0414,0.0933,0.000405,0.143,0.972,127.019,Vocal-driven & Uplifting
-Crazy for You - Edit,['Madonna'],1990,59,0,0.672,0.549,-11.93,0.029,0.168,0.0,0.102,0.588,95.01,Vocal-driven & Uplifting
-Borderline,['Madonna'],2009,58,0,0.807,0.764,-5.186,0.0312,0.082,3.87e-05,0.115,0.371,119.867,Vocal-driven & Uplifting
-The Power of Good-Bye,['Madonna'],1998,58,1,0.534,0.561,-11.089,0.0409,0.0442,0.678,0.189,0.219,84.978,Instrumental & Melancholic
-Express Yourself,['Madonna'],2009,58,0,0.667,0.93,-4.585,0.0608,0.0108,0.0,0.176,0.893,115.57,Vocal-driven & Uplifting
-Girl Gone Wild,['Madonna'],2012,57,0,0.697,0.598,-5.883,0.0708,0.0331,5.98e-06,0.318,0.606,131.967,Vocal-driven & Uplifting
-Don't Cry for Me Argentina,['Madonna'],1996,56,0,0.217,0.146,-13.9,0.0373,0.901,4.49e-06,0.222,0.0847,75.922,Vocal-driven & Uplifting
-Take a Bow,['Madonna'],2009,56,0,0.549,0.408,-7.698,0.024,0.341,0.0,0.0764,0.319,80.133,Vocal-driven & Uplifting
-Don't Tell Me,['Madonna'],2000,55,0,0.699,0.618,-7.338,0.0594,0.0502,0.000925,0.0914,0.679,99.965,Vocal-driven & Uplifting
-Who's That Girl,['Madonna'],1987,55,0,0.625,0.646,-13.592,0.0389,0.214,0.0533,0.0525,0.826,103.893,Vocal-driven & Uplifting
-Take a Bow,['Madonna'],1994,55,0,0.568,0.366,-8.854,0.0258,0.417,3.39e-06,0.0664,0.311,79.98,Vocal-driven & Uplifting
-Celebration,['Madonna'],2009,55,0,0.637,0.891,-4.139,0.0345,0.0742,0.000622,0.0686,0.933,126.002,Vocal-driven & Uplifting
-4 Minutes (feat. Justin Timberlake and Timbaland),"['Madonna', 'Justin Timberlake', 'Timbaland']",2008,55,0,0.705,0.911,-4.873,0.0717,0.00592,0.00154,0.0603,0.803,113.032,Vocal-driven & Uplifting
-Get Together,['Madonna'],2005,55,0,0.364,0.71,-7.428,0.0972,0.00489,0.00315,0.0747,0.284,123.902,Vocal-driven & Uplifting
-Frozen,['Madonna'],2009,55,0,0.591,0.736,-7.722,0.0336,0.511,0.00304,0.179,0.29,108.011,Vocal-driven & Uplifting
-Lucky Star,['Madonna'],1983,55,0,0.793,0.627,-10.599,0.0431,0.266,7.1e-05,0.145,0.963,117.203,Vocal-driven & Uplifting
-Die Another Day,['Madonna'],2003,55,0,0.792,0.797,-5.166,0.0901,0.062,0.00325,0.0896,0.491,123.993,Vocal-driven & Uplifting
-Hung Up - Radio Version,['Madonna'],2005,54,0,0.622,0.71,-6.825,0.0448,0.00268,0.0498,0.0721,0.62,125.0,Vocal-driven & Uplifting
-Vogue - Edit,['Madonna'],1990,54,0,0.69,0.817,-10.137,0.0478,0.0109,0.00276,0.103,0.285,116.211,Vocal-driven & Uplifting
-Like a Virgin,['Madonna'],2009,53,0,0.775,0.8,-3.338,0.036,0.365,0.000216,0.0976,0.96,119.725,Vocal-driven & Uplifting
-Secret,['Madonna'],1994,53,0,0.813,0.655,-7.884,0.0262,0.101,6.65e-05,0.146,0.46,99.982,Vocal-driven & Uplifting
-I'll Remember (Theme from the Motion Picture With Honors),['Madonna'],1995,53,0,0.691,0.601,-9.698,0.0428,0.628,0.017,0.0709,0.85,167.796,Vocal-driven & Uplifting
-Beautiful Stranger,['Madonna'],2009,53,0,0.52,0.756,-3.909,0.0288,0.122,3.53e-05,0.389,0.286,122.448,Vocal-driven & Uplifting
-Give Me All Your Luvin',"['Madonna', 'Nicki Minaj', 'M.I.A.']",2012,53,0,0.68,0.885,-4.345,0.0382,0.00563,0.000756,0.379,0.877,144.998,Vocal-driven & Uplifting
-Rain,['Madonna'],1992,52,0,0.592,0.642,-9.38,0.026,0.0883,0.00134,0.131,0.16,92.419,Vocal-driven & Uplifting
-Sorry,['Madonna'],2006,52,0,0.603,0.846,-7.495,0.0318,0.00118,0.141,0.116,0.438,132.983,Vocal-driven & Uplifting
-Open Your Heart,['Madonna'],1986,52,0,0.619,0.876,-9.214,0.0417,0.0434,1.53e-05,0.0925,0.89,114.008,Vocal-driven & Uplifting
-Hollywood,['Madonna'],2003,52,0,0.647,0.588,-7.519,0.0401,0.0554,0.000225,0.277,0.604,125.992,Vocal-driven & Uplifting
-Justify My Love,['Madonna'],2009,51,1,0.705,0.821,-7.085,0.128,0.00244,0.684,0.0572,0.456,99.642,Instrumental & Melancholic
-You'll See,['Madonna'],1995,51,0,0.601,0.545,-9.972,0.0311,0.479,0.000224,0.0975,0.234,89.79,Vocal-driven & Uplifting
-Into the Groove - Edit,['Madonna'],1990,51,0,0.686,0.714,-9.533,0.0385,0.0237,0.0012,0.066,0.706,116.6,Vocal-driven & Uplifting
-Express Yourself,['Madonna'],1989,50,0,0.747,0.866,-10.529,0.0289,0.356,2.81e-05,0.0915,0.946,115.492,Vocal-driven & Uplifting
-La Isla Bonita - Extended Remix,"['Madonna', 'Chris Lord-Alge']",1986,50,0,0.73,0.737,-6.515,0.0333,0.202,5.83e-05,0.153,0.89,99.998,Vocal-driven & Uplifting
-Cherish,['Madonna'],1989,50,0,0.703,0.685,-11.581,0.033,0.323,0.000567,0.0537,0.963,131.842,Vocal-driven & Uplifting
-Nothing Really Matters,['Madonna'],1998,49,0,0.707,0.692,-6.937,0.0409,0.0534,0.00796,0.0649,0.248,116.868,Vocal-driven & Uplifting
-This Used to Be My Playground,['Madonna'],1995,49,0,0.499,0.308,-11.692,0.0264,0.754,0.000928,0.125,0.0708,75.91,Vocal-driven & Uplifting
-Holiday,['Madonna'],1990,48,0,0.816,0.65,-9.576,0.0497,0.0145,0.0105,0.103,0.723,117.551,Vocal-driven & Uplifting
-Angel,['Madonna'],1984,48,0,0.754,0.618,-13.66,0.0357,0.298,0.000207,0.345,0.836,133.237,Vocal-driven & Uplifting
-Like a Virgin,['Madonna'],1990,48,0,0.806,0.637,-7.876,0.0385,0.246,0.00102,0.0842,0.962,119.564,Vocal-driven & Uplifting
-Miles Away,['Madonna'],2008,48,0,0.782,0.71,-4.394,0.0382,0.0447,0.0,0.095,0.762,115.995,Vocal-driven & Uplifting
-Drowned World / Substitute for Love,['Madonna'],1998,48,2,0.539,0.308,-12.101,0.0413,0.727,0.207,0.107,0.131,139.901,Instrumental & Melodic
-Human Nature,['Madonna'],1994,47,2,0.691,0.571,-7.737,0.0347,0.0313,0.206,0.118,0.641,92.528,Instrumental & Melodic
-Causing a Commotion,['Madonna'],1987,47,0,0.771,0.749,-10.628,0.0401,0.216,0.00184,0.135,0.854,119.875,Vocal-driven & Uplifting
-Masterpiece,['Madonna'],2012,47,0,0.533,0.58,-7.008,0.0542,0.0023,0.0181,0.12,0.374,173.988,Vocal-driven & Uplifting
-Dress You Up,['Madonna'],1984,47,0,0.654,0.646,-10.056,0.0294,0.0324,0.0414,0.0965,0.863,136.194,Vocal-driven & Uplifting
-Material Girl,['Madonna'],1990,46,0,0.734,0.853,-7.697,0.0353,0.113,0.00011,0.0464,0.977,134.523,Vocal-driven & Uplifting
-Borderline,['Madonna'],1983,46,0,0.787,0.526,-12.692,0.0424,0.0259,0.000833,0.0469,0.612,118.979,Vocal-driven & Uplifting
-What It Feels Like for a Girl,['Madonna'],2000,46,0,0.67,0.627,-9.497,0.0478,0.201,0.00161,0.154,0.582,104.988,Vocal-driven & Uplifting
-Deeper and Deeper,['Madonna'],1992,46,2,0.659,0.818,-7.09,0.0265,0.00601,0.299,0.336,0.39,119.943,Instrumental & Melodic
-Live to Tell,['Madonna'],1990,46,0,0.627,0.363,-12.368,0.026,0.104,3.52e-06,0.127,0.259,110.07,Vocal-driven & Uplifting
-Borderline,['Madonna'],1983,45,0,0.787,0.895,-4.864,0.0368,0.252,0.00064,0.0729,0.452,119.356,Vocal-driven & Uplifting
-Dear Jessie,['Madonna'],1989,45,0,0.702,0.26,-16.885,0.0449,0.755,0.0,0.304,0.897,126.838,Vocal-driven & Uplifting
-Borderline - Remix,['Madonna'],1990,45,0,0.776,0.772,-10.352,0.039,0.333,0.000703,0.0829,0.498,119.465,Vocal-driven & Uplifting
-Justify My Love,['Madonna'],1990,45,1,0.698,0.662,-12.58,0.111,0.00213,0.703,0.047,0.503,99.661,Instrumental & Melancholic
-Like a Prayer,['Madonna'],1990,45,0,0.705,0.693,-10.122,0.0455,0.018,1.21e-06,0.441,0.444,111.872,Vocal-driven & Uplifting
-Love Profusion,['Madonna'],2003,45,0,0.702,0.467,-8.026,0.0403,0.239,3.69e-05,0.188,0.705,119.956,Vocal-driven & Uplifting
-La Isla Bonita - Remix,"['Madonna', 'Chris Lord-Alge']",1990,44,0,0.648,0.66,-10.841,0.0348,0.101,0.0,0.0717,0.89,100.021,Vocal-driven & Uplifting
-Pray for Spanish Eyes,['Madonna'],1989,44,0,0.703,0.319,-12.911,0.0272,0.36,0.0,0.0958,0.483,108.519,Vocal-driven & Uplifting
-Swim,['Madonna'],1998,43,0,0.618,0.476,-12.823,0.0345,0.584,0.0243,0.168,0.2,100.488,Vocal-driven & Uplifting
-Sky Fits Heaven,['Madonna'],1998,43,1,0.526,0.568,-10.504,0.038,0.0727,0.711,0.106,0.215,139.952,Instrumental & Melancholic
-Skin,['Madonna'],1998,43,1,0.572,0.806,-12.316,0.0643,0.339,0.832,0.0681,0.388,142.957,Instrumental & Melancholic
-To Have and Not to Hold,['Madonna'],1998,43,2,0.554,0.543,-12.417,0.0355,0.721,0.317,0.0659,0.654,88.038,Instrumental & Melodic
-Papa Don't Preach,['Madonna'],1990,43,0,0.811,0.816,-8.423,0.0344,0.459,0.0,0.0543,0.944,121.915,Vocal-driven & Uplifting
-Oh Father,['Madonna'],1989,43,0,0.576,0.268,-14.313,0.0294,0.547,5.17e-05,0.118,0.175,115.952,Vocal-driven & Uplifting
-Lucky Star,['Madonna'],1983,43,0,0.803,0.814,-4.579,0.0381,0.198,1.18e-05,0.223,0.933,117.08,Vocal-driven & Uplifting
-Express Yourself,['Madonna'],1990,43,0,0.697,0.765,-9.158,0.0505,0.00306,0.000105,0.125,0.626,115.496,Vocal-driven & Uplifting
-Burning Up,['Madonna'],1983,43,0,0.869,0.738,-4.566,0.11,0.0276,0.00102,0.262,0.988,138.329,Vocal-driven & Uplifting
-Erotica,['Madonna'],1992,43,2,0.639,0.676,-11.168,0.061,0.000576,0.434,0.26,0.231,101.956,Instrumental & Melodic
-Where's the Party,['Madonna'],1986,42,0,0.752,0.829,-8.658,0.0494,0.33,0.0,0.625,0.906,118.955,Vocal-driven & Uplifting
-Open Your Heart,['Madonna'],1990,42,0,0.671,0.752,-10.03,0.0418,0.0158,0.0,0.103,0.847,113.065,Vocal-driven & Uplifting
-Shanti / Ashtangi,['Madonna'],1998,42,0,0.641,0.771,-9.501,0.0403,0.0588,0.075,0.117,0.419,139.845,Vocal-driven & Uplifting
-Bedtime Story,['Madonna'],1994,42,2,0.712,0.612,-12.74,0.0441,0.831,0.441,0.118,0.526,112.028,Instrumental & Melodic
-Cherish,['Madonna'],1990,41,0,0.678,0.783,-8.288,0.0478,0.328,0.000133,0.047,0.802,132.017,Vocal-driven & Uplifting
-Over and Over,['Madonna'],1984,41,0,0.669,0.785,-10.883,0.0351,0.415,0.00288,0.0537,0.971,150.247,Vocal-driven & Uplifting
-Hanky Panky,['Madonna'],1990,41,0,0.637,0.626,-10.728,0.329,0.419,0.0,0.0543,0.485,169.969,Vocal-driven & Uplifting
-Lucky Star - US ReMix Version,['Madonna'],1990,41,0,0.786,0.528,-11.679,0.0508,0.0818,0.000109,0.261,0.92,117.381,Vocal-driven & Uplifting
-You Must Love Me,['Madonna'],1996,40,0,0.357,0.161,-14.789,0.0436,0.926,3.47e-05,0.146,0.267,88.746,Vocal-driven & Uplifting
-Love Don't Live Here Anymore,['Madonna'],1984,40,0,0.483,0.366,-14.394,0.0452,0.327,3.78e-05,0.325,0.356,140.358,Vocal-driven & Uplifting
-True Blue - The Color Mix,['Madonna'],1986,40,0,0.807,0.525,-13.366,0.086,0.0384,0.0625,0.0581,0.616,119.91,Vocal-driven & Uplifting
-Like a Virgin - Extended Dance Remix,['Madonna'],1984,40,0,0.839,0.458,-13.606,0.0555,0.0223,0.00357,0.13,0.972,119.447,Vocal-driven & Uplifting
-Into the Groove,"['Madonna', 'Shep Pettibone']",1987,40,0,0.799,0.638,-12.271,0.0564,0.0329,0.0227,0.0323,0.823,116.556,Vocal-driven & Uplifting
-Everybody - Original Version,['Madonna'],1983,39,0,0.921,0.782,-4.998,0.039,0.0205,0.000894,0.0437,0.616,119.982,Vocal-driven & Uplifting
-Material Girl - Extended Dance Remix,['Madonna'],1984,39,0,0.735,0.74,-12.647,0.0519,0.208,0.000138,0.0763,0.964,136.42,Vocal-driven & Uplifting
-"Vogue - 12"" Version",['Madonna'],1990,39,0,0.684,0.615,-15.083,0.0489,0.00429,0.114,0.202,0.502,116.213,Vocal-driven & Uplifting
-Rescue Me,['Madonna'],1990,39,0,0.725,0.652,-10.017,0.05,0.0201,6.76e-05,0.108,0.355,117.946,Vocal-driven & Uplifting
-White Heat,['Madonna'],1986,39,0,0.67,0.696,-15.278,0.0586,0.479,0.0259,0.107,0.903,108.517,Vocal-driven & Uplifting
-Bad Girl,['Madonna'],1992,39,0,0.645,0.484,-11.233,0.0396,0.0211,3.88e-06,0.0495,0.52,146.897,Vocal-driven & Uplifting
-Fever,['Madonna'],1992,39,0,0.778,0.727,-10.296,0.0524,0.0663,0.0196,0.0923,0.549,115.94,Vocal-driven & Uplifting
-Amazing,['Madonna'],2000,39,0,0.563,0.842,-7.029,0.0552,0.00368,0.000472,0.101,0.41,135.012,Vocal-driven & Uplifting
-Where Life Begins,['Madonna'],1992,39,2,0.687,0.716,-10.745,0.0351,0.0257,0.282,0.113,0.83,99.983,Instrumental & Melodic
-Buenos Aires,['Madonna'],1996,38,0,0.772,0.805,-8.363,0.0848,0.116,0.000349,0.0759,0.657,122.95,Vocal-driven & Uplifting
-Survival,['Madonna'],1994,38,0,0.732,0.623,-9.004,0.0334,0.106,0.0,0.0704,0.736,94.994,Vocal-driven & Uplifting
-Another Suitcase in Another Hall,['Madonna'],1996,38,0,0.52,0.248,-14.166,0.0353,0.848,1.75e-05,0.112,0.228,125.956,Vocal-driven & Uplifting
-Oh What a Circus,"['Antonio Banderas', 'Madonna']",1996,38,0,0.36,0.492,-10.325,0.0431,0.811,0.0,0.276,0.302,135.455,Vocal-driven & Uplifting
-Keep It Together,['Madonna'],1989,38,0,0.719,0.819,-10.579,0.0448,0.231,0.0222,0.0808,0.794,103.078,Vocal-driven & Uplifting
-Physical Attraction,['Madonna'],1983,37,0,0.881,0.562,-13.091,0.0759,0.188,0.0461,0.172,0.947,120.199,Vocal-driven & Uplifting
-Jimmy Jimmy,['Madonna'],1986,37,0,0.674,0.671,-11.075,0.0342,0.144,0.00272,0.102,0.963,151.079,Vocal-driven & Uplifting
-Love Makes the World Go Round,['Madonna'],1986,37,0,0.775,0.759,-9.502,0.0339,0.236,0.0,0.197,0.97,121.9,Vocal-driven & Uplifting
-Till Death Do Us Part,['Madonna'],1989,37,0,0.615,0.783,-11.862,0.0289,0.112,0.0011,0.0428,0.977,143.783,Vocal-driven & Uplifting
-Don't Stop,"['Madonna', 'Daniel Abraham']",1994,36,0,0.733,0.789,-7.95,0.0584,0.00227,0.000622,0.0618,0.622,94.858,Vocal-driven & Uplifting
-I'd Be Surprisingly Good for You,"['Madonna', 'Jonathan Pryce']",1996,36,0,0.568,0.291,-13.888,0.047,0.871,0.0,0.0888,0.425,100.647,Vocal-driven & Uplifting
-The Look of Love,['Madonna'],1987,36,0,0.531,0.665,-14.231,0.0312,0.379,0.0,0.0916,0.752,91.93,Vocal-driven & Uplifting
-Spotlight,"['Madonna', 'Jellybean Benitiz']",1987,36,0,0.736,0.714,-11.136,0.0349,0.141,4.89e-06,0.0406,0.97,117.96,Vocal-driven & Uplifting
-Promise to Try,['Madonna'],1989,36,0,0.344,0.0659,-21.976,0.0428,0.922,2.89e-06,0.128,0.379,113.972,Vocal-driven & Uplifting
-Shoo-Bee-Doo,['Madonna'],1984,36,0,0.608,0.588,-11.973,0.0411,0.689,8.38e-06,0.0796,0.483,94.156,Vocal-driven & Uplifting
-Stay,['Madonna'],1984,36,0,0.715,0.706,-12.249,0.0453,0.464,0.0,0.357,0.85,118.419,Vocal-driven & Uplifting
-"High Flying, Adored","['Antonio Banderas', 'Madonna']",1996,36,0,0.686,0.372,-11.961,0.0358,0.639,0.0,0.132,0.307,122.953,Vocal-driven & Uplifting
-Love Song,['Madonna'],1989,35,0,0.771,0.457,-12.277,0.255,0.434,0.000179,0.135,0.675,158.558,Vocal-driven & Uplifting
-"Burning Up - 12"" Version","['Madonna', 'John ""Jellybean"" Benitez']",1983,35,0,0.872,0.811,-11.483,0.0453,0.0975,0.00287,0.0782,0.971,139.325,Vocal-driven & Uplifting
-Pretender,['Madonna'],1984,35,0,0.843,0.635,-12.244,0.0327,0.444,0.0,0.0607,0.843,111.128,Vocal-driven & Uplifting
-Goodnight and Thank You,"['Antonio Banderas', 'Madonna']",1996,35,0,0.388,0.617,-9.627,0.0436,0.691,0.0,0.0893,0.842,73.817,Vocal-driven & Uplifting
-Physical Attraction,['Madonna'],1983,34,0,0.907,0.641,-7.694,0.0746,0.0436,0.0138,0.184,0.932,119.2,Vocal-driven & Uplifting
-Bye Bye Baby,['Madonna'],1992,34,1,0.757,0.612,-9.986,0.0356,0.000905,0.85,0.0926,0.431,108.619,Instrumental & Melancholic
-Think of Me,['Madonna'],1983,34,2,0.832,0.724,-5.971,0.0403,0.0297,0.188,0.0334,0.89,118.411,Instrumental & Melodic
-Lucky Star - New Mix,['Madonna'],1983,33,0,0.801,0.722,-4.509,0.0444,0.068,0.000207,0.284,0.907,117.256,Vocal-driven & Uplifting
-Sooner or Later,['Madonna'],1990,33,0,0.488,0.189,-14.479,0.0288,0.632,1.28e-05,0.105,0.194,71.39,Vocal-driven & Uplifting
-Waiting,['Madonna'],1992,33,0,0.745,0.622,-8.164,0.0389,0.187,0.00278,0.0731,0.745,95.766,Vocal-driven & Uplifting
-Holiday,['Madonna'],1987,32,0,0.709,0.764,-10.948,0.0356,0.242,0.00599,0.0521,0.883,117.635,Vocal-driven & Uplifting
-Thief of Hearts,['Madonna'],1992,32,0,0.809,0.655,-8.479,0.0318,0.00449,0.0377,0.0622,0.471,117.952,Vocal-driven & Uplifting
-Can't Stop,['Madonna'],1987,31,0,0.737,0.798,-10.415,0.0295,0.0269,2.61e-06,0.297,0.586,114.999,Vocal-driven & Uplifting
-I Know It,['Madonna'],1983,31,0,0.877,0.423,-12.084,0.0405,0.216,0.00177,0.0838,0.62,128.375,Vocal-driven & Uplifting
-Act of Contrition,['Madonna'],1989,31,0,0.574,0.87,-15.162,0.281,0.0701,1.36e-05,0.825,0.209,110.934,Vocal-driven & Uplifting
-Why's It so Hard,['Madonna'],1992,30,0,0.612,0.617,-9.079,0.0378,0.00251,0.0473,0.0967,0.239,80.93,Vocal-driven & Uplifting
-Words,['Madonna'],1992,30,0,0.712,0.708,-9.277,0.0296,0.0094,0.00614,0.114,0.521,116.253,Vocal-driven & Uplifting
-Santa Baby,['Madonna'],1987,30,0,0.618,0.32,-12.977,0.0476,0.586,0.0,0.364,0.602,113.825,Vocal-driven & Uplifting
-In This Life,['Madonna'],1992,29,0,0.493,0.449,-10.437,0.0277,0.00557,0.000268,0.183,0.0856,146.282,Vocal-driven & Uplifting
-Something to Remember,['Madonna'],1990,28,0,0.545,0.382,-8.851,0.0241,0.753,6.81e-05,0.105,0.113,137.988,Vocal-driven & Uplifting
-He's a Man,['Madonna'],1990,28,0,0.638,0.639,-9.675,0.0313,0.543,0.0,0.0989,0.409,111.03,Vocal-driven & Uplifting
-Back in Business,['Madonna'],1990,27,0,0.559,0.622,-9.947,0.0936,0.521,7.13e-05,0.0888,0.424,174.651,Vocal-driven & Uplifting
-I'm Going Bananas,['Madonna'],1990,27,0,0.666,0.659,-8.556,0.105,0.325,8.22e-06,0.084,0.921,103.838,Vocal-driven & Uplifting
-Now I'm Following You (Part I),['Madonna'],1990,27,0,0.609,0.351,-12.451,0.0295,0.725,0.0,0.575,0.691,75.934,Vocal-driven & Uplifting
-More,['Madonna'],1990,27,0,0.632,0.356,-10.683,0.0955,0.569,0.0,0.068,0.554,104.625,Vocal-driven & Uplifting
-Cry Baby,['Madonna'],1990,26,0,0.836,0.144,-13.715,0.0536,0.804,5.49e-05,0.0666,0.571,138.128,Vocal-driven & Uplifting
-What Can You Lose,['Madonna'],1990,26,0,0.427,0.127,-18.956,0.0352,0.967,0.000282,0.129,0.255,102.785,Vocal-driven & Uplifting
-Now I'm Following You (Pt. 2),['Madonna'],1990,25,0,0.686,0.817,-8.906,0.0679,0.058,0.0241,0.157,0.782,98.978,Vocal-driven & Uplifting
-Over and Over - Extended Version,['Madonna'],1987,25,2,0.769,0.817,-10.768,0.0533,0.366,0.372,0.08,0.944,149.178,Instrumental & Melodic
-Justify My Love - The Beast Within Mix,"['Madonna', 'Lenny Kravitz']",1990,23,1,0.694,0.85,-11.339,0.0787,0.377,0.615,0.247,0.535,96.123,Instrumental & Melancholic
-Vogue - Bette Davis Dub,['Madonna'],1990,23,1,0.667,0.706,-14.302,0.0395,0.00364,0.75,0.0647,0.126,116.15,Instrumental & Melancholic
-Vogue - Strike-A-Pose Dub,['Madonna'],1990,22,1,0.721,0.549,-17.095,0.0663,0.00134,0.834,0.317,0.191,116.118,Instrumental & Melancholic
-Express Yourself - Shep's 'Spressin Himself Re-Remix,"['Madonna', 'Shep Pettibone']",1990,20,0,0.76,0.714,-11.93,0.0479,0.0101,0.00114,0.0697,0.59,115.854,Vocal-driven & Uplifting
-Justify My Love - Orbit Edit,"['Madonna', 'William Orbit']",1990,20,1,0.787,0.619,-13.473,0.0649,0.00188,0.77,0.0991,0.474,99.613,Instrumental & Melancholic
-Justify My Love - Hip Hop Mix,"['Madonna', 'Andre Betts']",1990,19,1,0.855,0.519,-13.12,0.215,0.0244,0.855,0.0756,0.496,95.927,Instrumental & Melancholic
-Hanky Panky - Bare Bones Single Mix,"['Madonna', 'Kevin Gilbert']",1990,19,0,0.638,0.844,-7.975,0.0652,0.21,0.0,0.0721,0.819,170.281,Vocal-driven & Uplifting
-"Hanky Panky - Bare Bottom 12"" Mix","['Madonna', 'Kevin Gilbert']",1990,17,0,0.672,0.837,-8.43,0.0677,0.0487,0.0,0.0545,0.929,170.152,Vocal-driven & Uplifting
+Hung Up,['Madonna'],2005,75,2,0.649,0.647,-7.695,0.0452,0.0039,0.161,0.0686,0.405,125.02,Instrumental & Produced
+Material Girl,['Madonna'],2009,74,3,0.742,0.883,-3.419,0.0329,0.333,7.51e-06,0.0964,0.978,136.506,Bold & Energetic
+Like a Prayer,['Madonna'],2009,73,3,0.624,0.842,-5.285,0.0376,0.264,2.11e-05,0.181,0.257,111.037,Bold & Energetic
+Like a Virgin,['Madonna'],1984,73,1,0.771,0.655,-10.842,0.0372,0.152,0.00197,0.0685,0.97,119.747,Uplifting & Danceable
+La Isla Bonita,['Madonna'],1986,72,1,0.725,0.612,-10.706,0.0372,0.302,1.63e-05,0.0548,0.965,99.978,Uplifting & Danceable
+4 Minutes (feat. Justin Timberlake & Timbaland),"['Madonna', 'Justin Timberlake', 'Timbaland']",2009,71,3,0.753,0.931,-4.922,0.0652,0.00994,0.00696,0.234,0.767,113.029,Bold & Energetic
+Vogue,['Madonna'],2009,68,3,0.737,0.88,-6.449,0.0433,0.00379,0.00351,0.417,0.329,115.998,Bold & Energetic
+Like a Prayer,['Madonna'],1989,66,0,0.66,0.629,-12.359,0.0387,0.432,7.3e-05,0.172,0.324,111.926,Acoustic & Mellow
+Papa Don't Preach,['Madonna'],1986,66,1,0.807,0.906,-8.973,0.0371,0.311,0.000791,0.0248,0.971,121.54,Uplifting & Danceable
+Crazy for You,['Madonna'],2009,65,3,0.662,0.719,-6.606,0.0298,0.107,0.0,0.102,0.511,95.001,Bold & Energetic
+Into the Groove,['Madonna'],2009,64,3,0.729,0.856,-4.164,0.035,0.0658,0.00832,0.0691,0.804,116.467,Bold & Energetic
+Holiday,['Madonna'],2009,63,3,0.854,0.796,-5.567,0.0399,0.0542,0.00184,0.151,0.946,115.625,Bold & Energetic
+Frozen,['Madonna'],1998,63,0,0.602,0.616,-10.917,0.0353,0.662,0.0153,0.149,0.31,108.017,Acoustic & Mellow
+Me Against the Music (feat. Madonna) - LP Version / Video Mix,"['Britney Spears', 'Madonna']",2003,62,3,0.804,0.836,-6.635,0.089,0.32,0.0,0.213,0.85,120.046,Bold & Energetic
+Sorry,['Madonna'],2005,62,3,0.589,0.877,-6.229,0.046,0.00121,0.013,0.169,0.443,132.971,Bold & Energetic
+Bitch I'm Madonna,"['Madonna', 'Nicki Minaj']",2015,62,3,0.722,0.63,-5.784,0.132,0.0485,0.000294,0.179,0.519,150.023,Bold & Energetic
+Vogue,['Madonna'],1990,62,3,0.748,0.84,-7.701,0.0421,0.00348,0.00647,0.44,0.304,115.997,Bold & Energetic
+American Pie,['Madonna'],2000,61,3,0.631,0.734,-7.48,0.036,0.348,0.0,0.135,0.591,124.036,Bold & Energetic
+Holiday,['Madonna'],1983,61,1,0.813,0.699,-8.656,0.0458,0.0251,0.0135,0.0527,0.732,117.548,Uplifting & Danceable
+True Blue,['Madonna'],1986,60,1,0.799,0.773,-10.035,0.0393,0.261,2.58e-06,0.044,0.896,118.045,Uplifting & Danceable
+Music,['Madonna'],2000,60,2,0.736,0.802,-8.527,0.0663,0.00149,0.0876,0.14,0.871,119.854,Instrumental & Produced
+Ray of Light,['Madonna'],1998,60,2,0.561,0.909,-7.878,0.0312,0.00118,0.46,0.0713,0.71,127.172,Instrumental & Produced
+Live to Tell,['Madonna'],1986,59,0,0.673,0.314,-14.156,0.0279,0.411,0.0334,0.107,0.27,109.841,Acoustic & Mellow
+Jump,['Madonna'],2005,59,2,0.629,0.839,-7.061,0.0899,0.0018,0.0859,0.251,0.449,118.979,Instrumental & Produced
+Hung Up,['Madonna'],2009,59,2,0.64,0.646,-7.572,0.0497,0.00364,0.165,0.0912,0.415,124.992,Instrumental & Produced
+Give It 2 Me,['Madonna'],2008,59,3,0.837,0.954,-3.512,0.0414,0.0933,0.000405,0.143,0.972,127.019,Bold & Energetic
+Crazy for You - Edit,['Madonna'],1990,59,0,0.672,0.549,-11.93,0.029,0.168,0.0,0.102,0.588,95.01,Acoustic & Mellow
+Borderline,['Madonna'],2009,58,3,0.807,0.764,-5.186,0.0312,0.082,3.87e-05,0.115,0.371,119.867,Bold & Energetic
+The Power of Good-Bye,['Madonna'],1998,58,2,0.534,0.561,-11.089,0.0409,0.0442,0.678,0.189,0.219,84.978,Instrumental & Produced
+Express Yourself,['Madonna'],2009,58,3,0.667,0.93,-4.585,0.0608,0.0108,0.0,0.176,0.893,115.57,Bold & Energetic
+Girl Gone Wild,['Madonna'],2012,57,3,0.697,0.598,-5.883,0.0708,0.0331,5.98e-06,0.318,0.606,131.967,Bold & Energetic
+Don't Cry for Me Argentina,['Madonna'],1996,56,0,0.217,0.146,-13.9,0.0373,0.901,4.49e-06,0.222,0.0847,75.922,Acoustic & Mellow
+Take a Bow,['Madonna'],2009,56,0,0.549,0.408,-7.698,0.024,0.341,0.0,0.0764,0.319,80.133,Acoustic & Mellow
+Don't Tell Me,['Madonna'],2000,55,3,0.699,0.618,-7.338,0.0594,0.0502,0.000925,0.0914,0.679,99.965,Bold & Energetic
+Who's That Girl,['Madonna'],1987,55,1,0.625,0.646,-13.592,0.0389,0.214,0.0533,0.0525,0.826,103.893,Uplifting & Danceable
+Take a Bow,['Madonna'],1994,55,0,0.568,0.366,-8.854,0.0258,0.417,3.39e-06,0.0664,0.311,79.98,Acoustic & Mellow
+Celebration,['Madonna'],2009,55,3,0.637,0.891,-4.139,0.0345,0.0742,0.000622,0.0686,0.933,126.002,Bold & Energetic
+4 Minutes (feat. Justin Timberlake and Timbaland),"['Madonna', 'Justin Timberlake', 'Timbaland']",2008,55,3,0.705,0.911,-4.873,0.0717,0.00592,0.00154,0.0603,0.803,113.032,Bold & Energetic
+Get Together,['Madonna'],2005,55,3,0.364,0.71,-7.428,0.0972,0.00489,0.00315,0.0747,0.284,123.902,Bold & Energetic
+Frozen,['Madonna'],2009,55,0,0.591,0.736,-7.722,0.0336,0.511,0.00304,0.179,0.29,108.011,Acoustic & Mellow
+Lucky Star,['Madonna'],1983,55,1,0.793,0.627,-10.599,0.0431,0.266,7.1e-05,0.145,0.963,117.203,Uplifting & Danceable
+Die Another Day,['Madonna'],2003,55,3,0.792,0.797,-5.166,0.0901,0.062,0.00325,0.0896,0.491,123.993,Bold & Energetic
+Hung Up - Radio Version,['Madonna'],2005,54,2,0.622,0.71,-6.825,0.0448,0.00268,0.0498,0.0721,0.62,125.0,Instrumental & Produced
+Vogue - Edit,['Madonna'],1990,54,3,0.69,0.817,-10.137,0.0478,0.0109,0.00276,0.103,0.285,116.211,Bold & Energetic
+Like a Virgin,['Madonna'],2009,53,3,0.775,0.8,-3.338,0.036,0.365,0.000216,0.0976,0.96,119.725,Bold & Energetic
+Secret,['Madonna'],1994,53,3,0.813,0.655,-7.884,0.0262,0.101,6.65e-05,0.146,0.46,99.982,Bold & Energetic
+I'll Remember (Theme from the Motion Picture With Honors),['Madonna'],1995,53,1,0.691,0.601,-9.698,0.0428,0.628,0.017,0.0709,0.85,167.796,Uplifting & Danceable
+Beautiful Stranger,['Madonna'],2009,53,3,0.52,0.756,-3.909,0.0288,0.122,3.53e-05,0.389,0.286,122.448,Bold & Energetic
+Give Me All Your Luvin',"['Madonna', 'Nicki Minaj', 'M.I.A.']",2012,53,3,0.68,0.885,-4.345,0.0382,0.00563,0.000756,0.379,0.877,144.998,Bold & Energetic
+Rain,['Madonna'],1992,52,0,0.592,0.642,-9.38,0.026,0.0883,0.00134,0.131,0.16,92.419,Acoustic & Mellow
+Sorry,['Madonna'],2006,52,2,0.603,0.846,-7.495,0.0318,0.00118,0.141,0.116,0.438,132.983,Instrumental & Produced
+Open Your Heart,['Madonna'],1986,52,3,0.619,0.876,-9.214,0.0417,0.0434,1.53e-05,0.0925,0.89,114.008,Bold & Energetic
+Hollywood,['Madonna'],2003,52,3,0.647,0.588,-7.519,0.0401,0.0554,0.000225,0.277,0.604,125.992,Bold & Energetic
+Justify My Love,['Madonna'],2009,51,2,0.705,0.821,-7.085,0.128,0.00244,0.684,0.0572,0.456,99.642,Instrumental & Produced
+You'll See,['Madonna'],1995,51,0,0.601,0.545,-9.972,0.0311,0.479,0.000224,0.0975,0.234,89.79,Acoustic & Mellow
+Into the Groove - Edit,['Madonna'],1990,51,1,0.686,0.714,-9.533,0.0385,0.0237,0.0012,0.066,0.706,116.6,Uplifting & Danceable
+Express Yourself,['Madonna'],1989,50,1,0.747,0.866,-10.529,0.0289,0.356,2.81e-05,0.0915,0.946,115.492,Uplifting & Danceable
+La Isla Bonita - Extended Remix,"['Madonna', 'Chris Lord-Alge']",1986,50,3,0.73,0.737,-6.515,0.0333,0.202,5.83e-05,0.153,0.89,99.998,Bold & Energetic
+Cherish,['Madonna'],1989,50,1,0.703,0.685,-11.581,0.033,0.323,0.000567,0.0537,0.963,131.842,Uplifting & Danceable
+Nothing Really Matters,['Madonna'],1998,49,3,0.707,0.692,-6.937,0.0409,0.0534,0.00796,0.0649,0.248,116.868,Bold & Energetic
+This Used to Be My Playground,['Madonna'],1995,49,0,0.499,0.308,-11.692,0.0264,0.754,0.000928,0.125,0.0708,75.91,Acoustic & Mellow
+Holiday,['Madonna'],1990,48,1,0.816,0.65,-9.576,0.0497,0.0145,0.0105,0.103,0.723,117.551,Uplifting & Danceable
+Angel,['Madonna'],1984,48,1,0.754,0.618,-13.66,0.0357,0.298,0.000207,0.345,0.836,133.237,Uplifting & Danceable
+Like a Virgin,['Madonna'],1990,48,1,0.806,0.637,-7.876,0.0385,0.246,0.00102,0.0842,0.962,119.564,Uplifting & Danceable
+Miles Away,['Madonna'],2008,48,3,0.782,0.71,-4.394,0.0382,0.0447,0.0,0.095,0.762,115.995,Bold & Energetic
+Drowned World / Substitute for Love,['Madonna'],1998,48,0,0.539,0.308,-12.101,0.0413,0.727,0.207,0.107,0.131,139.901,Acoustic & Mellow
+Human Nature,['Madonna'],1994,47,2,0.691,0.571,-7.737,0.0347,0.0313,0.206,0.118,0.641,92.528,Instrumental & Produced
+Causing a Commotion,['Madonna'],1987,47,1,0.771,0.749,-10.628,0.0401,0.216,0.00184,0.135,0.854,119.875,Uplifting & Danceable
+Masterpiece,['Madonna'],2012,47,3,0.533,0.58,-7.008,0.0542,0.0023,0.0181,0.12,0.374,173.988,Bold & Energetic
+Dress You Up,['Madonna'],1984,47,1,0.654,0.646,-10.056,0.0294,0.0324,0.0414,0.0965,0.863,136.194,Uplifting & Danceable
+Material Girl,['Madonna'],1990,46,1,0.734,0.853,-7.697,0.0353,0.113,0.00011,0.0464,0.977,134.523,Uplifting & Danceable
+Borderline,['Madonna'],1983,46,1,0.787,0.526,-12.692,0.0424,0.0259,0.000833,0.0469,0.612,118.979,Uplifting & Danceable
+What It Feels Like for a Girl,['Madonna'],2000,46,3,0.67,0.627,-9.497,0.0478,0.201,0.00161,0.154,0.582,104.988,Bold & Energetic
+Deeper and Deeper,['Madonna'],1992,46,2,0.659,0.818,-7.09,0.0265,0.00601,0.299,0.336,0.39,119.943,Instrumental & Produced
+Live to Tell,['Madonna'],1990,46,0,0.627,0.363,-12.368,0.026,0.104,3.52e-06,0.127,0.259,110.07,Acoustic & Mellow
+Borderline,['Madonna'],1983,45,3,0.787,0.895,-4.864,0.0368,0.252,0.00064,0.0729,0.452,119.356,Bold & Energetic
+Dear Jessie,['Madonna'],1989,45,0,0.702,0.26,-16.885,0.0449,0.755,0.0,0.304,0.897,126.838,Acoustic & Mellow
+Borderline - Remix,['Madonna'],1990,45,1,0.776,0.772,-10.352,0.039,0.333,0.000703,0.0829,0.498,119.465,Uplifting & Danceable
+Justify My Love,['Madonna'],1990,45,2,0.698,0.662,-12.58,0.111,0.00213,0.703,0.047,0.503,99.661,Instrumental & Produced
+Like a Prayer,['Madonna'],1990,45,3,0.705,0.693,-10.122,0.0455,0.018,1.21e-06,0.441,0.444,111.872,Bold & Energetic
+Love Profusion,['Madonna'],2003,45,3,0.702,0.467,-8.026,0.0403,0.239,3.69e-05,0.188,0.705,119.956,Bold & Energetic
+La Isla Bonita - Remix,"['Madonna', 'Chris Lord-Alge']",1990,44,1,0.648,0.66,-10.841,0.0348,0.101,0.0,0.0717,0.89,100.021,Uplifting & Danceable
+Pray for Spanish Eyes,['Madonna'],1989,44,0,0.703,0.319,-12.911,0.0272,0.36,0.0,0.0958,0.483,108.519,Acoustic & Mellow
+Swim,['Madonna'],1998,43,0,0.618,0.476,-12.823,0.0345,0.584,0.0243,0.168,0.2,100.488,Acoustic & Mellow
+Sky Fits Heaven,['Madonna'],1998,43,2,0.526,0.568,-10.504,0.038,0.0727,0.711,0.106,0.215,139.952,Instrumental & Produced
+Skin,['Madonna'],1998,43,2,0.572,0.806,-12.316,0.0643,0.339,0.832,0.0681,0.388,142.957,Instrumental & Produced
+To Have and Not to Hold,['Madonna'],1998,43,0,0.554,0.543,-12.417,0.0355,0.721,0.317,0.0659,0.654,88.038,Acoustic & Mellow
+Papa Don't Preach,['Madonna'],1990,43,1,0.811,0.816,-8.423,0.0344,0.459,0.0,0.0543,0.944,121.915,Uplifting & Danceable
+Oh Father,['Madonna'],1989,43,0,0.576,0.268,-14.313,0.0294,0.547,5.17e-05,0.118,0.175,115.952,Acoustic & Mellow
+Lucky Star,['Madonna'],1983,43,3,0.803,0.814,-4.579,0.0381,0.198,1.18e-05,0.223,0.933,117.08,Bold & Energetic
+Express Yourself,['Madonna'],1990,43,3,0.697,0.765,-9.158,0.0505,0.00306,0.000105,0.125,0.626,115.496,Bold & Energetic
+Burning Up,['Madonna'],1983,43,3,0.869,0.738,-4.566,0.11,0.0276,0.00102,0.262,0.988,138.329,Bold & Energetic
+Erotica,['Madonna'],1992,43,2,0.639,0.676,-11.168,0.061,0.000576,0.434,0.26,0.231,101.956,Instrumental & Produced
+Where's the Party,['Madonna'],1986,42,3,0.752,0.829,-8.658,0.0494,0.33,0.0,0.625,0.906,118.955,Bold & Energetic
+Open Your Heart,['Madonna'],1990,42,1,0.671,0.752,-10.03,0.0418,0.0158,0.0,0.103,0.847,113.065,Uplifting & Danceable
+Shanti / Ashtangi,['Madonna'],1998,42,2,0.641,0.771,-9.501,0.0403,0.0588,0.075,0.117,0.419,139.845,Instrumental & Produced
+Bedtime Story,['Madonna'],1994,42,2,0.712,0.612,-12.74,0.0441,0.831,0.441,0.118,0.526,112.028,Instrumental & Produced
+Cherish,['Madonna'],1990,41,1,0.678,0.783,-8.288,0.0478,0.328,0.000133,0.047,0.802,132.017,Uplifting & Danceable
+Over and Over,['Madonna'],1984,41,1,0.669,0.785,-10.883,0.0351,0.415,0.00288,0.0537,0.971,150.247,Uplifting & Danceable
+Hanky Panky,['Madonna'],1990,41,1,0.637,0.626,-10.728,0.329,0.419,0.0,0.0543,0.485,169.969,Uplifting & Danceable
+Lucky Star - US ReMix Version,['Madonna'],1990,41,1,0.786,0.528,-11.679,0.0508,0.0818,0.000109,0.261,0.92,117.381,Uplifting & Danceable
+You Must Love Me,['Madonna'],1996,40,0,0.357,0.161,-14.789,0.0436,0.926,3.47e-05,0.146,0.267,88.746,Acoustic & Mellow
+Love Don't Live Here Anymore,['Madonna'],1984,40,0,0.483,0.366,-14.394,0.0452,0.327,3.78e-05,0.325,0.356,140.358,Acoustic & Mellow
+True Blue - The Color Mix,['Madonna'],1986,40,2,0.807,0.525,-13.366,0.086,0.0384,0.0625,0.0581,0.616,119.91,Instrumental & Produced
+Like a Virgin - Extended Dance Remix,['Madonna'],1984,40,1,0.839,0.458,-13.606,0.0555,0.0223,0.00357,0.13,0.972,119.447,Uplifting & Danceable
+Into the Groove,"['Madonna', 'Shep Pettibone']",1987,40,1,0.799,0.638,-12.271,0.0564,0.0329,0.0227,0.0323,0.823,116.556,Uplifting & Danceable
+Everybody - Original Version,['Madonna'],1983,39,3,0.921,0.782,-4.998,0.039,0.0205,0.000894,0.0437,0.616,119.982,Bold & Energetic
+Material Girl - Extended Dance Remix,['Madonna'],1984,39,1,0.735,0.74,-12.647,0.0519,0.208,0.000138,0.0763,0.964,136.42,Uplifting & Danceable
+"Vogue - 12"" Version",['Madonna'],1990,39,2,0.684,0.615,-15.083,0.0489,0.00429,0.114,0.202,0.502,116.213,Instrumental & Produced
+Rescue Me,['Madonna'],1990,39,3,0.725,0.652,-10.017,0.05,0.0201,6.76e-05,0.108,0.355,117.946,Bold & Energetic
+White Heat,['Madonna'],1986,39,1,0.67,0.696,-15.278,0.0586,0.479,0.0259,0.107,0.903,108.517,Uplifting & Danceable
+Bad Girl,['Madonna'],1992,39,1,0.645,0.484,-11.233,0.0396,0.0211,3.88e-06,0.0495,0.52,146.897,Uplifting & Danceable
+Fever,['Madonna'],1992,39,1,0.778,0.727,-10.296,0.0524,0.0663,0.0196,0.0923,0.549,115.94,Uplifting & Danceable
+Amazing,['Madonna'],2000,39,3,0.563,0.842,-7.029,0.0552,0.00368,0.000472,0.101,0.41,135.012,Bold & Energetic
+Where Life Begins,['Madonna'],1992,39,2,0.687,0.716,-10.745,0.0351,0.0257,0.282,0.113,0.83,99.983,Instrumental & Produced
+Buenos Aires,['Madonna'],1996,38,3,0.772,0.805,-8.363,0.0848,0.116,0.000349,0.0759,0.657,122.95,Bold & Energetic
+Survival,['Madonna'],1994,38,1,0.732,0.623,-9.004,0.0334,0.106,0.0,0.0704,0.736,94.994,Uplifting & Danceable
+Another Suitcase in Another Hall,['Madonna'],1996,38,0,0.52,0.248,-14.166,0.0353,0.848,1.75e-05,0.112,0.228,125.956,Acoustic & Mellow
+Oh What a Circus,"['Antonio Banderas', 'Madonna']",1996,38,0,0.36,0.492,-10.325,0.0431,0.811,0.0,0.276,0.302,135.455,Acoustic & Mellow
+Keep It Together,['Madonna'],1989,38,1,0.719,0.819,-10.579,0.0448,0.231,0.0222,0.0808,0.794,103.078,Uplifting & Danceable
+Physical Attraction,['Madonna'],1983,37,1,0.881,0.562,-13.091,0.0759,0.188,0.0461,0.172,0.947,120.199,Uplifting & Danceable
+Jimmy Jimmy,['Madonna'],1986,37,1,0.674,0.671,-11.075,0.0342,0.144,0.00272,0.102,0.963,151.079,Uplifting & Danceable
+Love Makes the World Go Round,['Madonna'],1986,37,1,0.775,0.759,-9.502,0.0339,0.236,0.0,0.197,0.97,121.9,Uplifting & Danceable
+Till Death Do Us Part,['Madonna'],1989,37,1,0.615,0.783,-11.862,0.0289,0.112,0.0011,0.0428,0.977,143.783,Uplifting & Danceable
+Don't Stop,"['Madonna', 'Daniel Abraham']",1994,36,3,0.733,0.789,-7.95,0.0584,0.00227,0.000622,0.0618,0.622,94.858,Bold & Energetic
+I'd Be Surprisingly Good for You,"['Madonna', 'Jonathan Pryce']",1996,36,0,0.568,0.291,-13.888,0.047,0.871,0.0,0.0888,0.425,100.647,Acoustic & Mellow
+The Look of Love,['Madonna'],1987,36,0,0.531,0.665,-14.231,0.0312,0.379,0.0,0.0916,0.752,91.93,Acoustic & Mellow
+Spotlight,"['Madonna', 'Jellybean Benitiz']",1987,36,1,0.736,0.714,-11.136,0.0349,0.141,4.89e-06,0.0406,0.97,117.96,Uplifting & Danceable
+Promise to Try,['Madonna'],1989,36,0,0.344,0.0659,-21.976,0.0428,0.922,2.89e-06,0.128,0.379,113.972,Acoustic & Mellow
+Shoo-Bee-Doo,['Madonna'],1984,36,0,0.608,0.588,-11.973,0.0411,0.689,8.38e-06,0.0796,0.483,94.156,Acoustic & Mellow
+Stay,['Madonna'],1984,36,1,0.715,0.706,-12.249,0.0453,0.464,0.0,0.357,0.85,118.419,Uplifting & Danceable
+"High Flying, Adored","['Antonio Banderas', 'Madonna']",1996,36,0,0.686,0.372,-11.961,0.0358,0.639,0.0,0.132,0.307,122.953,Acoustic & Mellow
+Love Song,['Madonna'],1989,35,1,0.771,0.457,-12.277,0.255,0.434,0.000179,0.135,0.675,158.558,Uplifting & Danceable
+"Burning Up - 12"" Version","['Madonna', 'John ""Jellybean"" Benitez']",1983,35,1,0.872,0.811,-11.483,0.0453,0.0975,0.00287,0.0782,0.971,139.325,Uplifting & Danceable
+Pretender,['Madonna'],1984,35,1,0.843,0.635,-12.244,0.0327,0.444,0.0,0.0607,0.843,111.128,Uplifting & Danceable
+Goodnight and Thank You,"['Antonio Banderas', 'Madonna']",1996,35,0,0.388,0.617,-9.627,0.0436,0.691,0.0,0.0893,0.842,73.817,Acoustic & Mellow
+Physical Attraction,['Madonna'],1983,34,3,0.907,0.641,-7.694,0.0746,0.0436,0.0138,0.184,0.932,119.2,Bold & Energetic
+Bye Bye Baby,['Madonna'],1992,34,2,0.757,0.612,-9.986,0.0356,0.000905,0.85,0.0926,0.431,108.619,Instrumental & Produced
+Think of Me,['Madonna'],1983,34,2,0.832,0.724,-5.971,0.0403,0.0297,0.188,0.0334,0.89,118.411,Instrumental & Produced
+Lucky Star - New Mix,['Madonna'],1983,33,3,0.801,0.722,-4.509,0.0444,0.068,0.000207,0.284,0.907,117.256,Bold & Energetic
+Sooner or Later,['Madonna'],1990,33,0,0.488,0.189,-14.479,0.0288,0.632,1.28e-05,0.105,0.194,71.39,Acoustic & Mellow
+Waiting,['Madonna'],1992,33,1,0.745,0.622,-8.164,0.0389,0.187,0.00278,0.0731,0.745,95.766,Uplifting & Danceable
+Holiday,['Madonna'],1987,32,1,0.709,0.764,-10.948,0.0356,0.242,0.00599,0.0521,0.883,117.635,Uplifting & Danceable
+Thief of Hearts,['Madonna'],1992,32,1,0.809,0.655,-8.479,0.0318,0.00449,0.0377,0.0622,0.471,117.952,Uplifting & Danceable
+Can't Stop,['Madonna'],1987,31,3,0.737,0.798,-10.415,0.0295,0.0269,2.61e-06,0.297,0.586,114.999,Bold & Energetic
+I Know It,['Madonna'],1983,31,1,0.877,0.423,-12.084,0.0405,0.216,0.00177,0.0838,0.62,128.375,Uplifting & Danceable
+Act of Contrition,['Madonna'],1989,31,3,0.574,0.87,-15.162,0.281,0.0701,1.36e-05,0.825,0.209,110.934,Bold & Energetic
+Why's It so Hard,['Madonna'],1992,30,2,0.612,0.617,-9.079,0.0378,0.00251,0.0473,0.0967,0.239,80.93,Instrumental & Produced
+Words,['Madonna'],1992,30,3,0.712,0.708,-9.277,0.0296,0.0094,0.00614,0.114,0.521,116.253,Bold & Energetic
+Santa Baby,['Madonna'],1987,30,0,0.618,0.32,-12.977,0.0476,0.586,0.0,0.364,0.602,113.825,Acoustic & Mellow
+In This Life,['Madonna'],1992,29,0,0.493,0.449,-10.437,0.0277,0.00557,0.000268,0.183,0.0856,146.282,Acoustic & Mellow
+Something to Remember,['Madonna'],1990,28,0,0.545,0.382,-8.851,0.0241,0.753,6.81e-05,0.105,0.113,137.988,Acoustic & Mellow
+He's a Man,['Madonna'],1990,28,0,0.638,0.639,-9.675,0.0313,0.543,0.0,0.0989,0.409,111.03,Acoustic & Mellow
+Back in Business,['Madonna'],1990,27,1,0.559,0.622,-9.947,0.0936,0.521,7.13e-05,0.0888,0.424,174.651,Uplifting & Danceable
+I'm Going Bananas,['Madonna'],1990,27,1,0.666,0.659,-8.556,0.105,0.325,8.22e-06,0.084,0.921,103.838,Uplifting & Danceable
+Now I'm Following You (Part I),['Madonna'],1990,27,0,0.609,0.351,-12.451,0.0295,0.725,0.0,0.575,0.691,75.934,Acoustic & Mellow
+More,['Madonna'],1990,27,0,0.632,0.356,-10.683,0.0955,0.569,0.0,0.068,0.554,104.625,Acoustic & Mellow
+Cry Baby,['Madonna'],1990,26,1,0.836,0.144,-13.715,0.0536,0.804,5.49e-05,0.0666,0.571,138.128,Uplifting & Danceable
+What Can You Lose,['Madonna'],1990,26,0,0.427,0.127,-18.956,0.0352,0.967,0.000282,0.129,0.255,102.785,Acoustic & Mellow
+Now I'm Following You (Pt. 2),['Madonna'],1990,25,3,0.686,0.817,-8.906,0.0679,0.058,0.0241,0.157,0.782,98.978,Bold & Energetic
+Over and Over - Extended Version,['Madonna'],1987,25,1,0.769,0.817,-10.768,0.0533,0.366,0.372,0.08,0.944,149.178,Uplifting & Danceable
+Justify My Love - The Beast Within Mix,"['Madonna', 'Lenny Kravitz']",1990,23,2,0.694,0.85,-11.339,0.0787,0.377,0.615,0.247,0.535,96.123,Instrumental & Produced
+Vogue - Bette Davis Dub,['Madonna'],1990,23,2,0.667,0.706,-14.302,0.0395,0.00364,0.75,0.0647,0.126,116.15,Instrumental & Produced
+Vogue - Strike-A-Pose Dub,['Madonna'],1990,22,2,0.721,0.549,-17.095,0.0663,0.00134,0.834,0.317,0.191,116.118,Instrumental & Produced
+Express Yourself - Shep's 'Spressin Himself Re-Remix,"['Madonna', 'Shep Pettibone']",1990,20,1,0.76,0.714,-11.93,0.0479,0.0101,0.00114,0.0697,0.59,115.854,Uplifting & Danceable
+Justify My Love - Orbit Edit,"['Madonna', 'William Orbit']",1990,20,2,0.787,0.619,-13.473,0.0649,0.00188,0.77,0.0991,0.474,99.613,Instrumental & Produced
+Justify My Love - Hip Hop Mix,"['Madonna', 'Andre Betts']",1990,19,2,0.855,0.519,-13.12,0.215,0.0244,0.855,0.0756,0.496,95.927,Instrumental & Produced
+Hanky Panky - Bare Bones Single Mix,"['Madonna', 'Kevin Gilbert']",1990,19,1,0.638,0.844,-7.975,0.0652,0.21,0.0,0.0721,0.819,170.281,Uplifting & Danceable
+"Hanky Panky - Bare Bottom 12"" Mix","['Madonna', 'Kevin Gilbert']",1990,17,1,0.672,0.837,-8.43,0.0677,0.0487,0.0,0.0545,0.929,170.152,Uplifting & Danceable

@@ -12,14 +12,14 @@
     "speechiness": 0.0452,
     "loudness": -7.695,
     "tempo": 125.02,
-    "tsne_x": 8.94081974029541,
-    "tsne_y": 12.021071434020996
+    "tsne_x": -4.437192440032959,
+    "tsne_y": 7.710244655609131
   },
   {
     "name": "Material Girl",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 74,
     "danceability": 0.742,
     "energy": 0.883,
@@ -28,14 +28,14 @@
     "speechiness": 0.0329,
     "loudness": -3.419,
     "tempo": 136.506,
-    "tsne_x": 13.619080543518066,
-    "tsne_y": 8.208006858825684
+    "tsne_x": -3.8710787296295166,
+    "tsne_y": 2.633591890335083
   },
   {
     "name": "Like a Prayer",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 73,
     "danceability": 0.624,
     "energy": 0.842,
@@ -44,14 +44,14 @@
     "speechiness": 0.0376,
     "loudness": -5.285,
     "tempo": 111.037,
-    "tsne_x": 13.628449440002441,
-    "tsne_y": 11.505724906921387
+    "tsne_x": -2.5212700366973877,
+    "tsne_y": 6.183971881866455
   },
   {
     "name": "Like a Virgin",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 73,
     "danceability": 0.771,
     "energy": 0.655,
@@ -60,14 +60,14 @@
     "speechiness": 0.0372,
     "loudness": -10.842,
     "tempo": 119.747,
-    "tsne_x": 13.186808586120605,
-    "tsne_y": 9.976543426513672
+    "tsne_x": -0.9437360763549805,
+    "tsne_y": 4.210827827453613
   },
   {
     "name": "La Isla Bonita",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 72,
     "danceability": 0.725,
     "energy": 0.612,
@@ -76,14 +76,14 @@
     "speechiness": 0.0372,
     "loudness": -10.706,
     "tempo": 99.978,
-    "tsne_x": 12.50121021270752,
-    "tsne_y": 11.964070320129395
+    "tsne_x": -0.9896312952041626,
+    "tsne_y": 5.048817157745361
   },
   {
     "name": "4 Minutes (feat. Justin Timberlake & Timbaland)",
     "artists": "['Madonna', 'Justin Timberlake', 'Timbaland']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 71,
     "danceability": 0.753,
     "energy": 0.931,
@@ -92,14 +92,14 @@
     "speechiness": 0.0652,
     "loudness": -4.922,
     "tempo": 113.029,
-    "tsne_x": 11.311421394348145,
-    "tsne_y": 9.988207817077637
+    "tsne_x": -3.8830792903900146,
+    "tsne_y": 3.8414011001586914
   },
   {
     "name": "Vogue",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 68,
     "danceability": 0.737,
     "energy": 0.88,
@@ -108,8 +108,8 @@
     "speechiness": 0.0433,
     "loudness": -6.449,
     "tempo": 115.998,
-    "tsne_x": 15.831122398376465,
-    "tsne_y": 9.905305862426758
+    "tsne_x": -3.4549055099487305,
+    "tsne_y": 5.9448723793029785
   },
   {
     "name": "Like a Prayer",
@@ -124,14 +124,14 @@
     "speechiness": 0.0387,
     "loudness": -12.359,
     "tempo": 111.926,
-    "tsne_x": 14.386493682861328,
-    "tsne_y": 12.134020805358887
+    "tsne_x": -0.6095541715621948,
+    "tsne_y": 6.571799278259277
   },
   {
     "name": "Papa Don't Preach",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 66,
     "danceability": 0.807,
     "energy": 0.906,
@@ -140,14 +140,14 @@
     "speechiness": 0.0371,
     "loudness": -8.973,
     "tempo": 121.54,
-    "tsne_x": 13.27270221710205,
-    "tsne_y": 8.974607467651367
+    "tsne_x": -0.5056871771812439,
+    "tsne_y": 4.317574977874756
   },
   {
     "name": "Crazy for You",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 65,
     "danceability": 0.662,
     "energy": 0.719,
@@ -156,14 +156,14 @@
     "speechiness": 0.0298,
     "loudness": -6.606,
     "tempo": 95.001,
-    "tsne_x": 12.939763069152832,
-    "tsne_y": 12.483543395996094
+    "tsne_x": -2.390193462371826,
+    "tsne_y": 5.834547519683838
   },
   {
     "name": "Into the Groove",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 64,
     "danceability": 0.729,
     "energy": 0.856,
@@ -172,14 +172,14 @@
     "speechiness": 0.035,
     "loudness": -4.164,
     "tempo": 116.467,
-    "tsne_x": 14.004091262817383,
-    "tsne_y": 7.947305679321289
+    "tsne_x": -4.174056529998779,
+    "tsne_y": 2.9213624000549316
   },
   {
     "name": "Holiday",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 63,
     "danceability": 0.854,
     "energy": 0.796,
@@ -188,8 +188,8 @@
     "speechiness": 0.0399,
     "loudness": -5.567,
     "tempo": 115.625,
-    "tsne_x": 14.42656135559082,
-    "tsne_y": 8.674600601196289
+    "tsne_x": -3.4344565868377686,
+    "tsne_y": 3.049245595932007
   },
   {
     "name": "Frozen",
@@ -204,14 +204,14 @@
     "speechiness": 0.0353,
     "loudness": -10.917,
     "tempo": 108.017,
-    "tsne_x": 14.381245613098145,
-    "tsne_y": 12.658347129821777
+    "tsne_x": -0.8871942162513733,
+    "tsne_y": 7.0765485763549805
   },
   {
     "name": "Me Against the Music (feat. Madonna) - LP Version / Video Mix",
     "artists": "['Britney Spears', 'Madonna']",
     "release_year": 2003,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 62,
     "danceability": 0.804,
     "energy": 0.836,
@@ -220,14 +220,14 @@
     "speechiness": 0.089,
     "loudness": -6.635,
     "tempo": 120.046,
-    "tsne_x": 10.425920486450195,
-    "tsne_y": 9.781743049621582
+    "tsne_x": -3.266963243484497,
+    "tsne_y": 3.668370246887207
   },
   {
     "name": "Sorry",
     "artists": "['Madonna']",
     "release_year": 2005,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 62,
     "danceability": 0.589,
     "energy": 0.877,
@@ -236,14 +236,14 @@
     "speechiness": 0.046,
     "loudness": -6.229,
     "tempo": 132.971,
-    "tsne_x": 12.30479907989502,
-    "tsne_y": 10.080677032470703
+    "tsne_x": -3.711616039276123,
+    "tsne_y": 6.220386028289795
   },
   {
     "name": "Bitch I'm Madonna",
     "artists": "['Madonna', 'Nicki Minaj']",
     "release_year": 2015,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 62,
     "danceability": 0.722,
     "energy": 0.63,
@@ -252,14 +252,14 @@
     "speechiness": 0.132,
     "loudness": -5.784,
     "tempo": 150.023,
-    "tsne_x": 10.530295372009277,
-    "tsne_y": 9.193855285644531
+    "tsne_x": -3.825615882873535,
+    "tsne_y": 5.052393436431885
   },
   {
     "name": "Vogue",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 62,
     "danceability": 0.748,
     "energy": 0.84,
@@ -268,14 +268,14 @@
     "speechiness": 0.0421,
     "loudness": -7.701,
     "tempo": 115.997,
-    "tsne_x": 16.02448844909668,
-    "tsne_y": 10.042494773864746
+    "tsne_x": -3.7013323307037354,
+    "tsne_y": 5.728911399841309
   },
   {
     "name": "American Pie",
     "artists": "['Madonna']",
     "release_year": 2000,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 61,
     "danceability": 0.631,
     "energy": 0.734,
@@ -284,14 +284,14 @@
     "speechiness": 0.036,
     "loudness": -7.48,
     "tempo": 124.036,
-    "tsne_x": 14.027809143066406,
-    "tsne_y": 11.418084144592285
+    "tsne_x": -1.9661322832107544,
+    "tsne_y": 5.884222507476807
   },
   {
     "name": "Holiday",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 61,
     "danceability": 0.813,
     "energy": 0.699,
@@ -300,14 +300,14 @@
     "speechiness": 0.0458,
     "loudness": -8.656,
     "tempo": 117.548,
-    "tsne_x": 11.870113372802734,
-    "tsne_y": 11.233896255493164
+    "tsne_x": -5.677308559417725,
+    "tsne_y": 5.01124906539917
   },
   {
     "name": "True Blue",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 60,
     "danceability": 0.799,
     "energy": 0.773,
@@ -316,14 +316,14 @@
     "speechiness": 0.0393,
     "loudness": -10.035,
     "tempo": 118.045,
-    "tsne_x": 13.309398651123047,
-    "tsne_y": 9.566781044006348
+    "tsne_x": -0.8180142045021057,
+    "tsne_y": 4.3901190757751465
   },
   {
     "name": "Music",
     "artists": "['Madonna']",
     "release_year": 2000,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 60,
     "danceability": 0.736,
     "energy": 0.802,
@@ -332,8 +332,8 @@
     "speechiness": 0.0663,
     "loudness": -8.527,
     "tempo": 119.854,
-    "tsne_x": 9.85584831237793,
-    "tsne_y": 11.69981575012207
+    "tsne_x": -4.752307415008545,
+    "tsne_y": 6.568636894226074
   },
   {
     "name": "Ray of Light",
@@ -348,8 +348,8 @@
     "speechiness": 0.0312,
     "loudness": -7.878,
     "tempo": 127.172,
-    "tsne_x": 6.998247146606445,
-    "tsne_y": 11.762246131896973
+    "tsne_x": -4.122450828552246,
+    "tsne_y": 7.518021106719971
   },
   {
     "name": "Live to Tell",
@@ -364,14 +364,14 @@
     "speechiness": 0.0279,
     "loudness": -14.156,
     "tempo": 109.841,
-    "tsne_x": 14.657499313354492,
-    "tsne_y": 12.91687297821045
+    "tsne_x": -0.6966348886489868,
+    "tsne_y": 7.523638725280762
   },
   {
     "name": "Jump",
     "artists": "['Madonna']",
     "release_year": 2005,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 59,
     "danceability": 0.629,
     "energy": 0.839,
@@ -380,8 +380,8 @@
     "speechiness": 0.0899,
     "loudness": -7.061,
     "tempo": 118.979,
-    "tsne_x": 9.908808708190918,
-    "tsne_y": 11.487959861755371
+    "tsne_x": -4.137601375579834,
+    "tsne_y": 6.760400772094727
   },
   {
     "name": "Hung Up",
@@ -396,14 +396,14 @@
     "speechiness": 0.0497,
     "loudness": -7.572,
     "tempo": 124.992,
-    "tsne_x": 8.93985652923584,
-    "tsne_y": 11.925429344177246
+    "tsne_x": -4.4725565910339355,
+    "tsne_y": 7.798235893249512
   },
   {
     "name": "Give It 2 Me",
     "artists": "['Madonna']",
     "release_year": 2008,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 59,
     "danceability": 0.837,
     "energy": 0.954,
@@ -412,8 +412,8 @@
     "speechiness": 0.0414,
     "loudness": -3.512,
     "tempo": 127.019,
-    "tsne_x": 14.129592895507812,
-    "tsne_y": 8.264510154724121
+    "tsne_x": -3.563849925994873,
+    "tsne_y": 2.85001540184021
   },
   {
     "name": "Crazy for You - Edit",
@@ -428,14 +428,14 @@
     "speechiness": 0.029,
     "loudness": -11.93,
     "tempo": 95.01,
-    "tsne_x": 13.234786033630371,
-    "tsne_y": 12.80417251586914
+    "tsne_x": -1.5754300355911255,
+    "tsne_y": 6.643650054931641
   },
   {
     "name": "Borderline",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 58,
     "danceability": 0.807,
     "energy": 0.764,
@@ -444,14 +444,14 @@
     "speechiness": 0.0312,
     "loudness": -5.186,
     "tempo": 119.867,
-    "tsne_x": 14.027204513549805,
-    "tsne_y": 8.554777145385742
+    "tsne_x": -4.064396381378174,
+    "tsne_y": 4.2858967781066895
   },
   {
     "name": "The Power of Good-Bye",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 58,
     "danceability": 0.534,
     "energy": 0.561,
@@ -460,14 +460,14 @@
     "speechiness": 0.0409,
     "loudness": -11.089,
     "tempo": 84.978,
-    "tsne_x": 5.3038201332092285,
-    "tsne_y": 11.378005027770996
+    "tsne_x": -3.860018491744995,
+    "tsne_y": 8.423504829406738
   },
   {
     "name": "Express Yourself",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 58,
     "danceability": 0.667,
     "energy": 0.93,
@@ -476,14 +476,14 @@
     "speechiness": 0.0608,
     "loudness": -4.585,
     "tempo": 115.57,
-    "tsne_x": 11.70221996307373,
-    "tsne_y": 9.877707481384277
+    "tsne_x": -4.089255332946777,
+    "tsne_y": 3.671027660369873
   },
   {
     "name": "Girl Gone Wild",
     "artists": "['Madonna']",
     "release_year": 2012,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 57,
     "danceability": 0.697,
     "energy": 0.598,
@@ -492,8 +492,8 @@
     "speechiness": 0.0708,
     "loudness": -5.883,
     "tempo": 131.967,
-    "tsne_x": 15.114659309387207,
-    "tsne_y": 9.809897422790527
+    "tsne_x": -3.484262466430664,
+    "tsne_y": 5.1410627365112305
   },
   {
     "name": "Don't Cry for Me Argentina",
@@ -508,8 +508,8 @@
     "speechiness": 0.0373,
     "loudness": -13.9,
     "tempo": 75.922,
-    "tsne_x": 14.89913558959961,
-    "tsne_y": 13.704256057739258
+    "tsne_x": -0.2070261836051941,
+    "tsne_y": 7.959402561187744
   },
   {
     "name": "Take a Bow",
@@ -524,14 +524,14 @@
     "speechiness": 0.024,
     "loudness": -7.698,
     "tempo": 80.133,
-    "tsne_x": 13.591391563415527,
-    "tsne_y": 13.269627571105957
+    "tsne_x": -1.1382957696914673,
+    "tsne_y": 7.732307434082031
   },
   {
     "name": "Don't Tell Me",
     "artists": "['Madonna']",
     "release_year": 2000,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 55,
     "danceability": 0.699,
     "energy": 0.618,
@@ -540,14 +540,14 @@
     "speechiness": 0.0594,
     "loudness": -7.338,
     "tempo": 99.965,
-    "tsne_x": 11.651785850524902,
-    "tsne_y": 10.687667846679688
+    "tsne_x": -4.422086715698242,
+    "tsne_y": 4.861448764801025
   },
   {
     "name": "Who's That Girl",
     "artists": "['Madonna']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 55,
     "danceability": 0.625,
     "energy": 0.646,
@@ -556,8 +556,8 @@
     "speechiness": 0.0389,
     "loudness": -13.592,
     "tempo": 103.893,
-    "tsne_x": 10.702781677246094,
-    "tsne_y": 11.95732593536377
+    "tsne_x": -1.2511545419692993,
+    "tsne_y": 5.349287033081055
   },
   {
     "name": "Take a Bow",
@@ -572,14 +572,14 @@
     "speechiness": 0.0258,
     "loudness": -8.854,
     "tempo": 79.98,
-    "tsne_x": 13.69052505493164,
-    "tsne_y": 13.504373550415039
+    "tsne_x": -0.9959767460823059,
+    "tsne_y": 7.892722129821777
   },
   {
     "name": "Celebration",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 55,
     "danceability": 0.637,
     "energy": 0.891,
@@ -588,14 +588,14 @@
     "speechiness": 0.0345,
     "loudness": -4.139,
     "tempo": 126.002,
-    "tsne_x": 13.389875411987305,
-    "tsne_y": 8.372906684875488
+    "tsne_x": -4.009035587310791,
+    "tsne_y": 2.9519619941711426
   },
   {
     "name": "4 Minutes (feat. Justin Timberlake and Timbaland)",
     "artists": "['Madonna', 'Justin Timberlake', 'Timbaland']",
     "release_year": 2008,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 55,
     "danceability": 0.705,
     "energy": 0.911,
@@ -604,14 +604,14 @@
     "speechiness": 0.0717,
     "loudness": -4.873,
     "tempo": 113.032,
-    "tsne_x": 11.194011688232422,
-    "tsne_y": 9.936970710754395
+    "tsne_x": -4.676206588745117,
+    "tsne_y": 3.968417167663574
   },
   {
     "name": "Get Together",
     "artists": "['Madonna']",
     "release_year": 2005,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 55,
     "danceability": 0.364,
     "energy": 0.71,
@@ -620,8 +620,8 @@
     "speechiness": 0.0972,
     "loudness": -7.428,
     "tempo": 123.902,
-    "tsne_x": 11.031867027282715,
-    "tsne_y": 9.57799243927002
+    "tsne_x": -4.499800682067871,
+    "tsne_y": 6.135372638702393
   },
   {
     "name": "Frozen",
@@ -636,14 +636,14 @@
     "speechiness": 0.0336,
     "loudness": -7.722,
     "tempo": 108.011,
-    "tsne_x": 14.060647964477539,
-    "tsne_y": 12.07572078704834
+    "tsne_x": -1.5752135515213013,
+    "tsne_y": 6.431484699249268
   },
   {
     "name": "Lucky Star",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 55,
     "danceability": 0.793,
     "energy": 0.627,
@@ -652,14 +652,14 @@
     "speechiness": 0.0431,
     "loudness": -10.599,
     "tempo": 117.203,
-    "tsne_x": 14.082634925842285,
-    "tsne_y": 10.208236694335938
+    "tsne_x": -1.9030115604400635,
+    "tsne_y": 3.751929521560669
   },
   {
     "name": "Die Another Day",
     "artists": "['Madonna']",
     "release_year": 2003,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 55,
     "danceability": 0.792,
     "energy": 0.797,
@@ -668,14 +668,14 @@
     "speechiness": 0.0901,
     "loudness": -5.166,
     "tempo": 123.993,
-    "tsne_x": 10.824226379394531,
-    "tsne_y": 9.81044864654541
+    "tsne_x": -4.718416213989258,
+    "tsne_y": 4.390438556671143
   },
   {
     "name": "Hung Up - Radio Version",
     "artists": "['Madonna']",
     "release_year": 2005,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 54,
     "danceability": 0.622,
     "energy": 0.71,
@@ -684,14 +684,14 @@
     "speechiness": 0.0448,
     "loudness": -6.825,
     "tempo": 125.0,
-    "tsne_x": 10.338592529296875,
-    "tsne_y": 12.067749977111816
+    "tsne_x": -4.442226409912109,
+    "tsne_y": 6.869735240936279
   },
   {
     "name": "Vogue - Edit",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 54,
     "danceability": 0.69,
     "energy": 0.817,
@@ -700,14 +700,14 @@
     "speechiness": 0.0478,
     "loudness": -10.137,
     "tempo": 116.211,
-    "tsne_x": 12.527908325195312,
-    "tsne_y": 10.744023323059082
+    "tsne_x": -4.759310245513916,
+    "tsne_y": 5.565521717071533
   },
   {
     "name": "Like a Virgin",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 53,
     "danceability": 0.775,
     "energy": 0.8,
@@ -716,14 +716,14 @@
     "speechiness": 0.036,
     "loudness": -3.338,
     "tempo": 119.725,
-    "tsne_x": 13.828548431396484,
-    "tsne_y": 8.331127166748047
+    "tsne_x": -3.569136619567871,
+    "tsne_y": 2.6080005168914795
   },
   {
     "name": "Secret",
     "artists": "['Madonna']",
     "release_year": 1994,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 53,
     "danceability": 0.813,
     "energy": 0.655,
@@ -732,14 +732,14 @@
     "speechiness": 0.0262,
     "loudness": -7.884,
     "tempo": 99.982,
-    "tsne_x": 12.918257713317871,
-    "tsne_y": 12.294661521911621
+    "tsne_x": -3.1634366512298584,
+    "tsne_y": 5.4648027420043945
   },
   {
     "name": "I'll Remember (Theme from the Motion Picture With Honors)",
     "artists": "['Madonna']",
     "release_year": 1995,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 53,
     "danceability": 0.691,
     "energy": 0.601,
@@ -748,14 +748,14 @@
     "speechiness": 0.0428,
     "loudness": -9.698,
     "tempo": 167.796,
-    "tsne_x": 12.015870094299316,
-    "tsne_y": 8.40590763092041
+    "tsne_x": 0.16784599423408508,
+    "tsne_y": 3.7442939281463623
   },
   {
     "name": "Beautiful Stranger",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 53,
     "danceability": 0.52,
     "energy": 0.756,
@@ -764,14 +764,14 @@
     "speechiness": 0.0288,
     "loudness": -3.909,
     "tempo": 122.448,
-    "tsne_x": 15.79885196685791,
-    "tsne_y": 9.749336242675781
+    "tsne_x": -2.8073084354400635,
+    "tsne_y": 6.151052474975586
   },
   {
     "name": "Give Me All Your Luvin'",
     "artists": "['Madonna', 'Nicki Minaj', 'M.I.A.']",
     "release_year": 2012,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 53,
     "danceability": 0.68,
     "energy": 0.885,
@@ -780,8 +780,8 @@
     "speechiness": 0.0382,
     "loudness": -4.345,
     "tempo": 144.998,
-    "tsne_x": 15.709855079650879,
-    "tsne_y": 9.636387825012207
+    "tsne_x": -3.7493038177490234,
+    "tsne_y": 3.579392433166504
   },
   {
     "name": "Rain",
@@ -796,14 +796,14 @@
     "speechiness": 0.026,
     "loudness": -9.38,
     "tempo": 92.419,
-    "tsne_x": 13.275609016418457,
-    "tsne_y": 12.8755464553833
+    "tsne_x": -1.7955691814422607,
+    "tsne_y": 7.7400593757629395
   },
   {
     "name": "Sorry",
     "artists": "['Madonna']",
     "release_year": 2006,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 52,
     "danceability": 0.603,
     "energy": 0.846,
@@ -812,14 +812,14 @@
     "speechiness": 0.0318,
     "loudness": -7.495,
     "tempo": 132.983,
-    "tsne_x": 9.099407196044922,
-    "tsne_y": 11.91076374053955
+    "tsne_x": -4.285073280334473,
+    "tsne_y": 7.322464466094971
   },
   {
     "name": "Open Your Heart",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 52,
     "danceability": 0.619,
     "energy": 0.876,
@@ -828,14 +828,14 @@
     "speechiness": 0.0417,
     "loudness": -9.214,
     "tempo": 114.008,
-    "tsne_x": 12.508254051208496,
-    "tsne_y": 10.361029624938965
+    "tsne_x": -4.275844097137451,
+    "tsne_y": 4.481432914733887
   },
   {
     "name": "Hollywood",
     "artists": "['Madonna']",
     "release_year": 2003,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 52,
     "danceability": 0.647,
     "energy": 0.588,
@@ -844,14 +844,14 @@
     "speechiness": 0.0401,
     "loudness": -7.519,
     "tempo": 125.992,
-    "tsne_x": 15.223462104797363,
-    "tsne_y": 10.189253807067871
+    "tsne_x": -3.1020212173461914,
+    "tsne_y": 5.2114152908325195
   },
   {
     "name": "Justify My Love",
     "artists": "['Madonna']",
     "release_year": 2009,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 51,
     "danceability": 0.705,
     "energy": 0.821,
@@ -860,8 +860,8 @@
     "speechiness": 0.128,
     "loudness": -7.085,
     "tempo": 99.642,
-    "tsne_x": 5.256502628326416,
-    "tsne_y": 11.450057029724121
+    "tsne_x": -5.155823707580566,
+    "tsne_y": 7.445652961730957
   },
   {
     "name": "You'll See",
@@ -876,14 +876,14 @@
     "speechiness": 0.0311,
     "loudness": -9.972,
     "tempo": 89.79,
-    "tsne_x": 13.907821655273438,
-    "tsne_y": 13.297386169433594
+    "tsne_x": -1.227745532989502,
+    "tsne_y": 7.483163356781006
   },
   {
     "name": "Into the Groove - Edit",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 51,
     "danceability": 0.686,
     "energy": 0.714,
@@ -892,14 +892,14 @@
     "speechiness": 0.0385,
     "loudness": -9.533,
     "tempo": 116.6,
-    "tsne_x": 12.723504066467285,
-    "tsne_y": 10.419325828552246
+    "tsne_x": -4.925148963928223,
+    "tsne_y": 4.935336112976074
   },
   {
     "name": "Express Yourself",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 50,
     "danceability": 0.747,
     "energy": 0.866,
@@ -908,14 +908,14 @@
     "speechiness": 0.0289,
     "loudness": -10.529,
     "tempo": 115.492,
-    "tsne_x": 13.285423278808594,
-    "tsne_y": 9.466004371643066
+    "tsne_x": -0.39840978384017944,
+    "tsne_y": 4.181888103485107
   },
   {
     "name": "La Isla Bonita - Extended Remix",
     "artists": "['Madonna', 'Chris Lord-Alge']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 50,
     "danceability": 0.73,
     "energy": 0.737,
@@ -924,14 +924,14 @@
     "speechiness": 0.0333,
     "loudness": -6.515,
     "tempo": 99.998,
-    "tsne_x": 13.068342208862305,
-    "tsne_y": 11.946368217468262
+    "tsne_x": -2.4758498668670654,
+    "tsne_y": 3.156174659729004
   },
   {
     "name": "Cherish",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 50,
     "danceability": 0.703,
     "energy": 0.685,
@@ -940,14 +940,14 @@
     "speechiness": 0.033,
     "loudness": -11.581,
     "tempo": 131.842,
-    "tsne_x": 12.571578979492188,
-    "tsne_y": 9.251545906066895
+    "tsne_x": -0.055869895964860916,
+    "tsne_y": 4.469578742980957
   },
   {
     "name": "Nothing Really Matters",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 49,
     "danceability": 0.707,
     "energy": 0.692,
@@ -956,8 +956,8 @@
     "speechiness": 0.0409,
     "loudness": -6.937,
     "tempo": 116.868,
-    "tsne_x": 12.878558158874512,
-    "tsne_y": 11.001014709472656
+    "tsne_x": -4.888194561004639,
+    "tsne_y": 5.688179969787598
   },
   {
     "name": "This Used to Be My Playground",
@@ -972,14 +972,14 @@
     "speechiness": 0.0264,
     "loudness": -11.692,
     "tempo": 75.91,
-    "tsne_x": 14.297412872314453,
-    "tsne_y": 13.71060848236084
+    "tsne_x": -0.6573977470397949,
+    "tsne_y": 8.061528205871582
   },
   {
     "name": "Holiday",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 48,
     "danceability": 0.816,
     "energy": 0.65,
@@ -988,14 +988,14 @@
     "speechiness": 0.0497,
     "loudness": -9.576,
     "tempo": 117.551,
-    "tsne_x": 11.856521606445312,
-    "tsne_y": 10.98769474029541
+    "tsne_x": -5.376632213592529,
+    "tsne_y": 4.868900775909424
   },
   {
     "name": "Angel",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 48,
     "danceability": 0.754,
     "energy": 0.618,
@@ -1004,14 +1004,14 @@
     "speechiness": 0.0357,
     "loudness": -13.66,
     "tempo": 133.237,
-    "tsne_x": 15.464363098144531,
-    "tsne_y": 10.63354206085205
+    "tsne_x": -2.1151974201202393,
+    "tsne_y": 3.980287790298462
   },
   {
     "name": "Like a Virgin",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 48,
     "danceability": 0.806,
     "energy": 0.637,
@@ -1020,14 +1020,14 @@
     "speechiness": 0.0385,
     "loudness": -7.876,
     "tempo": 119.564,
-    "tsne_x": 13.822664260864258,
-    "tsne_y": 9.493441581726074
+    "tsne_x": -1.4686704874038696,
+    "tsne_y": 4.076444149017334
   },
   {
     "name": "Miles Away",
     "artists": "['Madonna']",
     "release_year": 2008,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 48,
     "danceability": 0.782,
     "energy": 0.71,
@@ -1036,14 +1036,14 @@
     "speechiness": 0.0382,
     "loudness": -4.394,
     "tempo": 115.995,
-    "tsne_x": 14.302316665649414,
-    "tsne_y": 8.294634819030762
+    "tsne_x": -4.280967712402344,
+    "tsne_y": 3.184621810913086
   },
   {
     "name": "Drowned World / Substitute for Love",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 2,
+    "cluster": 0,
     "popularity": 48,
     "danceability": 0.539,
     "energy": 0.308,
@@ -1052,8 +1052,8 @@
     "speechiness": 0.0413,
     "loudness": -12.101,
     "tempo": 139.901,
-    "tsne_x": 8.445037841796875,
-    "tsne_y": 11.886051177978516
+    "tsne_x": -2.4846384525299072,
+    "tsne_y": 7.649355888366699
   },
   {
     "name": "Human Nature",
@@ -1068,14 +1068,14 @@
     "speechiness": 0.0347,
     "loudness": -7.737,
     "tempo": 92.528,
-    "tsne_x": 8.595510482788086,
-    "tsne_y": 11.984408378601074
+    "tsne_x": -4.0999836921691895,
+    "tsne_y": 8.516685485839844
   },
   {
     "name": "Causing a Commotion",
     "artists": "['Madonna']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 47,
     "danceability": 0.771,
     "energy": 0.749,
@@ -1084,14 +1084,14 @@
     "speechiness": 0.0401,
     "loudness": -10.628,
     "tempo": 119.875,
-    "tsne_x": 13.758501052856445,
-    "tsne_y": 9.878061294555664
+    "tsne_x": -1.7209221124649048,
+    "tsne_y": 3.732211112976074
   },
   {
     "name": "Masterpiece",
     "artists": "['Madonna']",
     "release_year": 2012,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 47,
     "danceability": 0.533,
     "energy": 0.58,
@@ -1100,14 +1100,14 @@
     "speechiness": 0.0542,
     "loudness": -7.008,
     "tempo": 173.988,
-    "tsne_x": 11.507555961608887,
-    "tsne_y": 8.536954879760742
+    "tsne_x": -4.110361099243164,
+    "tsne_y": 6.43211030960083
   },
   {
     "name": "Dress You Up",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 47,
     "danceability": 0.654,
     "energy": 0.646,
@@ -1116,14 +1116,14 @@
     "speechiness": 0.0294,
     "loudness": -10.056,
     "tempo": 136.194,
-    "tsne_x": 10.59317684173584,
-    "tsne_y": 11.970657348632812
+    "tsne_x": -4.02691650390625,
+    "tsne_y": 5.235353946685791
   },
   {
     "name": "Material Girl",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 46,
     "danceability": 0.734,
     "energy": 0.853,
@@ -1132,14 +1132,14 @@
     "speechiness": 0.0353,
     "loudness": -7.697,
     "tempo": 134.523,
-    "tsne_x": 13.146059036254883,
-    "tsne_y": 8.514299392700195
+    "tsne_x": -0.15276038646697998,
+    "tsne_y": 4.574000358581543
   },
   {
     "name": "Borderline",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 46,
     "danceability": 0.787,
     "energy": 0.526,
@@ -1148,14 +1148,14 @@
     "speechiness": 0.0424,
     "loudness": -12.692,
     "tempo": 118.979,
-    "tsne_x": 13.308884620666504,
-    "tsne_y": 10.510381698608398
+    "tsne_x": -5.814609050750732,
+    "tsne_y": 5.369279384613037
   },
   {
     "name": "What It Feels Like for a Girl",
     "artists": "['Madonna']",
     "release_year": 2000,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 46,
     "danceability": 0.67,
     "energy": 0.627,
@@ -1164,8 +1164,8 @@
     "speechiness": 0.0478,
     "loudness": -9.497,
     "tempo": 104.988,
-    "tsne_x": 13.043485641479492,
-    "tsne_y": 11.446389198303223
+    "tsne_x": -2.6276378631591797,
+    "tsne_y": 5.231871604919434
   },
   {
     "name": "Deeper and Deeper",
@@ -1180,8 +1180,8 @@
     "speechiness": 0.0265,
     "loudness": -7.09,
     "tempo": 119.943,
-    "tsne_x": 7.811294078826904,
-    "tsne_y": 11.856620788574219
+    "tsne_x": -4.312468528747559,
+    "tsne_y": 7.4842071533203125
   },
   {
     "name": "Live to Tell",
@@ -1196,14 +1196,14 @@
     "speechiness": 0.026,
     "loudness": -12.368,
     "tempo": 110.07,
-    "tsne_x": 14.209878921508789,
-    "tsne_y": 12.555978775024414
+    "tsne_x": -1.522179126739502,
+    "tsne_y": 7.446622371673584
   },
   {
     "name": "Borderline",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 45,
     "danceability": 0.787,
     "energy": 0.895,
@@ -1212,8 +1212,8 @@
     "speechiness": 0.0368,
     "loudness": -4.864,
     "tempo": 119.356,
-    "tsne_x": 13.991029739379883,
-    "tsne_y": 8.155385971069336
+    "tsne_x": -4.0520734786987305,
+    "tsne_y": 3.462181806564331
   },
   {
     "name": "Dear Jessie",
@@ -1228,14 +1228,14 @@
     "speechiness": 0.0449,
     "loudness": -16.885,
     "tempo": 126.838,
-    "tsne_x": 15.542866706848145,
-    "tsne_y": 11.573066711425781
+    "tsne_x": -0.3110734820365906,
+    "tsne_y": 5.803605556488037
   },
   {
     "name": "Borderline - Remix",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 45,
     "danceability": 0.776,
     "energy": 0.772,
@@ -1244,14 +1244,14 @@
     "speechiness": 0.039,
     "loudness": -10.352,
     "tempo": 119.465,
-    "tsne_x": 13.559354782104492,
-    "tsne_y": 9.89748764038086
+    "tsne_x": -1.4721941947937012,
+    "tsne_y": 4.348986625671387
   },
   {
     "name": "Justify My Love",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 45,
     "danceability": 0.698,
     "energy": 0.662,
@@ -1260,14 +1260,14 @@
     "speechiness": 0.111,
     "loudness": -12.58,
     "tempo": 99.661,
-    "tsne_x": 5.207878589630127,
-    "tsne_y": 11.649201393127441
+    "tsne_x": -5.406574249267578,
+    "tsne_y": 7.811996936798096
   },
   {
     "name": "Like a Prayer",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 45,
     "danceability": 0.705,
     "energy": 0.693,
@@ -1276,14 +1276,14 @@
     "speechiness": 0.0455,
     "loudness": -10.122,
     "tempo": 111.872,
-    "tsne_x": 15.85101318359375,
-    "tsne_y": 10.20723819732666
+    "tsne_x": -3.552438259124756,
+    "tsne_y": 5.607911109924316
   },
   {
     "name": "Love Profusion",
     "artists": "['Madonna']",
     "release_year": 2003,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 45,
     "danceability": 0.702,
     "energy": 0.467,
@@ -1292,14 +1292,14 @@
     "speechiness": 0.0403,
     "loudness": -8.026,
     "tempo": 119.956,
-    "tsne_x": 14.530936241149902,
-    "tsne_y": 10.674221992492676
+    "tsne_x": -2.391366481781006,
+    "tsne_y": 4.824190616607666
   },
   {
     "name": "La Isla Bonita - Remix",
     "artists": "['Madonna', 'Chris Lord-Alge']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 44,
     "danceability": 0.648,
     "energy": 0.66,
@@ -1308,8 +1308,8 @@
     "speechiness": 0.0348,
     "loudness": -10.841,
     "tempo": 100.021,
-    "tsne_x": 12.630370140075684,
-    "tsne_y": 12.048941612243652
+    "tsne_x": -1.498680830001831,
+    "tsne_y": 5.66345739364624
   },
   {
     "name": "Pray for Spanish Eyes",
@@ -1324,8 +1324,8 @@
     "speechiness": 0.0272,
     "loudness": -12.911,
     "tempo": 108.519,
-    "tsne_x": 14.598493576049805,
-    "tsne_y": 12.61048698425293
+    "tsne_x": -0.9826005101203918,
+    "tsne_y": 7.285621166229248
   },
   {
     "name": "Swim",
@@ -1340,14 +1340,14 @@
     "speechiness": 0.0345,
     "loudness": -12.823,
     "tempo": 100.488,
-    "tsne_x": 14.438977241516113,
-    "tsne_y": 12.990036010742188
+    "tsne_x": -0.5381474494934082,
+    "tsne_y": 7.584261894226074
   },
   {
     "name": "Sky Fits Heaven",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 43,
     "danceability": 0.526,
     "energy": 0.568,
@@ -1356,14 +1356,14 @@
     "speechiness": 0.038,
     "loudness": -10.504,
     "tempo": 139.952,
-    "tsne_x": 5.0200629234313965,
-    "tsne_y": 11.36431884765625
+    "tsne_x": -3.7102437019348145,
+    "tsne_y": 7.864449501037598
   },
   {
     "name": "Skin",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 43,
     "danceability": 0.572,
     "energy": 0.806,
@@ -1372,14 +1372,14 @@
     "speechiness": 0.0643,
     "loudness": -12.316,
     "tempo": 142.957,
-    "tsne_x": 4.760814666748047,
-    "tsne_y": 11.814587593078613
+    "tsne_x": -3.3184335231781006,
+    "tsne_y": 7.48606014251709
   },
   {
     "name": "To Have and Not to Hold",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 2,
+    "cluster": 0,
     "popularity": 43,
     "danceability": 0.554,
     "energy": 0.543,
@@ -1388,14 +1388,14 @@
     "speechiness": 0.0355,
     "loudness": -12.417,
     "tempo": 88.038,
-    "tsne_x": 7.625170707702637,
-    "tsne_y": 11.909521102905273
+    "tsne_x": -2.0209856033325195,
+    "tsne_y": 6.996973991394043
   },
   {
     "name": "Papa Don't Preach",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 43,
     "danceability": 0.811,
     "energy": 0.816,
@@ -1404,8 +1404,8 @@
     "speechiness": 0.0344,
     "loudness": -8.423,
     "tempo": 121.915,
-    "tsne_x": 13.528010368347168,
-    "tsne_y": 9.184773445129395
+    "tsne_x": -0.5570859313011169,
+    "tsne_y": 4.065647602081299
   },
   {
     "name": "Oh Father",
@@ -1420,14 +1420,14 @@
     "speechiness": 0.0294,
     "loudness": -14.313,
     "tempo": 115.952,
-    "tsne_x": 15.092696189880371,
-    "tsne_y": 12.754541397094727
+    "tsne_x": -0.26768186688423157,
+    "tsne_y": 7.450992107391357
   },
   {
     "name": "Lucky Star",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 43,
     "danceability": 0.803,
     "energy": 0.814,
@@ -1436,14 +1436,14 @@
     "speechiness": 0.0381,
     "loudness": -4.579,
     "tempo": 117.08,
-    "tsne_x": 14.78487777709961,
-    "tsne_y": 9.081916809082031
+    "tsne_x": -3.116950511932373,
+    "tsne_y": 2.988295555114746
   },
   {
     "name": "Express Yourself",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 43,
     "danceability": 0.697,
     "energy": 0.765,
@@ -1452,14 +1452,14 @@
     "speechiness": 0.0505,
     "loudness": -9.158,
     "tempo": 115.496,
-    "tsne_x": 12.150328636169434,
-    "tsne_y": 10.754563331604004
+    "tsne_x": -4.677207946777344,
+    "tsne_y": 5.181619167327881
   },
   {
     "name": "Burning Up",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 43,
     "danceability": 0.869,
     "energy": 0.738,
@@ -1468,8 +1468,8 @@
     "speechiness": 0.11,
     "loudness": -4.566,
     "tempo": 138.329,
-    "tsne_x": 10.38050651550293,
-    "tsne_y": 9.618672370910645
+    "tsne_x": -3.4310731887817383,
+    "tsne_y": 3.9161758422851562
   },
   {
     "name": "Erotica",
@@ -1484,14 +1484,14 @@
     "speechiness": 0.061,
     "loudness": -11.168,
     "tempo": 101.956,
-    "tsne_x": 7.163243293762207,
-    "tsne_y": 11.530621528625488
+    "tsne_x": -4.60438871383667,
+    "tsne_y": 8.041802406311035
   },
   {
     "name": "Where's the Party",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 42,
     "danceability": 0.752,
     "energy": 0.829,
@@ -1500,14 +1500,14 @@
     "speechiness": 0.0494,
     "loudness": -8.658,
     "tempo": 118.955,
-    "tsne_x": 16.133880615234375,
-    "tsne_y": 10.134208679199219
+    "tsne_x": -2.578131914138794,
+    "tsne_y": 3.32907772064209
   },
   {
     "name": "Open Your Heart",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 42,
     "danceability": 0.671,
     "energy": 0.752,
@@ -1516,14 +1516,14 @@
     "speechiness": 0.0418,
     "loudness": -10.03,
     "tempo": 113.065,
-    "tsne_x": 12.839486122131348,
-    "tsne_y": 10.775721549987793
+    "tsne_x": -4.4626617431640625,
+    "tsne_y": 4.973276615142822
   },
   {
     "name": "Shanti / Ashtangi",
     "artists": "['Madonna']",
     "release_year": 1998,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 42,
     "danceability": 0.641,
     "energy": 0.771,
@@ -1532,8 +1532,8 @@
     "speechiness": 0.0403,
     "loudness": -9.501,
     "tempo": 139.845,
-    "tsne_x": 9.94406509399414,
-    "tsne_y": 12.051006317138672
+    "tsne_x": -3.9273979663848877,
+    "tsne_y": 7.259155750274658
   },
   {
     "name": "Bedtime Story",
@@ -1548,14 +1548,14 @@
     "speechiness": 0.0441,
     "loudness": -12.74,
     "tempo": 112.028,
-    "tsne_x": 7.130180835723877,
-    "tsne_y": 11.91639232635498
+    "tsne_x": -2.78617000579834,
+    "tsne_y": 7.387145519256592
   },
   {
     "name": "Cherish",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 41,
     "danceability": 0.678,
     "energy": 0.783,
@@ -1564,14 +1564,14 @@
     "speechiness": 0.0478,
     "loudness": -8.288,
     "tempo": 132.017,
-    "tsne_x": 12.66225528717041,
-    "tsne_y": 8.659684181213379
+    "tsne_x": -0.32681307196617126,
+    "tsne_y": 4.174480438232422
   },
   {
     "name": "Over and Over",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 41,
     "danceability": 0.669,
     "energy": 0.785,
@@ -1580,14 +1580,14 @@
     "speechiness": 0.0351,
     "loudness": -10.883,
     "tempo": 150.247,
-    "tsne_x": 12.17072868347168,
-    "tsne_y": 8.367509841918945
+    "tsne_x": 0.12267830967903137,
+    "tsne_y": 4.108874797821045
   },
   {
     "name": "Hanky Panky",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 41,
     "danceability": 0.637,
     "energy": 0.626,
@@ -1596,14 +1596,14 @@
     "speechiness": 0.329,
     "loudness": -10.728,
     "tempo": 169.969,
-    "tsne_x": 10.222808837890625,
-    "tsne_y": 9.43160343170166
+    "tsne_x": -0.0863049328327179,
+    "tsne_y": 3.0455617904663086
   },
   {
     "name": "Lucky Star - US ReMix Version",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 41,
     "danceability": 0.786,
     "energy": 0.528,
@@ -1612,8 +1612,8 @@
     "speechiness": 0.0508,
     "loudness": -11.679,
     "tempo": 117.381,
-    "tsne_x": 14.825026512145996,
-    "tsne_y": 10.360577583312988
+    "tsne_x": -2.466265916824341,
+    "tsne_y": 4.070797920227051
   },
   {
     "name": "You Must Love Me",
@@ -1628,8 +1628,8 @@
     "speechiness": 0.0436,
     "loudness": -14.789,
     "tempo": 88.746,
-    "tsne_x": 15.145658493041992,
-    "tsne_y": 13.721890449523926
+    "tsne_x": 0.04802657291293144,
+    "tsne_y": 7.719054698944092
   },
   {
     "name": "Love Don't Live Here Anymore",
@@ -1644,14 +1644,14 @@
     "speechiness": 0.0452,
     "loudness": -14.394,
     "tempo": 140.358,
-    "tsne_x": 15.290102005004883,
-    "tsne_y": 11.409280776977539
+    "tsne_x": 0.004442824982106686,
+    "tsne_y": 6.570971965789795
   },
   {
     "name": "True Blue - The Color Mix",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 40,
     "danceability": 0.807,
     "energy": 0.525,
@@ -1660,14 +1660,14 @@
     "speechiness": 0.086,
     "loudness": -13.366,
     "tempo": 119.91,
-    "tsne_x": 10.320963859558105,
-    "tsne_y": 11.348830223083496
+    "tsne_x": -5.601511478424072,
+    "tsne_y": 6.983344554901123
   },
   {
     "name": "Like a Virgin - Extended Dance Remix",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 40,
     "danceability": 0.839,
     "energy": 0.458,
@@ -1676,14 +1676,14 @@
     "speechiness": 0.0555,
     "loudness": -13.606,
     "tempo": 119.447,
-    "tsne_x": 13.710598945617676,
-    "tsne_y": 10.714111328125
+    "tsne_x": -2.6445274353027344,
+    "tsne_y": 4.2810540199279785
   },
   {
     "name": "Into the Groove",
     "artists": "['Madonna', 'Shep Pettibone']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 40,
     "danceability": 0.799,
     "energy": 0.638,
@@ -1692,14 +1692,14 @@
     "speechiness": 0.0564,
     "loudness": -12.271,
     "tempo": 116.556,
-    "tsne_x": 11.431885719299316,
-    "tsne_y": 11.368051528930664
+    "tsne_x": -5.801030158996582,
+    "tsne_y": 5.7995686531066895
   },
   {
     "name": "Everybody - Original Version",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 39,
     "danceability": 0.921,
     "energy": 0.782,
@@ -1708,14 +1708,14 @@
     "speechiness": 0.039,
     "loudness": -4.998,
     "tempo": 119.982,
-    "tsne_x": 14.422037124633789,
-    "tsne_y": 8.158896446228027
+    "tsne_x": -5.042346477508545,
+    "tsne_y": 3.8476502895355225
   },
   {
     "name": "Material Girl - Extended Dance Remix",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 39,
     "danceability": 0.735,
     "energy": 0.74,
@@ -1724,14 +1724,14 @@
     "speechiness": 0.0519,
     "loudness": -12.647,
     "tempo": 136.42,
-    "tsne_x": 12.554706573486328,
-    "tsne_y": 8.878873825073242
+    "tsne_x": -0.5016543865203857,
+    "tsne_y": 3.654545307159424
   },
   {
     "name": "Vogue - 12\" Version",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 39,
     "danceability": 0.684,
     "energy": 0.615,
@@ -1740,14 +1740,14 @@
     "speechiness": 0.0489,
     "loudness": -15.083,
     "tempo": 116.213,
-    "tsne_x": 9.536494255065918,
-    "tsne_y": 11.82295036315918
+    "tsne_x": -4.777744770050049,
+    "tsne_y": 8.392309188842773
   },
   {
     "name": "Rescue Me",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 39,
     "danceability": 0.725,
     "energy": 0.652,
@@ -1756,14 +1756,14 @@
     "speechiness": 0.05,
     "loudness": -10.017,
     "tempo": 117.946,
-    "tsne_x": 12.554677963256836,
-    "tsne_y": 10.836475372314453
+    "tsne_x": -5.050227642059326,
+    "tsne_y": 5.325780391693115
   },
   {
     "name": "White Heat",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 39,
     "danceability": 0.67,
     "energy": 0.696,
@@ -1772,14 +1772,14 @@
     "speechiness": 0.0586,
     "loudness": -15.278,
     "tempo": 108.517,
-    "tsne_x": 11.053564071655273,
-    "tsne_y": 11.33607292175293
+    "tsne_x": -1.2714295387268066,
+    "tsne_y": 4.922116279602051
   },
   {
     "name": "Bad Girl",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 39,
     "danceability": 0.645,
     "energy": 0.484,
@@ -1788,14 +1788,14 @@
     "speechiness": 0.0396,
     "loudness": -11.233,
     "tempo": 146.897,
-    "tsne_x": 12.071459770202637,
-    "tsne_y": 8.806417465209961
+    "tsne_x": -5.620769500732422,
+    "tsne_y": 5.502326488494873
   },
   {
     "name": "Fever",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 39,
     "danceability": 0.778,
     "energy": 0.727,
@@ -1804,14 +1804,14 @@
     "speechiness": 0.0524,
     "loudness": -10.296,
     "tempo": 115.94,
-    "tsne_x": 11.368511199951172,
-    "tsne_y": 11.32856559753418
+    "tsne_x": -5.127204895019531,
+    "tsne_y": 5.43101692199707
   },
   {
     "name": "Amazing",
     "artists": "['Madonna']",
     "release_year": 2000,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 39,
     "danceability": 0.563,
     "energy": 0.842,
@@ -1820,8 +1820,8 @@
     "speechiness": 0.0552,
     "loudness": -7.029,
     "tempo": 135.012,
-    "tsne_x": 11.965604782104492,
-    "tsne_y": 9.744695663452148
+    "tsne_x": -4.393895626068115,
+    "tsne_y": 6.105364799499512
   },
   {
     "name": "Where Life Begins",
@@ -1836,14 +1836,14 @@
     "speechiness": 0.0351,
     "loudness": -10.745,
     "tempo": 99.983,
-    "tsne_x": 7.917882919311523,
-    "tsne_y": 11.994843482971191
+    "tsne_x": -4.090883731842041,
+    "tsne_y": 8.142276763916016
   },
   {
     "name": "Buenos Aires",
     "artists": "['Madonna']",
     "release_year": 1996,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 38,
     "danceability": 0.772,
     "energy": 0.805,
@@ -1852,14 +1852,14 @@
     "speechiness": 0.0848,
     "loudness": -8.363,
     "tempo": 122.95,
-    "tsne_x": 10.831585884094238,
-    "tsne_y": 9.703675270080566
+    "tsne_x": -4.96260404586792,
+    "tsne_y": 4.386042594909668
   },
   {
     "name": "Survival",
     "artists": "['Madonna']",
     "release_year": 1994,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 38,
     "danceability": 0.732,
     "energy": 0.623,
@@ -1868,8 +1868,8 @@
     "speechiness": 0.0334,
     "loudness": -9.004,
     "tempo": 94.994,
-    "tsne_x": 12.619315147399902,
-    "tsne_y": 12.523876190185547
+    "tsne_x": -2.015049457550049,
+    "tsne_y": 5.666377067565918
   },
   {
     "name": "Another Suitcase in Another Hall",
@@ -1884,8 +1884,8 @@
     "speechiness": 0.0353,
     "loudness": -14.166,
     "tempo": 125.956,
-    "tsne_x": 15.362556457519531,
-    "tsne_y": 12.899934768676758
+    "tsne_x": 0.02385556325316429,
+    "tsne_y": 7.131128311157227
   },
   {
     "name": "Oh What a Circus",
@@ -1900,14 +1900,14 @@
     "speechiness": 0.0431,
     "loudness": -10.325,
     "tempo": 135.455,
-    "tsne_x": 15.195182800292969,
-    "tsne_y": 11.920936584472656
+    "tsne_x": 0.17343150079250336,
+    "tsne_y": 6.760339736938477
   },
   {
     "name": "Keep It Together",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 38,
     "danceability": 0.719,
     "energy": 0.819,
@@ -1916,14 +1916,14 @@
     "speechiness": 0.0448,
     "loudness": -10.579,
     "tempo": 103.078,
-    "tsne_x": 11.23985767364502,
-    "tsne_y": 11.549018859863281
+    "tsne_x": -1.4029407501220703,
+    "tsne_y": 4.75623893737793
   },
   {
     "name": "Physical Attraction",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 37,
     "danceability": 0.881,
     "energy": 0.562,
@@ -1932,14 +1932,14 @@
     "speechiness": 0.0759,
     "loudness": -13.091,
     "tempo": 120.199,
-    "tsne_x": 10.575859069824219,
-    "tsne_y": 11.174056053161621
+    "tsne_x": -2.692246913909912,
+    "tsne_y": 4.091964244842529
   },
   {
     "name": "Jimmy Jimmy",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 37,
     "danceability": 0.674,
     "energy": 0.671,
@@ -1948,14 +1948,14 @@
     "speechiness": 0.0342,
     "loudness": -11.075,
     "tempo": 151.079,
-    "tsne_x": 12.247795104980469,
-    "tsne_y": 8.651078224182129
+    "tsne_x": 0.46436476707458496,
+    "tsne_y": 4.0081095695495605
   },
   {
     "name": "Love Makes the World Go Round",
     "artists": "['Madonna']",
     "release_year": 1986,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 37,
     "danceability": 0.775,
     "energy": 0.759,
@@ -1964,14 +1964,14 @@
     "speechiness": 0.0339,
     "loudness": -9.502,
     "tempo": 121.9,
-    "tsne_x": 14.55239200592041,
-    "tsne_y": 9.830470085144043
+    "tsne_x": -2.1333250999450684,
+    "tsne_y": 3.326146125793457
   },
   {
     "name": "Till Death Do Us Part",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 37,
     "danceability": 0.615,
     "energy": 0.783,
@@ -1980,14 +1980,14 @@
     "speechiness": 0.0289,
     "loudness": -11.862,
     "tempo": 143.783,
-    "tsne_x": 12.514283180236816,
-    "tsne_y": 8.609577178955078
+    "tsne_x": 0.21454952657222748,
+    "tsne_y": 4.3710246086120605
   },
   {
     "name": "Don't Stop",
     "artists": "['Madonna', 'Daniel Abraham']",
     "release_year": 1994,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 36,
     "danceability": 0.733,
     "energy": 0.789,
@@ -1996,8 +1996,8 @@
     "speechiness": 0.0584,
     "loudness": -7.95,
     "tempo": 94.858,
-    "tsne_x": 11.545722961425781,
-    "tsne_y": 10.523213386535645
+    "tsne_x": -5.025451183319092,
+    "tsne_y": 4.660077095031738
   },
   {
     "name": "I'd Be Surprisingly Good for You",
@@ -2012,8 +2012,8 @@
     "speechiness": 0.047,
     "loudness": -13.888,
     "tempo": 100.647,
-    "tsne_x": 14.851761817932129,
-    "tsne_y": 13.231213569641113
+    "tsne_x": -0.3244912624359131,
+    "tsne_y": 7.144323348999023
   },
   {
     "name": "The Look of Love",
@@ -2028,14 +2028,14 @@
     "speechiness": 0.0312,
     "loudness": -14.231,
     "tempo": 91.93,
-    "tsne_x": 13.425000190734863,
-    "tsne_y": 13.092040061950684
+    "tsne_x": -1.4641892910003662,
+    "tsne_y": 6.520135402679443
   },
   {
     "name": "Spotlight",
     "artists": "['Madonna', 'Jellybean Benitiz']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 36,
     "danceability": 0.736,
     "energy": 0.714,
@@ -2044,8 +2044,8 @@
     "speechiness": 0.0349,
     "loudness": -11.136,
     "tempo": 117.96,
-    "tsne_x": 12.904562950134277,
-    "tsne_y": 9.812962532043457
+    "tsne_x": -0.4971957206726074,
+    "tsne_y": 4.7009100914001465
   },
   {
     "name": "Promise to Try",
@@ -2060,8 +2060,8 @@
     "speechiness": 0.0428,
     "loudness": -21.976,
     "tempo": 113.972,
-    "tsne_x": 15.379679679870605,
-    "tsne_y": 13.33395004272461
+    "tsne_x": 0.3003832995891571,
+    "tsne_y": 7.566831588745117
   },
   {
     "name": "Shoo-Bee-Doo",
@@ -2076,14 +2076,14 @@
     "speechiness": 0.0411,
     "loudness": -11.973,
     "tempo": 94.156,
-    "tsne_x": 14.07955265045166,
-    "tsne_y": 13.180623054504395
+    "tsne_x": -1.0674262046813965,
+    "tsne_y": 7.016721248626709
   },
   {
     "name": "Stay",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 36,
     "danceability": 0.715,
     "energy": 0.706,
@@ -2092,8 +2092,8 @@
     "speechiness": 0.0453,
     "loudness": -12.249,
     "tempo": 118.419,
-    "tsne_x": 15.548042297363281,
-    "tsne_y": 10.504036903381348
+    "tsne_x": -2.260850667953491,
+    "tsne_y": 3.6486222743988037
   },
   {
     "name": "High Flying, Adored",
@@ -2108,14 +2108,14 @@
     "speechiness": 0.0358,
     "loudness": -11.961,
     "tempo": 122.953,
-    "tsne_x": 14.95975399017334,
-    "tsne_y": 12.453879356384277
+    "tsne_x": -0.4437481164932251,
+    "tsne_y": 6.790658473968506
   },
   {
     "name": "Love Song",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 35,
     "danceability": 0.771,
     "energy": 0.457,
@@ -2124,14 +2124,14 @@
     "speechiness": 0.255,
     "loudness": -12.277,
     "tempo": 158.558,
-    "tsne_x": 10.113546371459961,
-    "tsne_y": 9.358661651611328
+    "tsne_x": -0.3295143246650696,
+    "tsne_y": 3.1232516765594482
   },
   {
     "name": "Burning Up - 12\" Version",
     "artists": "['Madonna', 'John \"Jellybean\" Benitez']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 35,
     "danceability": 0.872,
     "energy": 0.811,
@@ -2140,14 +2140,14 @@
     "speechiness": 0.0453,
     "loudness": -11.483,
     "tempo": 139.325,
-    "tsne_x": 12.754525184631348,
-    "tsne_y": 9.010110855102539
+    "tsne_x": -1.0319955348968506,
+    "tsne_y": 3.6248385906219482
   },
   {
     "name": "Pretender",
     "artists": "['Madonna']",
     "release_year": 1984,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 35,
     "danceability": 0.843,
     "energy": 0.635,
@@ -2156,8 +2156,8 @@
     "speechiness": 0.0327,
     "loudness": -12.244,
     "tempo": 111.128,
-    "tsne_x": 13.404561996459961,
-    "tsne_y": 9.959972381591797
+    "tsne_x": -1.1200703382492065,
+    "tsne_y": 3.979210138320923
   },
   {
     "name": "Goodnight and Thank You",
@@ -2172,14 +2172,14 @@
     "speechiness": 0.0436,
     "loudness": -9.627,
     "tempo": 73.817,
-    "tsne_x": 13.700769424438477,
-    "tsne_y": 13.663618087768555
+    "tsne_x": -1.3841866254806519,
+    "tsne_y": 6.851906776428223
   },
   {
     "name": "Physical Attraction",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 34,
     "danceability": 0.907,
     "energy": 0.641,
@@ -2188,14 +2188,14 @@
     "speechiness": 0.0746,
     "loudness": -7.694,
     "tempo": 119.2,
-    "tsne_x": 10.688441276550293,
-    "tsne_y": 10.486746788024902
+    "tsne_x": -3.1019294261932373,
+    "tsne_y": 3.90096116065979
   },
   {
     "name": "Bye Bye Baby",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 34,
     "danceability": 0.757,
     "energy": 0.612,
@@ -2204,8 +2204,8 @@
     "speechiness": 0.0356,
     "loudness": -9.986,
     "tempo": 108.619,
-    "tsne_x": 4.646672248840332,
-    "tsne_y": 11.674188613891602
+    "tsne_x": -4.3472514152526855,
+    "tsne_y": 8.406025886535645
   },
   {
     "name": "Think of Me",
@@ -2220,14 +2220,14 @@
     "speechiness": 0.0403,
     "loudness": -5.971,
     "tempo": 118.411,
-    "tsne_x": 8.645853042602539,
-    "tsne_y": 12.168312072753906
+    "tsne_x": -5.511521339416504,
+    "tsne_y": 5.783353805541992
   },
   {
     "name": "Lucky Star - New Mix",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 33,
     "danceability": 0.801,
     "energy": 0.722,
@@ -2236,8 +2236,8 @@
     "speechiness": 0.0444,
     "loudness": -4.509,
     "tempo": 117.256,
-    "tsne_x": 15.19704818725586,
-    "tsne_y": 9.542425155639648
+    "tsne_x": -3.4743008613586426,
+    "tsne_y": 3.333430528640747
   },
   {
     "name": "Sooner or Later",
@@ -2252,14 +2252,14 @@
     "speechiness": 0.0288,
     "loudness": -14.479,
     "tempo": 71.39,
-    "tsne_x": 14.623217582702637,
-    "tsne_y": 13.82956600189209
+    "tsne_x": -0.46971598267555237,
+    "tsne_y": 7.835465908050537
   },
   {
     "name": "Waiting",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 33,
     "danceability": 0.745,
     "energy": 0.622,
@@ -2268,14 +2268,14 @@
     "speechiness": 0.0389,
     "loudness": -8.164,
     "tempo": 95.766,
-    "tsne_x": 12.448822021484375,
-    "tsne_y": 12.143589973449707
+    "tsne_x": -1.9884788990020752,
+    "tsne_y": 5.1257853507995605
   },
   {
     "name": "Holiday",
     "artists": "['Madonna']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 32,
     "danceability": 0.709,
     "energy": 0.764,
@@ -2284,14 +2284,14 @@
     "speechiness": 0.0356,
     "loudness": -10.948,
     "tempo": 117.635,
-    "tsne_x": 12.876920700073242,
-    "tsne_y": 9.585494041442871
+    "tsne_x": -0.48980915546417236,
+    "tsne_y": 4.735509395599365
   },
   {
     "name": "Thief of Hearts",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 32,
     "danceability": 0.809,
     "energy": 0.655,
@@ -2300,14 +2300,14 @@
     "speechiness": 0.0318,
     "loudness": -8.479,
     "tempo": 117.952,
-    "tsne_x": 10.907646179199219,
-    "tsne_y": 12.035792350769043
+    "tsne_x": -5.377526760101318,
+    "tsne_y": 5.331423282623291
   },
   {
     "name": "Can't Stop",
     "artists": "['Madonna']",
     "release_year": 1987,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 31,
     "danceability": 0.737,
     "energy": 0.798,
@@ -2316,14 +2316,14 @@
     "speechiness": 0.0295,
     "loudness": -10.415,
     "tempo": 114.999,
-    "tsne_x": 15.374682426452637,
-    "tsne_y": 10.08283805847168
+    "tsne_x": -3.5047593116760254,
+    "tsne_y": 5.552151203155518
   },
   {
     "name": "I Know It",
     "artists": "['Madonna']",
     "release_year": 1983,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 31,
     "danceability": 0.877,
     "energy": 0.423,
@@ -2332,14 +2332,14 @@
     "speechiness": 0.0405,
     "loudness": -12.084,
     "tempo": 128.375,
-    "tsne_x": 13.793432235717773,
-    "tsne_y": 10.502812385559082
+    "tsne_x": -1.2458932399749756,
+    "tsne_y": 3.3367691040039062
   },
   {
     "name": "Act of Contrition",
     "artists": "['Madonna']",
     "release_year": 1989,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 31,
     "danceability": 0.574,
     "energy": 0.87,
@@ -2348,14 +2348,14 @@
     "speechiness": 0.281,
     "loudness": -15.162,
     "tempo": 110.934,
-    "tsne_x": 10.351873397827148,
-    "tsne_y": 9.206884384155273
+    "tsne_x": -4.052548885345459,
+    "tsne_y": 5.886474132537842
   },
   {
     "name": "Why's It so Hard",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 2,
     "popularity": 30,
     "danceability": 0.612,
     "energy": 0.617,
@@ -2364,14 +2364,14 @@
     "speechiness": 0.0378,
     "loudness": -9.079,
     "tempo": 80.93,
-    "tsne_x": 11.070783615112305,
-    "tsne_y": 12.205302238464355
+    "tsne_x": -3.389054775238037,
+    "tsne_y": 8.4666109085083
   },
   {
     "name": "Words",
     "artists": "['Madonna']",
     "release_year": 1992,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 30,
     "danceability": 0.712,
     "energy": 0.708,
@@ -2380,8 +2380,8 @@
     "speechiness": 0.0296,
     "loudness": -9.277,
     "tempo": 116.253,
-    "tsne_x": 13.172401428222656,
-    "tsne_y": 11.125603675842285
+    "tsne_x": -4.093214511871338,
+    "tsne_y": 5.353481769561768
   },
   {
     "name": "Santa Baby",
@@ -2396,8 +2396,8 @@
     "speechiness": 0.0476,
     "loudness": -12.977,
     "tempo": 113.825,
-    "tsne_x": 15.52308177947998,
-    "tsne_y": 11.221993446350098
+    "tsne_x": -0.07300284504890442,
+    "tsne_y": 6.2281365394592285
   },
   {
     "name": "In This Life",
@@ -2412,8 +2412,8 @@
     "speechiness": 0.0277,
     "loudness": -10.437,
     "tempo": 146.282,
-    "tsne_x": 14.72113037109375,
-    "tsne_y": 11.456511497497559
+    "tsne_x": -1.8998290300369263,
+    "tsne_y": 7.637053489685059
   },
   {
     "name": "Something to Remember",
@@ -2428,8 +2428,8 @@
     "speechiness": 0.0241,
     "loudness": -8.851,
     "tempo": 137.988,
-    "tsne_x": 15.30727481842041,
-    "tsne_y": 12.48958969116211
+    "tsne_x": -0.4430829882621765,
+    "tsne_y": 7.080727577209473
   },
   {
     "name": "He's a Man",
@@ -2444,14 +2444,14 @@
     "speechiness": 0.0313,
     "loudness": -9.675,
     "tempo": 111.03,
-    "tsne_x": 14.340697288513184,
-    "tsne_y": 12.319511413574219
+    "tsne_x": -1.181660771369934,
+    "tsne_y": 6.819885730743408
   },
   {
     "name": "Back in Business",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 27,
     "danceability": 0.559,
     "energy": 0.622,
@@ -2460,14 +2460,14 @@
     "speechiness": 0.0936,
     "loudness": -9.947,
     "tempo": 174.651,
-    "tsne_x": 11.339508056640625,
-    "tsne_y": 8.585801124572754
+    "tsne_x": 0.10538939386606216,
+    "tsne_y": 3.315730333328247
   },
   {
     "name": "I'm Going Bananas",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 27,
     "danceability": 0.666,
     "energy": 0.659,
@@ -2476,8 +2476,8 @@
     "speechiness": 0.105,
     "loudness": -8.556,
     "tempo": 103.838,
-    "tsne_x": 10.58590316772461,
-    "tsne_y": 9.973570823669434
+    "tsne_x": -1.866371989250183,
+    "tsne_y": 5.250570297241211
   },
   {
     "name": "Now I'm Following You (Part I)",
@@ -2492,8 +2492,8 @@
     "speechiness": 0.0295,
     "loudness": -12.451,
     "tempo": 75.934,
-    "tsne_x": 15.862449645996094,
-    "tsne_y": 10.796541213989258
+    "tsne_x": -0.14135804772377014,
+    "tsne_y": 6.919763565063477
   },
   {
     "name": "More",
@@ -2508,14 +2508,14 @@
     "speechiness": 0.0955,
     "loudness": -10.683,
     "tempo": 104.625,
-    "tsne_x": 10.638251304626465,
-    "tsne_y": 10.00490665435791
+    "tsne_x": -1.0486760139465332,
+    "tsne_y": 5.6452155113220215
   },
   {
     "name": "Cry Baby",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 26,
     "danceability": 0.836,
     "energy": 0.144,
@@ -2524,8 +2524,8 @@
     "speechiness": 0.0536,
     "loudness": -13.715,
     "tempo": 138.128,
-    "tsne_x": 15.367015838623047,
-    "tsne_y": 12.211907386779785
+    "tsne_x": -0.7675548791885376,
+    "tsne_y": 3.2270171642303467
   },
   {
     "name": "What Can You Lose",
@@ -2540,14 +2540,14 @@
     "speechiness": 0.0352,
     "loudness": -18.956,
     "tempo": 102.785,
-    "tsne_x": 15.3413724899292,
-    "tsne_y": 13.52561092376709
+    "tsne_x": 0.09050548821687698,
+    "tsne_y": 7.821077346801758
   },
   {
     "name": "Now I'm Following You (Pt. 2)",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 3,
     "popularity": 25,
     "danceability": 0.686,
     "energy": 0.817,
@@ -2556,14 +2556,14 @@
     "speechiness": 0.0679,
     "loudness": -8.906,
     "tempo": 98.978,
-    "tsne_x": 11.040475845336914,
-    "tsne_y": 10.933782577514648
+    "tsne_x": -4.575540065765381,
+    "tsne_y": 5.485416889190674
   },
   {
     "name": "Over and Over - Extended Version",
     "artists": "['Madonna']",
     "release_year": 1987,
-    "cluster": 2,
+    "cluster": 1,
     "popularity": 25,
     "danceability": 0.769,
     "energy": 0.817,
@@ -2572,14 +2572,14 @@
     "speechiness": 0.0533,
     "loudness": -10.768,
     "tempo": 149.178,
-    "tsne_x": 7.297220230102539,
-    "tsne_y": 11.72716236114502
+    "tsne_x": -2.951465606689453,
+    "tsne_y": 7.188774585723877
   },
   {
     "name": "Justify My Love - The Beast Within Mix",
     "artists": "['Madonna', 'Lenny Kravitz']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 23,
     "danceability": 0.694,
     "energy": 0.85,
@@ -2588,14 +2588,14 @@
     "speechiness": 0.0787,
     "loudness": -11.339,
     "tempo": 96.123,
-    "tsne_x": 5.539544582366943,
-    "tsne_y": 11.43967056274414
+    "tsne_x": -3.5048251152038574,
+    "tsne_y": 7.264730453491211
   },
   {
     "name": "Vogue - Bette Davis Dub",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 23,
     "danceability": 0.667,
     "energy": 0.706,
@@ -2604,14 +2604,14 @@
     "speechiness": 0.0395,
     "loudness": -14.302,
     "tempo": 116.15,
-    "tsne_x": 4.9323625564575195,
-    "tsne_y": 11.491327285766602
+    "tsne_x": -4.3894877433776855,
+    "tsne_y": 8.017261505126953
   },
   {
     "name": "Vogue - Strike-A-Pose Dub",
     "artists": "['Madonna']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 22,
     "danceability": 0.721,
     "energy": 0.549,
@@ -2620,14 +2620,14 @@
     "speechiness": 0.0663,
     "loudness": -17.095,
     "tempo": 116.118,
-    "tsne_x": 4.666752815246582,
-    "tsne_y": 11.715737342834473
+    "tsne_x": -4.837182521820068,
+    "tsne_y": 8.334606170654297
   },
   {
     "name": "Express Yourself - Shep's 'Spressin Himself Re-Remix",
     "artists": "['Madonna', 'Shep Pettibone']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 20,
     "danceability": 0.76,
     "energy": 0.714,
@@ -2636,14 +2636,14 @@
     "speechiness": 0.0479,
     "loudness": -11.93,
     "tempo": 115.854,
-    "tsne_x": 12.498525619506836,
-    "tsne_y": 10.913243293762207
+    "tsne_x": -5.460199356079102,
+    "tsne_y": 4.951414108276367
   },
   {
     "name": "Justify My Love - Orbit Edit",
     "artists": "['Madonna', 'William Orbit']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 20,
     "danceability": 0.787,
     "energy": 0.619,
@@ -2652,14 +2652,14 @@
     "speechiness": 0.0649,
     "loudness": -13.473,
     "tempo": 99.613,
-    "tsne_x": 4.798128128051758,
-    "tsne_y": 11.646206855773926
+    "tsne_x": -5.20206880569458,
+    "tsne_y": 7.999568462371826
   },
   {
     "name": "Justify My Love - Hip Hop Mix",
     "artists": "['Madonna', 'Andre Betts']",
     "release_year": 1990,
-    "cluster": 1,
+    "cluster": 2,
     "popularity": 19,
     "danceability": 0.855,
     "energy": 0.519,
@@ -2668,14 +2668,14 @@
     "speechiness": 0.215,
     "loudness": -13.12,
     "tempo": 95.927,
-    "tsne_x": 4.903364658355713,
-    "tsne_y": 11.970874786376953
+    "tsne_x": -5.445898532867432,
+    "tsne_y": 7.743686199188232
   },
   {
     "name": "Hanky Panky - Bare Bones Single Mix",
     "artists": "['Madonna', 'Kevin Gilbert']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 19,
     "danceability": 0.638,
     "energy": 0.844,
@@ -2684,14 +2684,14 @@
     "speechiness": 0.0652,
     "loudness": -7.975,
     "tempo": 170.281,
-    "tsne_x": 11.63081169128418,
-    "tsne_y": 8.474299430847168
+    "tsne_x": 0.3630599081516266,
+    "tsne_y": 3.430094003677368
   },
   {
     "name": "Hanky Panky - Bare Bottom 12\" Mix",
     "artists": "['Madonna', 'Kevin Gilbert']",
     "release_year": 1990,
-    "cluster": 0,
+    "cluster": 1,
     "popularity": 17,
     "danceability": 0.672,
     "energy": 0.837,
@@ -2700,7 +2700,7 @@
     "speechiness": 0.0677,
     "loudness": -8.43,
     "tempo": 170.152,
-    "tsne_x": 11.703803062438965,
-    "tsne_y": 8.35854434967041
+    "tsne_x": 0.585387110710144,
+    "tsne_y": 3.3686447143554688
   }
 ]

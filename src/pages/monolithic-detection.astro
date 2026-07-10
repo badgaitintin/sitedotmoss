@@ -155,28 +155,31 @@
 			/* ===========================
 			   SIDEBAR & WORKSPACE
 			=========================== */
-			.wbc-sidebar {
-				width: 300px;
+			/* ===========================
+			   SIDEBAR, GALAXY & CONTROL PANELS
+			=========================== */
+			.wbc-series-sidebar {
+				width: 250px;
 				flex-shrink: 0;
 				display: flex;
 				flex-direction: column;
 				gap: 16px;
 				border-right: 1px solid var(--bh-border);
-				padding-right: 24px;
+				padding-right: 20px;
 				overflow-y: auto;
 			}
-			.wbc-sidebar::-webkit-scrollbar {
-				width: 4px;
+			.wbc-series-sidebar::-webkit-scrollbar {
+				width: 3px;
 			}
-			.wbc-sidebar::-webkit-scrollbar-track {
+			.wbc-series-sidebar::-webkit-scrollbar-track {
 				background: transparent;
 			}
-			.wbc-sidebar::-webkit-scrollbar-thumb {
+			.wbc-series-sidebar::-webkit-scrollbar-thumb {
 				background: rgba(0, 0, 0, 0.08);
-				border-radius: 0px;
+				border-radius: 99px;
 			}
 
-			.wbc-workspace {
+			.wbc-workspace-canvas {
 				flex: 1;
 				display: flex;
 				flex-direction: column;
@@ -185,6 +188,72 @@
 				overflow: hidden;
 				gap: 16px;
 				justify-content: space-between;
+			}
+
+			.wbc-control-sidebar {
+				width: 315px;
+				flex-shrink: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				border-left: 1px solid var(--bh-border);
+				padding-left: 20px;
+				overflow-y: auto;
+			}
+			.wbc-control-sidebar::-webkit-scrollbar {
+				width: 3px;
+			}
+			.wbc-control-sidebar::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.wbc-control-sidebar::-webkit-scrollbar-thumb {
+				background: rgba(0, 0, 0, 0.08);
+				border-radius: 99px;
+			}
+
+			.series-btn {
+				background: rgba(255, 255, 255, 0.5);
+				border: 1px solid var(--bh-border);
+				border-radius: 0px;
+				padding: 12px;
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				cursor: pointer;
+				transition: all 0.2s;
+				position: relative;
+				text-align: left;
+				width: 100%;
+			}
+			.series-btn:hover:not(.locked) {
+				background: rgba(255, 255, 255, 0.8);
+				border-color: var(--bh-accent);
+			}
+			.series-btn.active {
+				background: rgba(255, 255, 255, 0.9);
+				border-color: #7c3aed;
+				box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
+			}
+			.series-color-bar {
+				width: 4px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				bottom: 0;
+			}
+			.series-title-wrap {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.series-name {
+				font-size: 0.82rem;
+				font-weight: bold;
+				color: var(--bh-text);
+			}
+			.series-desc {
+				font-size: 0.65rem;
+				color: var(--bh-muted);
 			}
 
 			/* ===========================
@@ -691,8 +760,8 @@
 		<div class="page-wrap">
 			<main class="bh-page">
 				<div class="bh-main-card">
-					<!-- SIDEBAR CONTROLS -->
-					<aside class="wbc-sidebar">
+					<!-- SIDEBAR SERIES SELECTOR -->
+					<aside class="wbc-series-sidebar">
 						<header class="bh-header">
 							<a href="/" class="wbc-back-btn" id="backBtn">
 								<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -700,94 +769,26 @@
 								</svg>
 								Back
 							</a>
-							<h2 class="bh-title">
-								<span class="title-mono">Monolithic</span>
-								<span class="title-dape">d-Ape</span>
+							<h2 class="bh-title" style="font-size: 1.25rem; margin-top: 4px;">
+								<span class="title-mono">d-Ape</span>
+								<span class="title-dape">Series</span>
 							</h2>
-							<p class="bh-subtitle">On-Device Depth Estimation</p>
+							<p class="bh-subtitle">On-Device Inference</p>
 						</header>
 
-						<!-- Model Load Status Card -->
-						<div class="model-status-card">
-							<div class="status-row">
-								<span class="status-label">Model Status</span>
-								<div class="model-status idle" id="modelStatus">
-									<span class="status-dot"></span>
-									<span id="modelStatusText">Not Loaded</span>
+						<div class="series-list" style="display: flex; flex-direction: column; gap: 8px;">
+							<button class="series-btn active" data-series="monolithic" type="button">
+								<div class="series-color-bar" style="background-color: #7c3aed;"></div>
+								<div class="series-title-wrap">
+									<span class="series-name">Depth Estimation</span>
+									<span class="series-desc">Monolithic Stereo Model</span>
 								</div>
-							</div>
-							<div class="model-load-bar" id="loadBar">
-								<div class="load-bar-track">
-									<div class="load-bar-fill" id="loadBarFill"></div>
-								</div>
-								<div class="load-bar-text" id="loadBarText">Initializing...</div>
-							</div>
-						</div>
-
-						<!-- Mode Select Tabs -->
-						<div class="mode-toggle">
-							<button class="mode-btn active" id="btnSingle" type="button">Single</button>
-							<button class="mode-btn" id="btnStereo" type="button">Stereo</button>
-							<button class="mode-btn" id="btnCamera" type="button">Live Camera</button>
-						</div>
-
-						<!-- Camera input selections -->
-						<div id="cameraControls" style="display:none;">
-							<div style="display:flex; gap:8px; margin-bottom:8px;">
-								<select id="cameraSelect" style="flex:1; background:#ffffff; color:var(--bh-text); border:1px solid var(--bh-border); padding:6px 10px; font-family:inherit; font-size:0.75rem;" aria-label="Select camera">
-									<option value="">Detecting cameras...</option>
-								</select>
-								<button class="sample-btn" id="btnRefreshCameras" type="button" style="flex-grow:0; width:auto; padding:6px 10px; margin:0;" title="Refresh cameras">Refresh</button>
-							</div>
-							<button class="run-btn" id="btnCameraToggle" type="button" style="padding:8px 12px; font-size:0.75rem;" disabled>
-								Start Camera
 							</button>
 						</div>
-
-						<!-- Upload drag and drop targets -->
-						<div id="uploadLeft">
-							<div class="upload-zone" id="dropZoneLeft">
-								<input type="file" id="fileLeft" accept="image/*" aria-label="Upload left image" />
-								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-								</svg>
-								<div class="upload-label">
-									<strong>Upload image</strong> or drag here
-									<span style="display:block; font-size:0.65rem; opacity:0.6; margin-top:2px;">Resizes to 320x1024</span>
-								</div>
-							</div>
-						</div>
-
-						<div id="uploadRight" style="display:none;">
-							<div class="upload-zone" id="dropZoneRight">
-								<input type="file" id="fileRight" accept="image/*" aria-label="Upload right image" />
-								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-								</svg>
-								<div class="upload-label">
-									<strong>Right image</strong> (optional stereo pair)
-								</div>
-							</div>
-						</div>
-
-						<!-- Hidden video tag for mediaDevices -->
-						<video id="cameraVideo" style="display:none;" autoplay playsinline></video>
-
-						<!-- Action triggers -->
-						<div class="sample-row">
-							<button class="sample-btn" id="sampleBtn" type="button">Sample Image</button>
-							<button class="sample-btn" id="clearBtn" type="button">✕ Clear</button>
-						</div>
-
-						<button class="run-btn" id="runBtn" type="button" disabled style="margin-top:auto;">
-							<span class="run-arrow">Run Inference →</span>
-							<span class="spinner"></span>
-							<span id="runBtnText">Run Inference →</span>
-						</button>
 					</aside>
 
 					<!-- WORKSPACE VIEWPORTS -->
-					<section class="wbc-workspace">
+					<section class="wbc-workspace-canvas">
 						<div class="workspace-canvasses">
 							<!-- Input Viewport -->
 							<div class="viewport-container">
@@ -871,6 +872,95 @@
 							</div>
 						</footer>
 					</section>
+
+					<!-- WBC CONTROL SIDEBAR (RIGHT COLUMN) -->
+					<aside class="wbc-control-sidebar">
+						<header class="bh-header" style="margin-bottom: 4px;">
+							<h3 class="bh-title" style="font-size: 1.1rem; font-weight: 700; line-height: 1.2;">
+								<span class="title-mono">Model</span>
+								<span class="title-dape">Settings</span>
+							</h3>
+							<p class="bh-subtitle">Configure model inference parameters</p>
+						</header>
+
+						<!-- Model Load Status Card -->
+						<div class="model-status-card">
+							<div class="status-row">
+								<span class="status-label">Model Status</span>
+								<div class="model-status idle" id="modelStatus">
+									<span class="status-dot"></span>
+									<span id="modelStatusText">Not Loaded</span>
+								</div>
+							</div>
+							<div class="model-load-bar" id="loadBar">
+								<div class="load-bar-track">
+									<div class="load-bar-fill" id="loadBarFill"></div>
+								</div>
+								<div class="load-bar-text" id="loadBarText">Initializing...</div>
+							</div>
+						</div>
+
+						<!-- Mode Select Tabs -->
+						<div class="mode-toggle">
+							<button class="mode-btn active" id="btnSingle" type="button">Single</button>
+							<button class="mode-btn" id="btnStereo" type="button">Stereo</button>
+							<button class="mode-btn" id="btnCamera" type="button">Live Camera</button>
+						</div>
+
+						<!-- Camera input selections -->
+						<div id="cameraControls" style="display:none;">
+							<div style="display:flex; gap:8px; margin-bottom:8px;">
+								<select id="cameraSelect" style="flex:1; background:#ffffff; color:var(--bh-text); border:1px solid var(--bh-border); padding:6px 10px; font-family:inherit; font-size:0.75rem;" aria-label="Select camera">
+									<option value="">Detecting cameras...</option>
+								</select>
+								<button class="sample-btn" id="btnRefreshCameras" type="button" style="flex-grow:0; width:auto; padding:6px 10px; margin:0;" title="Refresh cameras">Refresh</button>
+							</div>
+							<button class="run-btn" id="btnCameraToggle" type="button" style="padding:8px 12px; font-size:0.75rem;" disabled>
+								Start Camera
+							</button>
+						</div>
+
+						<!-- Upload drag and drop targets -->
+						<div id="uploadLeft">
+							<div class="upload-zone" id="dropZoneLeft">
+								<input type="file" id="fileLeft" accept="image/*" aria-label="Upload left image" />
+								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
+								</svg>
+								<div class="upload-label">
+									<strong>Upload image</strong> or drag here
+									<span style="display:block; font-size:0.65rem; opacity:0.6; margin-top:2px;">Resizes to 320x1024</span>
+								</div>
+							</div>
+						</div>
+
+						<div id="uploadRight" style="display:none;">
+							<div class="upload-zone" id="dropZoneRight">
+								<input type="file" id="fileRight" accept="image/*" aria-label="Upload right image" />
+								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
+								</svg>
+								<div class="upload-label">
+									<strong>Right image</strong> (optional stereo pair)
+								</div>
+							</div>
+						</div>
+
+						<!-- Hidden video tag for mediaDevices -->
+						<video id="cameraVideo" style="display:none;" autoplay playsinline></video>
+
+						<!-- Action triggers -->
+						<div class="sample-row">
+							<button class="sample-btn" id="sampleBtn" type="button">Sample Image</button>
+							<button class="sample-btn" id="clearBtn" type="button">✕ Clear</button>
+						</div>
+
+						<button class="run-btn" id="runBtn" type="button" disabled style="margin-top:auto;">
+							<span class="run-arrow">Run Inference →</span>
+							<span class="spinner"></span>
+							<span id="runBtnText">Run Inference →</span>
+						</button>
+					</aside>
 				</div>
 			</main>
 		</div>
@@ -1060,7 +1150,7 @@
 				modelLoading = true;
 				setStatus('loading', 'Loading...');
 				loadBar.classList.add('visible');
-				loadBarText.textContent = 'Downloading model weights (~73 MB)…';
+				loadBarText.textContent = 'Checking model weights cache…';
 				loadBarFill.style.width = '5%';
 
 				try {
@@ -1069,9 +1159,25 @@
 						throw new Error('ONNX Runtime Web not available. Check your connection.');
 					}
 
-					// Fetch with progress (the .onnx.data file is the big one)
-					const resp = await fetch(MODEL_DATA_URL);
-					if (!resp.ok) throw new Error(`Failed to fetch model data: ${resp.statusText}`);
+					// Cache Storage caching
+					const cacheName = 'dape-model-cache';
+					const cache = await caches.open(cacheName);
+					let resp = await cache.match(MODEL_DATA_URL);
+					
+					if (resp) {
+						console.log('[d-Ape] Model weights found in Cache Storage.');
+						loadBarText.textContent = 'Loading weights from cache…';
+					} else {
+						console.log('[d-Ape] Model weights cache miss. Downloading from network...');
+						loadBarText.textContent = 'Downloading model weights (~73 MB)…';
+						const fetchResp = await fetch(MODEL_DATA_URL);
+						if (!fetchResp.ok) throw new Error(`Failed to fetch model weights: ${fetchResp.statusText}`);
+						
+						// Store clone in Cache Storage
+						await cache.put(MODEL_DATA_URL, fetchResp.clone());
+						resp = fetchResp;
+					}
+
 					const total   = parseInt(resp.headers.get('content-length') || '0');
 					const reader  = resp.body.getReader();
 					const chunks  = [];
@@ -1085,7 +1191,7 @@
 						loadBarFill.style.width = pct + '%';
 						const mbLoaded = (received / 1048576).toFixed(1);
 						const mbTotal  = total > 0 ? (total / 1048576).toFixed(1) : '?';
-						loadBarText.textContent = `Downloading: ${mbLoaded} / ${mbTotal} MB`;
+						loadBarText.textContent = `Loading data: ${mbLoaded} / ${mbTotal} MB`;
 					}
 
 					// ORT Web externalData.data must be a Uint8Array — not a blob URL.

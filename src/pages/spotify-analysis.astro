@@ -1,12 +1,12 @@
 ---
 // spotify-analysis.astro — Spotify Sonic Atlas Page matching cv.astro theme
-import '@fontsource/google-sans-flex';
-import clusterSummary from '../../public/assets/spotify/cluster_summary.json';
-import musicGalaxy from '../../public/assets/spotify/music_galaxy.json';
-import personalRating from '../../public/assets/spotify/personal_rating.json';
+import "@fontsource/google-sans-flex";
+import clusterSummary from "../../public/assets/spotify/cluster_summary.json";
+import musicGalaxy from "../../public/assets/spotify/music_galaxy.json";
+import personalRating from "../../public/assets/spotify/personal_rating.json";
 
-const rawTracks = musicGalaxy.filter(t => t.release_year <= 2020);
-const uniqueNames = new Set(rawTracks.map(t => t.name.toLowerCase().trim()));
+const rawTracks = musicGalaxy.filter((t) => t.release_year <= 2020);
+const uniqueNames = new Set(rawTracks.map((t) => t.name.toLowerCase().trim()));
 const tracksCount = uniqueNames.size;
 const clustersCount = clusterSummary.length;
 ---
@@ -16,27 +16,31 @@ const clustersCount = clusterSummary.length;
 		<meta charset="utf-8" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard" />
+		<meta
+			name="description"
+			content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard"
+		/>
 		<title>Madonna Sonic Atlas — site(.)moss</title>
-		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline></script>
+		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline
+		></script>
 
 		<style is:global>
 			/* ===========================
 			   GLASSMORPHISM TOKEN SYSTEM
 			=========================== */
 			:root {
-				--bh-void: #ffffff;
-				--bh-deep: #f9fafb;
-				--bh-surface: #f3f4f6;
+				--bh-void: #000000;
+				--bh-deep: #0f172a;
+				--bh-surface: #1e293b;
 				--bh-card: transparent;
-				--bh-border: rgba(0, 0, 0, 0.08);
-				--bh-border-hi: rgba(0, 0, 0, 0.16);
-				--bh-text: #111827;
-				--bh-muted: #374151;
-				--bh-accent: #0f172a; /* Dark Slate Accent */
-				--bh-accent2: #4b5563;
-				--bh-accent3: #9ca3af;
-				--bh-danger: #374151;
+				--bh-border: rgba(255, 255, 255, 0.1);
+				--bh-border-hi: rgba(255, 255, 255, 0.25);
+				--bh-text: #f8fafc;
+				--bh-muted: #94a3b8;
+				--bh-accent: #ffffff;
+				--bh-accent2: #cbd5e1;
+				--bh-accent3: #64748b;
+				--bh-danger: #ef4444;
 				--bh-glow: transparent;
 				--bh-glow-sm: transparent;
 			}
@@ -50,27 +54,21 @@ const clustersCount = clusterSummary.length;
 				height: 100vh;
 				overflow: hidden;
 				background: transparent;
-				font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+				font-family:
+					"Google Sans Flex", "Google Sans", "Helvetica Neue",
+					sans-serif;
 				color: var(--bh-text);
 				line-height: 1.5;
 				margin: 0;
 				padding: 0;
 				position: relative;
 			}
-
-			body::before {
-				content: "";
-				position: fixed;
-				inset: -40px; /* Expands to hide the blurred edges */
-				z-index: -1;
-				background-image: url('/frutiger-aero-wallpaper-i-whipped-up-in-a-few-hours-hoping-v0-jcaq7gsamypc1.webp');
-				background-size: cover;
-				background-position: center;
-				background-repeat: no-repeat;
-				filter: blur(12px);
-				background-color: rgba(255, 255, 255, 0.05);
-				background-blend-mode: overlay;
+			
+			button {
+				color: inherit;
 			}
+
+			/* body::before removed in favor of canvas dot matrix background */
 
 			a {
 				color: var(--bh-accent);
@@ -146,18 +144,24 @@ const clustersCount = clusterSummary.length;
 				gap: 24px;
 				padding: 24px;
 				position: relative;
-				background: rgba(255, 255, 255, 0.85); /* Increased opacity for visibility */
-				backdrop-filter: blur(24px) saturate(180%);
-				-webkit-backdrop-filter: blur(24px) saturate(180%);
-				border: 1px solid rgba(255, 255, 255, 0.7);
+				background: rgba(0, 0, 0, 0.90);
+				border: 1px solid rgba(255, 255, 255, 0.15);
 				border-radius: 20px;
-				box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+				box-shadow:
+					0 16px 40px rgba(255, 255, 255, 0.1),
+					0 2px 8px rgba(0, 0, 0, 0.03),
+					inset 0 1px 0 rgba(255, 255, 255, 0.6);
 				box-sizing: border-box;
 				overflow-y: auto;
 				height: 100%;
 			}
-			.wbc-sidebar::-webkit-scrollbar { width: 3px; }
-			.wbc-sidebar::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.08); border-radius: 99px; }
+			.wbc-sidebar::-webkit-scrollbar {
+				width: 3px;
+			}
+			.wbc-sidebar::-webkit-scrollbar-thumb {
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 99px;
+			}
 
 			.wbc-sidebar .bh-header {
 				margin-top: 44px;
@@ -182,7 +186,13 @@ const clustersCount = clusterSummary.length;
 				z-index: 10;
 				width: 36px;
 				height: 36px;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.1) 51%, rgba(255, 255, 255, 0.45) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.8) 0%,
+					rgba(255, 255, 255, 0.3) 50%,
+					rgba(255, 255, 255, 0.1) 51%,
+					rgba(255, 255, 255, 0.45) 100%
+				);
 				color: var(--bh-text);
 				display: flex;
 				align-items: center;
@@ -190,13 +200,24 @@ const clustersCount = clusterSummary.length;
 				border: 1px solid rgba(255, 255, 255, 0.6);
 				border-radius: 50%;
 				cursor: pointer;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-				transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+				box-shadow:
+					0 4px 12px rgba(0, 0, 0, 0.05),
+					inset 0 1px 0 rgba(255, 255, 255, 0.5);
+				transition:
+					background 0.2s,
+					transform 0.2s,
+					box-shadow 0.2s;
 			}
 			.wbc-back-btn:hover {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0.18) 51%, rgba(255, 255, 255, 0.6) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.95) 0%,
+					rgba(255, 255, 255, 0.45) 50%,
+					rgba(255, 255, 255, 0.18) 51%,
+					rgba(255, 255, 255, 0.6) 100%
+				);
 				transform: scale(1.06);
-				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+				box-shadow: 0 6px 16px rgba(255, 255, 255, 0.1);
 			}
 
 			/* ===========================
@@ -216,7 +237,7 @@ const clustersCount = clusterSummary.length;
 				font-size: 0.65rem;
 				font-weight: 700;
 				letter-spacing: 0.18em;
-				color: #1a1410;
+				color: var(--bh-muted);
 				opacity: 0.65;
 				text-transform: uppercase;
 				display: inline-flex;
@@ -283,14 +304,14 @@ const clustersCount = clusterSummary.length;
 				font-family: inherit;
 			}
 			.nav-item:hover {
-				background: rgba(0,0,0,0.03);
+				background: rgba(0, 0, 0, 0.03);
 				color: var(--bh-text);
 			}
 			.nav-item.active {
 				background: rgba(255, 255, 255, 0.45);
 				border: 1px solid var(--bh-border);
 				color: var(--bh-accent);
-				box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 			}
 
 			.sidebar-footer {
@@ -326,13 +347,14 @@ const clustersCount = clusterSummary.length;
 				.tab-content.equal-split {
 					grid-template-columns: 1fr 1fr;
 				}
+				.tab-content.full-width {
+					grid-template-columns: 1fr;
+				}
 			}
 
 			.panel {
-				background: rgba(255, 255, 255, 0.85); /* Increased opacity for visibility */
-				backdrop-filter: blur(24px) saturate(180%);
-				-webkit-backdrop-filter: blur(24px) saturate(180%);
-				border: 1px solid rgba(255, 255, 255, 0.7);
+				background: rgba(0, 0, 0, 0.90);
+				border: 1px solid rgba(255, 255, 255, 0.15);
 				border-radius: 20px;
 				padding: 24px;
 				display: flex;
@@ -341,13 +363,21 @@ const clustersCount = clusterSummary.length;
 				min-height: 0;
 				box-sizing: border-box;
 				position: relative;
-				box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-				transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1), box-shadow 0.3s ease;
+				box-shadow:
+					0 16px 40px rgba(255, 255, 255, 0.1),
+					0 2px 8px rgba(0, 0, 0, 0.03),
+					inset 0 1px 0 rgba(255, 255, 255, 0.6);
+				transition:
+					transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1),
+					box-shadow 0.3s ease;
 				overflow: hidden; /* Fix scrollbar overflow stripes */
 			}
 			.panel:hover {
 				transform: translateY(-2px);
-				box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+				box-shadow:
+					0 20px 48px rgba(255, 255, 255, 0.1),
+					0 4px 12px rgba(0, 0, 0, 0.04),
+					inset 0 1px 0 rgba(255, 255, 255, 0.55);
 			}
 
 			/* Personas Tab styling */
@@ -361,26 +391,30 @@ const clustersCount = clusterSummary.length;
 				position: relative;
 				width: 100%;
 				padding: 12px 16px;
-				background: rgba(255,255,255,0.4);
-				border: 1px solid rgba(255,255,255,0.5);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				border-radius: 8px;
 				text-align: left;
 				cursor: pointer;
 				transition: all 0.2s ease;
 				font-family: inherit;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 			}
 			.cluster-btn:hover {
-				background: rgba(255,255,255,0.65);
+				background: rgba(255, 255, 255, 0.1);
 				transform: translateY(-1px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 			}
 			.cluster-btn.active {
-				background: #ffffff;
+				background: rgba(255, 255, 255, 0.15);
 				border-color: var(--bh-border-hi);
-				box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 			}
 			.cluster-color-bar {
 				position: absolute;
-				top: 0; bottom: 0; left: 0;
+				top: 0;
+				bottom: 0;
+				left: 0;
 				width: 4px;
 				border-top-left-radius: 8px;
 				border-bottom-left-radius: 8px;
@@ -393,7 +427,8 @@ const clustersCount = clusterSummary.length;
 				font-weight: 700;
 			}
 			.cluster-dot {
-				width: 8px; height: 8px;
+				width: 8px;
+				height: 8px;
 				border-radius: 50%;
 				display: inline-block;
 				margin-right: 6px;
@@ -416,7 +451,9 @@ const clustersCount = clusterSummary.length;
 				opacity: 0.22;
 				z-index: 0;
 				pointer-events: none;
-				transition: opacity 0.5s ease, background-image 0.5s ease;
+				transition:
+					opacity 0.5s ease,
+					background-image 0.5s ease;
 			}
 			.cluster-detail-header {
 				display: flex;
@@ -425,13 +462,14 @@ const clustersCount = clusterSummary.length;
 				z-index: 1;
 			}
 			.cluster-badge {
-				background: rgba(255,255,255,0.5);
-				border: 1px solid rgba(255,255,255,0.6);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				padding: 3px 10px;
 				border-radius: 20px;
 				font-size: 0.65rem;
 				font-weight: 700;
 				letter-spacing: 0.05em;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 			}
 			.cluster-desc {
 				font-size: 0.8rem;
@@ -448,10 +486,11 @@ const clustersCount = clusterSummary.length;
 				z-index: 1;
 			}
 			.metric-box {
-				background: rgba(255,255,255,0.45);
-				border: 1px solid rgba(255,255,255,0.5);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				padding: 8px 12px;
 				border-radius: 8px;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 			}
 			.metric-box.wide {
 				grid-column: span 2;
@@ -466,7 +505,7 @@ const clustersCount = clusterSummary.length;
 			}
 			.metric-bar {
 				height: 5px;
-				background: rgba(0,0,0,0.06);
+				background: rgba(0, 0, 0, 0.06);
 				border-radius: 4px;
 				overflow: hidden;
 			}
@@ -487,30 +526,39 @@ const clustersCount = clusterSummary.length;
 				gap: 4px;
 				min-height: 0;
 			}
-			.list-scroll::-webkit-scrollbar { width: 3px; }
-			.list-scroll::-webkit-scrollbar-track { background: transparent; }
-			.list-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.12); border-radius: 4px; }
+			.list-scroll::-webkit-scrollbar {
+				width: 3px;
+			}
+			.list-scroll::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.list-scroll::-webkit-scrollbar-thumb {
+				background: rgba(0, 0, 0, 0.12);
+				border-radius: 4px;
+			}
 
 			.track-list-item {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				padding: 8px 12px;
-				background: rgba(255,255,255,0.3);
-				border: 1px solid rgba(255,255,255,0.4);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				border-radius: 6px;
 				font-size: 0.78rem;
 				cursor: pointer;
 				text-align: left;
 				transition: all 0.15s ease;
 				font-family: inherit;
+				box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
 			}
 			.track-list-item:hover {
-				background: rgba(255,255,255,0.6);
+				background: rgba(255, 255, 255, 0.1);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 			}
 			.track-list-item.selected {
-				background: #ffffff;
-				border-color: rgba(0,0,0,0.12);
+				background: rgba(255, 255, 255, 0.15);
+				border-color: rgba(255, 255, 255, 0.15);
 				font-weight: bold;
 			}
 
@@ -519,7 +567,7 @@ const clustersCount = clusterSummary.length;
 				width: 100%;
 				height: 100%;
 				min-height: 0;
-				background: rgba(0,0,0,0.02);
+				background: rgba(0, 0, 0, 0.02);
 				border-radius: 12px;
 				overflow: hidden;
 				position: relative;
@@ -532,18 +580,18 @@ const clustersCount = clusterSummary.length;
 
 			/* Custom timeline slider input */
 			.timeline-slider-box {
-				background: rgba(255,255,255,0.45);
-				border: 1px solid rgba(255,255,255,0.5);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				border-radius: 12px;
 				padding: 16px;
 				margin-top: 10px;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 			}
 			.timeline-input {
 				-webkit-appearance: none;
 				width: 100%;
 				height: 6px;
-				background: rgba(0, 0, 0, 0.08);
+				background: rgba(255, 255, 255, 0.1);
 				border-radius: 99px;
 				outline: none;
 				margin-top: 12px;
@@ -557,7 +605,7 @@ const clustersCount = clusterSummary.length;
 				background: var(--bh-accent);
 				border: 2px solid #fff;
 				cursor: pointer;
-				box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+				box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
 				transition: transform 0.1s ease;
 			}
 			.timeline-input::-webkit-slider-thumb:hover {
@@ -571,15 +619,15 @@ const clustersCount = clusterSummary.length;
 				margin-top: 8px;
 			}
 			.neighbor-card {
-				background: rgba(255,255,255,0.4);
-				border: 1px solid rgba(255,255,255,0.5);
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
 				border-radius: 8px;
 				padding: 10px 12px;
 				font-size: 0.7rem;
 				transition: background 0.15s;
 			}
 			.neighbor-card:hover {
-				background: rgba(255,255,255,0.55);
+				background: rgba(255, 255, 255, 0.1);
 			}
 			.neighbor-header {
 				display: flex;
@@ -615,82 +663,337 @@ const clustersCount = clusterSummary.length;
 				margin: 0 0 2px 0;
 			}
 
-			.hidden { display: none !important; }
+			.hidden {
+				display: none !important;
+			}
+
+			/* ===========================
+			   ALBUM EXPANDABLE CARDS (TAB 3)
+			=========================== */
+			.album-card {
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.08);
+				border-radius: 16px;
+				margin-bottom: 12px;
+				overflow: hidden;
+				box-shadow:
+					0 4px 16px rgba(0, 0, 0, 0.2),
+					inset 0 1px 0 rgba(255, 255, 255, 0.1);
+				transition: all 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
+			}
+			.album-card:hover {
+				background: rgba(255, 255, 255, 0.1);
+				border-color: rgba(255, 255, 255, 0.15);
+				box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+			}
+			.album-card.active {
+				background: rgba(255, 255, 255, 0.15);
+				border-color: rgba(255, 255, 255, 0.2);
+				box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+			}
+			.album-card-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 16px 20px;
+				cursor: pointer;
+				user-select: none;
+			}
+			.album-card-info {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.album-card-title {
+				font-size: 0.95rem;
+				font-weight: 800;
+				color: var(--bh-text);
+			}
+			.album-card-subtitle {
+				font-size: 0.72rem;
+				color: var(--bh-muted);
+				font-weight: 500;
+			}
+			.album-card-chevron {
+				width: 18px;
+				height: 18px;
+				color: var(--bh-muted);
+				transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
+			}
+			.album-card.active .album-card-chevron {
+				transform: rotate(180deg);
+				color: var(--bh-text);
+			}
+			.album-card-body {
+				max-height: 0;
+				overflow-y: hidden;
+				transition:
+					max-height 0.4s cubic-bezier(0.1, 0.8, 0.2, 1),
+					padding 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
+				padding: 0 20px;
+			}
+			.album-card.active .album-card-body {
+				max-height: 250px;
+				overflow-y: auto;
+				padding-bottom: 20px;
+			}
+			.album-card-body::-webkit-scrollbar {
+				width: 3px;
+			}
+			.album-card-body::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.album-card-body::-webkit-scrollbar-thumb {
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 99px;
+			}
+			.pipeline-scroll::-webkit-scrollbar {
+				width: 3px;
+			}
+			.pipeline-scroll::-webkit-scrollbar-track {
+				background: transparent;
+			}
+			.pipeline-scroll::-webkit-scrollbar-thumb {
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 99px;
+			}
+			.rating-group-sec {
+				margin-top: 10px;
+				padding-left: 8px;
+			}
+			.rating-group-sec:first-child {
+				margin-top: 2px;
+			}
+			.rating-group-title-sec {
+				font-size: 0.65rem;
+				font-weight: 800;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				margin-bottom: 4px;
+				display: block;
+			}
+			.rating-group-tracks-sec {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
 		</style>
 	</head>
 
 	<body>
+		<canvas id="dotMatrixCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background: #ffffff;"></canvas>
 		<div class="page-wrap">
 			<div class="bh-page">
 				<div class="bh-main-card">
 					<!-- LEFT SIDEBAR -->
 					<aside class="wbc-sidebar">
 						<!-- Floating Back Button inside sidebar card -->
-						<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
-							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+						<a
+							href="/"
+							class="wbc-back-btn"
+							id="backBtn"
+							title="Back to Home"
+						>
+							<svg
+								width="14"
+								height="14"
+								viewBox="0 0 14 14"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
 								<path d="M9 12L4 7l5-5"></path>
 							</svg>
 						</a>
 						<header class="bh-header">
 							<span class="title-tag">
-								<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 4px;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="10"
+									height="10"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									style="margin-right: 4px;"
+									><circle cx="12" cy="12" r="10"
+									></circle><circle cx="12" cy="12" r="3"
+									></circle></svg
+								>
 								AI LAB PROJECT
 							</span>
 							<h1 class="bh-title">
 								<span class="title-nextwbc">Sonic</span>
-								<span class="title-classifier" style="color: #1DB954;">Atlas</span>
+								<span
+									class="title-classifier"
+									style="color: #1DB954;">Atlas</span
+								>
 							</h1>
 							<p class="bh-subtitle">
-								t-SNE manifold & clustering analysis of Madonna's audio dna.
+								Clustering analysis of Madonna's audio dna.
 							</p>
 						</header>
 
 						<nav class="wbc-nav-menu">
-							<button class="nav-item active" data-tab="personas" id="nav-personas">
-								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.886L4.2 10.8 10.088 12.71 12 18.6l1.912-5.89 5.888-1.91-5.888-1.912Z"/></svg>
+							<button
+								class="nav-item active"
+								data-tab="personas"
+								id="nav-personas"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="13"
+									height="13"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><path
+										d="m12 3-1.912 5.886L4.2 10.8 10.088 12.71 12 18.6l1.912-5.89 5.888-1.91-5.888-1.912Z"
+									></path></svg
+								>
 								Sonic Personas
 							</button>
-							<button class="nav-item" data-tab="galaxy" id="nav-galaxy">
-								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+							<button
+								class="nav-item"
+								data-tab="galaxy"
+								id="nav-galaxy"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="13"
+									height="13"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><path
+										d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+									></path></svg
+								>
 								Music Galaxy
 							</button>
-							<button class="nav-item" data-tab="rating" id="nav-rating">
-								<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+							<button
+								class="nav-item"
+								data-tab="rating"
+								id="nav-rating"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="13"
+									height="13"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><path
+										d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+									></path></svg
+								>
 								Personal Rating
+							</button>
+							<button
+								class="nav-item"
+								data-tab="pipeline"
+								id="nav-pipeline"
+							>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									width="13"
+									height="13"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									><path
+										d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+									></path><path
+										d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+									></path></svg
+								>
+								ML Pipeline
 							</button>
 						</nav>
 
 						<div class="sidebar-footer">
-							<span class="footer-meta">Tracks: {tracksCount} • Clusters: {clustersCount}</span>
+							<span class="footer-meta"
+								>Tracks: {tracksCount} • Clusters: {
+									clustersCount
+								}</span
+							>
 						</div>
 					</aside>
 
 					<!-- RIGHT WORKSPACE -->
 					<main class="wbc-workspace">
-
 						<!-- ── TAB 1: SONIC PERSONAS ── -->
 						<div id="tab-personas" class="tab-content wide-left">
 							<div class="panel">
 								<div class="cluster-detail-card">
-									<div class="cluster-bg-image" id="cluster-bg"></div>
+
 									<div style="z-index: 1;">
 										<div class="cluster-detail-header">
-											<h3 class="panel-header-title" id="cluster-name" style="font-size: 1.15rem;">The Disco Dynamo</h3>
-											<span class="cluster-badge" id="cluster-share">45% share</span>
+											<h3
+												class="panel-header-title"
+												id="cluster-name"
+												style="font-size: 1.15rem;"
+											>
+												The Disco Dynamo
+											</h3>
+											<span
+												class="cluster-badge"
+												id="cluster-share"
+												>45% share</span
+											>
 										</div>
-										<p class="cluster-desc" id="cluster-desc">High energy, danceable pop hits</p>
+										<p
+											class="cluster-desc"
+											id="cluster-desc"
+										>
+											High energy, danceable pop hits
+										</p>
 
-										<div class="metrics-grid" id="cluster-metrics">
+										<div
+											class="metrics-grid"
+											id="cluster-metrics"
+										>
 											<!-- Dynamic features populated by script -->
 										</div>
 									</div>
 
-									<div style="z-index: 1; margin-top: 14px; display: flex; flex-direction: column; min-height: 0; flex: 1;">
-										<span class="section-title">Tracks in cluster</span>
-										<div class="search-box-wrap" style="position: relative; margin-bottom: 8px;">
-											<input type="text" id="personas-search" placeholder="Search tracks..." style="width: 100%; padding: 7px 10px; font-size: 0.72rem; background: rgba(255,255,255,0.45); border: 1px solid rgba(255,255,255,0.5); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--bh-text); outline: none;" />
+									<div
+										style="z-index: 1; margin-top: 14px; display: flex; flex-direction: column; min-height: 0; flex: 1;"
+									>
+										<span class="section-title"
+											>Tracks in cluster</span
+										>
+										<div
+											class="search-box-wrap"
+											style="position: relative; margin-bottom: 8px;"
+										>
+											<input
+												type="text"
+												id="personas-search"
+												placeholder="Search tracks..."
+												style="width: 100%; padding: 7px 10px; font-size: 0.72rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--bh-text); outline: none;"
+											/>
 										</div>
-										<div class="list-scroll" id="cluster-tracks-list">
+										<div
+											class="list-scroll"
+											id="cluster-tracks-list"
+										>
 											<!-- Dynamic tracks in cluster -->
 										</div>
 									</div>
@@ -698,492 +1001,675 @@ const clustersCount = clusterSummary.length;
 							</div>
 
 							<div class="panel">
-								<span class="section-title">Sonic Personas</span>
-								<p style="font-size: 0.72rem; color: var(--bh-muted); margin: 0 0 10px 0; line-height: 1.3;">
-									AI groups Madonna's tracks by feel, not by release year.
+								<span class="section-title">Sonic Personas</span
+								>
+								<p
+									style="font-size: 0.72rem; color: var(--bh-muted); margin: 0 0 10px 0; line-height: 1.3;"
+								>
+									AI groups Madonna's tracks by feel, not by
+									release year.
 								</p>
-								<div class="cluster-rail" id="cluster-rail-list">
+								<div
+									class="cluster-rail"
+									id="cluster-rail-list"
+								>
 									<!-- Rail buttons -->
 								</div>
 							</div>
 						</div>
 
 						<!-- ── TAB 2: MUSIC GALAXY ── -->
-						<div id="tab-galaxy" class="tab-content wide-left hidden">
-							<div class="panel" style="padding: 0; position: relative;">
-								<div class="galaxy-svg-container" id="galaxy-container" style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: rgba(13, 17, 30, 0.55); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);">
-									<svg class="galaxy-svg" id="galaxy-svg" viewBox="0 0 1000 620" preserveAspectRatio="xMidYMid meet">
-										<!-- Background grid and points populated by script -->
-									</svg>
-									<!-- Map Hover Tooltip -->
-									<div id="galaxy-tooltip" style="position: absolute; display: none; background: rgba(15, 23, 42, 0.95); color: #fff; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; pointer-events: none; z-index: 100; border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 4px 16px rgba(0,0,0,0.25); white-space: nowrap; line-height: 1.35; font-family: inherit;"></div>
+						<div
+							id="tab-galaxy"
+							class="tab-content wide-left hidden"
+						>
+							<div
+								class="panel"
+								style="padding: 0; position: relative;"
+							>
+								<div
+									class="galaxy-svg-container"
+									id="galaxy-container"
+									style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: #0d111e;"
+								>
+									<div
+										id="plotly-galaxy-3d"
+										style="width: 100%; height: 100%;"
+									>
+									</div>
 								</div>
 							</div>
 
 							<!-- DETAILS PANEL FOR SELECTED TRACK (Grid item, matches other tabs) -->
-							<div class="panel" style="display: flex; flex-direction: column; padding: 20px;">
-								<div class="selected-track-card" style="display: flex; flex-direction: column; height: 100%;">
-									<span class="section-title">Selected Track</span>
+							<div
+								class="panel"
+								style="display: flex; flex-direction: column; padding: 20px;"
+							>
+								<div
+									class="selected-track-card"
+									style="display: flex; flex-direction: column; height: 100%;"
+								>
+									<span class="section-title"
+										>Selected Track</span
+									>
 									<div style="margin-bottom: 12px;">
-										<h4 class="panel-header-title" id="galaxy-track-name" style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text); margin-bottom: 4px;">-</h4>
-										<p style="font-size: 0.72rem; color: var(--bh-muted); margin: 0;" id="galaxy-track-year">-</p>
+										<h4
+											class="panel-header-title"
+											id="galaxy-track-name"
+											style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text); margin-bottom: 4px;"
+										>
+											-
+										</h4>
+										<p
+											style="font-size: 0.72rem; color: var(--bh-muted); margin: 0;"
+											id="galaxy-track-year"
+										>
+											-
+										</p>
 									</div>
 
-									<div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;" id="galaxy-track-metrics">
+									<div
+										style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"
+										id="galaxy-track-metrics"
+									>
 										<!-- Track metrics progress bars -->
 									</div>
 
-									<div style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 12px;">
-										<span class="section-title">Closest Wormholes</span>
-										<div class="list-scroll" id="galaxy-wormholes-list">
+									<div
+										style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 12px;"
+									>
+										<span class="section-title"
+											>Closest Wormholes</span
+										>
+										<div
+											class="list-scroll"
+											id="galaxy-wormholes-list"
+										>
 											<!-- Wormhole similarities -->
 										</div>
-									</div>
-
-									<!-- Mini Music Player Mockup -->
-									<div class="mini-player" style="margin-top: auto; padding: 12px; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.8); border-radius: 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-										<div class="player-disc-wrapper" style="position: relative; width: 38px; height: 38px; border-radius: 50%; background: #111; display: flex; align-items: center; justify-content: center; flex-shrink: 0; animation: player-spin 12s linear infinite; animation-play-state: paused; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" id="player-disc">
-											<div style="width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; border: 3px solid #111;"></div>
-										</div>
-										<div style="flex: 1; min-width: 0;">
-											<div style="font-size: 0.75rem; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text);" id="player-track-name">Hung Up</div>
-											<div style="font-size: 0.6rem; color: var(--bh-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Madonna</div>
-										</div>
-										<button id="player-play-btn" style="background: var(--bh-accent); color: #fff; border: none; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s, background 0.2s;" title="Play Mockup">
-											<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" id="player-play-icon"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-										</button>
 									</div>
 								</div>
 							</div>
 						</div>
 
 						<!-- ── TAB 3: PERSONAL RATING ── -->
-						<div id="tab-rating" class="tab-content wide-left hidden">
-							<div class="panel" style="display: flex; flex-direction: column; height: 100%;">
-								<span class="section-title">Personal Rating</span>
-								<h3 class="panel-header-title">Album Track Clustering</h3>
-								<p style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 12px;">Audio features and bias score clustering using GMM & PCA mapping.</p>
-								<div id="plotly-3d-map" style="flex: 1; min-height: 0; width: 100%;"></div>
+						<div
+							id="tab-rating"
+							class="tab-content wide-left hidden"
+						>
+							<div
+								class="panel"
+								style="display: flex; flex-direction: column; height: 100%;"
+							>
+								<span class="section-title"
+									>Personal Rating</span
+								>
+								<h3 class="panel-header-title">
+									Album Track Clustering
+								</h3>
+								<p
+									style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 12px;"
+								>
+									Audio features and bias score clustering
+									using GMM & PCA mapping.
+								</p>
+								<div
+									id="plotly-3d-map"
+									style="flex: 1; min-height: 0; width: 100%;"
+								>
+								</div>
 							</div>
-							<div class="panel" style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;">
-								<span class="section-title">Tracks by Cluster Group</span>
-								<div style="display: flex; flex-direction: column; gap: 16px; overflow-y: auto; flex: 1; padding-right: 4px;">
-									<div style="border-left: 4px solid #10B981; padding-left: 10px;">
-										<h4 style="margin: 0 0 6px 0; color: #10B981; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">My Favorite</h4>
-										<div id="rating-col-fav" style="display: flex; flex-direction: column; gap: 6px;"></div>
-									</div>
-									<div style="border-left: 4px solid #F59E0B; padding-left: 10px;">
-										<h4 style="margin: 0 0 6px 0; color: #F59E0B; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">So Far, So Good</h4>
-										<div id="rating-col-good" style="display: flex; flex-direction: column; gap: 6px;"></div>
-									</div>
-									<div style="border-left: 4px solid #EF4444; padding-left: 10px;">
-										<h4 style="margin: 0 0 6px 0; color: #EF4444; text-transform: uppercase; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.05em;">Not My Favorite</h4>
-										<div id="rating-col-notfav" style="display: flex; flex-direction: column; gap: 6px;"></div>
-									</div>
+							<div
+								class="panel"
+								style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;"
+							>
+								<span class="section-title"
+									>Tracks by Album & Cluster</span
+								>
+								<div
+									id="album-cards-container"
+									style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; padding-right: 4px;"
+								>
+									<!-- Dynamic expandable album cards populated by script -->
 								</div>
 							</div>
 						</div>
 
+						<!-- ── TAB 4: ML PIPELINE ── -->
+						<div
+							id="tab-pipeline"
+							class="tab-content full-width hidden"
+						>
+							<div
+								class="panel"
+								style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 28px 32px;"
+							>
+								<span
+									class="section-title"
+									style="margin-bottom: 8px;"
+									>Methodology</span
+								>
+								<h3
+									class="panel-header-title"
+									style="font-size: 1.25rem; margin-bottom: 6px;"
+								>
+								<h3
+									class="panel-header-title"
+									style="font-size: 1.25rem; margin-bottom: 6px;"
+								>
+									Methodology — Madonna Sonic Atlas
+								</h3>
+								<p
+									style="font-size: 0.74rem; color: var(--bh-muted); margin-bottom: 20px; line-height: 1.5;"
+								>
+									Each track in Madonna's catalog is represented by 9 audio features (danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo). Tracks are grouped using unsupervised clustering — no genre or era labels are provided in advance; the groupings are derived entirely from the audio feature space.
+								</p>
+
+								<div
+									class="pipeline-scroll"
+									style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; padding: 8px 16px 20px 4px;"
+								>
+									<!-- STEP 1 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">1</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">1. Data cleaning</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Reissues and remasters produce near-duplicate entries in the source dataset. These are deduplicated before analysis, since duplicate tracks would otherwise inflate cluster counts without adding signal.</p>
+										</div>
+									</div>
+
+									<!-- STEP 2 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">2</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">2. Preprocessing</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">instrumentalness, speechiness, and liveness are heavily right-skewed — most tracks sit near zero, with a small number of true outliers (spoken-word intros, live recordings, instrumental interludes) far out on the tail. Scaling by IQR alone (e.g. RobustScaler) corrects scale but not distribution shape, so these outliers remain far from the main mass in scaled space and get isolated into singleton clusters. A PowerTransformer (Yeo-Johnson) is applied instead, reshaping each feature toward a roughly Gaussian distribution before scaling, which substantially improves cluster balance.</p>
+										</div>
+									</div>
+
+									<!-- STEP 3 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">3</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">3. Cluster count and model selection</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">K is evaluated across a range (2–10) using elbow (inertia), silhouette score, and GMM BIC/AIC as diagnostics. K is fixed at 4 for this project (to match the four persona cards on the frontend); the diagnostics are used to confirm 4 is a reasonable choice rather than to auto-select K.<br><br>Both KMeans and a Gaussian Mixture Model (GMM, covariance_type='diag' to avoid overfitting given the sample size) are fit at K=4. The final labels come from whichever model achieves the higher silhouette score — the choice of algorithm is data-driven rather than fixed to KMeans by default. Cluster size balance is reported for both candidates as a sanity check.</p>
+										</div>
+									</div>
+
+									<!-- STEP 4 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">4</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">4. Validation</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Adjusted Rand Index (ARI) between KMeans and GMM labels quantifies agreement between the two algorithms. Bootstrap stability: the selected model is refit on 15 resamples (80% of the data each), and ARI is computed against the full-sample labels. High mean ARI indicates the cluster structure is stable rather than an artifact of one particular fit.</p>
+										</div>
+									</div>
+
+									<!-- STEP 5 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">5</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">5. Cluster naming and dimensionality reduction</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Cluster names are auto-derived from z-scores of each cluster's feature means relative to the full catalog (e.g. "Vocal-driven & Melodic"), rather than hand-assigned — names update automatically if K or the feature set changes. For visualization, UMAP reduces the 9-dimensional feature space to 2D coordinates for the track "galaxy" scatter plot.</p>
+										</div>
+									</div>
+
+									<!-- STEP 6 -->
+									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 16px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">6</div>
+										<div style="flex: 1;">
+											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">6. Recommendations</h4>
+											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Track-to-track similarity is computed via cosine similarity on the scaled feature vectors, used to generate content-based recommendations.</p>
+										</div>
+									</div>
+								</div> <!-- .pipeline-scroll -->
+							</div> <!-- .panel -->
+						</div> <!-- #tab-pipeline -->
 					</main>
 				</div>
 			</div>
 		</div>
-
-		<!-- Script to handle page exits -->
-		<script>
-			const backBtn = document.getElementById("backBtn");
-			if (backBtn) {
-				backBtn.addEventListener("click", (e) => {
-					e.preventDefault();
-					document.body.classList.add("is-exiting");
-					setTimeout(() => { window.location.href = backBtn.getAttribute("href"); }, 280);
-				});
-			}
-		</script>
-
-		<!-- Pass server data variables to Client JavaScript -->
-		<script define:vars={{ clusterSummary, musicGalaxy, personalRating }}>
-			window.CLUSTER_SUMMARY = clusterSummary;
-			window.MUSIC_GALAXY = musicGalaxy;
-			window.PERSONAL_RATING = personalRating;
-		</script>
-
-		<!-- Client interactivity module -->
-		<!-- Client interactivity module -->
-		<script type="module">
-			// Jacobi algorithm for 3x3 symmetric matrix eigenvalues & eigenvectors
-			function jacobi3x3(A) {
-				let V = [[1,0,0], [0,1,0], [0,0,1]];
-				let d = [A[0][0], A[1][1], A[2][2]];
-				let A_mut = [
-					[A[0][0], A[0][1], A[0][2]],
-					[A[1][0], A[1][1], A[1][2]],
-					[A[2][0], A[2][1], A[2][2]]
+		
+		<!-- Background rotation script -->
+		<script is:inline>
+			(function() {
+				const bgs = [
+					'/m1.jpg', '/m2.jpg', '/m3.avif', '/m4.jpg', '/m5.jpg', 
+					'/m6.jpg', '/m7.webp', '/m8.jpg', '/m9.jpg', '/m10.jpg', 
+					'/m11.jpg', '/m12.webp', '/m13.webp', '/m14.webp', '/m15.jpg'
 				];
-				for (let iter = 0; iter < 50; iter++) {
-					let p = 0, q = 1;
-					let maxVal = Math.abs(A_mut[0][1]);
-					if (Math.abs(A_mut[0][2]) > maxVal) { p = 0; q = 2; maxVal = Math.abs(A_mut[0][2]); }
-					if (Math.abs(A_mut[1][2]) > maxVal) { p = 1; q = 2; maxVal = Math.abs(A_mut[1][2]); }
-					if (maxVal < 1e-9) break;
-
-					let theta = 0.5 * (d[q] - d[p]) / A_mut[p][q];
-					let t = 1.0 / (Math.abs(theta) + Math.sqrt(1.0 + theta*theta));
-					if (theta < 0) t = -t;
-					let c = 1.0 / Math.sqrt(1.0 + t*t);
-					let s = t * c;
-					let tau = s / (1.0 + c);
-
-					let h = t * A_mut[p][q];
-					d[p] -= h;
-					d[q] += h;
-					A_mut[p][q] = 0;
-
-					for (let i = 0; i < 3; i++) {
-						if (i !== p && i !== q) {
-							let g = A_mut[i][p];
-							let j = A_mut[i][q];
-							A_mut[i][p] = c * g - s * j;
-							A_mut[i][q] = s * g + c * j;
-							A_mut[p][i] = A_mut[i][p];
-							A_mut[q][i] = A_mut[i][q];
-						}
-					}
-					for (let i = 0; i < 3; i++) {
-						let g = V[i][p];
-						let j = V[i][q];
-						V[i][p] = c * g - s * j;
-						V[i][q] = s * g + c * j;
-					}
+				function rotateBg() {
+					const rb = bgs[Math.floor(Math.random() * bgs.length)];
+					document.body.style.setProperty('--dynamic-bg', `url("${rb}")`);
 				}
-				return { eigenvalues: d, eigenvectors: V };
-			}
-
-			function getEllipsoidTrace(clusterTracks, color) {
-				if (clusterTracks.length < 3) return null;
-				
-				const mean = [0, 0, 0];
-				clusterTracks.forEach(t => {
-					mean[0] += t.pc1;
-					mean[1] += t.pc2;
-					mean[2] += t.bias_score;
-				});
-				mean[0] /= clusterTracks.length;
-				mean[1] /= clusterTracks.length;
-				mean[2] /= clusterTracks.length;
-				
-				const cov = [
-					[0, 0, 0],
-					[0, 0, 0],
-					[0, 0, 0]
-				];
-				clusterTracks.forEach(t => {
-					const dx = t.pc1 - mean[0];
-					const dy = t.pc2 - mean[1];
-					const dz = t.bias_score - mean[2];
-					cov[0][0] += dx * dx;
-					cov[0][1] += dx * dy;
-					cov[0][2] += dx * dz;
-					cov[1][1] += dy * dy;
-					cov[1][2] += dy * dz;
-					cov[2][2] += dz * dz;
-				});
-				cov[1][0] = cov[0][1];
-				cov[2][0] = cov[0][2];
-				cov[2][1] = cov[1][2];
-				
-				const n = clusterTracks.length;
-				for (let r = 0; r < 3; r++) {
-					for (let c = 0; c < 3; c++) {
-						cov[r][c] /= (n - 1);
-					}
-				}
-				
-				const { eigenvalues, eigenvectors } = jacobi3x3(cov);
-				
-				const scale = 1.6;
-				const s0 = scale * Math.sqrt(Math.max(0, eigenvalues[0]));
-				const s1 = scale * Math.sqrt(Math.max(0, eigenvalues[1]));
-				const s2 = scale * Math.sqrt(Math.max(0, eigenvalues[2]));
-				
-				const uSteps = 15;
-				const vSteps = 15;
-				const xArr = [];
-				const yArr = [];
-				const zArr = [];
-				
-				for (let i = 0; i <= uSteps; i++) {
-					const theta = (i / uSteps) * 2 * Math.PI;
-					for (let j = 0; j <= vSteps; j++) {
-						const phi = (j / vSteps) * Math.PI;
-						
-						const ux = Math.cos(theta) * Math.sin(phi);
-						const uy = Math.sin(theta) * Math.sin(phi);
-						const uz = Math.cos(phi);
-						
-						const sx = ux * s0;
-						const sy = uy * s1;
-						const sz = uz * s2;
-						
-						const rx = eigenvectors[0][0] * sx + eigenvectors[0][1] * sy + eigenvectors[0][2] * sz;
-						const ry = eigenvectors[1][0] * sx + eigenvectors[1][1] * sy + eigenvectors[1][2] * sz;
-						const rz = eigenvectors[2][0] * sx + eigenvectors[2][1] * sy + eigenvectors[2][2] * sz;
-						
-						xArr.push(mean[0] + rx);
-						yArr.push(mean[1] + ry);
-						zArr.push(mean[2] + rz);
-					}
-				}
-				
-				return {
-					type: 'mesh3d',
-					x: xArr,
-					y: yArr,
-					z: zArr,
-					alphahull: 0,
-					opacity: 0.08,
-					color: color,
-					showlegend: false,
-					hoverinfo: 'skip'
-				};
-			}
-
-			const CLUSTERS = window.CLUSTER_SUMMARY;
-			
-			// Deduplicate tracks by canonical name
-			const RAW_TRACKS = window.MUSIC_GALAXY.filter(t => t.release_year <= 2020);
-			const TRACKS = [];
-			const seenNames = new Set();
-			for (const t of RAW_TRACKS) {
-				const canonicalName = t.name.toLowerCase().trim();
-				if (!seenNames.has(canonicalName)) {
-					seenNames.add(canonicalName);
-					TRACKS.push(t);
-				}
-			}
-
-			// ── Dynamically build cluster metadata from json ──
-			const CLUSTER_META = {};
-			CLUSTERS.forEach(c => {
-				CLUSTER_META[c.cluster] = {
-					name: c.name || `Cluster ${c.cluster}`,
-					description: c.description || '',
-					color: c.color || '#888',
-					image: c.image || '/assets/spotify/thediscodynamo-1.jpg'
-				};
-			});
-
-			const AUDIO_FEATURE_KEYS = ['danceability', 'energy', 'valence', 'acousticness', 'speechiness'];
-
-			// ── Track similarity engine ──
-			class FeatureSpace {
-				constructor(tracks) {
-					this.tracks = tracks;
-					const vectors = tracks.map(t => AUDIO_FEATURE_KEYS.map(k => Number(t[k])));
-					const norms = vectors.map(v => Math.sqrt(v.reduce((sum, val) => sum + val * val, 0)));
-					const size = tracks.length;
-
-					this.matrix = Array.from({ length: size }, (_, r) =>
-						Array.from({ length: size }, (_, c) => (r === c ? 1 : 0))
-					);
-
-					for (let r = 0; r < size; r++) {
-						for (let c = r + 1; c < size; c++) {
-							const rNorm = norms[r];
-							const cNorm = norms[c];
-							if (rNorm === 0 || cNorm === 0) continue;
-
-							let dot = 0;
-							const rVec = vectors[r];
-							const cVec = vectors[c];
-							for (let i = 0; i < rVec.length; i++) dot += rVec[i] * cVec[i];
-
-							const sim = dot / (rNorm * cNorm);
-							this.matrix[r][c] = sim;
-							this.matrix[c][r] = sim;
-						}
-					}
-				}
-
-				getCentrality() {
-					const size = this.matrix.length;
-					if (size <= 1) return Array.from({ length: size }, () => 0);
-					return this.matrix.map((row, rIdx) => {
-						const sum = row.reduce((total, val) => total + val, 0) - row[rIdx];
-						return sum / (size - 1);
-					});
-				}
-
-				getTopSimilar(trackIndex, limit = 5) {
-					const row = this.matrix[trackIndex];
-					if (!row) return [];
-					return row
-						.map((similarity, index) => ({ index, similarity }))
-						.filter(item => item.index !== trackIndex)
-						.sort((a, b) => b.similarity - a.similarity)
-						.slice(0, limit);
-				}
-			}
-
-			// Precompute all values
-			const space = new FeatureSpace(TRACKS);
-			const centrality = space.getCentrality();
-
-			// Clamp min-max centrality
-			const minCentrality = Math.min(...centrality);
-			const maxCentrality = Math.max(...centrality);
-			const popularityProxy = centrality.map(val => {
-				if (maxCentrality === minCentrality) return 0.5;
-				return Math.min(1, Math.max(0, (val - minCentrality) / (maxCentrality - minCentrality)));
-			});
-
-			// Weighted impact computed dynamically
-			const clusterWeightedImpact = (() => {
-				const map = {};
-				CLUSTERS.forEach(c => {
-					map[c.cluster] = { sum: 0, count: 0 };
-				});
-				TRACKS.forEach((t, i) => {
-					if (map[t.cluster]) {
-						const weight = popularityProxy[i] * 0.85 + 0.15;
-						map[t.cluster].sum += weight;
-						map[t.cluster].count += 1;
-					}
-				});
-				const total = Object.values(map).reduce((sum, item) => sum + item.sum, 0) || 1;
-				return Object.keys(map).reduce((res, key) => {
-					res[key] = {
-						share: map[key].sum / total,
-						count: map[key].count
-					};
-					return res;
-				}, {});
+				rotateBg();
+				setInterval(rotateBg, 15000);
 			})();
+		</script>
+	</body>
+</html>
 
-			// CSS spin animation keyframes injected dynamically
-			const styleSheet = document.createElement("style");
-			styleSheet.innerText = `
-				@keyframes player-spin {
-					from { transform: rotate(0deg); }
-					to { transform: rotate(360deg); }
+<!-- Script to handle page exits -->
+<script>
+	const backBtn = document.getElementById("backBtn");
+	if (backBtn) {
+		backBtn.addEventListener("click", (e) => {
+			e.preventDefault();
+			document.body.classList.add("is-exiting");
+			setTimeout(() => {
+				window.location.href = backBtn.getAttribute("href");
+			}, 280);
+		});
+	}
+</script>
+
+<!-- Pass server data variables to Client JavaScript -->
+<script define:vars={{ clusterSummary, musicGalaxy, personalRating }}>
+	window.CLUSTER_SUMMARY = clusterSummary;
+	window.MUSIC_GALAXY = musicGalaxy;
+	window.PERSONAL_RATING = personalRating;
+</script>
+
+<!-- Client interactivity module -->
+<!-- Client interactivity module -->
+<script type="module">
+	// Jacobi algorithm for 3x3 symmetric matrix eigenvalues & eigenvectors
+	function jacobi3x3(A) {
+		let V = [
+			[1, 0, 0],
+			[0, 1, 0],
+			[0, 0, 1],
+		];
+		let d = [A[0][0], A[1][1], A[2][2]];
+		let A_mut = [
+			[A[0][0], A[0][1], A[0][2]],
+			[A[1][0], A[1][1], A[1][2]],
+			[A[2][0], A[2][1], A[2][2]],
+		];
+		for (let iter = 0; iter < 50; iter++) {
+			let p = 0,
+				q = 1;
+			let maxVal = Math.abs(A_mut[0][1]);
+			if (Math.abs(A_mut[0][2]) > maxVal) {
+				p = 0;
+				q = 2;
+				maxVal = Math.abs(A_mut[0][2]);
+			}
+			if (Math.abs(A_mut[1][2]) > maxVal) {
+				p = 1;
+				q = 2;
+				maxVal = Math.abs(A_mut[1][2]);
+			}
+			if (maxVal < 1e-9) break;
+
+			let theta = (0.5 * (d[q] - d[p])) / A_mut[p][q];
+			let t = 1.0 / (Math.abs(theta) + Math.sqrt(1.0 + theta * theta));
+			if (theta < 0) t = -t;
+			let c = 1.0 / Math.sqrt(1.0 + t * t);
+			let s = t * c;
+			let tau = s / (1.0 + c);
+
+			let h = t * A_mut[p][q];
+			d[p] -= h;
+			d[q] += h;
+			A_mut[p][q] = 0;
+
+			for (let i = 0; i < 3; i++) {
+				if (i !== p && i !== q) {
+					let g = A_mut[i][p];
+					let j = A_mut[i][q];
+					A_mut[i][p] = c * g - s * j;
+					A_mut[i][q] = s * g + c * j;
+					A_mut[p][i] = A_mut[i][p];
+					A_mut[q][i] = A_mut[i][q];
 				}
-			`;
-			document.head.appendChild(styleSheet);
+			}
+			for (let i = 0; i < 3; i++) {
+				let g = V[i][p];
+				let j = V[i][q];
+				V[i][p] = c * g - s * j;
+				V[i][q] = s * g + c * j;
+			}
+		}
+		return { eigenvalues: d, eigenvectors: V };
+	}
 
-			// DOM Elements
-			const navItems = document.querySelectorAll('.nav-item');
-			const tabs = {
-				personas: document.getElementById('tab-personas'),
-				galaxy: document.getElementById('tab-galaxy'),
-				rating: document.getElementById('tab-rating')
-			};
+	function getEllipsoidTrace(clusterTracks, color) {
+		if (clusterTracks.length < 3) return null;
 
-			// Active state
-			let state = {
-				tab: 'personas',
-				cluster: 0,
-				trackIndex: 0
-			};
+		const mean = [0, 0, 0];
+		clusterTracks.forEach((t) => {
+			mean[0] += t.pc1;
+			mean[1] += t.pc2;
+			mean[2] += t.bias_score;
+		});
+		mean[0] /= clusterTracks.length;
+		mean[1] /= clusterTracks.length;
+		mean[2] /= clusterTracks.length;
 
-			// ── Nav switching ──
-			navItems.forEach(btn => {
-				btn.addEventListener('click', () => {
-					const targetTab = btn.dataset.tab;
-					navItems.forEach(n => n.classList.remove('active'));
-					btn.classList.add('active');
+		const cov = [
+			[0, 0, 0],
+			[0, 0, 0],
+			[0, 0, 0],
+		];
+		clusterTracks.forEach((t) => {
+			const dx = t.pc1 - mean[0];
+			const dy = t.pc2 - mean[1];
+			const dz = t.bias_score - mean[2];
+			cov[0][0] += dx * dx;
+			cov[0][1] += dx * dy;
+			cov[0][2] += dx * dz;
+			cov[1][1] += dy * dy;
+			cov[1][2] += dy * dz;
+			cov[2][2] += dz * dz;
+		});
+		cov[1][0] = cov[0][1];
+		cov[2][0] = cov[0][2];
+		cov[2][1] = cov[1][2];
 
-					Object.keys(tabs).forEach(k => {
-						if (k === targetTab) tabs[k].classList.remove('hidden');
-						else tabs[k].classList.add('hidden');
-					});
-					state.tab = targetTab;
+		const n = clusterTracks.length;
+		for (let r = 0; r < 3; r++) {
+			for (let c = 0; c < 3; c++) {
+				cov[r][c] /= n - 1;
+			}
+		}
 
-					if (targetTab === 'galaxy') {
-						renderGalaxy();
-					}
-					if (targetTab === 'rating') {
-						renderRatingTab();
-						const gd = document.getElementById('plotly-3d-map');
-						if (gd && window.Plotly) {
-							window.Plotly.Plots.resize(gd);
-						}
-					}
-				});
+		const { eigenvalues, eigenvectors } = jacobi3x3(cov);
+
+		const scale = 1.6;
+		const s0 = scale * Math.sqrt(Math.max(0, eigenvalues[0]));
+		const s1 = scale * Math.sqrt(Math.max(0, eigenvalues[1]));
+		const s2 = scale * Math.sqrt(Math.max(0, eigenvalues[2]));
+
+		const uSteps = 15;
+		const vSteps = 15;
+		const xArr = [];
+		const yArr = [];
+		const zArr = [];
+
+		for (let i = 0; i <= uSteps; i++) {
+			const theta = (i / uSteps) * 2 * Math.PI;
+			for (let j = 0; j <= vSteps; j++) {
+				const phi = (j / vSteps) * Math.PI;
+
+				const ux = Math.cos(theta) * Math.sin(phi);
+				const uy = Math.sin(theta) * Math.sin(phi);
+				const uz = Math.cos(phi);
+
+				const sx = ux * s0;
+				const sy = uy * s1;
+				const sz = uz * s2;
+
+				const rx =
+					eigenvectors[0][0] * sx +
+					eigenvectors[0][1] * sy +
+					eigenvectors[0][2] * sz;
+				const ry =
+					eigenvectors[1][0] * sx +
+					eigenvectors[1][1] * sy +
+					eigenvectors[1][2] * sz;
+				const rz =
+					eigenvectors[2][0] * sx +
+					eigenvectors[2][1] * sy +
+					eigenvectors[2][2] * sz;
+
+				xArr.push(mean[0] + rx);
+				yArr.push(mean[1] + ry);
+				zArr.push(mean[2] + rz);
+			}
+		}
+
+		return {
+			type: "mesh3d",
+			x: xArr,
+			y: yArr,
+			z: zArr,
+			alphahull: 0,
+			opacity: 0.08,
+			color: color,
+			showlegend: false,
+			hoverinfo: "skip",
+		};
+	}
+
+	const CLUSTERS = window.CLUSTER_SUMMARY;
+
+	// Deduplicate tracks by canonical name
+	const RAW_TRACKS = window.MUSIC_GALAXY.filter(
+		(t) => t.release_year <= 2020,
+	);
+	const TRACKS = [];
+	const seenNames = new Set();
+	for (const t of RAW_TRACKS) {
+		const canonicalName = t.name.toLowerCase().trim();
+		if (!seenNames.has(canonicalName)) {
+			seenNames.add(canonicalName);
+			TRACKS.push(t);
+		}
+	}
+
+	// ── Dynamically build cluster metadata from json ──
+	const CLUSTER_META = {};
+	CLUSTERS.forEach((c) => {
+		CLUSTER_META[c.cluster] = {
+			name: c.name || `Cluster ${c.cluster}`,
+			description: c.description || "",
+			color: c.color || "#888",
+			image: c.image || "/assets/spotify/thediscodynamo-1.jpg",
+		};
+	});
+
+	const AUDIO_FEATURE_KEYS = [
+		"danceability",
+		"energy",
+		"valence",
+		"acousticness",
+		"speechiness",
+	];
+
+	// ── Track similarity engine ──
+	class FeatureSpace {
+		constructor(tracks) {
+			this.tracks = tracks;
+			const vectors = tracks.map((t) =>
+				AUDIO_FEATURE_KEYS.map((k) => Number(t[k])),
+			);
+			const norms = vectors.map((v) =>
+				Math.sqrt(v.reduce((sum, val) => sum + val * val, 0)),
+			);
+			const size = tracks.length;
+
+			this.matrix = Array.from({ length: size }, (_, r) =>
+				Array.from({ length: size }, (_, c) => (r === c ? 1 : 0)),
+			);
+
+			for (let r = 0; r < size; r++) {
+				for (let c = r + 1; c < size; c++) {
+					const rNorm = norms[r];
+					const cNorm = norms[c];
+					if (rNorm === 0 || cNorm === 0) continue;
+
+					let dot = 0;
+					const rVec = vectors[r];
+					const cVec = vectors[c];
+					for (let i = 0; i < rVec.length; i++)
+						dot += rVec[i] * cVec[i];
+
+					const sim = dot / (rNorm * cNorm);
+					this.matrix[r][c] = sim;
+					this.matrix[c][r] = sim;
+				}
+			}
+		}
+
+		getCentrality() {
+			const size = this.matrix.length;
+			if (size <= 1) return Array.from({ length: size }, () => 0);
+			return this.matrix.map((row, rIdx) => {
+				const sum =
+					row.reduce((total, val) => total + val, 0) - row[rIdx];
+				return sum / (size - 1);
 			});
+		}
 
-			// Search filtering logic
-			const searchInput = document.getElementById('personas-search');
-			if (searchInput) {
-				searchInput.addEventListener('input', () => {
-					renderPersonasTab();
-				});
+		getTopSimilar(trackIndex, limit = 5) {
+			const row = this.matrix[trackIndex];
+			if (!row) return [];
+			return row
+				.map((similarity, index) => ({ index, similarity }))
+				.filter((item) => item.index !== trackIndex)
+				.sort((a, b) => b.similarity - a.similarity)
+				.slice(0, limit);
+		}
+	}
+
+	// Precompute all values
+	const space = new FeatureSpace(TRACKS);
+	const centrality = space.getCentrality();
+
+	// Clamp min-max centrality
+	const minCentrality = Math.min(...centrality);
+	const maxCentrality = Math.max(...centrality);
+	const popularityProxy = centrality.map((val) => {
+		if (maxCentrality === minCentrality) return 0.5;
+		return Math.min(
+			1,
+			Math.max(
+				0,
+				(val - minCentrality) / (maxCentrality - minCentrality),
+			),
+		);
+	});
+
+	// Weighted impact computed dynamically
+	const clusterWeightedImpact = (() => {
+		const map = {};
+		CLUSTERS.forEach((c) => {
+			map[c.cluster] = { sum: 0, count: 0 };
+		});
+		TRACKS.forEach((t, i) => {
+			if (map[t.cluster]) {
+				const weight = popularityProxy[i] * 0.85 + 0.15;
+				map[t.cluster].sum += weight;
+				map[t.cluster].count += 1;
 			}
+		});
+		const total =
+			Object.values(map).reduce((sum, item) => sum + item.sum, 0) || 1;
+		return Object.keys(map).reduce((res, key) => {
+			res[key] = {
+				share: map[key].sum / total,
+				count: map[key].count,
+			};
+			return res;
+		}, {});
+	})();
 
-			// Play button mockup behavior
-			const playBtn = document.getElementById('player-play-btn');
-			const playIcon = document.getElementById('player-play-icon');
-			const disc = document.getElementById('player-disc');
-			let isPlaying = false;
+	// CSS spin animation keyframes injected dynamically
 
-			if (playBtn) {
-				playBtn.addEventListener('click', () => {
-					isPlaying = !isPlaying;
-					if (isPlaying) {
-						disc.style.animationPlayState = 'running';
-						playIcon.innerHTML = `<rect x="6" y="4" width="4" height="16" fill="currentColor"/><rect x="14" y="4" width="4" height="16" fill="currentColor"/>`;
-					} else {
-						disc.style.animationPlayState = 'paused';
-						playIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/>`;
-					}
-				});
+	// DOM Elements
+	const navItems = document.querySelectorAll(".nav-item");
+	const tabs = {
+		personas: document.getElementById("tab-personas"),
+		galaxy: document.getElementById("tab-galaxy"),
+		rating: document.getElementById("tab-rating"),
+		pipeline: document.getElementById("tab-pipeline"),
+	};
+
+	// Active state
+	let state = {
+		tab: "personas",
+		cluster: 0,
+		trackIndex: 0,
+	};
+
+	// ── Nav switching ──
+	navItems.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			const targetTab = btn.dataset.tab;
+			navItems.forEach((n) => n.classList.remove("active"));
+			btn.classList.add("active");
+
+			Object.keys(tabs).forEach((k) => {
+				if (k === targetTab) tabs[k].classList.remove("hidden");
+				else tabs[k].classList.add("hidden");
+			});
+			state.tab = targetTab;
+
+			if (targetTab === "galaxy") {
+				renderGalaxy();
+				const gd = document.getElementById("plotly-galaxy-3d");
+				if (gd && window.Plotly) {
+					window.Plotly.Plots.resize(gd);
+				}
 			}
+			if (targetTab === "rating") {
+				renderRatingTab();
+				const gd = document.getElementById("plotly-3d-map");
+				if (gd && window.Plotly) {
+					window.Plotly.Plots.resize(gd);
+				}
+			}
+		});
+	});
 
-			// ── TAB 1: Sonic Personas render ──
-			function renderPersonasTab() {
-				// Rail buttons
-				const railList = document.getElementById('cluster-rail-list');
-				railList.innerHTML = CLUSTERS.map(c => {
-					const meta = CLUSTER_META[c.cluster];
-					const count = clusterWeightedImpact[c.cluster].count;
-					const active = state.cluster === c.cluster;
-					return `
-						<button class="cluster-btn ${active ? 'active' : ''}" data-cluster="${c.cluster}">
-							${active ? `<div class="cluster-color-bar" style="background-color: ${meta.color}"></div>` : ''}
+	// Search filtering logic
+	const searchInput = document.getElementById("personas-search");
+	if (searchInput) {
+		searchInput.addEventListener("input", () => {
+			renderPersonasTab();
+		});
+	}
+
+	// ── TAB 1: Sonic Personas render ──
+	function renderPersonasTab() {
+		// Rail buttons
+		const railList = document.getElementById("cluster-rail-list");
+		railList.innerHTML = CLUSTERS.map((c) => {
+			const meta = CLUSTER_META[c.cluster];
+			const count = clusterWeightedImpact[c.cluster].count;
+			const active = state.cluster === c.cluster;
+			return `
+						<button class="cluster-btn ${active ? "active" : ""}" data-cluster="${c.cluster}">
+							${active ? `<div class="cluster-color-bar" style="background-color: ${meta.color}"></div>` : ""}
 							<div class="cluster-title-wrap">
 								<span><span class="cluster-dot" style="background-color: ${meta.color}"></span>${meta.name}</span>
 								<span style="opacity: 0.6; font-size: 0.7rem;">${count} tracks</span>
 							</div>
 						</button>
 					`;
-				}).join('');
+		}).join("");
 
-				// Register click listeners
-				document.querySelectorAll('.cluster-btn').forEach(btn => {
-					btn.addEventListener('click', () => {
-						state.cluster = Number(btn.dataset.cluster);
-						// Auto select first track in cluster
-						const trackIdx = TRACKS.findIndex(t => t.cluster === state.cluster);
-						if (trackIdx !== -1) state.trackIndex = trackIdx;
-						renderPersonasTab();
-					});
-				});
+		// Register click listeners
+		document.querySelectorAll(".cluster-btn").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				state.cluster = Number(btn.dataset.cluster);
+				// Auto select first track in cluster
+				const trackIdx = TRACKS.findIndex(
+					(t) => t.cluster === state.cluster,
+				);
+				if (trackIdx !== -1) state.trackIndex = trackIdx;
+				renderPersonasTab();
+			});
+		});
 
-				// Detailed card
-				const cMeta = CLUSTER_META[state.cluster];
-				const clusterData = CLUSTERS[state.cluster];
-				document.getElementById('cluster-name').innerText = cMeta.name;
-				document.getElementById('cluster-desc').innerText = cMeta.description;
-				document.getElementById('cluster-share').innerText = `${Math.round(clusterWeightedImpact[state.cluster].share * 100)}% share`;
-				// Overlay linear gradient so cover fades cleanly into background and remains readable
-				document.getElementById('cluster-bg').style.backgroundImage = `linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.95) 100%), url(${cMeta.image})`;
+		// Detailed card
+		const cMeta = CLUSTER_META[state.cluster];
+		const clusterData = CLUSTERS[state.cluster];
+		document.getElementById("cluster-name").innerText = cMeta.name;
+		document.getElementById("cluster-desc").innerText = cMeta.description;
+		document.getElementById("cluster-share").innerText =
+			`${Math.round(clusterWeightedImpact[state.cluster].share * 100)}% share`;
 
-				// Metrics grid (danceability, energy, valence, acousticness + average tempo and loudness)
-				let metricsHTML = [
-					{ label: 'Danceability', val: clusterData.danceability },
-					{ label: 'Energy', val: clusterData.energy },
-					{ label: 'Valence', val: clusterData.valence },
-					{ label: 'Acousticness', val: clusterData.acousticness }
-				].map(m => `
+		// Metrics grid (danceability, energy, valence, acousticness + average tempo and loudness)
+		let metricsHTML = [
+			{ label: "Danceability", val: clusterData.danceability },
+			{ label: "Energy", val: clusterData.energy },
+			{ label: "Valence", val: clusterData.valence },
+			{ label: "Acousticness", val: clusterData.acousticness },
+		]
+			.map(
+				(m) => `
 					<div class="metric-box">
 						<div class="metric-meta">
 							<span>${m.label}</span>
@@ -1193,11 +1679,13 @@ const clustersCount = clusterSummary.length;
 							<div class="metric-fill" style="width: ${m.val * 100}%; background-color: ${cMeta.color};"></div>
 						</div>
 					</div>
-				`).join('');
+				`,
+			)
+			.join("");
 
-				const avgTempo = Math.round(clusterData.tempo || 115);
-				const avgLoudness = (clusterData.loudness || 0).toFixed(1);
-				metricsHTML += `
+		const avgTempo = Math.round(clusterData.tempo || 115);
+		const avgLoudness = (clusterData.loudness || 0).toFixed(1);
+		metricsHTML += `
 					<div class="metric-box" style="padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.45);">
 						<span style="font-size: 0.65rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Avg Tempo</span>
 						<span style="font-size: 0.8rem; font-weight: bold; color: var(--bh-text);">${avgTempo} BPM</span>
@@ -1207,64 +1695,77 @@ const clustersCount = clusterSummary.length;
 						<span style="font-size: 0.8rem; font-weight: bold; color: var(--bh-text);">${avgLoudness} dB</span>
 					</div>
 				`;
-				document.getElementById('cluster-metrics').innerHTML = metricsHTML;
+		document.getElementById("cluster-metrics").innerHTML = metricsHTML;
 
-				// Tracks list filtered by query
-				const query = (document.getElementById('personas-search')?.value || '').toLowerCase().trim();
-				const clusterTracks = TRACKS.filter(t => t.cluster === state.cluster)
-					.sort((a,b) => b.release_year - a.release_year);
-				const tracksHTML = clusterTracks.map(t => {
-					const globalIdx = TRACKS.findIndex(gt => gt.name === t.name && gt.release_year === t.release_year);
-					const active = state.trackIndex === globalIdx;
-					const matches = t.name.toLowerCase().includes(query);
-					return `
-						<button class="track-list-item ${active ? 'selected' : ''} ${matches ? '' : 'hidden'}" data-idx="${globalIdx}">
+		// Tracks list filtered by query
+		const query = (document.getElementById("personas-search")?.value || "")
+			.toLowerCase()
+			.trim();
+		const clusterTracks = TRACKS.filter(
+			(t) => t.cluster === state.cluster,
+		).sort((a, b) => b.release_year - a.release_year);
+		const tracksHTML = clusterTracks
+			.map((t) => {
+				const globalIdx = TRACKS.findIndex(
+					(gt) =>
+						gt.name === t.name &&
+						gt.release_year === t.release_year,
+				);
+				const active = state.trackIndex === globalIdx;
+				const matches = t.name.toLowerCase().includes(query);
+				return `
+						<button class="track-list-item ${active ? "selected" : ""} ${matches ? "" : "hidden"}" data-idx="${globalIdx}">
 							<span>${t.name}</span>
 							<span style="opacity: 0.6; font-size: 0.7rem;">${t.release_year}</span>
 						</button>
 					`;
-				}).join('');
-				document.getElementById('cluster-tracks-list').innerHTML = tracksHTML;
+			})
+			.join("");
+		document.getElementById("cluster-tracks-list").innerHTML = tracksHTML;
 
-				document.querySelectorAll('#cluster-tracks-list .track-list-item').forEach(btn => {
-					btn.addEventListener('click', () => {
-						state.trackIndex = Number(btn.dataset.idx);
-						renderPersonasTab();
-					});
+		document
+			.querySelectorAll("#cluster-tracks-list .track-list-item")
+			.forEach((btn) => {
+				btn.addEventListener("click", () => {
+					state.trackIndex = Number(btn.dataset.idx);
+					renderPersonasTab();
 				});
-			}
+			});
+	}
 
-			// ── TAB 2: Music Galaxy render ──
-			const tsneBounds = (() => {
-				const xs = TRACKS.map(t => t.tsne_x);
-				const ys = TRACKS.map(t => t.tsne_y);
-				return { minX: Math.min(...xs), maxX: Math.max(...xs), minY: Math.min(...ys), maxY: Math.max(...ys) };
-			})();
+	// ── TAB 2: Music Galaxy render ──
+	const tsneBounds = (() => {
+		const xs = TRACKS.map((t) => t.tsne_x);
+		const ys = TRACKS.map((t) => t.tsne_y);
+		return {
+			minX: Math.min(...xs),
+			maxX: Math.max(...xs),
+			minY: Math.min(...ys),
+			maxY: Math.max(...ys),
+		};
+	})();
 
-			function project(val, min, max, size, padding = 40) {
-				if (max === min) return size / 2;
-				const norm = (val - min) / (max - min);
-				return padding + norm * (size - padding * 2);
-			}
+	function renderGalaxy() {
+		const gd = document.getElementById("plotly-galaxy-3d");
+		if (!gd || !window.Plotly) return;
 
-			function renderGalaxy() {
-				const svg = document.getElementById('galaxy-svg');
-				const selTrack = TRACKS[state.trackIndex];
+		const selTrack = TRACKS[state.trackIndex];
 
-				// Detail Card
-				document.getElementById('galaxy-track-name').innerText = selTrack ? selTrack.name : '-';
-				document.getElementById('galaxy-track-name').title = selTrack ? selTrack.name : '';
-				document.getElementById('galaxy-track-year').innerText = selTrack ? `${selTrack.release_year} • ${CLUSTER_META[selTrack.cluster].name}` : '-';
+		// Detail Card updates
+		document.getElementById("galaxy-track-name").innerText = selTrack
+			? selTrack.name
+			: "-";
+		document.getElementById("galaxy-track-name").title = selTrack
+			? selTrack.name
+			: "";
+		document.getElementById("galaxy-track-year").innerText = selTrack
+			? `${selTrack.release_year} • ${CLUSTER_META[selTrack.cluster].name}`
+			: "-";
 
-				// Update mockup player info
-				if (selTrack) {
-					document.getElementById('player-track-name').innerText = selTrack.name;
-				}
-
-				// Selected track metrics progress bars + secondary metrics (popular, tempo, loudness)
-				let featuresHTML = AUDIO_FEATURE_KEYS.map(k => {
-					const val = selTrack ? Number(selTrack[k]) : 0;
-					return `
+		// Selected track metrics progress bars + secondary metrics (popular, tempo, loudness)
+		let featuresHTML = AUDIO_FEATURE_KEYS.map((k) => {
+			const val = selTrack ? Number(selTrack[k]) : 0;
+			return `
 						<div>
 							<div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 1px; color: var(--bh-muted);">
 								<span style="text-transform: capitalize;">${k}</span>
@@ -1275,300 +1776,572 @@ const clustersCount = clusterSummary.length;
 							</div>
 						</div>
 					`;
-				}).join('');
+		}).join("");
 
-				if (selTrack) {
-					const tempo = Math.round(selTrack.tempo || 120);
-					const loudness = (selTrack.loudness || 0).toFixed(1);
-					const popularity = selTrack.popularity || 0;
-					featuresHTML += `
-						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 8px;">
-							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+		if (selTrack) {
+			const tempo = Math.round(selTrack.tempo || 120);
+			const loudness = (selTrack.loudness || 0).toFixed(1);
+			const popularity = selTrack.popularity || 0;
+			featuresHTML += `
+						<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
+							<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
 								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Pop</div>
 								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${popularity}%</div>
 							</div>
-							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+							<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
 								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Tempo</div>
 								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${tempo} <span style="font-size:0.5rem;font-weight:normal;">BPM</span></div>
 							</div>
-							<div style="text-align: center; background: rgba(255,255,255,0.4); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.5);">
+							<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
 								<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Loud</div>
 								<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${loudness} <span style="font-size:0.5rem;font-weight:normal;">dB</span></div>
 							</div>
 						</div>
 					`;
-				}
-				document.getElementById('galaxy-track-metrics').innerHTML = featuresHTML;
+		}
+		document.getElementById("galaxy-track-metrics").innerHTML =
+			featuresHTML;
 
-				// Wormholes list
-				const wormholes = space.getTopSimilar(state.trackIndex, 5);
-				const wormholesHTML = wormholes.map(w => {
-					const track = TRACKS[w.index];
-					return `
+		// Wormholes list
+		const wormholes = space.getTopSimilar(state.trackIndex, 5);
+		const wormholesHTML = wormholes
+			.map((w) => {
+				const track = TRACKS[w.index];
+				return `
 						<button class="track-list-item" data-idx="${w.index}">
 							<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${track.name}</span>
 							<span style="opacity: 0.6; font-size: 0.7rem;">${Math.round(w.similarity * 100)}%</span>
 						</button>
 					`;
-				}).join('');
-				document.getElementById('galaxy-wormholes-list').innerHTML = wormholesHTML;
-				document.querySelectorAll('#galaxy-wormholes-list .track-list-item').forEach(btn => {
-					btn.addEventListener('click', () => {
-						state.trackIndex = Number(btn.dataset.idx);
-						renderGalaxy();
-					});
+			})
+			.join("");
+		document.getElementById("galaxy-wormholes-list").innerHTML =
+			wormholesHTML;
+		document
+			.querySelectorAll("#galaxy-wormholes-list .track-list-item")
+			.forEach((btn) => {
+				btn.addEventListener("click", () => {
+					state.trackIndex = Number(btn.dataset.idx);
+					renderGalaxy();
 				});
+			});
 
-				// Draw SVG
-				let linesHTML = '';
-				if (selTrack) {
-					const sX = project(selTrack.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
-					const sY = project(selTrack.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
+		// Build Traces
+		const traces = [];
 
-					wormholes.forEach(link => {
-						const target = TRACKS[link.index];
-						const tX = project(target.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
-						const tY = project(target.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
-						const opacity = Math.min(0.95, Math.max(0.2, (link.similarity - 0.85) / 0.15));
+		// Add lines for wormholes in 3D
+		if (selTrack) {
+			const lineX = [];
+			const lineY = [];
+			const lineZ = [];
+			wormholes.forEach((w) => {
+				const target = TRACKS[w.index];
+				lineX.push(selTrack.tsne_x, target.tsne_x, null);
+				lineY.push(selTrack.tsne_y, target.tsne_y, null);
+				lineZ.push(selTrack.release_year, target.release_year, null);
+			});
 
-						linesHTML += `
-							<line x1="${sX}" y1="${sY}" x2="${tX}" y2="${tY}" 
-								stroke="rgba(125,211,252,0.9)" 
-								stroke-width="${1 + opacity * 2.5}" 
-								stroke-opacity="${opacity}" 
-								stroke-dasharray="3 4" />
-						`;
-					});
+			traces.push({
+				type: "scatter3d",
+				mode: "lines",
+				x: lineX,
+				y: lineY,
+				z: lineZ,
+				line: {
+					color: "rgba(125,211,252,0.85)",
+					width: 3.5,
+				},
+				name: "Wormholes",
+				showlegend: false,
+				hoverinfo: "skip",
+			});
+		}
+
+		// Add clusters traces
+		CLUSTERS.forEach((c) => {
+			const clusterTracks = TRACKS.map((t, idx) => ({
+				...t,
+				index: idx,
+			})).filter((t) => t.cluster === c.cluster);
+			if (clusterTracks.length === 0) return;
+
+			const meta = CLUSTER_META[c.cluster];
+			const isDimmed = state.cluster !== c.cluster;
+
+			traces.push({
+				x: clusterTracks.map((t) => t.tsne_x),
+				y: clusterTracks.map((t) => t.tsne_y),
+				z: clusterTracks.map((t) => t.release_year),
+				customdata: clusterTracks.map((t) => t.index),
+				mode: "markers",
+				type: "scatter3d",
+				name: meta.name,
+				marker: {
+					size: 4,
+					color: meta.color,
+					opacity: isDimmed ? 0.3 : 0.85,
+					line: { color: "#fff", width: 0.5 },
+				},
+				hoverinfo: "text",
+				hovertext: clusterTracks.map(
+					(t) =>
+						`<strong>${t.name}</strong> (${t.release_year})<br>Popularity: ${t.popularity || 0}%`,
+				),
+			});
+		});
+
+		// Highlight the selected track
+		if (selTrack) {
+			traces.push({
+				x: [selTrack.tsne_x],
+				y: [selTrack.tsne_y],
+				z: [selTrack.release_year],
+				mode: "markers",
+				type: "scatter3d",
+				name: "Selected: " + selTrack.name,
+				marker: {
+					size: 10,
+					color: "#ffffff",
+					symbol: "diamond",
+					line: {
+						color: CLUSTER_META[selTrack.cluster].color,
+						width: 2.5,
+					},
+				},
+				hoverinfo: "text",
+				hovertext: `Selected: ${selTrack.name} (${selTrack.release_year})`,
+				showlegend: false,
+			});
+		}
+
+		const layout = {
+			margin: { l: 0, r: 0, b: 0, t: 0 },
+			paper_bgcolor: "rgba(0,0,0,0)",
+			plot_bgcolor: "rgba(0,0,0,0)",
+			scene: {
+				xaxis: {
+					title: "Manifold X",
+					gridcolor: "rgba(255, 255, 255, 0.08)",
+					zerolinecolor: "rgba(255, 255, 255, 0.15)",
+					showbackground: false,
+					tickcolor: "#fff",
+					titlefont: { size: 10, color: "#9ca3af" },
+					tickfont: { size: 9, color: "#94a3b8" },
+				},
+				yaxis: {
+					title: "Manifold Y",
+					gridcolor: "rgba(255, 255, 255, 0.08)",
+					zerolinecolor: "rgba(255, 255, 255, 0.15)",
+					showbackground: false,
+					tickcolor: "#fff",
+					titlefont: { size: 10, color: "#9ca3af" },
+					tickfont: { size: 9, color: "#94a3b8" },
+				},
+				zaxis: {
+					title: "Release Year",
+					gridcolor: "rgba(255, 255, 255, 0.08)",
+					zerolinecolor: "rgba(255, 255, 255, 0.15)",
+					showbackground: false,
+					tickcolor: "#fff",
+					titlefont: { size: 10, color: "#9ca3af" },
+					tickfont: { size: 9, color: "#94a3b8" },
+				},
+				camera: {
+					eye: { x: 1.5, y: 1.5, z: 1.2 },
+				},
+			},
+			showlegend: true,
+			legend: {
+				x: 0.02,
+				y: 0.98,
+				font: { size: 9, color: "#fff" },
+				bgcolor: "rgba(13, 17, 30, 0.8)",
+				bordercolor: "rgba(255,255,255,0.08)",
+				borderwidth: 1,
+			},
+		};
+
+		const config = {
+			responsive: true,
+			displayModeBar: false,
+		};
+
+		window.Plotly.newPlot("plotly-galaxy-3d", traces, layout, config);
+
+		// Connect click event
+		gd.on("plotly_click", function (data) {
+			if (data.points && data.points.length > 0) {
+				const pt = data.points[0];
+				if (pt.customdata !== undefined) {
+					state.trackIndex = pt.customdata;
+					renderGalaxy();
 				}
-
-				const pointsHTML = TRACKS.map((t, idx) => {
-					const x = project(t.tsne_x, tsneBounds.minX, tsneBounds.maxX, 1000);
-					const y = project(t.tsne_y, tsneBounds.minY, tsneBounds.maxY, 620);
-					const meta = CLUSTER_META[t.cluster];
-					const isActive = state.trackIndex === idx;
-					const isDimmed = state.cluster !== t.cluster;
-					return `
-						<g class="galaxy-point" data-idx="${idx}" data-name="${t.name}" data-year="${t.release_year}" data-pop="${t.popularity || 0}" style="cursor: pointer; opacity: ${isDimmed ? 0.35 : 1};">
-							<circle cx="${x}" cy="${y}" r="${isActive ? 16 : 8}" fill="${meta.color}" opacity="${isActive ? 0.16 : 0.08}" />
-							<circle cx="${x}" cy="${y}" r="${isActive ? 10 : 5}" fill="${meta.color}" opacity="${isActive ? 0.25 : 0.15}" />
-							<circle cx="${x}" cy="${y}" r="${isActive ? 5 : 2.5}" fill="${meta.color}" stroke="#fff" stroke-width="${isActive ? 1.5 : 0.5}" />
-						</g>
-					`;
-				}).join('');
-
-				// Generate coordinate grid lines inside the galaxy t-SNE plot
-				let gridLines = '';
-				for (let i = 100; i < 1000; i += 100) {
-					gridLines += `<line x1="${i}" y1="0" x2="${i}" y2="620" stroke="rgba(255,255,255,0.03)" stroke-width="0.7" />`;
-				}
-				for (let j = 62; j < 620; j += 62) {
-					gridLines += `<line x1="0" y1="${j}" x2="1000" y2="${j}" stroke="rgba(255,255,255,0.03)" stroke-width="0.7" />`;
-				}
-
-				svg.innerHTML = `
-					<rect width="1000" height="620" fill="none" />
-					${gridLines}
-					<circle cx="500" cy="310" r="140" fill="rgba(255,255,255,0.01)" stroke="rgba(255,255,255,0.04)" stroke-width="1" />
-					${linesHTML}
-					${pointsHTML}
-				`;
-
-				// Mouse Hover Tooltip coordinates tracking
-				const tooltip = document.getElementById('galaxy-tooltip');
-				const container = document.getElementById('galaxy-container');
-
-				// Point click and hover hooks
-				document.querySelectorAll('.galaxy-point').forEach(g => {
-					g.addEventListener('click', () => {
-						state.trackIndex = Number(g.dataset.idx);
-						renderGalaxy();
-					});
-					g.addEventListener('mouseenter', () => {
-						const name = g.dataset.name;
-						const year = g.dataset.year;
-						const pop = g.dataset.pop;
-						tooltip.innerHTML = `<strong>${name}</strong> (${year})<br/><span style="opacity:0.8;font-size:0.65rem;">Popularity: ${pop}%</span>`;
-						tooltip.style.display = 'block';
-					});
-					g.addEventListener('mousemove', (e) => {
-						const rect = container.getBoundingClientRect();
-						const x = e.clientX - rect.left + 12;
-						const y = e.clientY - rect.top + 12;
-						tooltip.style.left = x + 'px';
-						tooltip.style.top = y + 'px';
-					});
-					g.addEventListener('mouseleave', () => {
-						tooltip.style.display = 'none';
-					});
-				});
 			}
+		});
+	}
 
-			// ── TAB 3: Personal Rating render ──
-			let selectedRatingAlbum = null;
+	// ── TAB 3: Personal Rating render ──
+	let selectedRatingAlbum = null;
+	let isFirstRatingRender = true;
 
-			function renderRatingTab() {
-				const favDiv = document.getElementById('rating-col-fav');
-				const goodDiv = document.getElementById('rating-col-good');
-				const notfavDiv = document.getElementById('rating-col-notfav');
-				if(!favDiv) return;
+	function renderRatingTab() {
+		const container = document.getElementById("album-cards-container");
+		if (!container) return;
 
-				let favHtml = '';
-				let goodHtml = '';
-				let notfavHtml = '';
+		// Map to ensure every track has an album field, fallback to "Confessions II"
+		const allTracksWithAlbum = (window.PERSONAL_RATING || []).map((t) => ({
+			...t,
+			album: t.album || "Confessions II",
+		}));
 
-				// Map to ensure every track has an album field, fallback to "Confessions i"
-				const allTracksWithAlbum = (window.PERSONAL_RATING || []).map(t => ({
-					...t,
-					album: t.album || 'Confessions i'
-				}));
+		// Extract unique albums
+		const albums = Array.from(
+			new Set(allTracksWithAlbum.map((t) => t.album)),
+		);
 
-				// Extract unique albums
-				const albums = Array.from(new Set(allTracksWithAlbum.map(t => t.album)));
+		// If first render, default to the first album being open
+		if (isFirstRatingRender && albums.length > 0) {
+			selectedRatingAlbum = albums[0];
+			isFirstRatingRender = false;
+		}
 
-				// Populate album select dropdown if it's empty
-				const select = document.getElementById('rating-album-select');
-				if (select && select.children.length === 0) {
-					select.innerHTML = albums.map(a => `<option value="${a}">${a}</option>`).join('');
-					selectedRatingAlbum = albums[0];
-					
-					select.addEventListener('change', (e) => {
-						selectedRatingAlbum = e.target.value;
-						renderRatingTab();
-					});
-				}
+		// Build the HTML for all album cards
+		let cardsHtml = "";
 
-				if (!selectedRatingAlbum && albums.length > 0) {
-					selectedRatingAlbum = albums[0];
-				}
+		albums.forEach((albumName) => {
+			const albumTracks = allTracksWithAlbum.filter(
+				(t) => t.album === albumName,
+			);
+			const isActive = selectedRatingAlbum === albumName;
 
-				// Filter by selected album and sort by bias score descending
-				const ratings = allTracksWithAlbum
-					.filter(t => t.album === selectedRatingAlbum)
-					.sort((a, b) => b.bias_score - a.bias_score);
+			let favHtml = "";
+			let goodHtml = "";
+			let notfavHtml = "";
 
-				ratings.forEach(t => {
+			// Group tracks for this specific album
+			albumTracks
+				.sort((a, b) => b.bias_score - a.bias_score)
+				.forEach((t) => {
 					const html = `
-						<div style="background: rgba(255,255,255,0.45); padding: 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-							<div style="font-weight: 800; font-size: 0.8rem; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text);" title="${t.track}">${t.track}</div>
-							<div style="display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--bh-muted);">
-								<span>Bias Score: <strong style="color: var(--bh-text); font-size: 0.7rem;">${t.bias_score}</strong></span>
-								<span>Energy: <strong>${t.energy}</strong></span>
+							<div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px; border-bottom: 1px dashed rgba(0,0,0,0.05); transition: background-color 0.15s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'" onmouseout="this.style.backgroundColor='transparent'">
+								<span style="font-weight: 700; font-size: 0.72rem; color: var(--bh-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px;" title="${t.track}">${t.track}</span>
+								<span style="font-size: 0.62rem; color: var(--bh-muted); flex-shrink: 0;">Bias: <strong style="color: var(--bh-text); font-size: 0.68rem;">${t.bias_score}</strong></span>
 							</div>
-						</div>
-					`;
-					if (t.label === 'My Favorite') favHtml += html;
-					else if (t.label === 'So Far, So Good') goodHtml += html;
+						`;
+					if (t.label === "My Favorite") favHtml += html;
+					else if (t.label === "So Far, So Good") goodHtml += html;
 					else notfavHtml += html;
 				});
 
-				favDiv.innerHTML = favHtml;
-				goodDiv.innerHTML = goodHtml;
-				notfavDiv.innerHTML = notfavHtml;
+			cardsHtml += `
+						<div class="album-card ${isActive ? "active" : ""}" data-album="${albumName}">
+							<div class="album-card-header">
+								<div class="album-card-info">
+									<span class="album-card-title">${albumName}</span>
+									<span class="album-card-subtitle">${albumTracks.length} tracks rated</span>
+								</div>
+								<svg class="album-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+									<polyline points="6 9 12 15 18 9"></polyline>
+								</svg>
+							</div>
+							<div class="album-card-body">
+								<div class="rating-group-sec" style="border-left: 4px solid #10B981;">
+									<span class="rating-group-title-sec" style="color: #10B981;">My Favorite</span>
+									<div class="rating-group-tracks-sec">${favHtml || '<span style="font-size:0.7rem; color:var(--bh-muted); font-style:italic;">None</span>'}</div>
+								</div>
+								<div class="rating-group-sec" style="border-left: 4px solid #F59E0B;">
+									<span class="rating-group-title-sec" style="color: #F59E0B;">So Far, So Good</span>
+									<div class="rating-group-tracks-sec">${goodHtml || '<span style="font-size:0.7rem; color:var(--bh-muted); font-style:italic;">None</span>'}</div>
+								</div>
+								<div class="rating-group-sec" style="border-left: 4px solid #EF4444;">
+									<span class="rating-group-title-sec" style="color: #EF4444;">Not My Favorite</span>
+									<div class="rating-group-tracks-sec">${notfavHtml || '<span style="font-size:0.7rem; color:var(--bh-muted); font-style:italic;">None</span>'}</div>
+								</div>
+							</div>
+						</div>
+					`;
+		});
 
-				// Render 3D Plotly Map
-				const gd = document.getElementById('plotly-3d-map');
-				if (gd && window.Plotly) {
-					const groups = [
-						{ label: 'My Favorite', color: '#10B981', border: '#047857' },
-						{ label: 'So Far, So Good', color: '#F59E0B', border: '#B45309' },
-						{ label: 'Not My Favorite', color: '#EF4444', border: '#B91C1C' }
-					];
+		container.innerHTML = cardsHtml;
 
-					const traces = [];
+		// Attach click listeners to the headers for expand/collapse toggle
+		container.querySelectorAll(".album-card-header").forEach((header) => {
+			header.addEventListener("click", () => {
+				const card = header.parentElement;
+				const albumName = card.dataset.album;
 
-					groups.forEach(g => {
-						const groupTracks = ratings.filter(t => t.label === g.label);
-						if (groupTracks.length === 0) return;
+				if (selectedRatingAlbum === albumName) {
+					// If clicking the currently active one, we collapse it (showing all tracks in the 3D plot)
+					selectedRatingAlbum = null;
+				} else {
+					// Open the clicked one, closing the others (accordion style)
+					selectedRatingAlbum = albumName;
+				}
 
-						// Scatter trace
-						traces.push({
-							x: groupTracks.map(t => t.pc1),
-							y: groupTracks.map(t => t.pc2),
-							z: groupTracks.map(t => t.bias_score),
-							mode: 'markers+text',
-							type: 'scatter3d',
-							name: g.label,
-							text: groupTracks.map(t => t.track),
-							textposition: 'top center',
-							textfont: { size: 8, color: '#374151' },
-							marker: {
-								size: 5,
-								color: g.color,
-								line: { color: g.border, width: 1 }
-							},
-							hoverinfo: 'text',
-							hovertext: groupTracks.map(t => `${t.track}<br>PC1: ${t.pc1.toFixed(3)}<br>PC2: ${t.pc2.toFixed(3)}<br>Bias Score: ${t.bias_score}`)
-						});
+				renderRatingTab();
+			});
+		});
 
-						// Ellipsoid mesh trace
-						const meshTrace = getEllipsoidTrace(groupTracks, g.color);
-						if (meshTrace) {
-							traces.push(meshTrace);
-						}
+		// Now filter ratings for the Plotly 3D scatter chart
+		const ratings = selectedRatingAlbum
+			? allTracksWithAlbum.filter((t) => t.album === selectedRatingAlbum)
+			: allTracksWithAlbum;
+
+		// Render 3D Plotly Map
+		const gd = document.getElementById("plotly-3d-map");
+		if (gd && window.Plotly) {
+			const groups = [
+				{ label: "My Favorite", color: "#10B981", border: "#047857" },
+				{
+					label: "So Far, So Good",
+					color: "#F59E0B",
+					border: "#B45309",
+				},
+				{
+					label: "Not My Favorite",
+					color: "#EF4444",
+					border: "#B91C1C",
+				},
+			];
+
+			const traces = [];
+
+			groups.forEach((g) => {
+				const groupTracks = ratings.filter((t) => t.label === g.label);
+				if (groupTracks.length === 0) return;
+
+				// Scatter trace
+				traces.push({
+					x: groupTracks.map((t) => t.pc1),
+					y: groupTracks.map((t) => t.pc2),
+					z: groupTracks.map((t) => t.bias_score),
+					mode: "markers+text",
+					type: "scatter3d",
+					name: g.label,
+					text: groupTracks.map((t) => t.track),
+					textposition: "top center",
+					textfont: { size: 8, color: "#cbd5e1" },
+					marker: {
+						size: 5,
+						color: g.color,
+						line: { color: g.border, width: 1 },
+					},
+					hoverinfo: "text",
+					hovertext: groupTracks.map(
+						(t) =>
+							`${t.track}<br>${selectedRatingAlbum ? "" : `Album: ${t.album}<br>`}PC1: ${t.pc1.toFixed(3)}<br>PC2: ${t.pc2.toFixed(3)}<br>Bias Score: ${t.bias_score}`,
+					),
+				});
+
+				// Ellipsoid mesh trace (only when we plot a single album's tracks)
+				if (selectedRatingAlbum && groupTracks.length >= 3) {
+					const meshTrace = getEllipsoidTrace(groupTracks, g.color);
+					if (meshTrace) {
+						traces.push(meshTrace);
+					}
+				}
+			});
+
+			const layout = {
+				margin: { l: 0, r: 0, b: 0, t: 0 },
+				paper_bgcolor: "rgba(0,0,0,0)",
+				plot_bgcolor: "rgba(0,0,0,0)",
+				scene: {
+					xaxis: {
+						title: "PC1 - style (84% var)",
+						gridcolor: "rgba(255, 255, 255, 0.1)",
+						zerolinecolor: "rgba(255, 255, 255, 0.2)",
+						backgroundcolor: "rgba(0,0,0,0)",
+						showbackground: false,
+						tickcolor: "#cbd5e1",
+						titlefont: { size: 10, color: "#cbd5e1" },
+						tickfont: { size: 9, color: "#94a3b8" },
+					},
+					yaxis: {
+						title: "PC2 - style (8% var)",
+						gridcolor: "rgba(255, 255, 255, 0.1)",
+						zerolinecolor: "rgba(255, 255, 255, 0.2)",
+						backgroundcolor: "rgba(0,0,0,0)",
+						showbackground: false,
+						tickcolor: "#cbd5e1",
+						titlefont: { size: 10, color: "#cbd5e1" },
+						tickfont: { size: 9, color: "#94a3b8" },
+					},
+					zaxis: {
+						title: "Personal Bias Score",
+						gridcolor: "rgba(255, 255, 255, 0.1)",
+						zerolinecolor: "rgba(255, 255, 255, 0.2)",
+						backgroundcolor: "rgba(0,0,0,0)",
+						showbackground: false,
+						tickcolor: "#cbd5e1",
+						titlefont: { size: 10, color: "#cbd5e1" },
+						tickfont: { size: 9, color: "#94a3b8" },
+					},
+					camera: {
+						eye: { x: 1.5, y: 1.5, z: 1.2 },
+					},
+				},
+				showlegend: true,
+				legend: {
+					x: 0,
+					y: 1,
+					font: { size: 9, color: "#cbd5e1" },
+					bgcolor: "rgba(30, 41, 59, 0.8)",
+					bordercolor: "rgba(255,255,255,0.1)",
+					borderwidth: 1,
+				},
+			};
+
+			const config = {
+				responsive: true,
+				displayModeBar: false,
+			};
+
+			window.Plotly.newPlot("plotly-3d-map", traces, layout, config);
+		}
+	}
+
+	// Initialize default rendering
+	renderPersonasTab();
+	renderRatingTab();
+</script>
+
+<script is:inline>
+	const dotBgs = [
+		"/m1.jpg", "/m2.jpg", "/m3.avif", "/m4.jpg", "/m5.jpg",
+		"/m6.jpg", "/m7.webp", "/m8.jpg", "/m9.jpg", "/m10.jpg",
+		"/m11.jpg", "/m12.webp", "/m13.webp", "/m14.webp", "/m15.jpg"
+	];
+	const dotCanvas = document.getElementById('dotMatrixCanvas');
+	if (dotCanvas) {
+		const dotCtx = dotCanvas.getContext('2d', { alpha: false, willReadFrequently: true });
+		let dotOffCanvas = document.createElement('canvas');
+		let dotOffCtx = dotOffCanvas.getContext('2d', { willReadFrequently: true });
+		let dotCurrentImg = new Image();
+		const DOT_CELL_SIZE = 4; 
+
+		let dots = [];
+		let animationFrameId = null;
+
+		function initDots() {
+			dots = [];
+			const cols = Math.ceil(dotCanvas.width / DOT_CELL_SIZE);
+			const rows = Math.ceil(dotCanvas.height / DOT_CELL_SIZE);
+			for (let r = 0; r < rows; r++) {
+				for (let c = 0; c < cols; c++) {
+					dots.push({
+						x: c * DOT_CELL_SIZE,
+						y: r * DOT_CELL_SIZE,
+						radius: 0, r: 255, g: 255, b: 255,
+						trd: 0, tr: 255, tg: 255, tb: 255
 					});
+				}
+			}
+		}
 
-					const layout = {
-						margin: { l: 0, r: 0, b: 0, t: 0 },
-						paper_bgcolor: 'rgba(0,0,0,0)',
-						plot_bgcolor: 'rgba(0,0,0,0)',
-						scene: {
-							xaxis: {
-								title: 'PC1 - style (84% var)',
-								gridcolor: 'rgba(0, 0, 0, 0.08)',
-								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
-								backgroundcolor: 'rgba(0,0,0,0)',
-								showbackground: false,
-								tickcolor: '#374151',
-								titlefont: { size: 10, color: '#374151' },
-								tickfont: { size: 9, color: '#6b7280' }
-							},
-							yaxis: {
-								title: 'PC2 - style (8% var)',
-								gridcolor: 'rgba(0, 0, 0, 0.08)',
-								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
-								backgroundcolor: 'rgba(0,0,0,0)',
-								showbackground: false,
-								tickcolor: '#374151',
-								titlefont: { size: 10, color: '#374151' },
-								tickfont: { size: 9, color: '#6b7280' }
-							},
-							zaxis: {
-								title: 'Personal Bias Score',
-								gridcolor: 'rgba(0, 0, 0, 0.08)',
-								zerolinecolor: 'rgba(0, 0, 0, 0.15)',
-								backgroundcolor: 'rgba(0,0,0,0)',
-								showbackground: false,
-								tickcolor: '#374151',
-								titlefont: { size: 10, color: '#374151' },
-								tickfont: { size: 9, color: '#6b7280' }
-							},
-							camera: {
-								eye: { x: 1.5, y: 1.5, z: 1.2 }
-							}
-						},
-						showlegend: true,
-						legend: {
-							x: 0,
-							y: 1,
-							font: { size: 9, color: '#374151' },
-							bgcolor: 'rgba(255,255,255,0.6)',
-							bordercolor: 'rgba(0,0,0,0.08)',
-							borderwidth: 1
-						}
-					};
+		function dotResize() {
+			dotCanvas.width = window.innerWidth;
+			dotCanvas.height = window.innerHeight;
+			initDots();
+			if (dotCurrentImg.src) {
+				updateDotTargets(dotCurrentImg);
+				if (!animationFrameId) renderLoop();
+			}
+		}
+		window.addEventListener('resize', dotResize);
+		dotResize();
 
-					const config = {
-						responsive: true,
-						displayModeBar: false
-					};
+		function updateDotTargets(img) {
+			if (!img.complete || img.naturalWidth === 0) return;
+			const w = dotCanvas.width;
+			const h = dotCanvas.height;
+			
+			dotOffCanvas.width = w;
+			dotOffCanvas.height = h;
+			dotOffCtx.clearRect(0, 0, w, h);
 
-					window.Plotly.newPlot('plotly-3d-map', traces, layout, config);
+			const imgRatio = img.naturalWidth / img.naturalHeight;
+			const canvasRatio = w / h;
+			let drawW, drawH, drawX, drawY;
+
+			if (canvasRatio > imgRatio) {
+				drawW = w;
+				drawH = w / imgRatio;
+				drawX = 0;
+				drawY = (h - drawH) / 2;
+			} else {
+				drawW = h * imgRatio;
+				drawH = h;
+				drawX = (w - drawW) / 2;
+				drawY = 0;
+			}
+			dotOffCtx.drawImage(img, drawX, drawY, drawW, drawH);
+			const imgData = dotOffCtx.getImageData(0, 0, w, h).data;
+
+			for (let i = 0; i < dots.length; i++) {
+				const d = dots[i];
+				const idx = (d.y * w + d.x) * 4;
+				if (idx < imgData.length - 2) {
+					d.tr = imgData[idx];
+					d.tg = imgData[idx+1];
+					d.tb = imgData[idx+2];
+					const brightness = 0.299 * d.tr + 0.587 * d.tg + 0.114 * d.tb;
+					d.trd = ((255 - brightness) / 255) * (DOT_CELL_SIZE / 2);
+				}
+			}
+		}
+
+		function renderLoop() {
+			const w = dotCanvas.width;
+			const h = dotCanvas.height;
+			dotCtx.fillStyle = "#ffffff";
+			dotCtx.fillRect(0, 0, w, h);
+
+			let needsMoreFrames = false;
+
+			for (let i = 0; i < dots.length; i++) {
+				const d = dots[i];
+				
+				const dr = d.trd - d.radius;
+				const dR = d.tr - d.r;
+				const dG = d.tg - d.g;
+				const dB = d.tb - d.b;
+
+				if (Math.abs(dr) > 0.1 || Math.abs(dR) > 1 || Math.abs(dG) > 1 || Math.abs(dB) > 1) {
+					needsMoreFrames = true;
+				}
+
+				d.radius += dr * 0.06;
+				d.r += dR * 0.06;
+				d.g += dG * 0.06;
+				d.b += dB * 0.06;
+
+				if (d.radius > 0.5) {
+					dotCtx.fillStyle = `rgb(${d.r|0}, ${d.g|0}, ${d.b|0})`;
+					dotCtx.fillRect(d.x + DOT_CELL_SIZE/2 - d.radius, d.y + DOT_CELL_SIZE/2 - d.radius, d.radius * 2, d.radius * 2);
 				}
 			}
 
-			// Initialize default rendering
-			renderPersonasTab();
-			renderRatingTab();
-		</script>
-	</body>
-</html>
+			if (needsMoreFrames) {
+				animationFrameId = requestAnimationFrame(renderLoop);
+			} else {
+				animationFrameId = null;
+			}
+		}
+
+		function loadNextDotImage() {
+			const src = dotBgs[Math.floor(Math.random() * dotBgs.length)];
+			const img = new Image();
+			img.crossOrigin = "Anonymous";
+			img.onload = () => {
+				dotCurrentImg = img;
+				updateDotTargets(img);
+				if (!animationFrameId) renderLoop();
+			};
+			img.src = src;
+		}
+
+		loadNextDotImage();
+		setInterval(loadNextDotImage, 20000); 
+	}
+</script>
