@@ -20,14 +20,14 @@ import '@fontsource/google-sans-flex';
 				--bh-void: #ffffff;
 				--bh-deep: #f9fafb;
 				--bh-surface: #f3f4f6;
-				--bh-card: #ffffff;
+				--bh-card: rgba(255, 255, 255, 0.6);
 				--bh-border: rgba(0, 0, 0, 0.08);
 				--bh-border-hi: rgba(0, 0, 0, 0.16);
 				--bh-text: #1f2937;
-				--bh-muted: #6b7280;
-				--bh-accent: #4f46e5; /* indigo */
-				--bh-accent2: #7c3aed; /* violet */
-				--bh-accent3: #10b981; /* emerald */
+				--bh-muted: #4b5563;
+				--bh-accent: #0ea5e9; /* Aero cyan */
+				--bh-accent2: #38bdf8; 
+				--bh-accent3: #22c55e; /* Green */
 				--bh-danger: #ef4444;
 				--bh-glow: transparent;
 				--bh-glow-sm: transparent;
@@ -53,14 +53,14 @@ import '@fontsource/google-sans-flex';
 			body::before {
 				content: "";
 				position: fixed;
-				inset: -40px; /* Expands to hide the blurred edges */
-				z-index: -1;
+				inset: -40px;
+				z-index: -2;
 				background-image: url('/frutiger-aero-wallpaper-i-whipped-up-in-a-few-hours-hoping-v0-jcaq7gsamypc1.webp');
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
 				filter: blur(24px);
-				background-color: rgba(255, 255, 255, 0.1); /* Very light overlay to not wash it out too much */
+				background-color: rgba(255, 255, 255, 0.1);
 				background-blend-mode: overlay;
 			}
 
@@ -118,13 +118,18 @@ import '@fontsource/google-sans-flex';
 
 			.bh-main-card {
 				position: relative;
-				background: rgba(255, 255, 255, 0.88);
-				backdrop-filter: blur(48px);
-				-webkit-backdrop-filter: blur(48px);
-				border: 1px solid rgba(0, 0, 0, 0.05);
-				border-radius: 0px;
+				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+				backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
+				border: 1px solid rgba(255, 255, 255, 0.4);
+				border-radius: 36px;
 				padding: 32px;
-				box-shadow: 0 32px 80px rgba(0, 0, 0, 0.08), 0 0 32px rgba(0, 0, 0, 0.02);
+				box-shadow: 
+					0 30px 60px rgba(0, 0, 0, 0.15),
+					inset 20px 20px 40px rgba(255, 255, 255, 0.25),
+					inset 3px 3px 10px rgba(255, 255, 255, 0.6),
+					inset -20px -20px 40px rgba(0, 0, 0, 0.05),
+					inset -3px -3px 10px rgba(0, 0, 0, 0.1);
 				display: flex;
 				gap: 32px;
 				height: calc(100vh - 80px);
@@ -144,7 +149,6 @@ import '@fontsource/google-sans-flex';
 				gap: 20px;
 				border-right: 1px solid var(--bh-border);
 				padding-right: 32px;
-				padding-top: 24px;
 				overflow-y: auto;
 			}
 			.wbc-workspace {
@@ -188,7 +192,7 @@ import '@fontsource/google-sans-flex';
 				padding: 8px 16px;
 				background: rgba(0, 0, 0, 0.03);
 				border: 1px solid rgba(0, 0, 0, 0.06);
-				border-radius: 0px;
+				border-radius: 99px;
 				width: fit-content;
 			}
 
@@ -205,7 +209,7 @@ import '@fontsource/google-sans-flex';
 			.wbc-empty-icon {
 				width: 80px;
 				height: 80px;
-				border-radius: 0px;
+				border-radius: 50%;
 				background: rgba(0, 0, 0, 0.02);
 				border: 1px solid var(--bh-border);
 				display: flex;
@@ -267,25 +271,25 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-back-btn {
-				position: absolute;
-				top: 0;
-				left: 0;
-				z-index: 10;
 				width: 40px;
 				height: 40px;
-				background: #f97316; /* Vibrant Orange */
+				background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 49%, #0ea5e9 50%, #0284c7 100%);
 				color: #ffffff;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				border: none;
-				border-radius: 0px; /* Square */
+				border: 1px solid #0369a1;
+				border-top: 1px solid #bae6fd;
+				border-radius: 50%;
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 12px rgba(14, 165, 233, 0.3);
 				cursor: pointer;
-				transition: background-color 0.2s, transform 0.2s;
+				transition: all 0.2s;
+				flex-shrink: 0;
 			}
 			.wbc-back-btn:hover {
-				background: #ea580c; /* Darker orange */
-				transform: scale(1.05);
+				background: linear-gradient(180deg, #bae6fd 0%, #7dd3fc 49%, #38bdf8 50%, #0ea5e9 100%);
+				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 6px 16px rgba(14, 165, 233, 0.4);
+				transform: translateY(-1px);
 			}
 
 			.bh-content-scroll {
@@ -349,7 +353,7 @@ import '@fontsource/google-sans-flex';
 			.wbc-upload-zone {
 				position: relative;
 				border: 2px dashed rgba(0, 0, 0, 0.15);
-				border-radius: 0px;
+				border-radius: 20px;
 				background: rgba(0, 0, 0, 0.02);
 				transition: border-color 0.2s, background-color 0.2s;
 				cursor: pointer;
@@ -406,7 +410,7 @@ import '@fontsource/google-sans-flex';
 			.wbc-step-num {
 				width: 20px;
 				height: 20px;
-				border-radius: 0px;
+				border-radius: 50%;
 				background: var(--bh-accent);
 				color: #ffffff;
 				font-size: 0.75rem;
@@ -424,16 +428,18 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-guide-note {
 				font-size: 0.75rem;
-				background: rgba(0, 0, 0, 0.02);
-				border: 1px solid var(--bh-border);
+				background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+				border: 1px solid rgba(255,255,255,0.6);
+				border-radius: 12px;
 				padding: 12px;
 				color: var(--bh-muted);
 				line-height: 1.4;
+				box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 			}
 			.wbc-upload-icon-wrapper {
 				width: 56px;
 				height: 56px;
-				border-radius: 0px;
+				border-radius: 20px;
 				background: rgba(0, 0, 0, 0.04);
 				display: flex;
 				align-items: center;
@@ -460,24 +466,24 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				gap: 16px;
 				padding: 24px;
-				background: rgba(0, 0, 0, 0.01);
-				border: 1px solid var(--bh-border);
-				border-radius: 0px;
+				background: rgba(255, 255, 255, 0.2);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 24px;
 				margin-top: 16px;
 			}
 			.wbc-preview-img {
 				max-height: 280px;
 				max-width: 100%;
-				border-radius: 0px;
+				border-radius: 12px;
 				object-fit: contain;
-				border: 1px solid var(--bh-border-hi);
+				border: 1px solid rgba(255, 255, 255, 0.6);
 			}
 			.wbc-progress-bar-wrapper {
 				width: 100%;
 				max-width: 400px;
 				height: 6px;
 				background: rgba(0, 0, 0, 0.08);
-				border-radius: 0px;
+				border-radius: 99px;
 				overflow: hidden;
 				margin-top: 8px;
 			}
@@ -485,7 +491,7 @@ import '@fontsource/google-sans-flex';
 				height: 100%;
 				width: 0%;
 				background: var(--bh-accent);
-				border-radius: 0px;
+				border-radius: 99px;
 				transition: width 0.4s ease-out;
 			}
 			.wbc-status-text {
@@ -500,7 +506,7 @@ import '@fontsource/google-sans-flex';
 
 			.wbc-error-msg {
 				padding: 16px;
-				border-radius: 0px;
+				border-radius: 12px;
 				background: rgba(239, 68, 68, 0.08);
 				border: 1px solid rgba(239, 68, 68, 0.15);
 				color: var(--bh-danger);
@@ -550,13 +556,14 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-image-panel {
 				flex: 1;
-				background: rgba(0, 0, 0, 0.03);
-				border: 1px solid var(--bh-border);
-				border-radius: 0px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 20px;
 				overflow: hidden;
 				position: relative;
 				min-width: 0;
 				min-height: 0;
+				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
 			}
 			.wbc-image-wrapper {
 				position: absolute;
@@ -573,7 +580,7 @@ import '@fontsource/google-sans-flex';
 				height: 100%;
 				object-fit: contain;
 				cursor: pointer;
-				border-radius: 0px;
+				border-radius: 20px;
 			}
 			.wbc-panel-badge {
 				position: absolute;
@@ -582,13 +589,14 @@ import '@fontsource/google-sans-flex';
 				z-index: 2;
 				font-size: 0.65rem;
 				font-weight: bold;
-				background: rgba(0, 0, 0, 0.8);
-				color: #fff;
-				padding: 4px 8px;
-				border-radius: 0px;
+				background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%);
+				color: var(--bh-accent);
+				padding: 4px 10px;
+				border-radius: 99px;
 				letter-spacing: 1px;
 				text-transform: uppercase;
-				border: 1px solid rgba(255,255,255,0.1);
+				border: 1px solid rgba(255,255,255,0.8);
+				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 			}
 
 			.wbc-stats-panel {
@@ -611,15 +619,16 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-count-card {
-				background: rgba(0, 0, 0, 0.02);
-				border: 1px solid var(--bh-border);
-				border-radius: 0px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 20px;
 				padding: 12px;
 				text-align: center;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
+				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
 			}
 			.wbc-count-number {
 				font-size: 1.8rem;
@@ -636,10 +645,11 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-chart-card {
-				background: rgba(0, 0, 0, 0.02);
-				border: 1px solid var(--bh-border);
-				border-radius: 0px;
-				padding: 12px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 20px;
+				padding: 16px;
+				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
 			}
 			.wbc-chart-title {
 				font-size: 0.72rem;
@@ -658,7 +668,7 @@ import '@fontsource/google-sans-flex';
 			.wbc-bar-dot {
 				width: 8px;
 				height: 8px;
-				border-radius: 0px;
+				border-radius: 50%;
 				flex-shrink: 0;
 			}
 			.wbc-bar-label {
@@ -674,12 +684,12 @@ import '@fontsource/google-sans-flex';
 				flex: 1;
 				height: 6px;
 				background: rgba(0, 0, 0, 0.06);
-				border-radius: 0px;
+				border-radius: 99px;
 				overflow: hidden;
 			}
 			.wbc-bar-fill {
 				height: 100%;
-				border-radius: 0px;
+				border-radius: 99px;
 				transition: width 0.8s ease-out;
 			}
 			.wbc-bar-val {
@@ -715,41 +725,46 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-crop-card {
 				flex: 0 0 auto;
-				width: 84px;
-				background: #fff;
-				border-radius: 0px;
+				width: 90px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
+				border-radius: 16px;
 				overflow: hidden;
-				box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+				box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
 				display: flex;
 				flex-direction: column;
-				border: 1px solid var(--bh-border);
+				border: 1px solid rgba(255, 255, 255, 0.8);
 				transition: transform 0.2s, box-shadow 0.2s;
 			}
 			.wbc-crop-card:hover {
 				transform: scale(1.05);
-				box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+				box-shadow: 0 6px 16px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,1);
 			}
 			.wbc-crop-img-wrap {
 				width: 100%;
 				height: 84px;
-				background: #f8f9fa;
+				background: transparent;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				padding: 4px;
+				padding: 8px;
 			}
 			.wbc-crop-img-wrap img {
 				max-width: 100%;
 				max-height: 100%;
-				object-fit: cover;
+				object-fit: contain;
+				border-radius: 8px;
 			}
 			.wbc-crop-info {
-				padding: 6px;
+				padding: 6px 4px;
 				display: flex;
-				justify-content: space-between;
+				flex-direction: column;
+				justify-content: center;
 				align-items: center;
-				font-size: 0.65rem;
+				gap: 2px;
+				font-size: 0.6rem;
 				font-weight: bold;
+				background: transparent;
+				border-top: 1px solid rgba(255,255,255,0.4);
 			}
 
 			/* Quick Try Sample Image */
@@ -764,13 +779,14 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				gap: 12px;
 				padding: 8px;
-				background: rgba(0, 0, 0, 0.02);
-				border: 1px solid var(--bh-border);
-				border-radius: 0px;
+				background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+				border: 1px solid rgba(255,255,255,0.6);
+				border-radius: 16px;
 				cursor: pointer;
 				text-align: left;
 				width: 100%;
 				transition: background-color 0.2s, border-color 0.2s;
+				box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 			}
 			.wbc-sample-btn:hover:not(:disabled) {
 				background: rgba(0, 0, 0, 0.05);
@@ -784,9 +800,9 @@ import '@fontsource/google-sans-flex';
 				width: 48px;
 				height: 48px;
 				object-fit: cover;
-				border: 1px solid var(--bh-border);
+				border: 1px solid rgba(255, 255, 255, 0.6);
 				flex-shrink: 0;
-				border-radius: 0px;
+				border-radius: 12px;
 			}
 			.wbc-sample-info {
 				display: flex;
@@ -826,17 +842,18 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-reset-btn {
-				background: rgba(0, 0, 0, 0.03);
-				border: 1px solid rgba(0,0,0,0.06);
+				background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%);
+				border: 1px solid rgba(255,255,255,0.8);
 				color: var(--bh-text);
 				cursor: pointer;
-				padding: 6px 12px;
-				border-radius: 4px;
+				padding: 6px 14px;
+				border-radius: 99px;
 				display: inline-flex;
 				align-items: center;
 				justify-content: center;
 				gap: 8px;
-				transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,0.8);
+				transition: all 0.2s;
 			}
 			.wbc-reset-btn:hover {
 				background: rgba(239, 68, 68, 0.1);
@@ -869,30 +886,27 @@ import '@fontsource/google-sans-flex';
 			<div class="bh-page">
 				<!-- MAIN CONTENT CARD (Split Columns) -->
 				<div class="bh-main-card">
-					<!-- Floating Square Orange Back Button -->
-					<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 14 14"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M9 12L4 7l5-5"></path>
-						</svg>
-					</a>
-					
 					<!-- LEFT SIDEBAR -->
 					<aside class="wbc-sidebar">
 
 						<!-- HEADER (Title, Summary) -->
 						<header class="bh-header">
+							<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
+								<svg
+									width="16"
+									height="16"
+									viewBox="0 0 14 14"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path d="M9 12L4 7l5-5"></path>
+								</svg>
+							</a>
 							<h1 class="bh-title">
 								<span class="title-nextwbc">NextWBC</span>
-								<span class="title-classifier">Classifier</span>
 							</h1>
 							<p class="bh-subtitle">
 								Avian white blood cell classification using YOLO12. Connects to badgaitintin/hawkwbc models.
@@ -1334,13 +1348,13 @@ import '@fontsource/google-sans-flex';
 					const confPct = Math.round(cell.confidence * 100);
 					
 					cropsHTML += `
-						<div class="wbc-crop-card" style="border-left: 3px solid ${color};">
+						<div class="wbc-crop-card" style="border: 2px solid ${color}80; box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8), inset 0 -16px 24px ${color}20;">
 							<div class="wbc-crop-img-wrap">
 								<img src="${cell.crop_base64}" alt="${label}" />
 							</div>
-							<div class="wbc-crop-info" style="background-color: ${color}">
-								<span class="wbc-crop-label" style="color: #fff;">${label}</span>
-								<span class="wbc-crop-conf" style="color: rgba(255,255,255,0.75);">${confPct}%</span>
+							<div class="wbc-crop-info">
+								<span class="wbc-crop-label" style="color: ${color}; filter: brightness(0.65);">${label}</span>
+								<span class="wbc-crop-conf" style="color: ${color}; filter: brightness(0.65); opacity: 0.8;">${confPct}%</span>
 							</div>
 						</div>
 					`;

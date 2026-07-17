@@ -126,8 +126,9 @@ const clustersCount = clusterSummary.length;
 			.bh-main-card {
 				position: relative;
 				display: flex;
-				gap: 24px;
-				height: calc(100vh - 80px);
+				flex-direction: column;
+				gap: 20px;
+				height: calc(100vh - 64px);
 				align-items: stretch;
 				box-sizing: border-box;
 				overflow: hidden;
@@ -137,34 +138,28 @@ const clustersCount = clusterSummary.length;
 			   SIDEBAR
 			=========================== */
 			.wbc-sidebar {
-				width: 260px;
+				width: 100%;
+				height: auto;
 				flex-shrink: 0;
 				display: flex;
-				flex-direction: column;
+				flex-direction: row;
+				align-items: center;
+				justify-content: space-between;
 				gap: 24px;
-				padding: 24px;
+				padding: 16px 24px;
 				position: relative;
-				background: rgba(0, 0, 0, 0.90);
-				border: 1px solid rgba(255, 255, 255, 0.15);
-				border-radius: 20px;
+				background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.75) 100%);
+				backdrop-filter: blur(24px);
+				-webkit-backdrop-filter: blur(24px);
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				border-top: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 24px;
 				box-shadow:
-					0 16px 40px rgba(255, 255, 255, 0.1),
-					0 2px 8px rgba(0, 0, 0, 0.03),
-					inset 0 1px 0 rgba(255, 255, 255, 0.6);
+					0 16px 40px rgba(0, 0, 0, 0.2),
+					inset 0 1px 4px rgba(255, 255, 255, 0.8),
+					inset 0 -4px 16px rgba(0, 0, 0, 0.6);
 				box-sizing: border-box;
-				overflow-y: auto;
-				height: 100%;
-			}
-			.wbc-sidebar::-webkit-scrollbar {
-				width: 3px;
-			}
-			.wbc-sidebar::-webkit-scrollbar-thumb {
-				background: rgba(255, 255, 255, 0.1);
-				border-radius: 99px;
-			}
-
-			.wbc-sidebar .bh-header {
-				margin-top: 44px;
+				z-index: 10;
 			}
 
 			.wbc-workspace {
@@ -180,10 +175,7 @@ const clustersCount = clusterSummary.length;
 			   BACK BUTTON
 			=========================== */
 			.wbc-back-btn {
-				position: absolute;
-				top: 16px;
-				left: 16px;
-				z-index: 10;
+				flex-shrink: 0;
 				width: 36px;
 				height: 36px;
 				background: linear-gradient(
@@ -225,11 +217,11 @@ const clustersCount = clusterSummary.length;
 			=========================== */
 			.bh-header {
 				display: flex;
-				flex-direction: column;
-				gap: 6px;
-				margin-bottom: 8px;
-				width: 100%;
-				align-items: flex-start;
+				flex-direction: row;
+				gap: 16px;
+				margin: 0;
+				width: auto;
+				align-items: center;
 				text-align: left;
 			}
 
@@ -269,13 +261,7 @@ const clustersCount = clusterSummary.length;
 			}
 
 			.bh-subtitle {
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				font-size: 0.82rem;
-				color: var(--bh-muted);
-				font-weight: 500;
-				margin: 0;
-				line-height: 1.4;
-				max-width: 100%;
+				display: none;
 			}
 
 			/* ===========================
@@ -283,41 +269,42 @@ const clustersCount = clusterSummary.length;
 			=========================== */
 			.wbc-nav-menu {
 				display: flex;
-				flex-direction: column;
-				gap: 4px;
-				margin-top: 8px;
+				flex-direction: row;
+				gap: 8px;
+				margin: 0;
+				align-items: center;
 			}
 			.nav-item {
 				display: flex;
 				align-items: center;
 				gap: 10px;
-				padding: 10px 14px;
+				padding: 10px 16px;
 				font-size: 0.82rem;
 				font-weight: 600;
 				color: var(--bh-muted);
-				background: transparent;
-				border: 1px solid transparent;
-				border-radius: 8px;
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				border-radius: 99px;
 				cursor: pointer;
 				text-align: left;
 				transition: all 0.2s ease;
 				font-family: inherit;
+				box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.1);
 			}
 			.nav-item:hover {
 				background: rgba(0, 0, 0, 0.03);
 				color: var(--bh-text);
 			}
 			.nav-item.active {
-				background: rgba(255, 255, 255, 0.45);
-				border: 1px solid var(--bh-border);
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.1) 100%);
+				border: 1px solid rgba(255, 255, 255, 0.4);
+				border-top: 1px solid rgba(255, 255, 255, 0.7);
 				color: var(--bh-accent);
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.8);
 			}
 
 			.sidebar-footer {
-				margin-top: auto;
-				padding-top: 12px;
-				border-top: 1px solid var(--bh-border);
+				display: none;
 			}
 			.footer-meta {
 				font-size: 0.7rem;
@@ -353,10 +340,13 @@ const clustersCount = clusterSummary.length;
 			}
 
 			.panel {
-				background: rgba(0, 0, 0, 0.90);
-				border: 1px solid rgba(255, 255, 255, 0.15);
-				border-radius: 20px;
-				padding: 24px;
+				background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.75) 100%);
+				backdrop-filter: blur(24px);
+				-webkit-backdrop-filter: blur(24px);
+				border: 1px solid rgba(255, 255, 255, 0.3);
+				border-top: 1px solid rgba(255, 255, 255, 0.6);
+				border-radius: 32px;
+				padding: 32px;
 				display: flex;
 				flex-direction: column;
 				height: 100%;
@@ -364,13 +354,13 @@ const clustersCount = clusterSummary.length;
 				box-sizing: border-box;
 				position: relative;
 				box-shadow:
-					0 16px 40px rgba(255, 255, 255, 0.1),
-					0 2px 8px rgba(0, 0, 0, 0.03),
-					inset 0 1px 0 rgba(255, 255, 255, 0.6);
+					0 16px 40px rgba(0, 0, 0, 0.2),
+					inset 0 1px 4px rgba(255, 255, 255, 0.8),
+					inset 0 -4px 16px rgba(0, 0, 0, 0.6);
 				transition:
 					transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1),
 					box-shadow 0.3s ease;
-				overflow: hidden; /* Fix scrollbar overflow stripes */
+				overflow: hidden;
 			}
 			.panel:hover {
 				transform: translateY(-2px);
@@ -390,19 +380,18 @@ const clustersCount = clusterSummary.length;
 			.cluster-btn {
 				position: relative;
 				width: 100%;
-				padding: 12px 16px;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid rgba(255, 255, 255, 0.08);
-				border-radius: 8px;
+				padding: 12px 20px;
+				background: linear-gradient(180deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				border-top: 1px solid rgba(255, 255, 255, 0.4);
+				border-radius: 99px;
 				text-align: left;
 				cursor: pointer;
 				transition: all 0.2s ease;
 				font-family: inherit;
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+				box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2);
 			}
 			.cluster-btn:hover {
-				background: rgba(255, 255, 255, 0.1);
-				transform: translateY(-1px);
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 			}
 			.cluster-btn.active {
@@ -785,57 +774,55 @@ const clustersCount = clusterSummary.length;
 		<div class="page-wrap">
 			<div class="bh-page">
 				<div class="bh-main-card">
-					<!-- LEFT SIDEBAR -->
+					<!-- LEFT SIDEBAR (Now Top Navigation Bar) -->
 					<aside class="wbc-sidebar">
-						<!-- Floating Back Button inside sidebar card -->
-						<a
-							href="/"
-							class="wbc-back-btn"
-							id="backBtn"
-							title="Back to Home"
-						>
-							<svg
-								width="14"
-								height="14"
-								viewBox="0 0 14 14"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2.5"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-							>
-								<path d="M9 12L4 7l5-5"></path>
-							</svg>
-						</a>
 						<header class="bh-header">
-							<span class="title-tag">
+							<a
+								href="/"
+								class="wbc-back-btn"
+								id="backBtn"
+								title="Back to Home"
+							>
 								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="10"
-									height="10"
-									viewBox="0 0 24 24"
+									width="16"
+									height="16"
+									viewBox="0 0 14 14"
 									fill="none"
 									stroke="currentColor"
 									stroke-width="2.5"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									style="margin-right: 4px;"
-									><circle cx="12" cy="12" r="10"
-									></circle><circle cx="12" cy="12" r="3"
-									></circle></svg
 								>
-								AI LAB PROJECT
-							</span>
-							<h1 class="bh-title">
-								<span class="title-nextwbc">Sonic</span>
-								<span
-									class="title-classifier"
-									style="color: #1DB954;">Atlas</span
-								>
-							</h1>
-							<p class="bh-subtitle">
-								Clustering analysis of Madonna's audio dna.
-							</p>
+									<path d="M9 12L4 7l5-5"></path>
+								</svg>
+							</a>
+							<div style="display: flex; flex-direction: column;">
+								<span class="title-tag">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="10"
+										height="10"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										style="margin-right: 4px;"
+										><circle cx="12" cy="12" r="10"
+										></circle><circle cx="12" cy="12" r="3"
+										></circle></svg
+									>
+									AI LAB PROJECT
+								</span>
+								<h1 class="bh-title">
+									<span class="title-nextwbc">Sonic</span>
+									<span
+										class="title-classifier"
+										style="color: #1DB954;">Atlas</span
+									>
+								</h1>
+							</div>
 						</header>
 
 						<nav class="wbc-nav-menu">
@@ -2218,7 +2205,14 @@ const clustersCount = clusterSummary.length;
 		let dotOffCanvas = document.createElement('canvas');
 		let dotOffCtx = dotOffCanvas.getContext('2d', { willReadFrequently: true });
 		let dotCurrentImg = new Image();
-		const DOT_CELL_SIZE = 4; 
+		
+		// === DOT MATRIX CONFIGURATION ===
+		const DOT_CELL_SIZE = 7; // Size of each dot grid cell (larger = chunkier dots)
+		const DOT_MIN_RADIUS = 0.4; // Smallest dot size (prevents dots from disappearing in bright areas)
+		const DOT_MAX_RADIUS = (DOT_CELL_SIZE / 2) - 0.2; // Largest dot size (prevents solid black walls in dark areas)
+		const DARK_PIXEL_BRIGHTEN = 70; // Adds brightness to very dark pixels so they don't blend into the dark glass UI
+		const BACKGROUND_COLOR = "#ffffff"; // Background color behind the dots
+		// ================================ 
 
 		let dots = [];
 		let animationFrameId = null;
@@ -2282,11 +2276,32 @@ const clustersCount = clusterSummary.length;
 				const d = dots[i];
 				const idx = (d.y * w + d.x) * 4;
 				if (idx < imgData.length - 2) {
-					d.tr = imgData[idx];
-					d.tg = imgData[idx+1];
-					d.tb = imgData[idx+2];
-					const brightness = 0.299 * d.tr + 0.587 * d.tg + 0.114 * d.tb;
-					d.trd = ((255 - brightness) / 255) * (DOT_CELL_SIZE / 2);
+					let r = imgData[idx];
+					let g = imgData[idx+1];
+					let b = imgData[idx+2];
+					
+					// Calculate true brightness of the pixel
+					const brightness = 0.299 * r + 0.587 * g + 0.114 * b;
+					
+					// Lighten very dark pixels to ensure they don't blend into the dark UI
+					if (brightness < 60) {
+						r = Math.min(255, r + DARK_PIXEL_BRIGHTEN);
+						g = Math.min(255, g + DARK_PIXEL_BRIGHTEN);
+						b = Math.min(255, b + DARK_PIXEL_BRIGHTEN);
+					}
+
+					d.tr = r;
+					d.tg = g;
+					d.tb = b;
+					
+					// Calculate target radius: darker areas get larger dots
+					let targetRadius = ((255 - brightness) / 255) * (DOT_CELL_SIZE / 1.5);
+					
+					// Clamp radius based on configuration
+					if (targetRadius < DOT_MIN_RADIUS) targetRadius = DOT_MIN_RADIUS;
+					if (targetRadius > DOT_MAX_RADIUS) targetRadius = DOT_MAX_RADIUS;
+
+					d.trd = targetRadius;
 				}
 			}
 		}
@@ -2294,7 +2309,7 @@ const clustersCount = clusterSummary.length;
 		function renderLoop() {
 			const w = dotCanvas.width;
 			const h = dotCanvas.height;
-			dotCtx.fillStyle = "#ffffff";
+			dotCtx.fillStyle = BACKGROUND_COLOR;
 			dotCtx.fillRect(0, 0, w, h);
 
 			let needsMoreFrames = false;
@@ -2316,9 +2331,11 @@ const clustersCount = clusterSummary.length;
 				d.g += dG * 0.06;
 				d.b += dB * 0.06;
 
-				if (d.radius > 0.5) {
+				if (d.radius > 0.1) {
 					dotCtx.fillStyle = `rgb(${d.r|0}, ${d.g|0}, ${d.b|0})`;
-					dotCtx.fillRect(d.x + DOT_CELL_SIZE/2 - d.radius, d.y + DOT_CELL_SIZE/2 - d.radius, d.radius * 2, d.radius * 2);
+					dotCtx.beginPath();
+					dotCtx.arc(d.x + DOT_CELL_SIZE/2, d.y + DOT_CELL_SIZE/2, d.radius, 0, Math.PI * 2);
+					dotCtx.fill();
 				}
 			}
 
