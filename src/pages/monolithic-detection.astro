@@ -141,30 +141,77 @@
 
 			.bh-main-card {
 				position: relative;
-				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-				backdrop-filter: blur(12px);
-				-webkit-backdrop-filter: blur(12px);
-				border: 1px solid rgba(255, 255, 255, 0.4);
-				border-radius: 36px;
-				padding: 24px;
-				box-shadow: 
-					/* Outer drop shadow */
-					0 30px 60px rgba(0, 0, 0, 0.15),
-					/* Deep soft 3D curve (Top/Left) */
-					inset 20px 20px 40px rgba(255, 255, 255, 0.25),
-					/* Tighter curve highlight */
-					inset 3px 3px 10px rgba(255, 255, 255, 0.6),
-					/* Deep soft 3D shadow (Bottom/Right) */
-					inset -20px -20px 40px rgba(0, 0, 0, 0.05),
-					/* Tighter curve shadow */
-					inset -3px -3px 10px rgba(0, 0, 0, 0.1);
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.18) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 35%);
+				backdrop-filter: blur(40px) saturate(180%);
+				-webkit-backdrop-filter: blur(40px) saturate(180%);
+				border: none;
+				border-radius: 44px;
+				padding: 28px;
+				box-shadow:
+					/* Ambient glow wrap */
+					0 0 100px rgba(14, 165, 233, 0.07),
+					0 0 40px rgba(255, 255, 255, 0.12),
+					/* Float */
+					0 30px 80px rgba(0, 0, 0, 0.12),
+					0 8px 32px rgba(0, 0, 0, 0.06);
 				display: flex;
-				gap: 24px;
-				height: calc(100vh - 40px);
+				gap: 28px;
+				height: calc(100vh - 64px);
 				align-items: stretch;
 				box-sizing: border-box;
 				overflow: hidden;
 			}
+
+			/* Thick gradient border ring — visible curved glass edge */
+			.bh-main-card::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				padding: 4px;
+				background: linear-gradient(
+					135deg,
+					rgba(255,255,255,1) 0%,
+					rgba(255,255,255,0.6) 10%,
+					rgba(255,255,255,0.15) 30%,
+					rgba(255,255,255,0.04) 50%,
+					rgba(255,255,255,0.12) 70%,
+					rgba(255,255,255,0.45) 90%,
+					rgba(255,255,255,0.8) 100%
+				);
+				-webkit-mask:
+					linear-gradient(#fff 0 0) content-box,
+					linear-gradient(#fff 0 0);
+				-webkit-mask-composite: xor;
+				mask-composite: exclude;
+				pointer-events: none;
+				z-index: 2;
+			}
+
+			/* Edge curvature vignette — visible darkening at edges */
+			.bh-main-card::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				box-shadow:
+					/* Deep edge vignette — glass curves away */
+					inset 0 0 80px 15px rgba(0, 0, 0, 0.05),
+					/* Top bright specular band */
+					inset 0 6px 20px rgba(255, 255, 255, 0.18),
+					/* Left bright specular */
+					inset 6px 0 20px rgba(255, 255, 255, 0.1),
+					/* Bottom dark curve */
+					inset 0 -6px 20px rgba(0, 0, 0, 0.06),
+					/* Right dark curve */
+					inset -6px 0 20px rgba(0, 0, 0, 0.04);
+				pointer-events: none;
+				z-index: 1;
+			}
+
+
 
 			/* ===========================
 			   SIDEBAR & WORKSPACE
@@ -226,30 +273,35 @@
 			}
 
 			.series-btn {
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid var(--bh-border);
-				border-radius: 16px;
+				background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
+				backdrop-filter: blur(12px) saturate(140%);
+				-webkit-backdrop-filter: blur(12px) saturate(140%);
+				border: 1px solid rgba(255, 255, 255, 0.2);
+				border-radius: 20px;
 				padding: 12px;
 				display: flex;
 				align-items: center;
 				gap: 12px;
 				cursor: pointer;
-				transition: all 0.2s;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				position: relative;
 				text-align: left;
 				width: 100%;
 			}
 			.series-btn:hover:not(.locked) {
-				background: rgba(255, 255, 255, 0.1);
-				border-color: var(--bh-accent);
+				background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+				border-color: rgba(14, 165, 233, 0.5);
+				box-shadow: 0 4px 16px rgba(14, 165, 233, 0.08);
 			}
 			.series-btn.active {
-				background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 49%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.3) 100%);
-				border-color: rgba(14, 165, 233, 0.6);
-				box-shadow: 
-					0 4px 12px rgba(14, 165, 233, 0.15),
-					inset 0 1px 0 rgba(255, 255, 255, 0.8);
-				border-radius: 16px;
+				background: linear-gradient(180deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 48%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.25) 100%);
+				border: 1px solid rgba(14, 165, 233, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+				box-shadow:
+					0 6px 20px rgba(14, 165, 233, 0.12),
+					inset 0 1px 0 rgba(255, 255, 255, 0.9),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+				border-radius: 20px;
 			}
 			.series-btn.active .series-name { color: #0369a1; }
 			.series-btn.active .series-desc { color: #0284c7; }
@@ -322,14 +374,22 @@
 			   MODEL STATUS BAR
 			=========================== */
 			.model-status-card {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 24px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.15) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 60%);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.45);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.75);
+				border-radius: 28px;
 				padding: 16px;
 				display: flex;
 				flex-direction: column;
 				gap: 8px;
-				box-shadow: inset 0 2px 4px rgba(255,255,255,0.8), 0 2px 12px rgba(0,0,0,0.05);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.6),
+					inset 0 -1px 0 rgba(0,0,0,0.04),
+					0 4px 16px rgba(0,0,0,0.06);
 			}
 			.status-row {
 				display: flex;
@@ -401,9 +461,11 @@
 			   MODE TOGGLE TABS
 			=========================== */
 			.mode-toggle {
-				background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.15) 100%);
-				border: 1px solid rgba(0,0,0,0.1);
-				box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 1px 0 rgba(255,255,255,0.8);
+				background: linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.12) 100%);
+				backdrop-filter: blur(16px) saturate(140%);
+				-webkit-backdrop-filter: blur(16px) saturate(140%);
+				border: 1px solid rgba(0,0,0,0.08);
+				box-shadow: inset 0 2px 4px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.8);
 				padding: 3px;
 				display: flex;
 				gap: 2px;
@@ -419,18 +481,24 @@
 				font-weight: 600;
 				padding: 8px 12px;
 				cursor: pointer;
-				transition: all 0.2s;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				text-align: center;
 				border-radius: 99px;
 			}
 			.mode-btn:hover {
 				color: var(--bh-text);
+				background: rgba(255,255,255,0.12);
 			}
 			.mode-btn.active {
-				background: linear-gradient(180deg, rgba(255,255,255,0.7) 0%, rgba(224,242,254,0.4) 100%);
+				background:
+					linear-gradient(180deg, rgba(255,255,255,0.75) 0%, rgba(224,242,254,0.35) 48%, rgba(255,255,255,0.1) 50%, rgba(224,242,254,0.25) 100%);
 				color: #0369a1;
-				box-shadow: 0 2px 6px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.9);
+				box-shadow:
+					0 3px 10px rgba(14, 165, 233, 0.12),
+					inset 0 1px 0 rgba(255,255,255,0.95),
+					inset 0 -1px 0 rgba(0,0,0,0.04);
 				border: 1px solid rgba(14,165,233,0.2);
+				border-top: 1.5px solid rgba(255,255,255,0.8);
 				font-weight: 700;
 			}
 
@@ -438,18 +506,21 @@
 			   UPLOAD ZONES
 			=========================== */
 			.upload-zone {
-				border: 2px dashed rgba(255, 255, 255, 0.2);
+				border: 2px dashed rgba(255, 255, 255, 0.25);
 				padding: 20px 16px;
 				text-align: center;
-				background: rgba(255, 255, 255, 0.02);
+				background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
+				backdrop-filter: blur(12px);
+				-webkit-backdrop-filter: blur(12px);
 				cursor: pointer;
 				position: relative;
-				transition: all 0.2s;
-				border-radius: 8px;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+				border-radius: 20px;
 			}
 			.upload-zone:hover {
-				border-color: var(--bh-accent);
-				background: rgba(255, 255, 255, 0.05);
+				border-color: rgba(14, 165, 233, 0.5);
+				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
+				box-shadow: 0 4px 16px rgba(14, 165, 233, 0.06);
 			}
 			.upload-zone input[type=file] {
 				position: absolute;
@@ -531,21 +602,24 @@
 			.sample-btn {
 				flex: 1;
 				padding: 8px 10px;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid var(--bh-border);
+				background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.2);
 				color: var(--bh-muted);
 				font-size: 0.7rem;
 				font-weight: 600;
 				cursor: pointer;
 				font-family: inherit;
-				transition: all 0.2s;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				text-align: center;
-				border-radius: 6px;
+				border-radius: 14px;
 			}
 			.sample-btn:hover {
-				border-color: var(--bh-accent);
+				border-color: rgba(14, 165, 233, 0.4);
 				color: var(--bh-text);
-				background: rgba(255, 255, 255, 0.1);
+				background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.06) 100%);
+				box-shadow: 0 2px 10px rgba(14, 165, 233, 0.06);
 			}
 
 			/* ===========================
@@ -564,8 +638,13 @@
 				width: 100%;
 				max-width: 1024px;
 				margin: 0 auto;
-				background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.02) 100%);
-				border: 1px solid rgba(255, 255, 255, 0.4);
+				background:
+					linear-gradient(135deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.06) 50%, rgba(0,0,0,0.02) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.06) 0%, transparent 40%);
+				backdrop-filter: blur(8px) saturate(120%);
+				-webkit-backdrop-filter: blur(8px) saturate(120%);
+				border: 1px solid rgba(255, 255, 255, 0.35);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.6);
 				position: relative;
 				flex: 1;
 				min-height: 0;
@@ -574,10 +653,11 @@
 				align-items: center;
 				justify-content: center;
 				overflow: hidden;
-				border-radius: 20px;
-				box-shadow: 
-					inset 0 4px 12px rgba(0,0,0,0.08),
-					0 2px 0 rgba(255,255,255,0.6);
+				border-radius: 28px;
+				box-shadow:
+					inset 0 3px 8px rgba(0,0,0,0.06),
+					inset 0 1px 0 rgba(255,255,255,0.5),
+					0 2px 0 rgba(255,255,255,0.4);
 			}
 			
 			.viewport-container.single-preview {
@@ -611,15 +691,20 @@
 				z-index: 2;
 				font-size: 0.65rem;
 				font-weight: 700;
-				background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(240,240,240,0.8) 100%);
+				background:
+					linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.5) 48%, rgba(255,255,255,0.35) 50%, rgba(255,255,255,0.6) 100%);
 				color: #0369a1;
-				padding: 4px 10px;
+				padding: 5px 12px;
 				letter-spacing: 0.5px;
 				text-transform: uppercase;
-				border: 1px solid rgba(255,255,255,0.9);
-				backdrop-filter: blur(8px);
+				border: 1px solid rgba(255,255,255,0.8);
+				border-top: 1.5px solid rgba(255,255,255,0.95);
+				backdrop-filter: blur(20px) saturate(180%);
+				-webkit-backdrop-filter: blur(20px) saturate(180%);
 				border-radius: 99px;
-				box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+				box-shadow:
+					0 2px 8px rgba(0,0,0,0.08),
+					inset 0 1px 0 rgba(255,255,255,0.9);
 			}
 
 			.preview-row {
@@ -648,10 +733,17 @@
 				display: flex;
 				flex-direction: column;
 				gap: 12px;
-				background: rgba(255, 255, 255, 0.03);
-				border: 1px solid var(--bh-border);
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.06) 100%);
+				backdrop-filter: blur(16px) saturate(140%);
+				-webkit-backdrop-filter: blur(16px) saturate(140%);
+				border: 1px solid rgba(255, 255, 255, 0.25);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.5);
 				padding: 12px 16px;
-				border-radius: 8px;
+				border-radius: 22px;
+				box-shadow:
+					inset 0 1px 0 rgba(255,255,255,0.5),
+					0 2px 8px rgba(0,0,0,0.04);
 			}
 
 			.colormap-row {
@@ -747,21 +839,24 @@
 				display: inline-flex;
 				align-items: center;
 				gap: 6px;
-				padding: 7px 12px;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid var(--bh-border);
+				padding: 7px 14px;
+				background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.03) 100%);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 255, 255, 0.25);
 				color: var(--bh-text);
 				font-size: 0.72rem;
 				font-weight: 600;
 				cursor: pointer;
 				font-family: inherit;
-				transition: all 0.2s;
-				border-radius: 6px;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+				border-radius: 14px;
 			}
 			.dl-btn:hover {
-				background: rgba(255, 255, 255, 0.1);
-				border-color: var(--bh-accent);
+				background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.06) 100%);
+				border-color: rgba(14, 165, 233, 0.4);
 				color: var(--bh-text);
+				box-shadow: 0 2px 10px rgba(14, 165, 233, 0.06);
 			}
 			.dl-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
@@ -780,15 +875,22 @@
 				position: fixed;
 				bottom: 24px;
 				right: 24px;
-				background: rgba(239, 68, 68, 0.08);
-				border: 1px solid rgba(239, 68, 68, 0.2);
-				padding: 12px 18px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.04) 100%);
+				border: 1px solid rgba(239, 68, 68, 0.25);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.5);
+				padding: 14px 20px;
 				color: var(--bh-danger);
 				font-size: 0.8rem;
 				font-weight: 500;
 				z-index: 1000;
 				max-width: 360px;
-				backdrop-filter: blur(12px);
+				backdrop-filter: blur(30px) saturate(160%);
+				-webkit-backdrop-filter: blur(30px) saturate(160%);
+				border-radius: 22px;
+				box-shadow:
+					0 8px 32px rgba(0,0,0,0.1),
+					inset 0 1px 0 rgba(255,255,255,0.5);
 				display: none;
 			}
 		</style>

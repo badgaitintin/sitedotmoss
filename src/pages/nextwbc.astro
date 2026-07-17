@@ -118,25 +118,70 @@ import '@fontsource/google-sans-flex';
 
 			.bh-main-card {
 				position: relative;
-				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
-				backdrop-filter: blur(12px);
-				-webkit-backdrop-filter: blur(12px);
-				border: 1px solid rgba(255, 255, 255, 0.4);
-				border-radius: 36px;
-				padding: 32px;
-				box-shadow: 
-					0 30px 60px rgba(0, 0, 0, 0.15),
-					inset 20px 20px 40px rgba(255, 255, 255, 0.25),
-					inset 3px 3px 10px rgba(255, 255, 255, 0.6),
-					inset -20px -20px 40px rgba(0, 0, 0, 0.05),
-					inset -3px -3px 10px rgba(0, 0, 0, 0.1);
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.1) 30%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.18) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, transparent 35%);
+				backdrop-filter: blur(40px) saturate(180%);
+				-webkit-backdrop-filter: blur(40px) saturate(180%);
+				border: none;
+				border-radius: 44px;
+				padding: 28px;
+				box-shadow:
+					0 0 100px rgba(14, 165, 233, 0.07),
+					0 0 40px rgba(255, 255, 255, 0.12),
+					0 30px 80px rgba(0, 0, 0, 0.12),
+					0 8px 32px rgba(0, 0, 0, 0.06);
 				display: flex;
-				gap: 32px;
-				height: calc(100vh - 80px);
+				gap: 28px;
+				height: calc(100vh - 64px);
 				align-items: stretch;
 				box-sizing: border-box;
 				overflow: hidden;
 			}
+
+			/* Thick gradient border ring — visible curved glass edge */
+			.bh-main-card::before {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				padding: 4px;
+				background: linear-gradient(
+					135deg,
+					rgba(255,255,255,1) 0%,
+					rgba(255,255,255,0.6) 10%,
+					rgba(255,255,255,0.15) 30%,
+					rgba(255,255,255,0.04) 50%,
+					rgba(255,255,255,0.12) 70%,
+					rgba(255,255,255,0.45) 90%,
+					rgba(255,255,255,0.8) 100%
+				);
+				-webkit-mask:
+					linear-gradient(#fff 0 0) content-box,
+					linear-gradient(#fff 0 0);
+				-webkit-mask-composite: xor;
+				mask-composite: exclude;
+				pointer-events: none;
+				z-index: 2;
+			}
+
+			/* Edge curvature vignette */
+			.bh-main-card::after {
+				content: '';
+				position: absolute;
+				inset: 0;
+				border-radius: inherit;
+				box-shadow:
+					inset 0 0 80px 15px rgba(0, 0, 0, 0.05),
+					inset 0 6px 20px rgba(255, 255, 255, 0.18),
+					inset 6px 0 20px rgba(255, 255, 255, 0.1),
+					inset 0 -6px 20px rgba(0, 0, 0, 0.06),
+					inset -6px 0 20px rgba(0, 0, 0, 0.04);
+				pointer-events: none;
+				z-index: 1;
+			}
+
+
 
 			/* ===========================
 			   DASHBOARD SPLIT LAYOUT
@@ -273,23 +318,30 @@ import '@fontsource/google-sans-flex';
 			.wbc-back-btn {
 				width: 40px;
 				height: 40px;
-				background: linear-gradient(180deg, #7dd3fc 0%, #38bdf8 49%, #0ea5e9 50%, #0284c7 100%);
+				background:
+					linear-gradient(180deg, rgba(186,230,253,0.9) 0%, rgba(125,211,252,0.7) 48%, rgba(56,189,248,0.8) 50%, rgba(14,165,233,0.9) 100%);
 				color: #ffffff;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				border: 1px solid #0369a1;
-				border-top: 1px solid #bae6fd;
+				border: 1px solid rgba(3,105,161,0.5);
+				border-top: 1.5px solid rgba(186,230,253,0.9);
 				border-radius: 50%;
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 4px 12px rgba(14, 165, 233, 0.3);
+				box-shadow:
+					inset 0 2px 0 rgba(255, 255, 255, 0.7),
+					inset 0 -1px 0 rgba(0,0,0,0.1),
+					0 4px 16px rgba(14, 165, 233, 0.25);
 				cursor: pointer;
-				transition: all 0.2s;
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				flex-shrink: 0;
 			}
 			.wbc-back-btn:hover {
-				background: linear-gradient(180deg, #bae6fd 0%, #7dd3fc 49%, #38bdf8 50%, #0ea5e9 100%);
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 6px 16px rgba(14, 165, 233, 0.4);
-				transform: translateY(-1px);
+				background:
+					linear-gradient(180deg, rgba(224,242,254,0.95) 0%, rgba(186,230,253,0.8) 48%, rgba(125,211,252,0.85) 50%, rgba(56,189,248,0.95) 100%);
+				box-shadow:
+					inset 0 2px 0 rgba(255, 255, 255, 0.9),
+					0 6px 20px rgba(14, 165, 233, 0.35);
+				transform: translateY(-1px) scale(1.04);
 			}
 
 			.bh-content-scroll {
@@ -352,10 +404,13 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-upload-zone {
 				position: relative;
-				border: 2px dashed rgba(0, 0, 0, 0.15);
-				border-radius: 20px;
-				background: rgba(0, 0, 0, 0.02);
-				transition: border-color 0.2s, background-color 0.2s;
+				border: 2px dashed rgba(0, 0, 0, 0.12);
+				border-radius: 28px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.05) 100%);
+				backdrop-filter: blur(12px) saturate(120%);
+				-webkit-backdrop-filter: blur(12px) saturate(120%);
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				cursor: pointer;
 				text-align: center;
 				padding: 64px 24px;
@@ -368,12 +423,15 @@ import '@fontsource/google-sans-flex';
 				min-height: 320px;
 			}
 			.wbc-upload-zone:hover {
-				border-color: var(--bh-accent);
-				background: rgba(0, 0, 0, 0.04);
+				border-color: rgba(14, 165, 233, 0.45);
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(224,242,254,0.05) 50%, rgba(255,255,255,0.08) 100%);
+				box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
 			}
 			.wbc-upload-zone.dragging {
 				border-color: var(--bh-accent);
-				background: rgba(79, 70, 229, 0.05);
+				background: rgba(14, 165, 233, 0.06);
+				box-shadow: 0 6px 24px rgba(14, 165, 233, 0.1);
 			}
 
 			/* ── User Guide Styling ── */
@@ -428,13 +486,20 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-guide-note {
 				font-size: 0.75rem;
-				background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-				border: 1px solid rgba(255,255,255,0.6);
-				border-radius: 12px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 60%);
+				backdrop-filter: blur(20px) saturate(160%);
+				-webkit-backdrop-filter: blur(20px) saturate(160%);
+				border: 1px solid rgba(255,255,255,0.5);
+				border-top: 1.5px solid rgba(255,255,255,0.75);
+				border-radius: 18px;
 				padding: 12px;
 				color: var(--bh-muted);
 				line-height: 1.4;
-				box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.5),
+					0 2px 8px rgba(0,0,0,0.04);
 			}
 			.wbc-upload-icon-wrapper {
 				width: 56px;
@@ -466,10 +531,19 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				gap: 16px;
 				padding: 24px;
-				background: rgba(255, 255, 255, 0.2);
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 24px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.12) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+				backdrop-filter: blur(24px) saturate(160%);
+				-webkit-backdrop-filter: blur(24px) saturate(160%);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+				border-radius: 28px;
 				margin-top: 16px;
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.6),
+					inset 0 -1px 0 rgba(0,0,0,0.04),
+					0 6px 24px rgba(0,0,0,0.06);
 			}
 			.wbc-preview-img {
 				max-height: 280px;
@@ -556,14 +630,22 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-image-panel {
 				flex: 1;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 20px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 50%);
+				backdrop-filter: blur(20px) saturate(150%);
+				-webkit-backdrop-filter: blur(20px) saturate(150%);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+				border-radius: 28px;
 				overflow: hidden;
 				position: relative;
 				min-width: 0;
 				min-height: 0;
-				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.6),
+					inset 0 -1px 0 rgba(0,0,0,0.04),
+					0 4px 16px rgba(0,0,0,0.06);
 			}
 			.wbc-image-wrapper {
 				position: absolute;
@@ -617,19 +699,43 @@ import '@fontsource/google-sans-flex';
 					min-width: 140px;
 				}
 			}
-
 			.wbc-count-card {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 20px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+				backdrop-filter: blur(20px) saturate(150%);
+				-webkit-backdrop-filter: blur(20px) saturate(150%);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+				border-radius: 24px;
 				padding: 12px;
 				text-align: center;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
 				justify-content: center;
-				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.6),
+					inset 0 -1px 0 rgba(0,0,0,0.04),
+					0 4px 16px rgba(0,0,0,0.05);
 			}
+
+			.wbc-chart-card {
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+				backdrop-filter: blur(20px) saturate(150%);
+				-webkit-backdrop-filter: blur(20px) saturate(150%);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.8);
+				border-radius: 24px;
+				padding: 16px;
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.6),
+					inset 0 -1px 0 rgba(0,0,0,0.04),
+					0 4px 16px rgba(0,0,0,0.05);
+			}
+
 			.wbc-count-number {
 				font-size: 1.8rem;
 				font-weight: 300;
@@ -726,18 +832,27 @@ import '@fontsource/google-sans-flex';
 			.wbc-crop-card {
 				flex: 0 0 auto;
 				width: 90px;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 100%);
-				border-radius: 16px;
+				background:
+					linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.15) 48%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.3) 100%);
+				backdrop-filter: blur(12px) saturate(140%);
+				-webkit-backdrop-filter: blur(12px) saturate(140%);
+				border-radius: 20px;
 				overflow: hidden;
-				box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8);
+				box-shadow:
+					0 4px 16px rgba(0,0,0,0.08),
+					inset 0 2px 0 rgba(255,255,255,0.7),
+					inset 0 -1px 0 rgba(0,0,0,0.04);
 				display: flex;
 				flex-direction: column;
-				border: 1px solid rgba(255, 255, 255, 0.8);
-				transition: transform 0.2s, box-shadow 0.2s;
+				border: 1px solid rgba(255, 255, 255, 0.65);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.9);
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 			}
 			.wbc-crop-card:hover {
-				transform: scale(1.05);
-				box-shadow: 0 6px 16px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,1);
+				transform: scale(1.05) translateY(-2px);
+				box-shadow:
+					0 8px 24px rgba(0,0,0,0.12),
+					inset 0 2px 0 rgba(255,255,255,0.9);
 			}
 			.wbc-crop-img-wrap {
 				width: 100%;
@@ -779,19 +894,32 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				gap: 12px;
 				padding: 8px;
-				background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
-				border: 1px solid rgba(255,255,255,0.6);
-				border-radius: 16px;
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
+					linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 50%);
+				backdrop-filter: blur(16px) saturate(140%);
+				-webkit-backdrop-filter: blur(16px) saturate(140%);
+				border: 1px solid rgba(255,255,255,0.5);
+				border-top: 1.5px solid rgba(255,255,255,0.75);
+				border-radius: 20px;
 				cursor: pointer;
 				text-align: left;
 				width: 100%;
-				transition: background-color 0.2s, border-color 0.2s;
-				box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.5),
+					0 2px 8px rgba(0,0,0,0.04);
 			}
 			.wbc-sample-btn:hover:not(:disabled) {
-				background: rgba(0, 0, 0, 0.05);
-				border-color: var(--bh-accent);
+				background:
+					linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(224,242,254,0.15) 50%, rgba(255,255,255,0.25) 100%);
+				border-color: rgba(14, 165, 233, 0.4);
+				box-shadow:
+					inset 0 2px 0 rgba(255,255,255,0.7),
+					0 4px 16px rgba(14, 165, 233, 0.08);
+				transform: translateY(-1px);
 			}
+
 			.wbc-sample-btn:disabled {
 				opacity: 0.6;
 				cursor: not-allowed;
@@ -842,8 +970,12 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-reset-btn {
-				background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 100%);
-				border: 1px solid rgba(255,255,255,0.8);
+				background:
+					linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 48%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.3) 100%);
+				backdrop-filter: blur(12px) saturate(140%);
+				-webkit-backdrop-filter: blur(12px) saturate(140%);
+				border: 1px solid rgba(255,255,255,0.6);
+				border-top: 1.5px solid rgba(255,255,255,0.85);
 				color: var(--bh-text);
 				cursor: pointer;
 				padding: 6px 14px;
@@ -852,13 +984,19 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				justify-content: center;
 				gap: 8px;
-				box-shadow: 0 2px 4px rgba(0,0,0,0.05), inset 0 2px 4px rgba(255,255,255,0.8);
-				transition: all 0.2s;
+				box-shadow:
+					0 3px 10px rgba(0,0,0,0.06),
+					inset 0 2px 0 rgba(255,255,255,0.7),
+					inset 0 -1px 0 rgba(0,0,0,0.04);
+				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 			}
 			.wbc-reset-btn:hover {
-				background: rgba(239, 68, 68, 0.1);
+				background: linear-gradient(135deg, rgba(255,200,200,0.3) 0%, rgba(239,68,68,0.08) 100%);
 				color: #EF4444;
-				border-color: rgba(239, 68, 68, 0.3);
+				border-color: rgba(239, 68, 68, 0.35);
+				box-shadow:
+					0 4px 12px rgba(239,68,68,0.08),
+					inset 0 1px 0 rgba(255,255,255,0.5);
 			}
 			.wbc-reset-btn span {
 				font-size: 0.8rem;
