@@ -15,7 +15,7 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@400;500;600;700&family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Permanent+Marker&family=Rock+Salt&display=swap"
 			rel="stylesheet"
 		/>
 		<!-- ONNX Runtime Web is loaded dynamically inside the page script to guarantee availability -->
@@ -35,24 +35,28 @@
 			   STREET ART / Y2K GRAFFITI TOKENS
 			=========================== */
 			:root {
-				--g-pink:   #FF2D78;   /* hot pink */
-				--g-cyan:   #00E5FF;   /* electric cyan */
-				--g-orange: #FF6B00;   /* neon orange */
+				--g-pink:   #FF1A6C;   /* hot pink — spray paint */
+				--g-cyan:   #00D4FF;   /* electric cyan */
+				--g-orange: #FF5500;   /* can orange */
 				--g-yellow: #FFD600;   /* chrome yellow */
-				--g-purple: #9B30FF;   /* purple */
-				--g-green:  #39FF14;   /* slime green */
-				--g-dark:   rgba(10, 8, 18, 0.82);
-				--g-panel:  rgba(8, 6, 18, 0.70);
-				--g-border: rgba(255,255,255,0.15);
-				--g-text:   #F0EAE0;
-				--g-muted:  rgba(200, 180, 220, 0.55);
+				--g-purple: #8B20FF;   /* purple */
+				--g-green:  #2EFF00;   /* slime green */
+				--g-dark:   rgba(6, 5, 12, 0.85);
+				--g-panel:  rgba(6, 5, 14, 0.75);
+				--g-border: rgba(255,255,255,0.12);
+				--g-text:   #EDE8DC;
+				--g-muted:  rgba(190, 170, 210, 0.5);
+				/* ── graffiti font stack ── */
+				--font-display: "Permanent Marker", cursive;  /* title + CTA button */
+				--font-tag:     "Rock Salt", cursive;         /* labels, headers, tags */
+				--font-mono:    "Share Tech Mono", monospace; /* data / numbers only */
 				/* aliases for legacy selectors */
 				--bh-text:    var(--g-text);
 				--bh-muted:   var(--g-muted);
 				--bh-accent:  var(--g-pink);
 				--bh-accent2: var(--g-cyan);
 				--bh-accent3: var(--g-yellow);
-				--bh-danger:  #FF2020;
+				--bh-danger:  #FF1010;
 				--bh-border:  var(--g-border);
 			}
 
@@ -83,9 +87,124 @@
 				object-fit: cover;
 				object-position: center;
 				pointer-events: none;
-				opacity: 0.75;
-				filter: saturate(1.4) contrast(1.05) brightness(0.8);
+				opacity: 0.25;
+				transition: opacity 1s ease;
 			}
+			#bg-video.intro-hidden {
+				opacity: 0 !important;
+			}
+			#bg-video.intro-ready {
+				opacity: 0.25;
+			}
+
+			/* ===========================
+			   SPRAY INTRO OVERLAY
+			=========================== */
+			#sprayIntroOverlay {
+				position: fixed; inset: 0; z-index: 9999;
+				background: #08060F;
+				display: flex; align-items: center; justify-content: center;
+				pointer-events: all;
+				transition: opacity 0.5s ease, background 1s ease;
+			}
+			#sprayIntroOverlay.bg-revealed {
+				background: transparent;
+			}
+			#sprayIntroOverlay.intro-done {
+				opacity: 0; pointer-events: none;
+			}
+
+			#sprayCanGroup {
+				position: absolute;
+				top: 50%; left: 50%;
+				width: 0; height: 0;
+				opacity: 0;
+				transform: translate(-150vw, 50vh) rotate(-45deg);
+				z-index: 10000;
+				transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s;
+			}
+			
+			/* Positions for intro phases applied to the group */
+			#sprayCanGroup.phase-1 { opacity: 1; transform: translate(0vw, 0vh) rotate(15deg) scaleX(-1); }
+			#sprayCanGroup.phase-2 { transform: translate(-10vw, 10vh) rotate(-10deg) scaleX(-1); }
+			#sprayCanGroup.phase-3 { transform: translate(-30vw, -35vh) rotate(25deg) scaleX(-1); }
+			#sprayCanGroup.phase-exit { transform: translate(150vw, -100vh) rotate(90deg); opacity: 0; }
+
+			@keyframes spray-sweep {
+				0%   { transform: translate(-30px, -10px) rotate(-12deg); }
+				50%  { transform: translate(30px, 10px) rotate(8deg); }
+				100% { transform: translate(-30px, -10px) rotate(-12deg); }
+			}
+			#sprayShakeGroup {
+				position: absolute;
+				top: 0; left: 0;
+			}
+			#sprayShakeGroup.shaking {
+				animation: spray-sweep 0.4s ease-in-out infinite;
+			}
+
+			#sprayMascot {
+				position: absolute;
+				top: -100px; left: -100px;
+				width: 200px;
+				filter: drop-shadow(0 0 25px rgba(0, 212, 255, 0.8));
+			}
+
+			#sprayMist {
+				position: absolute;
+				/* Offset so it appears to come from the can nozzle (which is roughly top-right of image, but flipped it's top-left) */
+				top: -300px; left: -300px;
+				width: 600px; height: 600px;
+				background: radial-gradient(circle at center, rgba(0, 212, 255, 0.4) 0%, transparent 60%);
+				opacity: 0;
+				pointer-events: none;
+				transform: scale(0.1);
+				transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-out;
+				mix-blend-mode: screen;
+			}
+			#sprayMist.burst {
+				opacity: 1; transform: scale(1);
+			}
+
+			/* Setup transitions on base elements so they animate in and out cleanly */
+			.bh-page .shard {
+				transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+			}
+			.bh-page .bh-title,
+			.bh-page .bh-subtitle {
+				transition: opacity 0.8s, filter 0.8s, transform 0.8s;
+			}
+
+			/* Initial Hidden States for Page */
+			.bh-page.intro-active .shard {
+				opacity: 0; transform: scale(0.85) translateY(30px);
+			}
+			.bh-page.intro-active .bh-title,
+			.bh-page.intro-active .bh-subtitle {
+				opacity: 0; filter: blur(10px); transform: translateY(-10px);
+			}
+
+			/* Revealed States (Overrides the hidden state during intro) */
+			.bh-page.intro-active.intro-shards-ready .shard { opacity: 1; transform: none; }
+			.bh-page.intro-active.intro-text-ready .bh-title,
+			.bh-page.intro-active.intro-text-ready .bh-subtitle { opacity: 1; filter: blur(0); transform: none; }
+
+			/* Cascade delay for shards */
+			.bh-page.intro-shards-ready .shard:nth-child(1) { transition-delay: 0.1s; }
+			.bh-page.intro-shards-ready .shard:nth-child(2) { transition-delay: 0.15s; }
+			.bh-page.intro-shards-ready .shard:nth-child(3) { transition-delay: 0.25s; }
+			.bh-page.intro-shards-ready .shard:nth-child(4) { transition-delay: 0.3s; }
+			.bh-page.intro-shards-ready .shard:nth-child(5) { transition-delay: 0.35s; }
+			.bh-page.intro-shards-ready .shard:nth-child(6) { transition-delay: 0.2s; }
+			.bh-page.intro-shards-ready .shard:nth-child(7) { transition-delay: 0.1s; }
+			.bh-page.intro-shards-ready .shard:nth-child(8) { transition-delay: 0.4s; }
+			.bh-page.intro-shards-ready .shard:nth-child(9) { transition-delay: 0.45s; }
+			.bh-page.intro-shards-ready .shard:nth-child(10) { transition-delay: 0.5s; }
+			.bh-page.intro-shards-ready .shard-run { transition-delay: 0.6s; }
+			
+			/* Title delay */
+			.bh-page.intro-text-ready .bh-title { transition-delay: 0s; }
+			.bh-page.intro-text-ready .bh-subtitle { transition-delay: 0.2s; }
 
 			/* Dark vignette + tint on top of video */
 			body::before {
@@ -115,14 +234,19 @@
 				text-underline-offset: 3px;
 			}
 
+			/* ===========================
+			   SHATTERED TILE LAYOUT
+			=========================== */
 			.page-wrap {
 				position: relative;
 				z-index: 2;
-				animation: bh-enter 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-				height: 100%;
+				animation: bh-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+				height: 100vh;
+				width: 100%;
+				overflow: hidden;
 			}
 			@keyframes bh-enter {
-				from { opacity: 0; transform: translateY(16px); }
+				from { opacity: 0; transform: translateY(12px); }
 				to   { opacity: 1; transform: translateY(0); }
 			}
 			body.is-exiting .page-wrap {
@@ -131,44 +255,21 @@
 			}
 			@keyframes bh-exit {
 				from { opacity: 1; transform: translateY(0); }
-				to   { opacity: 0; transform: translateY(16px); }
+				to   { opacity: 0; transform: translateY(12px); }
 			}
 
 			/* ===========================
-			   LAYOUT CONTAINER
+			   ANIMATIONS
 			=========================== */
-			.bh-page {
-				position: relative;
-				z-index: 1;
-				max-width: 1200px;
-				margin: 0 auto;
-				height: 100vh;
-				padding: 20px 16px;
-				box-sizing: border-box;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-			}
-
-			/* ── MAIN CARD — see-through panel ── */
-			/* ===========================
-			   GAMER ANIMATIONS
-			=========================== */
-
-			/* Neon border pulse — pink/cyan alternating */
 			@keyframes neon-border-pulse {
 				0%   { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 35px rgba(255,45,120,0.18), 0 0 70px rgba(0,229,255,0.06), inset 0 0 60px rgba(0,0,0,0.3); }
 				50%  { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 55px rgba(0,229,255,0.22), 0 0 90px rgba(255,45,120,0.08), inset 0 0 60px rgba(0,0,0,0.3); }
 				100% { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 35px rgba(255,45,120,0.18), 0 0 70px rgba(0,229,255,0.06), inset 0 0 60px rgba(0,0,0,0.3); }
 			}
-
-			/* Scanline sweep across the whole card */
 			@keyframes scanline-sweep {
 				0%   { transform: translateY(-100%); }
 				100% { transform: translateY(200%); }
 			}
-
-			/* Glitch shift for title */
 			@keyframes glitch-shift {
 				0%, 90%, 100% { clip-path: none; transform: none; }
 				91% { clip-path: inset(40% 0 30% 0); transform: translate(-3px, 0); }
@@ -176,239 +277,169 @@
 				95% { clip-path: inset(70% 0 5% 0);  transform: translate(-2px, 0); color: var(--g-cyan); }
 				97% { clip-path: inset(25% 0 45% 0); transform: translate(2px, 0); }
 			}
-
-			/* Corner tag flicker */
 			@keyframes tag-flicker {
 				0%, 94%, 100% { opacity: 1; }
-				95% { opacity: 0.2; }
-				96% { opacity: 1; }
-				97% { opacity: 0.5; }
-				98% { opacity: 1; }
+				95% { opacity: 0.2; } 96% { opacity: 1; } 97% { opacity: 0.5; } 98% { opacity: 1; }
 			}
-
-			/* Neon glow breathe — for sidebar dividers */
-			@keyframes glow-breathe-pink {
-				0%, 100% { border-right-color: rgba(255,45,120,0.15); }
-				50%       { border-right-color: rgba(255,45,120,0.40); }
-			}
-			@keyframes glow-breathe-cyan {
-				0%, 100% { border-left-color: rgba(0,229,255,0.15); }
-				50%       { border-left-color: rgba(0,229,255,0.40); }
-			}
-
-			/* Viewport cyan top-border pulse */
-			@keyframes viewport-glow {
-				0%, 100% { border-top-color: var(--g-cyan); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 8px rgba(0,229,255,0.08); }
-				50%       { border-top-color: var(--g-pink); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,45,120,0.15); }
-			}
-
-			/* Run button idle glow pulse */
 			@keyframes btn-idle-glow {
 				0%, 100% { box-shadow: 0 0 20px rgba(255,45,120,0.35), 0 0 50px rgba(255,45,120,0.12), inset 0 1px 0 rgba(255,180,210,0.4); }
 				50%       { box-shadow: 0 0 30px rgba(255,45,120,0.55), 0 0 70px rgba(255,45,120,0.20), inset 0 1px 0 rgba(255,180,210,0.4); }
 			}
-
-			/* Badge blink */
 			@keyframes badge-blink {
-				0%, 85%, 100% { opacity: 1; }
-				90% { opacity: 0.6; }
-				92% { opacity: 1; }
+				0%, 85%, 100% { opacity: 1; } 90% { opacity: 0.6; } 92% { opacity: 1; }
 			}
-
-			/* Loading bar shimmer */
+			@keyframes viewport-glow {
+				0%, 100% { border-top-color: var(--g-cyan); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 8px rgba(0,229,255,0.08); }
+				50%       { border-top-color: var(--g-pink); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,45,120,0.15); }
+			}
+			@keyframes pulse-status {
+				0%, 100% { opacity: 0.3; transform: scale(0.8); }
+				50%       { opacity: 1;   transform: scale(1.2); }
+			}
+			@keyframes spin { to { transform: rotate(360deg); } }
+			@keyframes shard-enter-1 { from { opacity:0; transform: rotate(-1.5deg) translate(-8px,-6px); } to { opacity:1; transform: rotate(-1.5deg) translate(0,0); } }
+			@keyframes shard-enter-2 { from { opacity:0; transform: rotate(0.8deg) translate(6px,-4px); } to { opacity:1; transform: rotate(0.8deg) translate(0,0); } }
+			@keyframes shard-enter-3 { from { opacity:0; transform: rotate(-0.5deg) translate(-4px,6px); } to { opacity:1; transform: rotate(-0.5deg) translate(0,0); } }
+			@keyframes shard-enter-4 { from { opacity:0; transform: rotate(1.2deg) translate(8px,4px); } to { opacity:1; transform: rotate(1.2deg) translate(0,0); } }
+			@keyframes shard-enter-5 { from { opacity:0; transform: rotate(-0.8deg) translate(0px,-8px); } to { opacity:1; transform: rotate(-0.8deg) translate(0,0); } }
 			@keyframes shimmer {
 				0%   { background-position: -200% center; }
 				100% { background-position: 200% center; }
 			}
 
-			.bh-main-card {
+			/* ===========================
+			   SHATTERED TILE GRID
+			=========================== */
+			.bh-page {
 				position: relative;
-				/* Key: dark but NOT fully opaque so video shows */
-				background: var(--g-dark);
-				backdrop-filter: blur(2px) saturate(1.2);
-				-webkit-backdrop-filter: blur(2px) saturate(1.2);
-				border: 1.5px solid rgba(255,255,255,0.12);
-				border-top: 3px solid var(--g-pink);
-				border-left: 3px solid var(--g-cyan);
-				border-radius: 0px;
-				padding: 22px;
-				display: flex;
-				gap: 22px;
-				height: calc(100vh - 64px);
-				align-items: stretch;
+				z-index: 1;
+				max-width: 1340px;
+				margin: 0 auto;
+				height: 100vh;
+				padding: 14px 16px;
 				box-sizing: border-box;
-				overflow: hidden;
-				/* Animated neon glow */
-				animation: neon-border-pulse 4s ease-in-out infinite;
-			}
-
-			/* Scanline sweep overlay — lives inside card via a fixed pseudo child */
-			.bh-main-card .scanline-fx {
-				position: absolute;
-				inset: 0;
-				pointer-events: none;
-				z-index: 5;
-				overflow: hidden;
-			}
-			.bh-main-card .scanline-fx::after {
-				content: '';
-				position: absolute;
-				left: 0;
-				width: 100%;
-				height: 60px;
-				background: linear-gradient(180deg,
-					transparent 0%,
-					rgba(0, 229, 255, 0.04) 50%,
-					transparent 100%
-				);
-				animation: scanline-sweep 5s linear infinite;
-				top: 0;
-			}
-
-			/* Neon corner tag — top-left */
-			.bh-main-card::before {
-				content: 'MONOLITHIC';
-				position: absolute;
-				top: -12px;
-				left: 20px;
-				font-family: "Bebas Neue", sans-serif;
-				font-size: 0.65rem;
-				letter-spacing: 4px;
-				color: var(--g-pink);
-				background: #08060F;
-				padding: 0 8px;
-				z-index: 20;
-				pointer-events: none;
-				text-shadow: 0 0 10px var(--g-pink);
-				animation: tag-flicker 8s ease-in-out infinite;
-			}
-
-			/* Neon corner accent — bottom-right, animated width */
-			@keyframes corner-grow {
-				0%, 100% { width: 50px; opacity: 0.8; }
-				50%       { width: 90px; opacity: 1; }
-			}
-			.bh-main-card::after {
-				content: '';
-				position: absolute;
-				bottom: 0;
-				right: 0;
-				width: 60px;
-				height: 3px;
-				background: linear-gradient(90deg, transparent, var(--g-cyan));
-				pointer-events: none;
-				z-index: 10;
-				animation: corner-grow 3s ease-in-out infinite;
+				display: grid;
+				grid-template-columns: 210px 1fr 280px;
+				grid-template-rows: auto 1fr 1fr auto auto;
+				gap: 7px;
+				align-content: start;
 			}
 
 			/* ===========================
-			   SIDEBARS & WORKSPACE
+			   BASE SHARD (shared by all tiles)
 			=========================== */
-			.wbc-series-sidebar {
-				width: 230px;
-				flex-shrink: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 12px;
-				border-right: 1px solid rgba(255,45,120,0.2);
-				padding-right: 18px;
-				overflow-y: auto;
-				animation: glow-breathe-pink 4s ease-in-out infinite;
-			}
-			.wbc-series-sidebar::-webkit-scrollbar { width: 2px; }
-			.wbc-series-sidebar::-webkit-scrollbar-track { background: transparent; }
-			.wbc-series-sidebar::-webkit-scrollbar-thumb {
-				background: var(--g-pink);
-				box-shadow: 0 0 6px var(--g-pink);
-			}
-
-			.wbc-workspace-canvas {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				min-width: 0;
-				height: 100%;
-				overflow: hidden;
-				gap: 12px;
-				justify-content: space-between;
-			}
-
-			.wbc-control-sidebar {
-				width: 295px;
-				flex-shrink: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-				border-left: 1px solid rgba(0,229,255,0.2);
-				padding-left: 18px;
-				overflow-y: auto;
-				animation: glow-breathe-cyan 4s ease-in-out infinite 2s;
-			}
-			.wbc-control-sidebar::-webkit-scrollbar { width: 2px; }
-			.wbc-control-sidebar::-webkit-scrollbar-track { background: transparent; }
-			.wbc-control-sidebar::-webkit-scrollbar-thumb {
-				background: var(--g-cyan);
-				box-shadow: 0 0 6px var(--g-cyan);
-			}
-
-			/* ===========================
-			   SERIES BUTTONS
-			=========================== */
-			.series-btn {
-				background: rgba(255,255,255,0.03);
-				border: 1px solid rgba(255,255,255,0.08);
-				border-left: 3px solid transparent;
-				border-radius: 0px;
-				padding: 10px 12px;
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				cursor: pointer;
-				transition: all 0.15s ease;
+			.shard {
+				/* Slightly more opaque — paint on concrete feel */
+				background: rgba(6, 5, 12, 0.82);
+				backdrop-filter: blur(2px) saturate(1.1);
+				-webkit-backdrop-filter: blur(2px) saturate(1.1);
 				position: relative;
-				text-align: left;
-				width: 100%;
+				overflow: hidden;
+				box-sizing: border-box;
+				/* Subtle grain texture via background noise */
+				background-image:
+					url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
 			}
-			.series-btn:hover:not(.locked) {
-				background: rgba(255,45,120,0.08);
-				border-left-color: var(--g-pink);
-				border-color: rgba(255,45,120,0.3);
-				box-shadow: 0 0 12px rgba(255,45,120,0.08);
+			/* Paint drip pseudo-element (bottom edge) */
+			.shard::before {
+				content: '';
+				position: absolute;
+				bottom: -4px; left: 0; right: 0;
+				height: 8px;
+				pointer-events: none;
+				z-index: 25;
+				/* paint drip shape via radial blobs */
+				background: radial-gradient(ellipse 8px 14px at 15% 0%, currentColor 50%, transparent 100%),
+					radial-gradient(ellipse 5px 10px at 35% 0%, currentColor 50%, transparent 100%),
+					radial-gradient(ellipse 7px 18px at 62% 0%, currentColor 50%, transparent 100%),
+					radial-gradient(ellipse 4px 8px at 80% 0%, currentColor 50%, transparent 100%),
+					radial-gradient(ellipse 6px 12px at 92% 0%, currentColor 50%, transparent 100%);
+				opacity: 0;
 			}
-			.series-btn.active {
-				background: rgba(255,45,120,0.1);
-				border-left-color: var(--g-pink);
-				border-color: rgba(255,45,120,0.25);
-				box-shadow: inset 0 0 20px rgba(255,45,120,0.06), 0 0 10px rgba(255,45,120,0.1);
+			/* Scanline removed — too sci-fi. Keep as hidden */
+			.shard .scan-line { display: none; }
+
+			/* === SHARD VARIANTS — paint stroke borders === */
+			/* Border thickness increased for spray-paint 'tape line' feel */
+			.shard-pink {
+				border: 2px solid rgba(255,26,108,0.35);
+				border-top: 4px solid var(--g-pink);
+				clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+				box-shadow: 0 0 12px rgba(255,26,108,0.18), inset 0 0 20px rgba(255,26,108,0.04);
+				color: var(--g-pink); /* for ::before drip color */
 			}
-			.series-btn.active .series-name { color: var(--g-pink); text-shadow: 0 0 8px rgba(255,45,120,0.6); }
-			.series-btn.active .series-desc { color: var(--g-cyan); }
-			.series-color-bar { display: none; }
-			.series-title-wrap { display: flex; flex-direction: column; gap: 2px; }
-			.series-name {
-				font-size: 0.8rem;
-				font-weight: 700;
-				color: var(--g-text);
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				font-family: "Bebas Neue", sans-serif;
-				font-size: 0.95rem;
+			.shard-cyan {
+				border: 2px solid rgba(0,212,255,0.3);
+				border-left: 4px solid var(--g-cyan);
+				clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
+				box-shadow: 0 0 12px rgba(0,212,255,0.12);
+				color: var(--g-cyan);
 			}
-			.series-desc {
-				font-size: 0.6rem;
-				color: var(--g-muted);
-				font-family: "Share Tech Mono", monospace;
-				letter-spacing: 0.5px;
+			.shard-yellow {
+				border: 2px solid rgba(255,214,0,0.3);
+				border-bottom: 4px solid var(--g-yellow);
+				clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
+				box-shadow: 0 0 10px rgba(255,214,0,0.1);
+				color: var(--g-yellow);
+			}
+			.shard-purple {
+				border: 2px solid rgba(139,32,255,0.3);
+				border-right: 4px solid var(--g-purple);
+				clip-path: polygon(0 0, 100% 0, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+				box-shadow: 0 0 10px rgba(139,32,255,0.12);
+				color: var(--g-purple);
+			}
+			.shard-green {
+				border: 2px solid rgba(46,255,0,0.25);
+				border-top: 4px solid var(--g-green);
+				clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+				box-shadow: 0 0 10px rgba(46,255,0,0.08);
+				color: var(--g-green);
+			}
+			.shard-orange {
+				border: 2px solid rgba(255,85,0,0.3);
+				border-top: 4px solid var(--g-orange);
+				clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+				box-shadow: 0 0 12px rgba(255,85,0,0.14);
+				color: var(--g-orange);
+			}
+			/* Drip effect — show on pink/cyan shards only */
+			.shard-pink::before, .shard-cyan::before {
+				opacity: 0.65;
 			}
 
-			/* ===========================
-			   HEADER & TITLES
-			=========================== */
-			.bh-header {
-				display: flex;
-				flex-direction: column;
-				gap: 3px;
+			/* === SHARD ROTATION CLASSES (subtle, broken feel) === */
+			.rot-n2  { transform: rotate(-1.8deg); }
+			.rot-n1  { transform: rotate(-0.9deg); }
+			.rot-0   { transform: rotate(0deg); }
+			.rot-p1  { transform: rotate(0.7deg); }
+			.rot-p2  { transform: rotate(1.4deg); }
+			.rot-n2:hover, .rot-n1:hover, .rot-0:hover, .rot-p1:hover, .rot-p2:hover {
+				transform: rotate(0deg) scale(1.008);
+				transition: transform 0.25s ease;
 			}
+
+			/* === GRID PLACEMENT === */
+			.shard-header      { grid-column: 1; grid-row: 1; padding: 14px 16px 12px; animation: shard-enter-1 0.5s 0.05s both; }
+			.shard-series      { grid-column: 1; grid-row: 2 / 4; padding: 12px 14px; animation: shard-enter-1 0.5s 0.1s both; overflow-y: auto; }
+			.shard-model-stat  { grid-column: 1; grid-row: 4; padding: 10px 14px; animation: shard-enter-1 0.5s 0.15s both; }
+			.shard-viewport-in { grid-column: 2; grid-row: 1 / 3; animation: shard-enter-2 0.5s 0.08s both; display:flex; flex-direction:column; }
+			.shard-viewport-out{ grid-column: 2; grid-row: 3 / 5; animation: shard-enter-3 0.5s 0.12s both; display:flex; flex-direction:column; }
+			.shard-controls-bar{ grid-column: 2; grid-row: 5; padding: 8px 14px; animation: shard-enter-5 0.5s 0.18s both; }
+			.shard-mode        { grid-column: 3; grid-row: 1; padding: 10px 14px; animation: shard-enter-4 0.5s 0.06s both; }
+			.shard-upload      { grid-column: 3; grid-row: 2; padding: 10px 14px; animation: shard-enter-4 0.5s 0.1s both; }
+			.shard-camera      { grid-column: 3; grid-row: 3; padding: 10px 14px; animation: shard-enter-4 0.5s 0.14s both; }
+			.shard-actions     { grid-column: 3; grid-row: 4; padding: 8px 14px; animation: shard-enter-4 0.5s 0.18s both; }
+			.shard-run         { grid-column: 3; grid-row: 5; padding: 0; animation: shard-enter-4 0.5s 0.22s both; }
+
+			/* scroll for series shard */
+			.shard-series::-webkit-scrollbar { width: 2px; }
+			.shard-series::-webkit-scrollbar-track { background: transparent; }
+			.shard-series::-webkit-scrollbar-thumb { background: var(--g-pink); box-shadow: 0 0 4px var(--g-pink); }
+
+			/* ===========================
+			   HEADER INSIDE SHARD
+			=========================== */
 			.wbc-back-btn {
 				width: fit-content;
 				background: transparent;
@@ -418,559 +449,438 @@
 				align-items: center;
 				gap: 6px;
 				cursor: pointer;
-				font-size: 0.65rem;
-				font-weight: 400;
+				font-size: 0.6rem;
 				text-decoration: none;
 				transition: all 0.15s;
 				padding: 0;
-				margin-bottom: 4px;
+				margin-bottom: 6px;
 				font-family: "Share Tech Mono", monospace;
 				text-transform: uppercase;
 				letter-spacing: 2px;
 			}
-			.wbc-back-btn:hover {
-				color: var(--g-cyan);
-				text-decoration: none;
-				text-shadow: 0 0 8px var(--g-cyan);
-			}
+			.wbc-back-btn:hover { color: var(--g-cyan); text-shadow: 0 0 8px var(--g-cyan); }
+			/* === TITLE & SUBTITLE === */
 			.bh-title {
-				font-size: 2rem;
+				/* Permanent Marker — bold Sharpie throw-up */
+				font-size: 1.9rem;
 				font-weight: 400;
-				line-height: 1;
-				letter-spacing: 4px;
+				line-height: 1.05;
+				letter-spacing: 1px;
 				margin: 0;
-				font-family: "Bebas Neue", sans-serif;
-				text-transform: uppercase;
+				font-family: var(--font-display);
+				text-transform: none;
 			}
-			.title-mono {
-				color: var(--g-text);
-				/* white chrome-like effect */
-				text-shadow:
-					0 1px 0 rgba(255,255,255,0.4),
-					0 -1px 0 rgba(0,0,0,0.6),
-					0 0 20px rgba(255,255,255,0.1);
-			}
+			.title-mono { color: var(--g-text); text-shadow: 3px 3px 0px rgba(0,0,0,0.9), 0 0 16px rgba(255,255,255,0.05); }
 			.title-dape {
 				color: var(--g-pink);
 				text-shadow:
-					0 0 10px var(--g-pink),
-					0 0 30px rgba(255,45,120,0.4);
+					3px 3px 0px rgba(0,0,0,0.7),
+					0 0 22px rgba(255,26,108,0.75),
+					0 0 50px rgba(255,26,108,0.3);
 				animation: glitch-shift 7s ease-in-out infinite;
 				display: inline-block;
 			}
 			.bh-subtitle {
-				font-size: 0.6rem;
+				/* Rock Salt — quick street tag underneath */
+				font-size: 0.52rem;
 				color: var(--g-cyan);
-				margin: 0;
-				font-family: "Share Tech Mono", monospace;
-				text-transform: uppercase;
-				letter-spacing: 3px;
-				text-shadow: 0 0 8px rgba(0,229,255,0.5);
+				margin: 6px 0 0;
+				font-family: var(--font-tag);
+				text-transform: none;
+				letter-spacing: 0.5px;
+				line-height: 1.6;
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,212,255,0.45);
 			}
+			.shard-header::before { content: none; }
 
 			/* ===========================
-			   MODEL STATUS CARD
+			   SERIES LIST (left shard)
 			=========================== */
-			.model-status-card {
-				background: rgba(255,255,255,0.03);
-				border: 1px solid rgba(255,255,255,0.08);
-				border-left: 3px solid var(--g-cyan);
-				border-radius: 0px;
-				padding: 10px 14px;
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-				box-shadow: 0 0 10px rgba(0,229,255,0.06);
+			.shard-series-label {
+				/* Rock Salt — quick marker tag */
+				font-size: 0.6rem;
+				color: var(--g-pink);
+				font-family: var(--font-tag);
+				text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 14px rgba(255,26,108,0.6);
+				margin-bottom: 10px;
+				display: block;
+				transform: rotate(-1.2deg);
+				text-transform: none;
 			}
-			.status-row {
+			.series-btn {
+				background: rgba(255,255,255,0.02);
+				/* rough marker border */
+				border: 2px solid rgba(255,255,255,0.08);
+				border-left: 4px solid transparent;
+				padding: 9px 11px;
 				display: flex;
 				align-items: center;
-				justify-content: space-between;
+				gap: 9px;
+				cursor: pointer;
+				transition: all 0.15s ease;
+				text-align: left;
+				width: 100%;
+				margin-bottom: 5px;
 			}
+			.series-btn:hover:not(.locked) { background: rgba(255,26,108,0.08); border-left-color: var(--g-pink); }
+			.series-btn.active {
+				background: rgba(255,26,108,0.1);
+				border-left-color: var(--g-pink);
+				box-shadow: inset 0 0 16px rgba(255,26,108,0.06), 3px 0 0 var(--g-pink);
+			}
+			.series-btn.active .series-name { color: var(--g-pink); text-shadow: 2px 2px 0 rgba(0,0,0,0.7), 0 0 14px rgba(255,26,108,0.6); }
+			.series-btn.active .series-desc { color: var(--g-cyan); }
+			.series-color-bar { display: none; }
+			.series-title-wrap { display: flex; flex-direction: column; gap: 2px; }
+			/* Series name — Rock Salt (readable marker tag) */
+			.series-name { font-size: 0.6rem; font-weight: 400; color: var(--g-text); font-family: var(--font-tag); letter-spacing: 0; text-transform: none; line-height: 1.5; }
+			.series-desc { font-size: 0.56rem; color: var(--g-muted); font-family: var(--font-mono); letter-spacing: 0.5px; margin-top: 2px; }
+
+			/* ===========================
+			   MODEL STATUS INSIDE SHARD
+			=========================== */
+			.status-row { display: flex; align-items: center; justify-content: space-between; }
 			.status-label {
-				font-size: 0.6rem;
-				text-transform: uppercase;
-				letter-spacing: 2px;
-				color: var(--g-cyan);
-				font-weight: 700;
-				font-family: "Share Tech Mono", monospace;
-				text-shadow: 0 0 6px rgba(0,229,255,0.4);
+				/* Rock Salt — scrawled marker label */
+				font-size: 0.5rem;
+				color: var(--g-cyan); font-weight: 400;
+				font-family: var(--font-tag);
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 10px rgba(0,212,255,0.45);
+				text-transform: none;
+				letter-spacing: 0.5px;
 			}
 			.model-status {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
+				display: inline-flex; align-items: center; gap: 6px;
 				font-family: "Share Tech Mono", monospace;
-				font-size: 0.6rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1.5px;
+				font-size: 0.58rem; font-weight: 700;
+				text-transform: uppercase; letter-spacing: 1.5px;
 				color: var(--g-muted);
 			}
 			.model-status.ready  { color: var(--g-green);  text-shadow: 0 0 8px var(--g-green); }
 			.model-status.loading{ color: var(--g-yellow); text-shadow: 0 0 8px var(--g-yellow); }
 			.model-status.error  { color: var(--bh-danger); text-shadow: 0 0 8px var(--bh-danger); }
-
-			.status-dot {
-				width: 6px;
-				height: 6px;
-				border-radius: 50%;
-				background: var(--g-muted);
-				flex-shrink: 0;
-			}
+			.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g-muted); flex-shrink: 0; }
 			.model-status.ready .status-dot  { background: var(--g-green);  box-shadow: 0 0 8px var(--g-green), 0 0 16px var(--g-green); }
 			.model-status.loading .status-dot{ background: var(--g-yellow); animation: pulse-status 0.9s infinite ease-in-out; box-shadow: 0 0 8px var(--g-yellow); }
-			.model-status.error .status-dot  { background: var(--bh-danger);}
-			@keyframes pulse-status {
-				0%, 100% { opacity: 0.3; transform: scale(0.8); }
-				50%       { opacity: 1;   transform: scale(1.2); }
-			}
-
-			.model-load-bar { display: none; flex-direction: column; gap: 4px; }
+			.model-status.error .status-dot  { background: var(--bh-danger); }
+			.model-load-bar { display: none; flex-direction: column; gap: 4px; margin-top: 8px; }
 			.model-load-bar.visible { display: flex; }
-			.load-bar-track {
-				height: 3px;
-				background: rgba(255,255,255,0.06);
-				overflow: hidden;
-				position: relative;
-			}
-			.load-bar-fill {
-				height: 100%;
-				width: 0%;
-				background: linear-gradient(90deg, var(--g-pink), var(--g-cyan));
-				transition: width 0.3s;
-				box-shadow: 0 0 8px var(--g-pink);
-			}
-			.load-bar-text {
-				font-size: 0.58rem;
-				color: var(--g-muted);
-				text-align: right;
-				font-family: "Share Tech Mono", monospace;
-			}
+			.load-bar-track { height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+			.load-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--g-pink), var(--g-cyan)); transition: width 0.3s; box-shadow: 0 0 8px var(--g-pink); }
+			.load-bar-text { font-size: 0.56rem; color: var(--g-muted); text-align: right; font-family: "Share Tech Mono", monospace; }
 
 			/* ===========================
-			   MODE TOGGLE TABS
+			   VIEWPORT SHARDS (center)
 			=========================== */
+			.viewport-inner {
+				flex: 1;
+				min-height: 0;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				overflow: hidden;
+				background: rgba(0,0,0,0.4);
+				animation: viewport-glow 6s ease-in-out infinite;
+			}
+			.viewport-label-bar {
+				padding: 5px 12px;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				border-bottom: 2px solid rgba(255,255,255,0.08);
+				background: rgba(0,0,0,0.4);
+			}
+			.viewport-label-text {
+				/* Rock Salt — stencil-style tagging */
+				font-size: 0.55rem;
+				font-family: var(--font-tag);
+				text-transform: none;
+				letter-spacing: 0.5px;
+				color: var(--g-cyan);
+				text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 10px rgba(0,212,255,0.5);
+			}
+			.viewport-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g-cyan); box-shadow: 0 0 8px var(--g-cyan); animation: badge-blink 5s ease-in-out infinite; }
+			.viewport-inner canvas { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+			.preview-empty {
+				position: absolute; inset: 0;
+				display: flex; align-items: center; justify-content: center;
+				/* Permanent Marker — spray-can stencil message */
+				color: rgba(0,212,255,0.15);
+				font-size: 1rem; background: transparent;
+				font-family: var(--font-display);
+				transform: rotate(-2deg);
+				letter-spacing: 1px;
+			}
+			.viewport-badge {
+				position: absolute; top: 8px; left: 8px; z-index: 2;
+				/* Rock Salt — tag badge */
+				font-size: 0.5rem; font-weight: 400;
+				background: rgba(0,0,0,0.9);
+				color: var(--g-cyan);
+				padding: 3px 10px 4px;
+				border: 2px solid var(--g-cyan);
+				font-family: var(--font-tag);
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 10px var(--g-cyan);
+				box-shadow: 0 0 12px rgba(0,212,255,0.2);
+				animation: badge-blink 6s ease-in-out infinite;
+			}
+			.preview-row { display: flex; gap: 8px; width: 100%; height: 100%; }
+			.preview-row.single .preview-box:last-child { display: none; }
+			.preview-box { flex: 1; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; }
+
+			/* ===========================
+			   MODE TOGGLE (right shard)
+			=========================== */
+			.shard-label {
+				/* Rock Salt — section header tag */
+				font-size: 0.55rem; font-weight: 400;
+				color: var(--g-muted); font-family: var(--font-tag);
+				display: block; margin-bottom: 10px;
+				text-transform: none;
+				transform: rotate(-0.8deg);
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
+				letter-spacing: 0.5px;
+			}
 			.mode-toggle {
-				background: rgba(0,0,0,0.35);
-				border: 1px solid rgba(255,255,255,0.08);
-				border-top: 2px solid var(--g-orange);
-				border-radius: 0px;
+				background: rgba(0,0,0,0.4);
+				border: 2px solid rgba(255,255,255,0.08);
 				padding: 2px;
 				display: flex;
 				gap: 2px;
 			}
 			.mode-btn {
-				flex: 1;
-				background: transparent;
-				border: none;
+				flex: 1; background: transparent; border: none;
 				color: var(--g-muted);
-				font-family: "Share Tech Mono", monospace;
-				font-size: 0.65rem;
-				font-weight: 400;
-				padding: 7px 8px;
-				cursor: pointer;
-				transition: all 0.15s ease;
-				text-align: center;
-				border-radius: 0px;
-				text-transform: uppercase;
-				letter-spacing: 1.5px;
+				/* Rock Salt for tab buttons */
+				font-family: var(--font-tag);
+				font-size: 0.5rem; font-weight: 400;
+				padding: 6px 4px; cursor: pointer;
+				transition: all 0.15s ease; text-align: center;
+				text-transform: none;
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+				letter-spacing: 0.3px;
 			}
-			.mode-btn:hover {
-				color: var(--g-orange);
-				background: rgba(255,107,0,0.06);
-				text-shadow: 0 0 8px var(--g-orange);
-			}
-			.mode-btn.active {
-				background: var(--g-orange);
-				color: #000;
-				font-weight: 700;
-				box-shadow: 0 0 16px rgba(255,107,0,0.45);
-				text-shadow: none;
-			}
+			.mode-btn:hover { color: var(--g-orange); background: rgba(255,85,0,0.08); text-shadow: 1px 1px 0 rgba(0,0,0,0.6), 0 0 14px var(--g-orange); }
+			.mode-btn.active { background: var(--g-orange); color: #000; font-weight: 400; box-shadow: 0 0 20px rgba(255,85,0,0.5), inset 0 -3px 0 rgba(0,0,0,0.35); text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
 
 			/* ===========================
-			   UPLOAD ZONES
+			   UPLOAD ZONE
 			=========================== */
 			.upload-zone {
-				border: 1px dashed rgba(255,255,255,0.15);
-				padding: 16px 12px;
+				border: 1px dashed rgba(255,255,255,0.13);
+				padding: 14px 10px;
 				text-align: center;
 				background: rgba(255,255,255,0.02);
 				cursor: pointer;
 				position: relative;
 				transition: all 0.15s ease;
-				border-radius: 0px;
 			}
-			.upload-zone:hover {
-				border-color: var(--g-pink);
-				border-style: solid;
-				background: rgba(255,45,120,0.05);
-				box-shadow: inset 0 0 20px rgba(255,45,120,0.04), 0 0 10px rgba(255,45,120,0.1);
+			.upload-zone:hover { border-color: var(--g-pink); border-style: solid; background: rgba(255,45,120,0.04); box-shadow: inset 0 0 16px rgba(255,45,120,0.03), 0 0 8px rgba(255,45,120,0.08); }
+			.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+			.upload-icon { width: 18px; height: 18px; stroke: var(--g-pink); margin: 0 auto 6px; display: block; filter: drop-shadow(0 0 6px var(--g-pink)); }
+			.upload-label { font-size: 0.55rem; color: var(--g-muted); line-height: 1.8; font-family: var(--font-tag); text-transform: none; letter-spacing: 0.3px; }
+
+			/* ===========================
+			   CONTROLS BAR (bottom center shard)
+			=========================== */
+			.colormap-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
+			.cm-btn { width: 30px; height: 18px; border-radius: 0px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; transition: all 0.15s; }
+			.cm-btn.active { border-color: var(--g-yellow); box-shadow: 0 0 8px rgba(255,214,0,0.5); transform: scale(1.1); }
+			.cm-inferno { background: linear-gradient(90deg, #000004, #1b0c41, #4a0c4e, #781c6d, #a52c60, #cf4446, #ed6925, #fb9b06, #f7d03c, #fcffa4); }
+			.cm-plasma  { background: linear-gradient(90deg, #0d0887, #46039f, #7201a8, #9c179e, #bd3786, #d8576b, #ed7953, #fb9f3a, #fdcb26, #f0f921); }
+			.cm-viridis { background: linear-gradient(90deg, #440154, #3b528b, #21918c, #5ec962, #fde725); }
+			.cm-turbo   { background: linear-gradient(90deg, #30123b, #4145ab, #4675ed, #39a7f5, #1dd1d4, #37f6ac, #95f95a, #e9f53a, #febb2b, #f56918, #c52a18, #7a0403); }
+			.slider-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+			.slider-label {
+				/* Rock Salt — scrawled label */
+				font-size: 0.5rem; font-weight: 400;
+				color: var(--g-yellow); white-space: nowrap; min-width: 38px;
+				font-family: var(--font-tag);
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 8px rgba(255,214,0,0.5);
+				letter-spacing: 0.3px;
 			}
-			.upload-zone input[type=file] {
-				position: absolute;
-				inset: 0;
-				opacity: 0;
-				cursor: pointer;
+			input[type=range] { flex: 1; -webkit-appearance: none; height: 3px; background: linear-gradient(90deg, rgba(255,214,0,0.4), rgba(255,26,108,0.4)); outline: none; }
+			input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 2px; background: var(--g-yellow); cursor: pointer; box-shadow: 0 0 10px rgba(255,214,0,0.7), 2px 2px 0 rgba(0,0,0,0.5); border: none; }
+
+			/* ===========================
+			   STATS / ACTIONS (right shard)
+			=========================== */
+			.depth-stats { display: flex; gap: 12px; flex-wrap: wrap; }
+			.depth-stat { display: flex; flex-direction: column; gap: 2px; }
+			.depth-stat-label { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 2px; color: var(--g-muted); font-weight: 700; font-family: "Share Tech Mono", monospace; }
+			.depth-stat-val { font-family: "Share Tech Mono", monospace; font-size: 0.82rem; font-weight: 700; color: var(--g-text); }
+			.depth-stat-val.accent { color: var(--g-cyan); text-shadow: 0 0 8px rgba(0,229,255,0.5); }
+			.actions-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+			.dl-btn {
+				display: inline-flex; align-items: center; gap: 5px;
+				padding: 5px 10px;
+				background: rgba(255,255,255,0.03);
+				border: 1px solid rgba(255,255,255,0.1);
+				color: var(--g-muted); font-size: 0.58rem; font-weight: 700;
+				cursor: pointer; font-family: "Share Tech Mono", monospace;
+				transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 1px;
 			}
-			.upload-icon {
-				width: 20px;
-				height: 20px;
-				stroke: var(--g-pink);
-				margin: 0 auto 8px;
-				display: block;
-				filter: drop-shadow(0 0 4px var(--g-pink));
-			}
-			.upload-label {
-				font-size: 0.68rem;
-				color: var(--g-muted);
-				line-height: 1.4;
-				font-family: "Share Tech Mono", monospace;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-			}
+			.dl-btn:hover { border-color: var(--g-purple); color: var(--g-purple); background: rgba(155,48,255,0.06); text-shadow: 0 0 6px var(--g-purple); }
+			.dl-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+			.infer-time { font-size: 0.58rem; color: var(--g-green); padding: 2px 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(57,255,20,0.3); display: none; font-family: "Share Tech Mono", monospace; text-shadow: 0 0 6px var(--g-green); }
+			.infer-time.visible { display: inline-block; }
 
 			/* ===========================
 			   BUTTONS
 			=========================== */
 			.run-btn {
-				width: 100%;
-				padding: 12px 16px;
-				background: linear-gradient(135deg, var(--g-pink) 0%, #C4006A 100%);
+				width: 100%; height: 100%;
+				padding: 14px 16px;
+				/* Bold spray paint style — flat + heavy drop shadow */
+				background: var(--g-pink);
 				border: none;
-				border-top: 2px solid #FF80B0;
-				border-radius: 0px;
+				border-top: 4px solid #FF80B0;
+				border-bottom: 4px solid #A00050;
 				color: #fff;
-				font-family: "Bebas Neue", sans-serif;
-				font-size: 1.15rem;
-				font-weight: 400;
-				letter-spacing: 5px;
-				text-transform: uppercase;
+				/* Permanent Marker — bold Sharpie CTA */
+				font-family: var(--font-display);
+				font-size: 1.6rem;
+				letter-spacing: 2px;
+				text-transform: none;
 				cursor: pointer;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				gap: 8px;
+				display: flex; align-items: center; justify-content: center; gap: 8px;
 				transition: all 0.15s ease;
-				box-shadow:
-					0 0 25px rgba(255,45,120,0.4),
-					0 0 60px rgba(255,45,120,0.15),
-					inset 0 1px 0 rgba(255,180,210,0.4);
+				text-shadow: 3px 3px 0 rgba(0,0,0,0.6), 0 0 24px rgba(255,26,108,0.45);
+				box-shadow: 0 6px 0 #8A0040, 0 0 30px rgba(255,26,108,0.4), inset 0 1px 0 rgba(255,180,210,0.3);
 				animation: btn-idle-glow 2.5s ease-in-out infinite;
 			}
-			.run-btn:not(:disabled):hover,
-			.run-btn:not(:disabled):focus { animation: none; }
-			.run-btn:hover {
-				background: linear-gradient(135deg, #FF5090 0%, var(--g-pink) 100%);
-				transform: translateY(-2px);
-				box-shadow:
-					0 0 35px rgba(255,45,120,0.6),
-					0 0 80px rgba(255,45,120,0.25),
-					inset 0 1px 0 rgba(255,200,220,0.5);
-			}
-			.run-btn:active {
-				transform: translateY(1px);
-				box-shadow: 0 0 10px rgba(255,45,120,0.3);
-			}
-			.run-btn:disabled {
-				opacity: 0.3;
-				cursor: not-allowed;
-				transform: none;
-				box-shadow: none;
-				background: rgba(255,45,120,0.25);
-			}
-			.run-btn .spinner {
-				width: 14px;
-				height: 14px;
-				border: 2px solid rgba(255,255,255,0.25);
-				border-top-color: #fff;
-				border-radius: 50%;
-				animation: spin 0.7s linear infinite;
-				display: none;
-			}
+			.run-btn:not(:disabled):hover { animation: none; }
+			.run-btn:hover { background: linear-gradient(135deg, #FF5090 0%, var(--g-pink) 100%); transform: translateY(-1px); box-shadow: 0 0 35px rgba(255,45,120,0.6), 0 0 80px rgba(255,45,120,0.25); }
+			.run-btn:active { transform: translateY(1px); box-shadow: 0 0 10px rgba(255,45,120,0.3); }
+			.run-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; background: rgba(255,45,120,0.25); animation: none; }
+			.run-btn .spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
 			.run-btn.running .spinner { display: block; }
 			.run-btn.running .run-arrow { display: none; }
-			@keyframes spin { to { transform: rotate(360deg); } }
-
-			.sample-row { display: flex; gap: 6px; }
+			.sample-row { display: flex; gap: 5px; }
 			.sample-btn {
-				flex: 1;
-				padding: 7px 10px;
+				flex: 1; padding: 6px 8px;
 				background: rgba(255,255,255,0.03);
-				border: 1px solid rgba(255,255,255,0.1);
+				border: 2px solid rgba(255,255,255,0.1);
 				color: var(--g-muted);
-				font-size: 0.62rem;
-				font-weight: 400;
-				cursor: pointer;
-				font-family: "Share Tech Mono", monospace;
-				transition: all 0.15s ease;
-				text-align: center;
-				border-radius: 0px;
-				text-transform: uppercase;
-				letter-spacing: 1.5px;
+				/* Rock Salt for secondary buttons */
+				font-size: 0.5rem; font-weight: 400;
+				cursor: pointer; font-family: var(--font-tag);
+				transition: all 0.15s ease; text-align: center;
+				text-transform: none;
+				text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+				letter-spacing: 0.3px;
 			}
-			.sample-btn:hover {
-				border-color: var(--g-cyan);
-				color: var(--g-cyan);
-				background: rgba(0,229,255,0.05);
-				text-shadow: 0 0 6px var(--g-cyan);
-				box-shadow: 0 0 8px rgba(0,229,255,0.1);
-			}
+			.sample-btn:hover { border-color: var(--g-cyan); color: var(--g-cyan); background: rgba(0,212,255,0.06); text-shadow: 1px 1px 0 rgba(0,0,0,0.5), 0 0 10px var(--g-cyan); }
 
 			/* ===========================
-			   WORKSPACE & VIEWPORTS
+			   GRAFFITI IMAGE DECORATIONS
 			=========================== */
-			.workspace-canvasses {
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-				flex: 1;
-				min-height: 0;
-				justify-content: center;
-			}
-
-			.viewport-container {
-				width: 100%;
-				max-width: 1024px;
-				margin: 0 auto;
-				background: rgba(0,0,0,0.55);
-				border: 1px solid rgba(255,255,255,0.07);
-				border-top: 2px solid var(--g-cyan);
-				position: relative;
-				flex: 1;
-				min-height: 0;
-				max-height: 220px;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-				border-radius: 0px;
-				box-shadow:
-					inset 0 0 40px rgba(0,0,0,0.5),
-					0 0 12px rgba(0,229,255,0.08);
-				animation: viewport-glow 6s ease-in-out infinite;
-				transition: border-color 0.5s;
-			}
-			.viewport-container.single-preview { max-height: 220px; }
-
-			.viewport-container canvas {
-				max-width: 100%;
-				max-height: 100%;
-				object-fit: contain;
-				display: block;
-			}
-
-			.preview-empty {
+			/* gr1 — wild-style BG on header shard */
+			.gr-header-bg {
 				position: absolute;
-				inset: 0;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: rgba(0,229,255,0.3);
-				font-size: 0.6rem;
-				background: transparent;
-				text-transform: uppercase;
-				letter-spacing: 4px;
-				font-family: "Share Tech Mono", monospace;
+				bottom: -10px; right: -10px;
+				width: 110px;
+				opacity: 0.12;
+				pointer-events: none;
+				z-index: 0;
+				transform: rotate(8deg) scaleX(-1);
+				filter: saturate(1.5);
+				mix-blend-mode: screen;
 			}
-
-			.viewport-badge {
+			/* gr2 — broken wall watermark in output viewport */
+			.gr-wall-bg {
 				position: absolute;
-				top: 8px;
-				left: 8px;
-				z-index: 2;
-				font-size: 0.58rem;
-				font-weight: 700;
-				background: rgba(0,0,0,0.85);
-				color: var(--g-cyan);
-				padding: 3px 10px;
-				letter-spacing: 2px;
-				text-transform: uppercase;
-				border: 1px solid var(--g-cyan);
-				border-radius: 0px;
-				font-family: "Share Tech Mono", monospace;
-				text-shadow: 0 0 8px var(--g-cyan);
-				box-shadow: 0 0 10px rgba(0,229,255,0.15);
-				animation: badge-blink 6s ease-in-out infinite;
+				bottom: 0; left: 50%;
+				transform: translateX(-50%);
+				height: 90%;
+				width: auto;
+				opacity: 0.07;
+				pointer-events: none;
+				z-index: 0;
+				mix-blend-mode: screen;
+				filter: saturate(0.5);
 			}
-
-			.preview-row { display: flex; gap: 10px; width: 100%; height: 100%; }
-			.preview-row.single .preview-box:last-child { display: none; }
-			.preview-box {
-				flex: 1;
-				height: 100%;
-				position: relative;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				min-width: 0;
+			/* gr3 — orange graffiti tag corner on series shard */
+			.gr-tag-corner {
+				position: absolute;
+				bottom: -8px; right: -12px;
+				width: 90px;
+				opacity: 0.18;
+				pointer-events: none;
+				z-index: 0;
+				transform: rotate(-6deg);
+				filter: saturate(1.2);
+				mix-blend-mode: screen;
 			}
-
-			/* ===========================
-			   WORKSPACE CONTROLS
-			=========================== */
-			.workspace-controls {
-				display: flex;
-				flex-direction: column;
-				gap: 10px;
-				background: rgba(0,0,0,0.4);
-				border: 1px solid rgba(255,255,255,0.07);
-				border-left: 3px solid var(--g-yellow);
-				padding: 10px 14px;
-				border-radius: 0px;
-				box-shadow: 0 0 10px rgba(255,214,0,0.05);
+			/* gr4 — B&W bubble letters watermark in input viewport */
+			.gr-bubble-bg {
+				position: absolute;
+				top: 50%; left: 50%;
+				transform: translate(-50%, -50%) rotate(-4deg);
+				width: 70%;
+				opacity: 0.045;
+				pointer-events: none;
+				z-index: 0;
+				filter: invert(1);
+				mix-blend-mode: screen;
 			}
-
-			.colormap-row { margin-bottom: 0 !important; }
-			.cm-btn {
-				width: 32px;
-				height: 20px;
-				border-radius: 0px;
-				border: 1px solid rgba(255,255,255,0.12);
-				cursor: pointer;
-				transition: all 0.15s;
+			/* gr5 — spray can mascot in upload shard */
+			.gr-spray-can {
+				position: absolute;
+				bottom: -6px; right: 4px;
+				width: 56px;
+				opacity: 0.55;
+				pointer-events: none;
+				z-index: 1;
+				transform: rotate(10deg) scaleX(-1);
+				filter: drop-shadow(0 0 6px rgba(139,32,255,0.5));
+				transition: opacity 0.3s, transform 0.3s;
 			}
-			.cm-btn.active {
-				border-color: var(--g-yellow);
-				box-shadow: 0 0 8px rgba(255,214,0,0.5);
-				transform: scale(1.1);
+			.shard-upload:hover .gr-spray-can {
+				opacity: 0.85;
+				transform: rotate(5deg) scaleX(-1) scale(1.08);
 			}
-			.cm-inferno { background: linear-gradient(90deg, #000004, #1b0c41, #4a0c4e, #781c6d, #a52c60, #cf4446, #ed6925, #fb9b06, #f7d03c, #fcffa4); }
-			.cm-plasma  { background: linear-gradient(90deg, #0d0887, #46039f, #7201a8, #9c179e, #bd3786, #d8576b, #ed7953, #fb9f3a, #fdcb26, #f0f921); }
-			.cm-viridis { background: linear-gradient(90deg, #440154, #3b528b, #21918c, #5ec962, #fde725); }
-			.cm-turbo   { background: linear-gradient(90deg, #30123b, #4145ab, #4675ed, #39a7f5, #1dd1d4, #37f6ac, #95f95a, #e9f53a, #febb2b, #f56918, #c52a18, #7a0403); }
-
-			.slider-row { display: flex; align-items: center; gap: 10px; }
-			.slider-label {
-				font-size: 0.6rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1.5px;
-				color: var(--g-yellow);
-				white-space: nowrap;
-				min-width: 50px;
-				font-family: "Share Tech Mono", monospace;
-				text-shadow: 0 0 6px rgba(255,214,0,0.4);
+			/* gr6 — rock-on hand sign on run shard corner */
+			.gr-rockon {
+				position: absolute;
+				bottom: 0; left: -12px;
+				height: 80%;
+				width: auto;
+				opacity: 0.55;
+				pointer-events: none;
+				z-index: 1;
+				transform: rotate(-4deg);
+				filter: drop-shadow(0 0 8px rgba(255,26,108,0.4));
 			}
-			input[type=range] {
-				flex: 1;
-				-webkit-appearance: none;
-				height: 3px;
-				background: linear-gradient(90deg, rgba(255,214,0,0.3), rgba(255,45,120,0.3));
-				outline: none;
-				border-radius: 0px;
-			}
-			input[type=range]::-webkit-slider-thumb {
-				-webkit-appearance: none;
-				width: 14px;
-				height: 14px;
-				border-radius: 50%;
-				background: var(--g-yellow);
-				cursor: pointer;
-				box-shadow: 0 0 10px rgba(255,214,0,0.6), 0 0 20px rgba(255,214,0,0.3);
-				border: 2px solid rgba(0,0,0,0.4);
-			}
-
-			/* ===========================
-			   FOOTER
-			=========================== */
-			.workspace-footer {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 16px;
-				border-top: 1px solid rgba(255,255,255,0.06);
-				padding-top: 10px;
-			}
-			.depth-stats { display: flex; gap: 16px; }
-			.depth-stat { display: flex; flex-direction: column; gap: 2px; }
-			.depth-stat-label {
-				font-size: 0.55rem;
-				text-transform: uppercase;
-				letter-spacing: 2px;
-				color: var(--g-muted);
-				font-weight: 700;
-				font-family: "Share Tech Mono", monospace;
-			}
-			.depth-stat-val {
-				font-family: "Share Tech Mono", monospace;
-				font-size: 0.88rem;
-				font-weight: 700;
-				color: var(--g-text);
-			}
-			.depth-stat-val.accent {
-				color: var(--g-cyan);
-				text-shadow: 0 0 8px rgba(0,229,255,0.5);
-			}
-
-			.actions-row { display: flex; gap: 6px; }
-			.dl-btn {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				padding: 6px 12px;
-				background: rgba(255,255,255,0.03);
-				border: 1px solid rgba(255,255,255,0.1);
-				color: var(--g-muted);
-				font-size: 0.62rem;
-				font-weight: 700;
-				cursor: pointer;
-				font-family: "Share Tech Mono", monospace;
-				transition: all 0.15s ease;
-				border-radius: 0px;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-			}
-			.dl-btn:hover {
-				border-color: var(--g-purple);
-				color: var(--g-purple);
-				background: rgba(155,48,255,0.06);
-				text-shadow: 0 0 6px var(--g-purple);
-				box-shadow: 0 0 10px rgba(155,48,255,0.1);
-			}
-			.dl-btn:disabled { opacity: 0.2; cursor: not-allowed; }
-
-			.infer-time {
-				font-size: 0.6rem;
-				color: var(--g-green);
-				padding: 2px 8px;
-				background: rgba(0,0,0,0.4);
-				border: 1px solid rgba(57,255,20,0.3);
-				display: none;
-				border-radius: 0px;
-				font-family: "Share Tech Mono", monospace;
-				text-shadow: 0 0 6px var(--g-green);
-			}
-			.infer-time.visible { display: inline-block; }
-
 			.error-toast {
-				position: fixed;
-				bottom: 24px;
-				right: 24px;
+				position: fixed; bottom: 24px; right: 24px;
 				background: rgba(0,0,0,0.92);
-				border: 1px solid var(--bh-danger);
-				border-left: 4px solid var(--bh-danger);
-				padding: 12px 18px;
-				color: var(--bh-danger);
-				font-size: 0.72rem;
-				font-weight: 700;
-				z-index: 1000;
+				border: 1px solid var(--bh-danger); border-left: 4px solid var(--bh-danger);
+				padding: 12px 18px; color: var(--bh-danger);
+				font-size: 0.7rem; font-weight: 700; z-index: 1000;
 				max-width: 360px;
-				border-radius: 0px;
-				box-shadow: 0 0 30px rgba(255,32,32,0.2), 0 0 60px rgba(255,32,32,0.08);
-				display: none;
-				font-family: "Share Tech Mono", monospace;
-				text-transform: uppercase;
-				letter-spacing: 1px;
+				box-shadow: 0 0 30px rgba(255,32,32,0.2);
+				display: none; font-family: "Share Tech Mono", monospace;
+				text-transform: uppercase; letter-spacing: 1px;
 				text-shadow: 0 0 8px var(--bh-danger);
 			}
 		</style>
 	</head>
 
 	<body>
+		<!-- Spray Intro Overlay -->
+		<div id="sprayIntroOverlay">
+			<div id="sprayCanGroup">
+				<div id="sprayShakeGroup">
+					<img src="/gr5.png" id="sprayMascot" alt="Spray Can Mascot" />
+					<div id="sprayMist"></div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Video Background -->
-		<video id="bg-video" autoplay loop muted playsinline preload="auto" src="/Kanye%20West%20-%20On%20Sight%20%5BVisualizer%5D.mp4"></video>
+		<video id="bg-video" class="intro-hidden" autoplay loop muted playsinline preload="auto" src="/Kanye%20West%20-%20On%20Sight%20%5BVisualizer%5D.mp4"></video>
 
 		<!-- Error Toast -->
 		<div class="error-toast" id="errorToast" role="alert"></div>
@@ -978,211 +888,240 @@
 <canvas id="pointCloudCanvas"></canvas>
 
 		<div class="page-wrap">
-			<main class="bh-page">
-				<div class="bh-main-card">
-				<!-- Scanline sweep animation overlay -->
-				<div class="scanline-fx" aria-hidden="true"></div>
-					<!-- SIDEBAR SERIES SELECTOR -->
-					<aside class="wbc-series-sidebar">
-						<header class="bh-header">
-							<a href="/" class="wbc-back-btn" id="backBtn">
-								<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-									<path d="M9 12L4 7l5-5"/>
-								</svg>
-								Back
-							</a>
-							<h2 class="bh-title" style="font-size: 1.25rem; margin-top: 4px;">
-								<span class="title-mono">Monolithic</span>
-								<span class="title-dape">:/</span>
-							</h2>
-							<p class="bh-subtitle">On-Device Inference</p>
-						</header>
+			<main class="bh-page intro-active">
 
-						<div class="series-list" style="display: flex; flex-direction: column; gap: 8px;">
-							<button class="series-btn active" data-series="monolithic" type="button">
-								<div class="series-color-bar" style="background-color: #7c3aed;"></div>
-								<div class="series-title-wrap">
-									<span class="series-name">Depth Estimation</span>
-									<span class="series-desc">Monolithic Stereo Model</span>
-								</div>
-							</button>
-						</div>
-					</aside>
-
-					<!-- WORKSPACE VIEWPORTS -->
-					<section class="wbc-workspace-canvas">
-						<div class="workspace-canvasses">
-							<!-- Input Viewport -->
-							<div class="viewport-container">
-								<span class="viewport-badge">Input Image</span>
-								<div class="preview-row single" id="previewRow" style="height: 100%;">
-									<div class="preview-box">
-										<span class="viewport-badge" id="previewLabelLeft" style="top:auto; bottom:8px; left:8px;">Left</span>
-										<canvas id="previewLeft"></canvas>
-										<div class="preview-empty" id="previewEmptyLeft">Awaiting input image</div>
-									</div>
-									<div class="preview-box" id="previewRightBox" style="display:none;">
-										<span class="viewport-badge" style="top:auto; bottom:8px; left:8px;">Right</span>
-										<canvas id="previewRight"></canvas>
-										<div class="preview-empty" id="previewEmptyRight">No right image</div>
-									</div>
-								</div>
-							</div>
-
-							<!-- Output Viewport -->
-							<div class="viewport-container">
-								<span class="viewport-badge">Depth Map Output</span>
-								<canvas id="outputCanvas" width="1024" height="320"></canvas>
-								<div class="preview-empty" id="outputEmpty">Awaiting inference</div>
-							</div>
-						</div>
-
-						<!-- Output Adjustments (Middle Bar) -->
-						<div class="workspace-controls">
-							<div class="colormap-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-								<div style="display:flex; gap:6px; align-items:center;">
-									<span class="slider-label" style="min-width:auto;">Colormap</span>
-									<button class="cm-btn cm-inferno active" id="cm-inferno" title="Inferno" aria-label="Inferno colormap"></button>
-									<button class="cm-btn cm-plasma" id="cm-plasma" title="Plasma" aria-label="Plasma colormap"></button>
-									<button class="cm-btn cm-viridis" id="cm-viridis" title="Viridis" aria-label="Viridis colormap"></button>
-									<button class="cm-btn cm-turbo" id="cm-turbo" title="Turbo" aria-label="Turbo colormap"></button>
-								</div>
-								<div class="mode-toggle" style="margin:0; padding:2px; height:auto; display:flex; gap:2px;">
-									<button class="mode-btn active" id="btnVizRegression" type="button" style="padding:4px 8px; font-size:0.68rem; min-width:auto;">Regression</button>
-									<button class="mode-btn" id="btnVizTopographic" type="button" style="padding:4px 8px; font-size:0.68rem; min-width:auto;">Topographic</button>
-								</div>
-							</div>
-
-							<div class="slider-row">
-								<span class="slider-label">Overlay</span>
-								<input type="range" id="blendSlider" min="0" max="100" value="60" />
-								<span style="font-family:monospace;font-size:0.72rem;color:var(--bh-muted);min-width:32px;" id="blendValue">60%</span>
-							</div>
-						</div>
-
-						<!-- Footer Metrics & Downloads -->
-						<footer class="workspace-footer">
-							<div class="depth-stats">
-								<div class="depth-stat">
-									<span class="depth-stat-label">Min Depth</span>
-									<span class="depth-stat-val accent" id="statMinDepth">—</span>
-								</div>
-								<div class="depth-stat">
-									<span class="depth-stat-label">Max Depth</span>
-									<span class="depth-stat-val" id="statMaxDepth">—</span>
-								</div>
-								<div class="depth-stat">
-									<span class="depth-stat-label">Mean Depth</span>
-									<span class="depth-stat-val" id="statMeanDepth">—</span>
-								</div>
-							</div>
-							
-							<div class="actions-row">
-								<span class="infer-time" id="inferTime"></span>
-								<button class="dl-btn" id="dlDepthBtn" disabled>
-									<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-										<path d="M7 2v8M4 7l3 3 3-3M2 12h10"/>
-									</svg>
-									PNG Depth Map
-								</button>
-								<button class="dl-btn" id="dlRawBtn" disabled>
-									<svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-										<path d="M7 2v8M4 7l3 3 3-3M2 12h10"/>
-									</svg>
-									Raw Float32
-								</button>
-							</div>
-						</footer>
-					</section>
-
-					<!-- WBC CONTROL SIDEBAR (RIGHT COLUMN) -->
-					<aside class="wbc-control-sidebar">
-						<header class="bh-header" style="margin-bottom: 4px;">
-							<h3 class="bh-title" style="font-size: 1.1rem; font-weight: 700; line-height: 1.2;">
-								<span class="title-mono">Model</span>
-								<span class="title-dape">Settings</span>
-							</h3>
-							<p class="bh-subtitle">Configure model inference parameters</p>
-						</header>
-
-						<!-- Model Load Status Card -->
-						<div class="model-status-card">
-							<div class="status-row">
-								<span class="status-label">Model Status</span>
-								<div class="model-status idle" id="modelStatus">
-									<span class="status-dot"></span>
-									<span id="modelStatusText">Not Loaded</span>
-								</div>
-							</div>
-							<div class="model-load-bar" id="loadBar">
-								<div class="load-bar-track">
-									<div class="load-bar-fill" id="loadBarFill"></div>
-								</div>
-								<div class="load-bar-text" id="loadBarText">Initializing...</div>
-							</div>
-						</div>
-
-						<!-- Mode Select Tabs -->
-						<div class="mode-toggle">
-							<button class="mode-btn active" id="btnSingle" type="button">Single</button>
-							<button class="mode-btn" id="btnStereo" type="button">Stereo</button>
-							<button class="mode-btn" id="btnCamera" type="button">Live Camera</button>
-						</div>
-
-						<!-- Camera input selections -->
-						<div id="cameraControls" style="display:none;">
-							<div style="display:flex; gap:8px; margin-bottom:8px;">
-								<select id="cameraSelect" style="flex:1; background:#ffffff; color:var(--bh-text); border:1px solid var(--bh-border); padding:6px 10px; font-family:inherit; font-size:0.75rem;" aria-label="Select camera">
-									<option value="">Detecting cameras...</option>
-								</select>
-								<button class="sample-btn" id="btnRefreshCameras" type="button" style="flex-grow:0; width:auto; padding:6px 10px; margin:0;" title="Refresh cameras">Refresh</button>
-							</div>
-							<button class="run-btn" id="btnCameraToggle" type="button" style="padding:8px 12px; font-size:0.75rem;" disabled>
-								Start Camera
-							</button>
-						</div>
-
-						<!-- Upload drag and drop targets -->
-						<div id="uploadLeft">
-							<div class="upload-zone" id="dropZoneLeft">
-								<input type="file" id="fileLeft" accept="image/*" aria-label="Upload left image" />
-								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-								</svg>
-								<div class="upload-label">
-									<strong>Upload image</strong> or drag here
-									<span style="display:block; font-size:0.65rem; opacity:0.6; margin-top:2px;">Resizes to 320x1024</span>
-								</div>
-							</div>
-						</div>
-
-						<div id="uploadRight" style="display:none;">
-							<div class="upload-zone" id="dropZoneRight">
-								<input type="file" id="fileRight" accept="image/*" aria-label="Upload right image" />
-								<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-								</svg>
-								<div class="upload-label">
-									<strong>Right image</strong> (optional stereo pair)
-								</div>
-							</div>
-						</div>
-
-						<!-- Hidden video tag for mediaDevices -->
-						<video id="cameraVideo" style="display:none;" autoplay playsinline></video>
-
-						<!-- Action triggers -->
-						<div class="sample-row">
-							<button class="sample-btn" id="sampleBtn" type="button">Sample Image</button>
-							<button class="sample-btn" id="clearBtn" type="button">✕ Clear</button>
-						</div>
-
-						<button class="run-btn" id="runBtn" type="button" disabled style="margin-top:auto;">
-							<span class="spinner"></span>
-							<span id="runBtnText">Run Inference →</span>
-						</button>
-					</aside>
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 1 · HEADER (top-left)            -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-pink shard-header rot-n2">
+					<!-- gr1: wild-style background decoration -->
+					<img src="/gr1.png" alt="" class="gr-header-bg" aria-hidden="true" />
+					<div class="scan-line" aria-hidden="true"></div>
+					<a href="/" class="wbc-back-btn" id="backBtn">
+						<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12L4 7l5-5"/></svg>
+						Back
+					</a>
+					<h1 class="bh-title">
+						<span class="title-mono">Monolithic</span>
+						<span class="title-dape">:/</span>
+					</h1>
+					<p class="bh-subtitle">On-Device Inference · d-Ape</p>
 				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 2 · SERIES (left, rows 2-3)       -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-cyan shard-series rot-p1">
+					<!-- gr3: orange graffiti tag corner decoration -->
+					<img src="/gr3.png" alt="" class="gr-tag-corner" aria-hidden="true" />
+					<div class="scan-line" aria-hidden="true"></div>
+					<span class="shard-series-label">// Tasks</span>
+					<div style="display: flex; flex-direction: column;">
+						<button class="series-btn active" data-series="monolithic" type="button">
+							<div class="series-color-bar" style="background-color: #7c3aed;"></div>
+							<div class="series-title-wrap">
+								<span class="series-name">Depth Estimation</span>
+								<span class="series-desc">Monolithic Stereo Model</span>
+							</div>
+						</button>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 3 · MODEL STATUS (left, row 4)    -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-green shard-model-stat rot-n1">
+					<div class="status-row">
+						<span class="status-label">Model Status</span>
+						<div class="model-status idle" id="modelStatus">
+							<span class="status-dot"></span>
+							<span id="modelStatusText">Not Loaded</span>
+						</div>
+					</div>
+					<div class="model-load-bar" id="loadBar">
+						<div class="load-bar-track">
+							<div class="load-bar-fill" id="loadBarFill"></div>
+						</div>
+						<div class="load-bar-text" id="loadBarText">Initializing...</div>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 4 · INPUT VIEWPORT (center top)  -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-cyan shard-viewport-in rot-0">
+					<div class="viewport-label-bar">
+						<span class="viewport-dot"></span>
+						<span class="viewport-label-text">Input Image</span>
+					</div>
+					<div class="viewport-inner">
+						<!-- gr4: B&W bubble letters watermark -->
+						<img src="/gr4.png" alt="" class="gr-bubble-bg" aria-hidden="true" />
+						<div class="scan-line" aria-hidden="true"></div>
+						<div class="preview-row single" id="previewRow" style="height: 100%; width: 100%;">
+							<div class="preview-box">
+								<span class="viewport-badge" id="previewLabelLeft" style="top:auto; bottom:8px; left:8px;">Left</span>
+								<canvas id="previewLeft"></canvas>
+								<div class="preview-empty" id="previewEmptyLeft">Awaiting input image</div>
+							</div>
+							<div class="preview-box" id="previewRightBox" style="display:none;">
+								<span class="viewport-badge" style="top:auto; bottom:8px; left:8px;">Right</span>
+								<canvas id="previewRight"></canvas>
+								<div class="preview-empty" id="previewEmptyRight">No right image</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 5 · OUTPUT VIEWPORT (center bot) -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-pink shard-viewport-out rot-p1">
+					<div class="viewport-label-bar" style="border-bottom-color: rgba(255,45,120,0.2);">
+						<span class="viewport-dot" style="background: var(--g-pink); box-shadow: 0 0 6px var(--g-pink);"></span>
+						<span class="viewport-label-text" style="color: var(--g-pink);">Depth Map Output</span>
+					</div>
+					<div class="viewport-inner" style="border-top-color: var(--g-pink);">
+						<!-- gr2: broken brick wall watermark -->
+						<img src="/gr2.png" alt="" class="gr-wall-bg" aria-hidden="true" />
+						<div class="scan-line" aria-hidden="true"></div>
+						<canvas id="outputCanvas" width="1024" height="320"></canvas>
+						<div class="preview-empty" id="outputEmpty">Awaiting inference</div>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 6 · CONTROLS BAR (center bottom) -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-yellow shard-controls-bar rot-n1">
+					<div class="colormap-row">
+						<div style="display:flex; gap:5px; align-items:center;">
+							<span class="slider-label" style="min-width:auto;">Map</span>
+							<button class="cm-btn cm-inferno active" id="cm-inferno" title="Inferno" aria-label="Inferno colormap"></button>
+							<button class="cm-btn cm-plasma" id="cm-plasma" title="Plasma" aria-label="Plasma colormap"></button>
+							<button class="cm-btn cm-viridis" id="cm-viridis" title="Viridis" aria-label="Viridis colormap"></button>
+							<button class="cm-btn cm-turbo" id="cm-turbo" title="Turbo" aria-label="Turbo colormap"></button>
+						</div>
+						<div class="mode-toggle" style="margin:0; padding:2px; display:flex; gap:2px;">
+							<button class="mode-btn active" id="btnVizRegression" type="button" style="padding:3px 8px; font-size:0.6rem;">Regression</button>
+							<button class="mode-btn" id="btnVizTopographic" type="button" style="padding:3px 8px; font-size:0.6rem;">Topographic</button>
+						</div>
+						<div class="slider-row" style="margin-top:0; flex:1; min-width: 160px;">
+							<span class="slider-label">Blend</span>
+							<input type="range" id="blendSlider" min="0" max="100" value="60" />
+							<span style="font-family:monospace;font-size:0.68rem;color:var(--g-muted);min-width:28px;" id="blendValue">60%</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 7 · MODE TOGGLE (right, row 1)    -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-orange shard-mode rot-p2">
+					<span class="shard-label">// Input Mode</span>
+					<div class="mode-toggle">
+						<button class="mode-btn active" id="btnSingle" type="button">Single</button>
+						<button class="mode-btn" id="btnStereo" type="button">Stereo</button>
+						<button class="mode-btn" id="btnCamera" type="button">Camera</button>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 8 · UPLOAD (right, row 2)         -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-purple shard-upload rot-n1">
+					<!-- gr5: spray can mascot -->
+					<img src="/gr5.png" alt="" class="gr-spray-can" aria-hidden="true" />
+					<span class="shard-label">// Upload Image</span>
+					<div id="uploadLeft">
+						<div class="upload-zone" id="dropZoneLeft">
+							<input type="file" id="fileLeft" accept="image/*" aria-label="Upload left image" />
+							<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
+							</svg>
+							<div class="upload-label">
+								<strong>Upload image</strong> or drag here
+								<span style="display:block; font-size:0.6rem; opacity:0.6; margin-top:2px;">Resizes to 320×1024</span>
+							</div>
+						</div>
+					</div>
+					<div id="uploadRight" style="display:none; margin-top:6px;">
+						<div class="upload-zone" id="dropZoneRight">
+							<input type="file" id="fileRight" accept="image/*" aria-label="Upload right image" />
+							<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
+							</svg>
+							<div class="upload-label"><strong>Right image</strong> (stereo pair)</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 9 · CAMERA (right, row 3)         -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-cyan shard-camera rot-p1" id="cameraShardWrapper">
+					<span class="shard-label">// Live Camera</span>
+					<div id="cameraControls" style="display:none;">
+						<div style="display:flex; gap:6px; margin-bottom:6px;">
+							<select id="cameraSelect" style="flex:1; background: rgba(0,0,0,0.5); color:var(--g-text); border:1px solid var(--g-border); padding:5px 8px; font-family:inherit; font-size:0.68rem;" aria-label="Select camera">
+								<option value="">Detecting cameras...</option>
+							</select>
+							<button class="sample-btn" id="btnRefreshCameras" type="button" style="flex-grow:0; width:auto; padding:5px 8px;" title="Refresh cameras">↺</button>
+						</div>
+						<button class="sample-btn" id="btnCameraToggle" type="button" style="width:100%; padding:6px 10px;" disabled>Start Camera</button>
+					</div>
+					<div id="cameraIdleMsg" style="font-size:0.58rem; color:var(--g-muted); font-family:'Share Tech Mono',monospace; text-align:center; padding: 6px 0;">Select 'Camera' mode to activate</div>
+					<video id="cameraVideo" style="display:none;" autoplay playsinline></video>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 10 · ACTIONS/STATS (right, row 4) -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-yellow shard-actions rot-n2">
+					<span class="shard-label">// Depth Stats</span>
+					<div class="depth-stats">
+						<div class="depth-stat">
+							<span class="depth-stat-label">Min</span>
+							<span class="depth-stat-val accent" id="statMinDepth">—</span>
+						</div>
+						<div class="depth-stat">
+							<span class="depth-stat-label">Max</span>
+							<span class="depth-stat-val" id="statMaxDepth">—</span>
+						</div>
+						<div class="depth-stat">
+							<span class="depth-stat-label">Mean</span>
+							<span class="depth-stat-val" id="statMeanDepth">—</span>
+						</div>
+					</div>
+					<div class="actions-row">
+						<span class="infer-time" id="inferTime"></span>
+						<button class="dl-btn" id="dlDepthBtn" disabled>
+							<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3M2 12h10"/></svg>
+							PNG
+						</button>
+						<button class="dl-btn" id="dlRawBtn" disabled>
+							<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3M2 12h10"/></svg>
+							Float32
+						</button>
+					</div>
+					<div class="sample-row" style="margin-top:6px;">
+						<button class="sample-btn" id="sampleBtn" type="button">Sample</button>
+						<button class="sample-btn" id="clearBtn" type="button">✕ Clear</button>
+					</div>
+				</div>
+
+				<!-- ═══════════════════════════════════════ -->
+				<!-- SHARD 11 · RUN BUTTON (right, row 5)    -->
+				<!-- ═══════════════════════════════════════ -->
+				<div class="shard shard-run rot-p1" style="background:transparent; border:none; box-shadow:none; clip-path:none; overflow:visible; position:relative;">
+					<!-- gr6: rock-on hand sign corner -->
+					<img src="/gr6.png" alt="" class="gr-rockon" aria-hidden="true" />
+					<button class="run-btn" id="runBtn" type="button" disabled>
+						<span class="spinner"></span>
+						<span id="runBtnText">Run Inference →</span>
+					</button>
+				</div>
+
 			</main>
 		</div>
 
@@ -2271,8 +2210,89 @@
 				document.head.appendChild(s);
 			}
 
-			// Small delay so the page paints first, then fetch ORT + model
-			setTimeout(() => injectORT(loadModel), 400);
+			// ── Intro Animation Sequence ───────────────────────
+			function runIntroSequence() {
+				const overlay = document.getElementById('sprayIntroOverlay');
+				const group = document.getElementById('sprayCanGroup');
+				const shakeGroup = document.getElementById('sprayShakeGroup');
+				const mist = document.getElementById('sprayMist');
+				const bgVideo = document.getElementById('bg-video');
+				const page = document.querySelector('.bh-page');
+
+				// Skip if already played this session
+				if (sessionStorage.getItem('dapeIntroPlayed')) {
+					overlay.style.display = 'none';
+					bgVideo.classList.remove('intro-hidden');
+					bgVideo.classList.add('intro-ready');
+					page.classList.remove('intro-active');
+					setTimeout(() => injectORT(loadModel), 100);
+					return;
+				}
+				sessionStorage.setItem('dapeIntroPlayed', 'true');
+
+				// Sequence
+				setTimeout(() => {
+					// Phase 1: Enter & spray background
+					group.classList.add('phase-1');
+					setTimeout(() => {
+						shakeGroup.classList.add('shaking');
+						mist.classList.add('burst');
+						overlay.classList.add('bg-revealed');
+						bgVideo.classList.remove('intro-hidden');
+						bgVideo.classList.add('intro-ready');
+					}, 500);
+				}, 100);
+
+				setTimeout(() => {
+					// Phase 2: Spray Shards
+					shakeGroup.classList.remove('shaking');
+					mist.classList.remove('burst');
+					group.classList.remove('phase-1');
+					group.classList.add('phase-2');
+					setTimeout(() => {
+						shakeGroup.classList.add('shaking');
+						mist.classList.add('burst');
+						// Now shards appear sequentially
+						page.classList.add('intro-shards-ready');
+					}, 400);
+				}, 1600);
+
+				setTimeout(() => {
+					// Phase 3: Spray Text & Exit
+					shakeGroup.classList.remove('shaking');
+					mist.classList.remove('burst');
+					group.classList.remove('phase-2');
+					group.classList.add('phase-3');
+					setTimeout(() => {
+						mist.style.background = 'radial-gradient(circle at center, rgba(255, 26, 108, 0.45) 0%, transparent 60%)';
+						shakeGroup.classList.add('shaking');
+						mist.classList.add('burst');
+						// Now text appears
+						page.classList.add('intro-text-ready');
+					}, 500);
+					
+					setTimeout(() => {
+						shakeGroup.classList.remove('shaking');
+						mist.classList.remove('burst');
+						group.classList.remove('phase-3');
+						group.classList.add('phase-exit');
+					}, 1300);
+				}, 2800);
+
+				setTimeout(() => {
+					// Cleanup
+					overlay.classList.add('intro-done');
+					page.classList.remove('intro-active');
+					setTimeout(() => {
+						overlay.style.display = 'none';
+						injectORT(loadModel);
+					}, 500);
+				}, 4600);
+			}
+
+			// Run intro instead of directly injecting ORT
+			// It will call injectORT at the end of the animation
+			runIntroSequence();
 
 		})();
 		</script>
