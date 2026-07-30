@@ -1,0 +1,56 @@
+---
+import { db } from "../../db/client";
+import { posts, comments } from "../../db/schema";
+import { eq, desc } from "drizzle-orm";
+import { InstagramPostModal } from "../../components/blog/InstagramPostModal";
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+let post: any = null;
+if (slug) {
+  const dbPosts = await db.select().from(posts).where(eq(posts.slug, slug)).limit(1);
+  if (dbPosts.length > 0) {
+    const rawPost = dbPosts[0];
+    const postComments = await db
+      .select()
+      .from(comments)
+      .where(eq(comments.postSlug, slug))
+      .orderBy(desc(comments.createdAt));
+
+    post = {
+      ...rawPost,
+      images: rawPost.images ? JSON.parse(rawPost.images) : [rawPost.coverImage],
+      tags: rawPost.tags ? JSON.parse(rawPost.tags) : [],
+      comments: postComments,
+    };
+  }
+}
+---
+
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post ? `${post.title} | sitedotmoss` : "Post Not Found"}</title>
+    <meta name="description" content={post ? post.caption.substring(0, 150) : "Blog Post"} />
+  </head>
+  <body class="bg-zinc-950 text-white min-h-screen">
+    {post ? (
+      <div>
+        <div class="fixed inset-0 bg-zinc-950 flex items-center justify-center p-4">
+          <InstagramPostModal post={post} onClose={() => { window.location.href = "/blog"; }} client:load />
+        </div>
+      </div>
+    ) : (
+      <div class="flex flex-col items-center justify-center h-screen space-y-4">
+        <h1 class="text-2xl font-bold text-red-400">Post Not Found</h1>
+        <a href="/blog" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm">
+          Return to Blog Feed
+        </a>
+      </div>
+    )}
+  </body>
+</html>

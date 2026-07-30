@@ -1,2301 +1,1044 @@
----
-// monolithic-detection.astro — Monolithic d-Ape · On-Device Inference · Blackhole Theme
+﻿---
+// monolithic-detection.astro -- TinyConvMemLM WASM On-Device Deployment (Claude UI Theme)
 ---
 
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Monolithic</title>
-		<meta
-			name="description"
-			content="Run Monolithic d-Ape, a self-supervised stereo depth estimation model, entirely in your browser using ONNX Runtime Web. No server required."
-		/>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Permanent+Marker&family=Rock+Salt&display=swap"
-			rel="stylesheet"
-		/>
-		<!-- ONNX Runtime Web is loaded dynamically inside the page script to guarantee availability -->
-		<style is:global>
-			/* ===========================
-			   RESET
-			=========================== */
-			*,
-			*::before,
-			*::after {
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-
-			/* ===========================
-			   STREET ART / Y2K GRAFFITI TOKENS
-			=========================== */
-			:root {
-				--g-pink:   #FF1A6C;   /* hot pink — spray paint */
-				--g-cyan:   #00D4FF;   /* electric cyan */
-				--g-orange: #FF5500;   /* can orange */
-				--g-yellow: #FFD600;   /* chrome yellow */
-				--g-purple: #8B20FF;   /* purple */
-				--g-green:  #2EFF00;   /* slime green */
-				--g-dark:   rgba(6, 5, 12, 0.85);
-				--g-panel:  rgba(6, 5, 14, 0.75);
-				--g-border: rgba(255,255,255,0.12);
-				--g-text:   #EDE8DC;
-				--g-muted:  rgba(190, 170, 210, 0.5);
-				/* ── graffiti font stack ── */
-				--font-display: "Permanent Marker", cursive;  /* title + CTA button */
-				--font-tag:     "Rock Salt", cursive;         /* labels, headers, tags */
-				--font-mono:    "Share Tech Mono", monospace; /* data / numbers only */
-				/* aliases for legacy selectors */
-				--bh-text:    var(--g-text);
-				--bh-muted:   var(--g-muted);
-				--bh-accent:  var(--g-pink);
-				--bh-accent2: var(--g-cyan);
-				--bh-accent3: var(--g-yellow);
-				--bh-danger:  #FF1010;
-				--bh-border:  var(--g-border);
-			}
-
-			/* ===========================
-			   BASE
-			=========================== */
-			html,
-			body {
-				width: 100%;
-				height: 100vh;
-				overflow: hidden;
-				background: #08060F;
-				font-family: "Space Mono", "Courier New", monospace;
-				color: var(--g-text);
-				line-height: 1.5;
-				margin: 0;
-				padding: 0;
-				position: relative;
-			}
-
-			/* ── VIDEO BACKGROUND ── */
-			#bg-video {
-				position: fixed;
-				inset: 0;
-				z-index: 0;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				object-position: center;
-				pointer-events: none;
-				opacity: 0.25;
-				transition: opacity 1s ease;
-			}
-			#bg-video.intro-hidden {
-				opacity: 0 !important;
-			}
-			#bg-video.intro-ready {
-				opacity: 0.25;
-			}
-
-			/* ===========================
-			   SPRAY INTRO OVERLAY
-			=========================== */
-			#sprayIntroOverlay {
-				position: fixed; inset: 0; z-index: 9999;
-				background: #08060F;
-				display: flex; align-items: center; justify-content: center;
-				pointer-events: all;
-				transition: opacity 0.5s ease, background 1s ease;
-			}
-			#sprayIntroOverlay.bg-revealed {
-				background: transparent;
-			}
-			#sprayIntroOverlay.intro-done {
-				opacity: 0; pointer-events: none;
-			}
-
-			#sprayCanGroup {
-				position: absolute;
-				top: 50%; left: 50%;
-				width: 0; height: 0;
-				opacity: 0;
-				transform: translate(-150vw, 50vh) rotate(-45deg);
-				z-index: 10000;
-				transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s;
-			}
-			
-			/* Positions for intro phases applied to the group */
-			#sprayCanGroup.phase-1 { opacity: 1; transform: translate(0vw, 0vh) rotate(15deg) scaleX(-1); }
-			#sprayCanGroup.phase-2 { transform: translate(-10vw, 10vh) rotate(-10deg) scaleX(-1); }
-			#sprayCanGroup.phase-3 { transform: translate(-30vw, -35vh) rotate(25deg) scaleX(-1); }
-			#sprayCanGroup.phase-exit { transform: translate(150vw, -100vh) rotate(90deg); opacity: 0; }
-
-			@keyframes spray-sweep {
-				0%   { transform: translate(-30px, -10px) rotate(-12deg); }
-				50%  { transform: translate(30px, 10px) rotate(8deg); }
-				100% { transform: translate(-30px, -10px) rotate(-12deg); }
-			}
-			#sprayShakeGroup {
-				position: absolute;
-				top: 0; left: 0;
-			}
-			#sprayShakeGroup.shaking {
-				animation: spray-sweep 0.4s ease-in-out infinite;
-			}
-
-			#sprayMascot {
-				position: absolute;
-				top: -100px; left: -100px;
-				width: 200px;
-				filter: drop-shadow(0 0 25px rgba(0, 212, 255, 0.8));
-			}
-
-			#sprayMist {
-				position: absolute;
-				/* Offset so it appears to come from the can nozzle (which is roughly top-right of image, but flipped it's top-left) */
-				top: -300px; left: -300px;
-				width: 600px; height: 600px;
-				background: radial-gradient(circle at center, rgba(0, 212, 255, 0.4) 0%, transparent 60%);
-				opacity: 0;
-				pointer-events: none;
-				transform: scale(0.1);
-				transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-out;
-				mix-blend-mode: screen;
-			}
-			#sprayMist.burst {
-				opacity: 1; transform: scale(1);
-			}
-
-			/* Setup transitions on base elements so they animate in and out cleanly */
-			.bh-page .shard {
-				transition: opacity 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-			}
-			.bh-page .bh-title,
-			.bh-page .bh-subtitle {
-				transition: opacity 0.8s, filter 0.8s, transform 0.8s;
-			}
-
-			/* Initial Hidden States for Page */
-			.bh-page.intro-active .shard {
-				opacity: 0; transform: scale(0.85) translateY(30px);
-			}
-			.bh-page.intro-active .bh-title,
-			.bh-page.intro-active .bh-subtitle {
-				opacity: 0; filter: blur(10px); transform: translateY(-10px);
-			}
-
-			/* Revealed States (Overrides the hidden state during intro) */
-			.bh-page.intro-active.intro-shards-ready .shard { opacity: 1; transform: none; }
-			.bh-page.intro-active.intro-text-ready .bh-title,
-			.bh-page.intro-active.intro-text-ready .bh-subtitle { opacity: 1; filter: blur(0); transform: none; }
-
-			/* Cascade delay for shards */
-			.bh-page.intro-shards-ready .shard:nth-child(1) { transition-delay: 0.1s; }
-			.bh-page.intro-shards-ready .shard:nth-child(2) { transition-delay: 0.15s; }
-			.bh-page.intro-shards-ready .shard:nth-child(3) { transition-delay: 0.25s; }
-			.bh-page.intro-shards-ready .shard:nth-child(4) { transition-delay: 0.3s; }
-			.bh-page.intro-shards-ready .shard:nth-child(5) { transition-delay: 0.35s; }
-			.bh-page.intro-shards-ready .shard:nth-child(6) { transition-delay: 0.2s; }
-			.bh-page.intro-shards-ready .shard:nth-child(7) { transition-delay: 0.1s; }
-			.bh-page.intro-shards-ready .shard:nth-child(8) { transition-delay: 0.4s; }
-			.bh-page.intro-shards-ready .shard:nth-child(9) { transition-delay: 0.45s; }
-			.bh-page.intro-shards-ready .shard:nth-child(10) { transition-delay: 0.5s; }
-			.bh-page.intro-shards-ready .shard-run { transition-delay: 0.6s; }
-			
-			/* Title delay */
-			.bh-page.intro-text-ready .bh-title { transition-delay: 0s; }
-			.bh-page.intro-text-ready .bh-subtitle { transition-delay: 0.2s; }
-
-			/* Dark vignette + tint on top of video */
-			body::before {
-				content: "";
-				position: fixed;
-				inset: 0;
-				z-index: 1;
-				background:
-					radial-gradient(ellipse at 20% 50%, rgba(155, 48, 255, 0.18) 0%, transparent 60%),
-					radial-gradient(ellipse at 80% 30%, rgba(0, 229, 255, 0.12) 0%, transparent 55%),
-					radial-gradient(ellipse at 60% 80%, rgba(255, 45, 120, 0.14) 0%, transparent 50%),
-					linear-gradient(180deg, rgba(8,6,18,0.35) 0%, rgba(8,6,18,0.20) 50%, rgba(8,6,18,0.50) 100%);
-				pointer-events: none;
-			}
-
-			#pointCloudCanvas {
-				display: none;
-			}
-
-			a {
-				color: var(--g-cyan);
-				text-decoration: none;
-			}
-			a:hover {
-				text-decoration: underline;
-				text-decoration-color: var(--g-pink);
-				text-underline-offset: 3px;
-			}
-
-			/* ===========================
-			   SHATTERED TILE LAYOUT
-			=========================== */
-			.page-wrap {
-				position: relative;
-				z-index: 2;
-				animation: bh-enter 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-				height: 100vh;
-				width: 100%;
-				overflow: hidden;
-			}
-			@keyframes bh-enter {
-				from { opacity: 0; transform: translateY(12px); }
-				to   { opacity: 1; transform: translateY(0); }
-			}
-			body.is-exiting .page-wrap {
-				animation: bh-exit 0.25s ease both;
-				pointer-events: none;
-			}
-			@keyframes bh-exit {
-				from { opacity: 1; transform: translateY(0); }
-				to   { opacity: 0; transform: translateY(12px); }
-			}
-
-			/* ===========================
-			   ANIMATIONS
-			=========================== */
-			@keyframes neon-border-pulse {
-				0%   { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 35px rgba(255,45,120,0.18), 0 0 70px rgba(0,229,255,0.06), inset 0 0 60px rgba(0,0,0,0.3); }
-				50%  { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 55px rgba(0,229,255,0.22), 0 0 90px rgba(255,45,120,0.08), inset 0 0 60px rgba(0,0,0,0.3); }
-				100% { box-shadow: 0 0 0 1px rgba(0,0,0,0.6), 0 0 35px rgba(255,45,120,0.18), 0 0 70px rgba(0,229,255,0.06), inset 0 0 60px rgba(0,0,0,0.3); }
-			}
-			@keyframes scanline-sweep {
-				0%   { transform: translateY(-100%); }
-				100% { transform: translateY(200%); }
-			}
-			@keyframes glitch-shift {
-				0%, 90%, 100% { clip-path: none; transform: none; }
-				91% { clip-path: inset(40% 0 30% 0); transform: translate(-3px, 0); }
-				93% { clip-path: inset(10% 0 60% 0); transform: translate(3px, 0); }
-				95% { clip-path: inset(70% 0 5% 0);  transform: translate(-2px, 0); color: var(--g-cyan); }
-				97% { clip-path: inset(25% 0 45% 0); transform: translate(2px, 0); }
-			}
-			@keyframes tag-flicker {
-				0%, 94%, 100% { opacity: 1; }
-				95% { opacity: 0.2; } 96% { opacity: 1; } 97% { opacity: 0.5; } 98% { opacity: 1; }
-			}
-			@keyframes btn-idle-glow {
-				0%, 100% { box-shadow: 0 0 20px rgba(255,45,120,0.35), 0 0 50px rgba(255,45,120,0.12), inset 0 1px 0 rgba(255,180,210,0.4); }
-				50%       { box-shadow: 0 0 30px rgba(255,45,120,0.55), 0 0 70px rgba(255,45,120,0.20), inset 0 1px 0 rgba(255,180,210,0.4); }
-			}
-			@keyframes badge-blink {
-				0%, 85%, 100% { opacity: 1; } 90% { opacity: 0.6; } 92% { opacity: 1; }
-			}
-			@keyframes viewport-glow {
-				0%, 100% { border-top-color: var(--g-cyan); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 8px rgba(0,229,255,0.08); }
-				50%       { border-top-color: var(--g-pink); box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 20px rgba(255,45,120,0.15); }
-			}
-			@keyframes pulse-status {
-				0%, 100% { opacity: 0.3; transform: scale(0.8); }
-				50%       { opacity: 1;   transform: scale(1.2); }
-			}
-			@keyframes spin { to { transform: rotate(360deg); } }
-			@keyframes shard-enter-1 { from { opacity:0; transform: rotate(-1.5deg) translate(-8px,-6px); } to { opacity:1; transform: rotate(-1.5deg) translate(0,0); } }
-			@keyframes shard-enter-2 { from { opacity:0; transform: rotate(0.8deg) translate(6px,-4px); } to { opacity:1; transform: rotate(0.8deg) translate(0,0); } }
-			@keyframes shard-enter-3 { from { opacity:0; transform: rotate(-0.5deg) translate(-4px,6px); } to { opacity:1; transform: rotate(-0.5deg) translate(0,0); } }
-			@keyframes shard-enter-4 { from { opacity:0; transform: rotate(1.2deg) translate(8px,4px); } to { opacity:1; transform: rotate(1.2deg) translate(0,0); } }
-			@keyframes shard-enter-5 { from { opacity:0; transform: rotate(-0.8deg) translate(0px,-8px); } to { opacity:1; transform: rotate(-0.8deg) translate(0,0); } }
-			@keyframes shimmer {
-				0%   { background-position: -200% center; }
-				100% { background-position: 200% center; }
-			}
-
-			/* ===========================
-			   SHATTERED TILE GRID
-			=========================== */
-			.bh-page {
-				position: relative;
-				z-index: 1;
-				max-width: 1340px;
-				margin: 0 auto;
-				height: 100vh;
-				padding: 14px 16px;
-				box-sizing: border-box;
-				display: grid;
-				grid-template-columns: 210px 1fr 280px;
-				grid-template-rows: auto 1fr 1fr auto auto;
-				gap: 7px;
-				align-content: start;
-			}
-
-			/* ===========================
-			   BASE SHARD (shared by all tiles)
-			=========================== */
-			.shard {
-				/* Slightly more opaque — paint on concrete feel */
-				background: rgba(6, 5, 12, 0.82);
-				backdrop-filter: blur(2px) saturate(1.1);
-				-webkit-backdrop-filter: blur(2px) saturate(1.1);
-				position: relative;
-				overflow: hidden;
-				box-sizing: border-box;
-				/* Subtle grain texture via background noise */
-				background-image:
-					url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-			}
-			/* Paint drip pseudo-element (bottom edge) */
-			.shard::before {
-				content: '';
-				position: absolute;
-				bottom: -4px; left: 0; right: 0;
-				height: 8px;
-				pointer-events: none;
-				z-index: 25;
-				/* paint drip shape via radial blobs */
-				background: radial-gradient(ellipse 8px 14px at 15% 0%, currentColor 50%, transparent 100%),
-					radial-gradient(ellipse 5px 10px at 35% 0%, currentColor 50%, transparent 100%),
-					radial-gradient(ellipse 7px 18px at 62% 0%, currentColor 50%, transparent 100%),
-					radial-gradient(ellipse 4px 8px at 80% 0%, currentColor 50%, transparent 100%),
-					radial-gradient(ellipse 6px 12px at 92% 0%, currentColor 50%, transparent 100%);
-				opacity: 0;
-			}
-			/* Scanline removed — too sci-fi. Keep as hidden */
-			.shard .scan-line { display: none; }
-
-			/* === SHARD VARIANTS — paint stroke borders === */
-			/* Border thickness increased for spray-paint 'tape line' feel */
-			.shard-pink {
-				border: 2px solid rgba(255,26,108,0.35);
-				border-top: 4px solid var(--g-pink);
-				clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-				box-shadow: 0 0 12px rgba(255,26,108,0.18), inset 0 0 20px rgba(255,26,108,0.04);
-				color: var(--g-pink); /* for ::before drip color */
-			}
-			.shard-cyan {
-				border: 2px solid rgba(0,212,255,0.3);
-				border-left: 4px solid var(--g-cyan);
-				clip-path: polygon(0 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%);
-				box-shadow: 0 0 12px rgba(0,212,255,0.12);
-				color: var(--g-cyan);
-			}
-			.shard-yellow {
-				border: 2px solid rgba(255,214,0,0.3);
-				border-bottom: 4px solid var(--g-yellow);
-				clip-path: polygon(8px 0, 100% 0, 100% 100%, 0 100%, 0 8px);
-				box-shadow: 0 0 10px rgba(255,214,0,0.1);
-				color: var(--g-yellow);
-			}
-			.shard-purple {
-				border: 2px solid rgba(139,32,255,0.3);
-				border-right: 4px solid var(--g-purple);
-				clip-path: polygon(0 0, 100% 0, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-				box-shadow: 0 0 10px rgba(139,32,255,0.12);
-				color: var(--g-purple);
-			}
-			.shard-green {
-				border: 2px solid rgba(46,255,0,0.25);
-				border-top: 4px solid var(--g-green);
-				clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-				box-shadow: 0 0 10px rgba(46,255,0,0.08);
-				color: var(--g-green);
-			}
-			.shard-orange {
-				border: 2px solid rgba(255,85,0,0.3);
-				border-top: 4px solid var(--g-orange);
-				clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
-				box-shadow: 0 0 12px rgba(255,85,0,0.14);
-				color: var(--g-orange);
-			}
-			/* Drip effect — show on pink/cyan shards only */
-			.shard-pink::before, .shard-cyan::before {
-				opacity: 0.65;
-			}
-
-			/* === SHARD ROTATION CLASSES (subtle, broken feel) === */
-			.rot-n2  { transform: rotate(-1.8deg); }
-			.rot-n1  { transform: rotate(-0.9deg); }
-			.rot-0   { transform: rotate(0deg); }
-			.rot-p1  { transform: rotate(0.7deg); }
-			.rot-p2  { transform: rotate(1.4deg); }
-			.rot-n2:hover, .rot-n1:hover, .rot-0:hover, .rot-p1:hover, .rot-p2:hover {
-				transform: rotate(0deg) scale(1.008);
-				transition: transform 0.25s ease;
-			}
-
-			/* === GRID PLACEMENT === */
-			.shard-header      { grid-column: 1; grid-row: 1; padding: 14px 16px 12px; animation: shard-enter-1 0.5s 0.05s both; }
-			.shard-series      { grid-column: 1; grid-row: 2 / 4; padding: 12px 14px; animation: shard-enter-1 0.5s 0.1s both; overflow-y: auto; }
-			.shard-model-stat  { grid-column: 1; grid-row: 4; padding: 10px 14px; animation: shard-enter-1 0.5s 0.15s both; }
-			.shard-viewport-in { grid-column: 2; grid-row: 1 / 3; animation: shard-enter-2 0.5s 0.08s both; display:flex; flex-direction:column; }
-			.shard-viewport-out{ grid-column: 2; grid-row: 3 / 5; animation: shard-enter-3 0.5s 0.12s both; display:flex; flex-direction:column; }
-			.shard-controls-bar{ grid-column: 2; grid-row: 5; padding: 8px 14px; animation: shard-enter-5 0.5s 0.18s both; }
-			.shard-mode        { grid-column: 3; grid-row: 1; padding: 10px 14px; animation: shard-enter-4 0.5s 0.06s both; }
-			.shard-upload      { grid-column: 3; grid-row: 2; padding: 10px 14px; animation: shard-enter-4 0.5s 0.1s both; }
-			.shard-camera      { grid-column: 3; grid-row: 3; padding: 10px 14px; animation: shard-enter-4 0.5s 0.14s both; }
-			.shard-actions     { grid-column: 3; grid-row: 4; padding: 8px 14px; animation: shard-enter-4 0.5s 0.18s both; }
-			.shard-run         { grid-column: 3; grid-row: 5; padding: 0; animation: shard-enter-4 0.5s 0.22s both; }
-
-			/* scroll for series shard */
-			.shard-series::-webkit-scrollbar { width: 2px; }
-			.shard-series::-webkit-scrollbar-track { background: transparent; }
-			.shard-series::-webkit-scrollbar-thumb { background: var(--g-pink); box-shadow: 0 0 4px var(--g-pink); }
-
-			/* ===========================
-			   HEADER INSIDE SHARD
-			=========================== */
-			.wbc-back-btn {
-				width: fit-content;
-				background: transparent;
-				border: none;
-				color: var(--g-muted);
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				cursor: pointer;
-				font-size: 0.6rem;
-				text-decoration: none;
-				transition: all 0.15s;
-				padding: 0;
-				margin-bottom: 6px;
-				font-family: "Share Tech Mono", monospace;
-				text-transform: uppercase;
-				letter-spacing: 2px;
-			}
-			.wbc-back-btn:hover { color: var(--g-cyan); text-shadow: 0 0 8px var(--g-cyan); }
-			/* === TITLE & SUBTITLE === */
-			.bh-title {
-				/* Permanent Marker — bold Sharpie throw-up */
-				font-size: 1.9rem;
-				font-weight: 400;
-				line-height: 1.05;
-				letter-spacing: 1px;
-				margin: 0;
-				font-family: var(--font-display);
-				text-transform: none;
-			}
-			.title-mono { color: var(--g-text); text-shadow: 3px 3px 0px rgba(0,0,0,0.9), 0 0 16px rgba(255,255,255,0.05); }
-			.title-dape {
-				color: var(--g-pink);
-				text-shadow:
-					3px 3px 0px rgba(0,0,0,0.7),
-					0 0 22px rgba(255,26,108,0.75),
-					0 0 50px rgba(255,26,108,0.3);
-				animation: glitch-shift 7s ease-in-out infinite;
-				display: inline-block;
-			}
-			.bh-subtitle {
-				/* Rock Salt — quick street tag underneath */
-				font-size: 0.52rem;
-				color: var(--g-cyan);
-				margin: 6px 0 0;
-				font-family: var(--font-tag);
-				text-transform: none;
-				letter-spacing: 0.5px;
-				line-height: 1.6;
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 12px rgba(0,212,255,0.45);
-			}
-			.shard-header::before { content: none; }
-
-			/* ===========================
-			   SERIES LIST (left shard)
-			=========================== */
-			.shard-series-label {
-				/* Rock Salt — quick marker tag */
-				font-size: 0.6rem;
-				color: var(--g-pink);
-				font-family: var(--font-tag);
-				text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 14px rgba(255,26,108,0.6);
-				margin-bottom: 10px;
-				display: block;
-				transform: rotate(-1.2deg);
-				text-transform: none;
-			}
-			.series-btn {
-				background: rgba(255,255,255,0.02);
-				/* rough marker border */
-				border: 2px solid rgba(255,255,255,0.08);
-				border-left: 4px solid transparent;
-				padding: 9px 11px;
-				display: flex;
-				align-items: center;
-				gap: 9px;
-				cursor: pointer;
-				transition: all 0.15s ease;
-				text-align: left;
-				width: 100%;
-				margin-bottom: 5px;
-			}
-			.series-btn:hover:not(.locked) { background: rgba(255,26,108,0.08); border-left-color: var(--g-pink); }
-			.series-btn.active {
-				background: rgba(255,26,108,0.1);
-				border-left-color: var(--g-pink);
-				box-shadow: inset 0 0 16px rgba(255,26,108,0.06), 3px 0 0 var(--g-pink);
-			}
-			.series-btn.active .series-name { color: var(--g-pink); text-shadow: 2px 2px 0 rgba(0,0,0,0.7), 0 0 14px rgba(255,26,108,0.6); }
-			.series-btn.active .series-desc { color: var(--g-cyan); }
-			.series-color-bar { display: none; }
-			.series-title-wrap { display: flex; flex-direction: column; gap: 2px; }
-			/* Series name — Rock Salt (readable marker tag) */
-			.series-name { font-size: 0.6rem; font-weight: 400; color: var(--g-text); font-family: var(--font-tag); letter-spacing: 0; text-transform: none; line-height: 1.5; }
-			.series-desc { font-size: 0.56rem; color: var(--g-muted); font-family: var(--font-mono); letter-spacing: 0.5px; margin-top: 2px; }
-
-			/* ===========================
-			   MODEL STATUS INSIDE SHARD
-			=========================== */
-			.status-row { display: flex; align-items: center; justify-content: space-between; }
-			.status-label {
-				/* Rock Salt — scrawled marker label */
-				font-size: 0.5rem;
-				color: var(--g-cyan); font-weight: 400;
-				font-family: var(--font-tag);
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 10px rgba(0,212,255,0.45);
-				text-transform: none;
-				letter-spacing: 0.5px;
-			}
-			.model-status {
-				display: inline-flex; align-items: center; gap: 6px;
-				font-family: "Share Tech Mono", monospace;
-				font-size: 0.58rem; font-weight: 700;
-				text-transform: uppercase; letter-spacing: 1.5px;
-				color: var(--g-muted);
-			}
-			.model-status.ready  { color: var(--g-green);  text-shadow: 0 0 8px var(--g-green); }
-			.model-status.loading{ color: var(--g-yellow); text-shadow: 0 0 8px var(--g-yellow); }
-			.model-status.error  { color: var(--bh-danger); text-shadow: 0 0 8px var(--bh-danger); }
-			.status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g-muted); flex-shrink: 0; }
-			.model-status.ready .status-dot  { background: var(--g-green);  box-shadow: 0 0 8px var(--g-green), 0 0 16px var(--g-green); }
-			.model-status.loading .status-dot{ background: var(--g-yellow); animation: pulse-status 0.9s infinite ease-in-out; box-shadow: 0 0 8px var(--g-yellow); }
-			.model-status.error .status-dot  { background: var(--bh-danger); }
-			.model-load-bar { display: none; flex-direction: column; gap: 4px; margin-top: 8px; }
-			.model-load-bar.visible { display: flex; }
-			.load-bar-track { height: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
-			.load-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--g-pink), var(--g-cyan)); transition: width 0.3s; box-shadow: 0 0 8px var(--g-pink); }
-			.load-bar-text { font-size: 0.56rem; color: var(--g-muted); text-align: right; font-family: "Share Tech Mono", monospace; }
-
-			/* ===========================
-			   VIEWPORT SHARDS (center)
-			=========================== */
-			.viewport-inner {
-				flex: 1;
-				min-height: 0;
-				position: relative;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				overflow: hidden;
-				background: rgba(0,0,0,0.4);
-				animation: viewport-glow 6s ease-in-out infinite;
-			}
-			.viewport-label-bar {
-				padding: 5px 12px;
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				border-bottom: 2px solid rgba(255,255,255,0.08);
-				background: rgba(0,0,0,0.4);
-			}
-			.viewport-label-text {
-				/* Rock Salt — stencil-style tagging */
-				font-size: 0.55rem;
-				font-family: var(--font-tag);
-				text-transform: none;
-				letter-spacing: 0.5px;
-				color: var(--g-cyan);
-				text-shadow: 2px 2px 0 rgba(0,0,0,0.9), 0 0 10px rgba(0,212,255,0.5);
-			}
-			.viewport-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--g-cyan); box-shadow: 0 0 8px var(--g-cyan); animation: badge-blink 5s ease-in-out infinite; }
-			.viewport-inner canvas { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
-			.preview-empty {
-				position: absolute; inset: 0;
-				display: flex; align-items: center; justify-content: center;
-				/* Permanent Marker — spray-can stencil message */
-				color: rgba(0,212,255,0.15);
-				font-size: 1rem; background: transparent;
-				font-family: var(--font-display);
-				transform: rotate(-2deg);
-				letter-spacing: 1px;
-			}
-			.viewport-badge {
-				position: absolute; top: 8px; left: 8px; z-index: 2;
-				/* Rock Salt — tag badge */
-				font-size: 0.5rem; font-weight: 400;
-				background: rgba(0,0,0,0.9);
-				color: var(--g-cyan);
-				padding: 3px 10px 4px;
-				border: 2px solid var(--g-cyan);
-				font-family: var(--font-tag);
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 10px var(--g-cyan);
-				box-shadow: 0 0 12px rgba(0,212,255,0.2);
-				animation: badge-blink 6s ease-in-out infinite;
-			}
-			.preview-row { display: flex; gap: 8px; width: 100%; height: 100%; }
-			.preview-row.single .preview-box:last-child { display: none; }
-			.preview-box { flex: 1; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; min-width: 0; }
-
-			/* ===========================
-			   MODE TOGGLE (right shard)
-			=========================== */
-			.shard-label {
-				/* Rock Salt — section header tag */
-				font-size: 0.55rem; font-weight: 400;
-				color: var(--g-muted); font-family: var(--font-tag);
-				display: block; margin-bottom: 10px;
-				text-transform: none;
-				transform: rotate(-0.8deg);
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.8);
-				letter-spacing: 0.5px;
-			}
-			.mode-toggle {
-				background: rgba(0,0,0,0.4);
-				border: 2px solid rgba(255,255,255,0.08);
-				padding: 2px;
-				display: flex;
-				gap: 2px;
-			}
-			.mode-btn {
-				flex: 1; background: transparent; border: none;
-				color: var(--g-muted);
-				/* Rock Salt for tab buttons */
-				font-family: var(--font-tag);
-				font-size: 0.5rem; font-weight: 400;
-				padding: 6px 4px; cursor: pointer;
-				transition: all 0.15s ease; text-align: center;
-				text-transform: none;
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-				letter-spacing: 0.3px;
-			}
-			.mode-btn:hover { color: var(--g-orange); background: rgba(255,85,0,0.08); text-shadow: 1px 1px 0 rgba(0,0,0,0.6), 0 0 14px var(--g-orange); }
-			.mode-btn.active { background: var(--g-orange); color: #000; font-weight: 400; box-shadow: 0 0 20px rgba(255,85,0,0.5), inset 0 -3px 0 rgba(0,0,0,0.35); text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
-
-			/* ===========================
-			   UPLOAD ZONE
-			=========================== */
-			.upload-zone {
-				border: 1px dashed rgba(255,255,255,0.13);
-				padding: 14px 10px;
-				text-align: center;
-				background: rgba(255,255,255,0.02);
-				cursor: pointer;
-				position: relative;
-				transition: all 0.15s ease;
-			}
-			.upload-zone:hover { border-color: var(--g-pink); border-style: solid; background: rgba(255,45,120,0.04); box-shadow: inset 0 0 16px rgba(255,45,120,0.03), 0 0 8px rgba(255,45,120,0.08); }
-			.upload-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-			.upload-icon { width: 18px; height: 18px; stroke: var(--g-pink); margin: 0 auto 6px; display: block; filter: drop-shadow(0 0 6px var(--g-pink)); }
-			.upload-label { font-size: 0.55rem; color: var(--g-muted); line-height: 1.8; font-family: var(--font-tag); text-transform: none; letter-spacing: 0.3px; }
-
-			/* ===========================
-			   CONTROLS BAR (bottom center shard)
-			=========================== */
-			.colormap-row { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; }
-			.cm-btn { width: 30px; height: 18px; border-radius: 0px; border: 1px solid rgba(255,255,255,0.12); cursor: pointer; transition: all 0.15s; }
-			.cm-btn.active { border-color: var(--g-yellow); box-shadow: 0 0 8px rgba(255,214,0,0.5); transform: scale(1.1); }
-			.cm-inferno { background: linear-gradient(90deg, #000004, #1b0c41, #4a0c4e, #781c6d, #a52c60, #cf4446, #ed6925, #fb9b06, #f7d03c, #fcffa4); }
-			.cm-plasma  { background: linear-gradient(90deg, #0d0887, #46039f, #7201a8, #9c179e, #bd3786, #d8576b, #ed7953, #fb9f3a, #fdcb26, #f0f921); }
-			.cm-viridis { background: linear-gradient(90deg, #440154, #3b528b, #21918c, #5ec962, #fde725); }
-			.cm-turbo   { background: linear-gradient(90deg, #30123b, #4145ab, #4675ed, #39a7f5, #1dd1d4, #37f6ac, #95f95a, #e9f53a, #febb2b, #f56918, #c52a18, #7a0403); }
-			.slider-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
-			.slider-label {
-				/* Rock Salt — scrawled label */
-				font-size: 0.5rem; font-weight: 400;
-				color: var(--g-yellow); white-space: nowrap; min-width: 38px;
-				font-family: var(--font-tag);
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.9), 0 0 8px rgba(255,214,0,0.5);
-				letter-spacing: 0.3px;
-			}
-			input[type=range] { flex: 1; -webkit-appearance: none; height: 3px; background: linear-gradient(90deg, rgba(255,214,0,0.4), rgba(255,26,108,0.4)); outline: none; }
-			input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 2px; background: var(--g-yellow); cursor: pointer; box-shadow: 0 0 10px rgba(255,214,0,0.7), 2px 2px 0 rgba(0,0,0,0.5); border: none; }
-
-			/* ===========================
-			   STATS / ACTIONS (right shard)
-			=========================== */
-			.depth-stats { display: flex; gap: 12px; flex-wrap: wrap; }
-			.depth-stat { display: flex; flex-direction: column; gap: 2px; }
-			.depth-stat-label { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 2px; color: var(--g-muted); font-weight: 700; font-family: "Share Tech Mono", monospace; }
-			.depth-stat-val { font-family: "Share Tech Mono", monospace; font-size: 0.82rem; font-weight: 700; color: var(--g-text); }
-			.depth-stat-val.accent { color: var(--g-cyan); text-shadow: 0 0 8px rgba(0,229,255,0.5); }
-			.actions-row { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-			.dl-btn {
-				display: inline-flex; align-items: center; gap: 5px;
-				padding: 5px 10px;
-				background: rgba(255,255,255,0.03);
-				border: 1px solid rgba(255,255,255,0.1);
-				color: var(--g-muted); font-size: 0.58rem; font-weight: 700;
-				cursor: pointer; font-family: "Share Tech Mono", monospace;
-				transition: all 0.15s ease; text-transform: uppercase; letter-spacing: 1px;
-			}
-			.dl-btn:hover { border-color: var(--g-purple); color: var(--g-purple); background: rgba(155,48,255,0.06); text-shadow: 0 0 6px var(--g-purple); }
-			.dl-btn:disabled { opacity: 0.2; cursor: not-allowed; }
-			.infer-time { font-size: 0.58rem; color: var(--g-green); padding: 2px 8px; background: rgba(0,0,0,0.4); border: 1px solid rgba(57,255,20,0.3); display: none; font-family: "Share Tech Mono", monospace; text-shadow: 0 0 6px var(--g-green); }
-			.infer-time.visible { display: inline-block; }
-
-			/* ===========================
-			   BUTTONS
-			=========================== */
-			.run-btn {
-				width: 100%; height: 100%;
-				padding: 14px 16px;
-				/* Bold spray paint style — flat + heavy drop shadow */
-				background: var(--g-pink);
-				border: none;
-				border-top: 4px solid #FF80B0;
-				border-bottom: 4px solid #A00050;
-				color: #fff;
-				/* Permanent Marker — bold Sharpie CTA */
-				font-family: var(--font-display);
-				font-size: 1.6rem;
-				letter-spacing: 2px;
-				text-transform: none;
-				cursor: pointer;
-				display: flex; align-items: center; justify-content: center; gap: 8px;
-				transition: all 0.15s ease;
-				text-shadow: 3px 3px 0 rgba(0,0,0,0.6), 0 0 24px rgba(255,26,108,0.45);
-				box-shadow: 0 6px 0 #8A0040, 0 0 30px rgba(255,26,108,0.4), inset 0 1px 0 rgba(255,180,210,0.3);
-				animation: btn-idle-glow 2.5s ease-in-out infinite;
-			}
-			.run-btn:not(:disabled):hover { animation: none; }
-			.run-btn:hover { background: linear-gradient(135deg, #FF5090 0%, var(--g-pink) 100%); transform: translateY(-1px); box-shadow: 0 0 35px rgba(255,45,120,0.6), 0 0 80px rgba(255,45,120,0.25); }
-			.run-btn:active { transform: translateY(1px); box-shadow: 0 0 10px rgba(255,45,120,0.3); }
-			.run-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; background: rgba(255,45,120,0.25); animation: none; }
-			.run-btn .spinner { width: 13px; height: 13px; border: 2px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
-			.run-btn.running .spinner { display: block; }
-			.run-btn.running .run-arrow { display: none; }
-			.sample-row { display: flex; gap: 5px; }
-			.sample-btn {
-				flex: 1; padding: 6px 8px;
-				background: rgba(255,255,255,0.03);
-				border: 2px solid rgba(255,255,255,0.1);
-				color: var(--g-muted);
-				/* Rock Salt for secondary buttons */
-				font-size: 0.5rem; font-weight: 400;
-				cursor: pointer; font-family: var(--font-tag);
-				transition: all 0.15s ease; text-align: center;
-				text-transform: none;
-				text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-				letter-spacing: 0.3px;
-			}
-			.sample-btn:hover { border-color: var(--g-cyan); color: var(--g-cyan); background: rgba(0,212,255,0.06); text-shadow: 1px 1px 0 rgba(0,0,0,0.5), 0 0 10px var(--g-cyan); }
-
-			/* ===========================
-			   GRAFFITI IMAGE DECORATIONS
-			=========================== */
-			/* gr1 — wild-style BG on header shard */
-			.gr-header-bg {
-				position: absolute;
-				bottom: -10px; right: -10px;
-				width: 110px;
-				opacity: 0.12;
-				pointer-events: none;
-				z-index: 0;
-				transform: rotate(8deg) scaleX(-1);
-				filter: saturate(1.5);
-				mix-blend-mode: screen;
-			}
-			/* gr2 — broken wall watermark in output viewport */
-			.gr-wall-bg {
-				position: absolute;
-				bottom: 0; left: 50%;
-				transform: translateX(-50%);
-				height: 90%;
-				width: auto;
-				opacity: 0.07;
-				pointer-events: none;
-				z-index: 0;
-				mix-blend-mode: screen;
-				filter: saturate(0.5);
-			}
-			/* gr3 — orange graffiti tag corner on series shard */
-			.gr-tag-corner {
-				position: absolute;
-				bottom: -8px; right: -12px;
-				width: 90px;
-				opacity: 0.18;
-				pointer-events: none;
-				z-index: 0;
-				transform: rotate(-6deg);
-				filter: saturate(1.2);
-				mix-blend-mode: screen;
-			}
-			/* gr4 — B&W bubble letters watermark in input viewport */
-			.gr-bubble-bg {
-				position: absolute;
-				top: 50%; left: 50%;
-				transform: translate(-50%, -50%) rotate(-4deg);
-				width: 70%;
-				opacity: 0.045;
-				pointer-events: none;
-				z-index: 0;
-				filter: invert(1);
-				mix-blend-mode: screen;
-			}
-			/* gr5 — spray can mascot in upload shard */
-			.gr-spray-can {
-				position: absolute;
-				bottom: -6px; right: 4px;
-				width: 56px;
-				opacity: 0.55;
-				pointer-events: none;
-				z-index: 1;
-				transform: rotate(10deg) scaleX(-1);
-				filter: drop-shadow(0 0 6px rgba(139,32,255,0.5));
-				transition: opacity 0.3s, transform 0.3s;
-			}
-			.shard-upload:hover .gr-spray-can {
-				opacity: 0.85;
-				transform: rotate(5deg) scaleX(-1) scale(1.08);
-			}
-			/* gr6 — rock-on hand sign on run shard corner */
-			.gr-rockon {
-				position: absolute;
-				bottom: 0; left: -12px;
-				height: 80%;
-				width: auto;
-				opacity: 0.55;
-				pointer-events: none;
-				z-index: 1;
-				transform: rotate(-4deg);
-				filter: drop-shadow(0 0 8px rgba(255,26,108,0.4));
-			}
-			.error-toast {
-				position: fixed; bottom: 24px; right: 24px;
-				background: rgba(0,0,0,0.92);
-				border: 1px solid var(--bh-danger); border-left: 4px solid var(--bh-danger);
-				padding: 12px 18px; color: var(--bh-danger);
-				font-size: 0.7rem; font-weight: 700; z-index: 1000;
-				max-width: 360px;
-				box-shadow: 0 0 30px rgba(255,32,32,0.2);
-				display: none; font-family: "Share Tech Mono", monospace;
-				text-transform: uppercase; letter-spacing: 1px;
-				text-shadow: 0 0 8px var(--bh-danger);
-			}
-		</style>
-	</head>
-
-	<body>
-		<!-- Spray Intro Overlay -->
-		<div id="sprayIntroOverlay">
-			<div id="sprayCanGroup">
-				<div id="sprayShakeGroup">
-					<img src="/gr5.png" id="sprayMascot" alt="Spray Can Mascot" />
-					<div id="sprayMist"></div>
-				</div>
-			</div>
-		</div>
-
-		<!-- Video Background -->
-		<video id="bg-video" class="intro-hidden" autoplay loop muted playsinline preload="auto" src="/Kanye%20West%20-%20On%20Sight%20%5BVisualizer%5D.mp4"></video>
-
-		<!-- Error Toast -->
-		<div class="error-toast" id="errorToast" role="alert"></div>
-
-<canvas id="pointCloudCanvas"></canvas>
-
-		<div class="page-wrap">
-			<main class="bh-page intro-active">
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 1 · HEADER (top-left)            -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-pink shard-header rot-n2">
-					<!-- gr1: wild-style background decoration -->
-					<img src="/gr1.png" alt="" class="gr-header-bg" aria-hidden="true" />
-					<div class="scan-line" aria-hidden="true"></div>
-					<a href="/" class="wbc-back-btn" id="backBtn">
-						<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12L4 7l5-5"/></svg>
-						Back
-					</a>
-					<h1 class="bh-title">
-						<span class="title-mono">Monolithic</span>
-						<span class="title-dape">:/</span>
-					</h1>
-					<p class="bh-subtitle">On-Device Inference · d-Ape</p>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 2 · SERIES (left, rows 2-3)       -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-cyan shard-series rot-p1">
-					<!-- gr3: orange graffiti tag corner decoration -->
-					<img src="/gr3.png" alt="" class="gr-tag-corner" aria-hidden="true" />
-					<div class="scan-line" aria-hidden="true"></div>
-					<span class="shard-series-label">// Tasks</span>
-					<div style="display: flex; flex-direction: column;">
-						<button class="series-btn active" data-series="monolithic" type="button">
-							<div class="series-color-bar" style="background-color: #7c3aed;"></div>
-							<div class="series-title-wrap">
-								<span class="series-name">Depth Estimation</span>
-								<span class="series-desc">Monolithic Stereo Model</span>
-							</div>
-						</button>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 3 · MODEL STATUS (left, row 4)    -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-green shard-model-stat rot-n1">
-					<div class="status-row">
-						<span class="status-label">Model Status</span>
-						<div class="model-status idle" id="modelStatus">
-							<span class="status-dot"></span>
-							<span id="modelStatusText">Not Loaded</span>
-						</div>
-					</div>
-					<div class="model-load-bar" id="loadBar">
-						<div class="load-bar-track">
-							<div class="load-bar-fill" id="loadBarFill"></div>
-						</div>
-						<div class="load-bar-text" id="loadBarText">Initializing...</div>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 4 · INPUT VIEWPORT (center top)  -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-cyan shard-viewport-in rot-0">
-					<div class="viewport-label-bar">
-						<span class="viewport-dot"></span>
-						<span class="viewport-label-text">Input Image</span>
-					</div>
-					<div class="viewport-inner">
-						<!-- gr4: B&W bubble letters watermark -->
-						<img src="/gr4.png" alt="" class="gr-bubble-bg" aria-hidden="true" />
-						<div class="scan-line" aria-hidden="true"></div>
-						<div class="preview-row single" id="previewRow" style="height: 100%; width: 100%;">
-							<div class="preview-box">
-								<span class="viewport-badge" id="previewLabelLeft" style="top:auto; bottom:8px; left:8px;">Left</span>
-								<canvas id="previewLeft"></canvas>
-								<div class="preview-empty" id="previewEmptyLeft">Awaiting input image</div>
-							</div>
-							<div class="preview-box" id="previewRightBox" style="display:none;">
-								<span class="viewport-badge" style="top:auto; bottom:8px; left:8px;">Right</span>
-								<canvas id="previewRight"></canvas>
-								<div class="preview-empty" id="previewEmptyRight">No right image</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 5 · OUTPUT VIEWPORT (center bot) -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-pink shard-viewport-out rot-p1">
-					<div class="viewport-label-bar" style="border-bottom-color: rgba(255,45,120,0.2);">
-						<span class="viewport-dot" style="background: var(--g-pink); box-shadow: 0 0 6px var(--g-pink);"></span>
-						<span class="viewport-label-text" style="color: var(--g-pink);">Depth Map Output</span>
-					</div>
-					<div class="viewport-inner" style="border-top-color: var(--g-pink);">
-						<!-- gr2: broken brick wall watermark -->
-						<img src="/gr2.png" alt="" class="gr-wall-bg" aria-hidden="true" />
-						<div class="scan-line" aria-hidden="true"></div>
-						<canvas id="outputCanvas" width="1024" height="320"></canvas>
-						<div class="preview-empty" id="outputEmpty">Awaiting inference</div>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 6 · CONTROLS BAR (center bottom) -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-yellow shard-controls-bar rot-n1">
-					<div class="colormap-row">
-						<div style="display:flex; gap:5px; align-items:center;">
-							<span class="slider-label" style="min-width:auto;">Map</span>
-							<button class="cm-btn cm-inferno active" id="cm-inferno" title="Inferno" aria-label="Inferno colormap"></button>
-							<button class="cm-btn cm-plasma" id="cm-plasma" title="Plasma" aria-label="Plasma colormap"></button>
-							<button class="cm-btn cm-viridis" id="cm-viridis" title="Viridis" aria-label="Viridis colormap"></button>
-							<button class="cm-btn cm-turbo" id="cm-turbo" title="Turbo" aria-label="Turbo colormap"></button>
-						</div>
-						<div class="mode-toggle" style="margin:0; padding:2px; display:flex; gap:2px;">
-							<button class="mode-btn active" id="btnVizRegression" type="button" style="padding:3px 8px; font-size:0.6rem;">Regression</button>
-							<button class="mode-btn" id="btnVizTopographic" type="button" style="padding:3px 8px; font-size:0.6rem;">Topographic</button>
-						</div>
-						<div class="slider-row" style="margin-top:0; flex:1; min-width: 160px;">
-							<span class="slider-label">Blend</span>
-							<input type="range" id="blendSlider" min="0" max="100" value="60" />
-							<span style="font-family:monospace;font-size:0.68rem;color:var(--g-muted);min-width:28px;" id="blendValue">60%</span>
-						</div>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 7 · MODE TOGGLE (right, row 1)    -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-orange shard-mode rot-p2">
-					<span class="shard-label">// Input Mode</span>
-					<div class="mode-toggle">
-						<button class="mode-btn active" id="btnSingle" type="button">Single</button>
-						<button class="mode-btn" id="btnStereo" type="button">Stereo</button>
-						<button class="mode-btn" id="btnCamera" type="button">Camera</button>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 8 · UPLOAD (right, row 2)         -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-purple shard-upload rot-n1">
-					<!-- gr5: spray can mascot -->
-					<img src="/gr5.png" alt="" class="gr-spray-can" aria-hidden="true" />
-					<span class="shard-label">// Upload Image</span>
-					<div id="uploadLeft">
-						<div class="upload-zone" id="dropZoneLeft">
-							<input type="file" id="fileLeft" accept="image/*" aria-label="Upload left image" />
-							<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-							</svg>
-							<div class="upload-label">
-								<strong>Upload image</strong> or drag here
-								<span style="display:block; font-size:0.6rem; opacity:0.6; margin-top:2px;">Resizes to 320×1024</span>
-							</div>
-						</div>
-					</div>
-					<div id="uploadRight" style="display:none; margin-top:6px;">
-						<div class="upload-zone" id="dropZoneRight">
-							<input type="file" id="fileRight" accept="image/*" aria-label="Upload right image" />
-							<svg class="upload-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0L8 8m4-4l4 4"/>
-							</svg>
-							<div class="upload-label"><strong>Right image</strong> (stereo pair)</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 9 · CAMERA (right, row 3)         -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-cyan shard-camera rot-p1" id="cameraShardWrapper">
-					<span class="shard-label">// Live Camera</span>
-					<div id="cameraControls" style="display:none;">
-						<div style="display:flex; gap:6px; margin-bottom:6px;">
-							<select id="cameraSelect" style="flex:1; background: rgba(0,0,0,0.5); color:var(--g-text); border:1px solid var(--g-border); padding:5px 8px; font-family:inherit; font-size:0.68rem;" aria-label="Select camera">
-								<option value="">Detecting cameras...</option>
-							</select>
-							<button class="sample-btn" id="btnRefreshCameras" type="button" style="flex-grow:0; width:auto; padding:5px 8px;" title="Refresh cameras">↺</button>
-						</div>
-						<button class="sample-btn" id="btnCameraToggle" type="button" style="width:100%; padding:6px 10px;" disabled>Start Camera</button>
-					</div>
-					<div id="cameraIdleMsg" style="font-size:0.58rem; color:var(--g-muted); font-family:'Share Tech Mono',monospace; text-align:center; padding: 6px 0;">Select 'Camera' mode to activate</div>
-					<video id="cameraVideo" style="display:none;" autoplay playsinline></video>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 10 · ACTIONS/STATS (right, row 4) -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-yellow shard-actions rot-n2">
-					<span class="shard-label">// Depth Stats</span>
-					<div class="depth-stats">
-						<div class="depth-stat">
-							<span class="depth-stat-label">Min</span>
-							<span class="depth-stat-val accent" id="statMinDepth">—</span>
-						</div>
-						<div class="depth-stat">
-							<span class="depth-stat-label">Max</span>
-							<span class="depth-stat-val" id="statMaxDepth">—</span>
-						</div>
-						<div class="depth-stat">
-							<span class="depth-stat-label">Mean</span>
-							<span class="depth-stat-val" id="statMeanDepth">—</span>
-						</div>
-					</div>
-					<div class="actions-row">
-						<span class="infer-time" id="inferTime"></span>
-						<button class="dl-btn" id="dlDepthBtn" disabled>
-							<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3M2 12h10"/></svg>
-							PNG
-						</button>
-						<button class="dl-btn" id="dlRawBtn" disabled>
-							<svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M7 2v8M4 7l3 3 3-3M2 12h10"/></svg>
-							Float32
-						</button>
-					</div>
-					<div class="sample-row" style="margin-top:6px;">
-						<button class="sample-btn" id="sampleBtn" type="button">Sample</button>
-						<button class="sample-btn" id="clearBtn" type="button">✕ Clear</button>
-					</div>
-				</div>
-
-				<!-- ═══════════════════════════════════════ -->
-				<!-- SHARD 11 · RUN BUTTON (right, row 5)    -->
-				<!-- ═══════════════════════════════════════ -->
-				<div class="shard shard-run rot-p1" style="background:transparent; border:none; box-shadow:none; clip-path:none; overflow:visible; position:relative;">
-					<!-- gr6: rock-on hand sign corner -->
-					<img src="/gr6.png" alt="" class="gr-rockon" aria-hidden="true" />
-					<button class="run-btn" id="runBtn" type="button" disabled>
-						<span class="spinner"></span>
-						<span id="runBtnText">Run Inference →</span>
-					</button>
-				</div>
-
-			</main>
-		</div>
-
-		<script>
-		// ========================================================
-		// ONNX Runtime Web · Monolithic d-Ape Inference Engine
-		// ========================================================
-		(function () {
-			'use strict';
-
-			// ── Config ──────────────────────────────────────────
-			const MODEL_URL      = '/onrunmodel/monolithic_dape_web.onnx';
-			const MODEL_DATA_URL = '/onrunmodel/monolithic_dape_web.onnx.data';
-			const IMG_H = 320;
-			const IMG_W = 1024;
-			const MEAN  = [0.485, 0.456, 0.406];
-			const STD   = [0.229, 0.224, 0.225];
-			const MIN_DEPTH = 0.1;
-			const MAX_DEPTH = 100.0;
-
-			// ── State ────────────────────────────────────────────
-			let session      = null;
-			let modelLoading = false;
-			let modelInputDims = [1, 3, 320, 1024]; // Updated after session load from actual metadata
-			let leftImage    = null;   // HTMLImageElement
-			let rightImage   = null;
-			let stereoMode   = false;
-			let lastDisp     = null;   // Float32Array
-			let lastDispW    = 1024;   // Width of the last disparity output tensor
-			let lastDispH    = 320;    // Height of the last disparity output tensor
-			let lastBlend    = 60;
-			let activeColormap = 'inferno';
-			let activeVizMode  = 'regression'; // 'regression' or 'topographic'
-			let cameraMode   = false;
-			let cameraStream = null;
-			let cameraActive = false;
-			let cameraAnimFrame = null;
-			let isProcessingCamera = false;
-
-			// ── DOM Refs ─────────────────────────────────────────
-			const modelStatus    = document.getElementById('modelStatus');
-			const modelStatusTxt = document.getElementById('modelStatusText');
-			const loadBar        = document.getElementById('loadBar');
-			const loadBarFill    = document.getElementById('loadBarFill');
-			const loadBarText    = document.getElementById('loadBarText');
-			const backendLabel   = document.getElementById('backendLabel');
-			const runBtn         = document.getElementById('runBtn');
-			const runBtnText     = document.getElementById('runBtnText');
-			const outputCanvas   = document.getElementById('outputCanvas');
-			const outputEmpty    = document.getElementById('outputEmpty');
-			const inferTime      = document.getElementById('inferTime');
-			const blendSlider    = document.getElementById('blendSlider');
-			const blendValue     = document.getElementById('blendValue');
-			const dlDepthBtn     = document.getElementById('dlDepthBtn');
-			const dlRawBtn       = document.getElementById('dlRawBtn');
-			const errorToast     = document.getElementById('errorToast');
-			const btnSingle      = document.getElementById('btnSingle');
-			const btnStereo      = document.getElementById('btnStereo');
-			const btnCamera      = document.getElementById('btnCamera');
-			const btnVizRegression = document.getElementById('btnVizRegression');
-			const btnVizTopographic = document.getElementById('btnVizTopographic');
-			const cameraControls = document.getElementById('cameraControls');
-			const cameraSelect   = document.getElementById('cameraSelect');
-			const btnRefreshCameras = document.getElementById('btnRefreshCameras');
-			const btnCameraToggle = document.getElementById('btnCameraToggle');
-			const cameraVideo    = document.getElementById('cameraVideo');
-			const uploadLeft     = document.getElementById('uploadLeft');
-			const uploadRight    = document.getElementById('uploadRight');
-			const previewRow     = document.getElementById('previewRow');
-			const previewRightBox = document.getElementById('previewRightBox');
-			const previewLabelLeft = document.getElementById('previewLabelLeft');
-			const previewLeft    = document.getElementById('previewLeft');
-			const previewRight   = document.getElementById('previewRight');
-			const previewEmptyL  = document.getElementById('previewEmptyLeft');
-			const previewEmptyR  = document.getElementById('previewEmptyRight');
-			const dropZoneLeft   = document.getElementById('dropZoneLeft');
-			const dropZoneRight  = document.getElementById('dropZoneRight');
-			const fileLeft       = document.getElementById('fileLeft');
-			const fileRight      = document.getElementById('fileRight');
-			const statMinDepth   = document.getElementById('statMinDepth');
-			const statMaxDepth   = document.getElementById('statMaxDepth');
-			const statMeanDepth  = document.getElementById('statMeanDepth');
-			const sampleBtn      = document.getElementById('sampleBtn');
-			const clearBtn       = document.getElementById('clearBtn');
-
-			// ── Colormap LUTs ────────────────────────────────────
-			// Each LUT is an array of 256 [R, G, B] entries (0-255)
-			function makeInfernoLUT() {
-				// Inferno colormap keypoints
-				const stops = [
-					[0.0,  [0,   0,   4]],
-					[0.13, [27,  12,  65]],
-					[0.25, [74,  12,  107]],
-					[0.38, [120, 28,  109]],
-					[0.50, [165, 44,  96]],
-					[0.63, [207, 71,  70]],
-					[0.75, [237, 121, 38]],
-					[0.88, [251, 180, 26]],
-					[1.0,  [252, 255, 164]],
-				];
-				return buildLUT(stops);
-			}
-			function makePlasmaLUT() {
-				const stops = [
-					[0.0,  [13,  8,  135]],
-					[0.13, [70,  3,  159]],
-					[0.25, [114, 1,  168]],
-					[0.38, [156, 23, 158]],
-					[0.50, [189, 55, 134]],
-					[0.63, [216, 87, 107]],
-					[0.75, [237, 121, 83]],
-					[0.88, [253, 180, 98]],
-					[1.0,  [240, 249, 33]],
-				];
-				return buildLUT(stops);
-			}
-			function makeViridisLUT() {
-				const stops = [
-					[0.0,  [68,  1,  84]],
-					[0.25, [59,  82,  139]],
-					[0.50, [33,  145, 140]],
-					[0.75, [94,  201, 98]],
-					[1.0,  [253, 231, 37]],
-				];
-				return buildLUT(stops);
-			}
-			function makeTurboLUT() {
-				const stops = [
-					[0.0,  [48,  18,  59]],
-					[0.12, [65,  69,  171]],
-					[0.25, [70,  117, 237]],
-					[0.38, [57,  167, 245]],
-					[0.50, [29,  209, 196]],
-					[0.63, [55,  246, 172]],
-					[0.75, [149, 249, 90]],
-					[0.88, [233, 245, 58]],
-					[1.0,  [197, 42,  3]],
-				];
-				return buildLUT(stops);
-			}
-
-			function buildLUT(stops) {
-				const lut = new Array(256);
-				for (let i = 0; i < 256; i++) {
-					const t = i / 255;
-					// find surrounding stops
-					let lo = stops[0], hi = stops[stops.length - 1];
-					for (let s = 0; s < stops.length - 1; s++) {
-						if (t >= stops[s][0] && t <= stops[s+1][0]) {
-							lo = stops[s]; hi = stops[s+1]; break;
-						}
-					}
-					const range = hi[0] - lo[0];
-					const f = range < 1e-9 ? 0 : (t - lo[0]) / range;
-					lut[i] = [
-						Math.round(lo[1][0] + (hi[1][0] - lo[1][0]) * f),
-						Math.round(lo[1][1] + (hi[1][1] - lo[1][1]) * f),
-						Math.round(lo[1][2] + (hi[1][2] - lo[1][2]) * f),
-					];
-				}
-				return lut;
-			}
-
-			const COLORMAPS = {
-				inferno: makeInfernoLUT(),
-				plasma:  makePlasmaLUT(),
-				viridis: makeViridisLUT(),
-				turbo:   makeTurboLUT(),
-			};
-
-			// ── Status helpers ───────────────────────────────────
-			function setStatus(state, text) {
-				modelStatus.className = 'model-status ' + state;
-				modelStatusTxt.textContent = text;
-			}
-
-			function showError(msg) {
-				errorToast.textContent = '⚠ ' + msg;
-				errorToast.classList.add('visible');
-				setTimeout(() => errorToast.classList.remove('visible'), 5000);
-			}
-
-			// ── Model Loading ────────────────────────────────────
-			async function loadModel() {
-				if (session || modelLoading) return;
-				modelLoading = true;
-				setStatus('loading', 'Loading...');
-				loadBar.classList.add('visible');
-				loadBarText.textContent = 'Checking model weights cache…';
-				loadBarFill.style.width = '5%';
-
-				try {
-					// Detect ORT
-					if (typeof ort === 'undefined') {
-						throw new Error('ONNX Runtime Web not available. Check your connection.');
-					}
-
-					// Cache Storage caching
-					const cacheName = 'dape-model-cache';
-					const cache = await caches.open(cacheName);
-					let resp = await cache.match(MODEL_DATA_URL);
-					
-					if (resp) {
-						console.log('[d-Ape] Model weights found in Cache Storage.');
-						loadBarText.textContent = 'Loading weights from cache…';
-					} else {
-						console.log('[d-Ape] Model weights cache miss. Downloading from network...');
-						loadBarText.textContent = 'Downloading model weights (~73 MB)…';
-						const fetchResp = await fetch(MODEL_DATA_URL);
-						if (!fetchResp.ok) throw new Error(`Failed to fetch model weights: ${fetchResp.statusText}`);
-						
-						// Store clone in Cache Storage
-						await cache.put(MODEL_DATA_URL, fetchResp.clone());
-						resp = fetchResp;
-					}
-
-					const total   = parseInt(resp.headers.get('content-length') || '0');
-					const reader  = resp.body.getReader();
-					const chunks  = [];
-					let received  = 0;
-					while (true) {
-						const { done, value } = await reader.read();
-						if (done) break;
-						chunks.push(value);
-						received += value.length;
-						const pct = total > 0 ? Math.min(95, 15 + (received / total) * 70) : 50;
-						loadBarFill.style.width = pct + '%';
-						const mbLoaded = (received / 1048576).toFixed(1);
-						const mbTotal  = total > 0 ? (total / 1048576).toFixed(1) : '?';
-						loadBarText.textContent = `Loading data: ${mbLoaded} / ${mbTotal} MB`;
-					}
-
-					// ORT Web externalData.data must be a Uint8Array — not a blob URL.
-					// Concatenate all streamed chunks into one contiguous buffer.
-					const totalBytes = chunks.reduce((s, c) => s + c.length, 0);
-					const weightsBuffer = new Uint8Array(totalBytes);
-					let offset = 0;
-					for (const chunk of chunks) {
-						weightsBuffer.set(chunk, offset);
-						offset += chunk.length;
-					}
-
-					// WebGL might support execution provider initialization but fail on large model graph creation
-					// or external weights loader. We use a try-create loop to auto-fallback from WebGL to WASM.
-					const backendsToTry = [];
-					try {
-						const testCanvas = document.createElement('canvas');
-						const gl = testCanvas.getContext('webgl2') || testCanvas.getContext('webgl');
-						if (gl) backendsToTry.push('webgl');
-					} catch (_) {}
-					backendsToTry.push('wasm');
-
-					let loadedBackend = 'wasm';
-					let lastError = null;
-
-					console.log(`[d-Ape] Downloaded weights size: ${totalBytes} bytes. Expected total: ${total} bytes.`);
-					loadBarText.textContent = `Downloaded ${totalBytes} bytes. Initializing session...`;
-
-					for (const backend of backendsToTry) {
-						try {
-							console.log(`[d-Ape] Trying to create session with backend: ${backend}`);
-							if (backendLabel) {
-								backendLabel.textContent = backend.toUpperCase();
-							}
-							loadBarText.textContent = `Initializing session (${backend.toUpperCase()})...`;
-
-							const opts = {
-								executionProviders: [backend],
-								graphOptimizationLevel: 'all',
-								externalData: [
-									{ path: 'monolithic_dape_web.onnx.data', data: weightsBuffer }
-								],
-							};
-
-							session = await ort.InferenceSession.create(MODEL_URL, opts);
-							loadedBackend = backend;
-							lastError = null;
-							console.log(`[d-Ape] Session created successfully using backend: ${backend}`);
-							break;
-						} catch (e) {
-							console.warn(`[d-Ape] Backend ${backend} initialization failed:`, e);
-							lastError = e;
-						}
-					}
-
-					if (lastError) {
-						throw new Error(`All backends failed. Last error: ${lastError.message}`);
-					}
-
-					// Update UI with final working backend
-					if (backendLabel) {
-						backendLabel.textContent = loadedBackend.toUpperCase();
-					}
-
-					// ── Discover actual input shape from model metadata ──
-					try {
-						const firstInputName = session.inputNames[0];
-						const meta = session.inputMetadata
-							? session.inputMetadata[firstInputName]
-							: null;
-						if (meta && meta.dims && meta.dims.length === 4) {
-							// Use dims directly; replace dynamic -1 with known defaults
-							modelInputDims = meta.dims.map((d, i) => {
-								if (d > 0) return d;
-								const defaults = [1, 3, IMG_H, IMG_W];
-								return defaults[i];
-							});
-						} else {
-							// Fallback: keep default [1,3,H,W]
-							modelInputDims = [1, 3, IMG_H, IMG_W];
-						}
-					} catch (_) {
-						modelInputDims = [1, 3, IMG_H, IMG_W];
-					}
-					console.log('[d-Ape] inputNames:', session.inputNames);
-					console.log('[d-Ape] outputNames:', session.outputNames);
-					console.log('[d-Ape] resolved modelInputDims:', modelInputDims);
-					console.log('[d-Ape] inputMetadata:', session.inputMetadata);
-
-					loadBarFill.style.width = '100%';
-					loadBarText.textContent = `Model ready (${loadedBackend.toUpperCase()})!`;
-					setTimeout(() => loadBar.classList.remove('visible'), 1200);
-
-					setStatus('ready', `Ready (${loadedBackend.toUpperCase()})`);
-					updateRunBtn();
-
-				} catch (err) {
-					console.error('[d-Ape] Model load error:', err);
-					setStatus('error', 'Load Failed');
-					loadBarText.textContent = 'Error: ' + err.message;
-					showError('Model load failed: ' + err.message);
-					modelLoading = false;
-				}
-			}
-
-			// ── Image preprocessing ──────────────────────────────
-			// nCh: number of input channels expected by the model (3 or 4)
-			// If 4, channel 3 is a zero-padded HOG plane (model was exported with use_hog=True
-			// but HOG logic removed — we feed zeros for that channel, which is safe because
-			// HogProjector uses zero-init weights so it contributes nothing at inference).
-			function imageToTensor(imgEl, nCh) {
-				nCh = nCh || 3;
-				// Draw image to offscreen canvas at target size
-				const offscreen = document.createElement('canvas');
-				offscreen.width  = IMG_W;
-				offscreen.height = IMG_H;
-				const ctx = offscreen.getContext('2d');
-				ctx.drawImage(imgEl, 0, 0, IMG_W, IMG_H);
-				const { data } = ctx.getImageData(0, 0, IMG_W, IMG_H);
-
-				// NCHW float32 [1, nCh, H, W] normalized
-				const tensor = new Float32Array(nCh * IMG_H * IMG_W);
-				for (let y = 0; y < IMG_H; y++) {
-					for (let x = 0; x < IMG_W; x++) {
-						const idx4 = (y * IMG_W + x) * 4;
-						const idx  = y * IMG_W + x;
-						tensor[0 * IMG_H * IMG_W + idx] = (data[idx4 + 0] / 255 - MEAN[0]) / STD[0];
-						tensor[1 * IMG_H * IMG_W + idx] = (data[idx4 + 1] / 255 - MEAN[1]) / STD[1];
-						tensor[2 * IMG_H * IMG_W + idx] = (data[idx4 + 2] / 255 - MEAN[2]) / STD[2];
-						// Channel 3 (HOG): zeros — HogProjector has zero-init weights so no effect
-						if (nCh >= 4) tensor[3 * IMG_H * IMG_W + idx] = 0.0;
-					}
-				}
-				return tensor;
-			}
-
-			function makeMirrorImage(imgEl) {
-				const offscreen = document.createElement('canvas');
-				offscreen.width  = IMG_W;
-				offscreen.height = IMG_H;
-				const ctx = offscreen.getContext('2d');
-				ctx.translate(IMG_W, 0);
-				ctx.scale(-1, 1);
-				ctx.drawImage(imgEl, 0, 0, IMG_W, IMG_H);
-				return offscreen;
-			}
-
-			// ── Disparity → Depth conversion ────────────────────
-			function dispToDepth(disp) {
-				const minDisp = 1.0 / MAX_DEPTH;
-				const maxDisp = 1.0 / MIN_DEPTH;
-				const depth = new Float32Array(disp.length);
-				for (let i = 0; i < disp.length; i++) {
-					const scaledDisp = minDisp + (maxDisp - minDisp) * disp[i];
-					depth[i] = 1.0 / Math.max(scaledDisp, 1e-6);
-				}
-				return depth;
-			}
-
-			// ── Colorize disparity map ───────────────────────────
-			function colorizeDisp(disp, lut, w, h) {
-				const imgData = new Uint8ClampedArray(w * h * 4);
-				let dmin = Infinity, dmax = -Infinity;
-				for (let i = 0; i < disp.length; i++) {
-					if (disp[i] < dmin) dmin = disp[i];
-					if (disp[i] > dmax) dmax = disp[i];
-				}
-				const range = Math.max(dmax - dmin, 1e-8);
-				for (let i = 0; i < disp.length; i++) {
-					const t = (disp[i] - dmin) / range;
-					
-					let r, g, b;
-					if (activeVizMode === 'topographic') {
-						// Topographic mode: Quantize into 12 discrete bands
-						const levels = 12;
-						const band = Math.floor(t * levels) / levels;
-						
-						// Draw sharp dark contour boundaries
-						const factor = t * levels;
-						const distToBoundary = Math.abs(factor - Math.round(factor));
-						const isBoundary = distToBoundary < 0.08;
-						
-						const c = lut[Math.min(255, Math.round(band * 255))];
-						if (isBoundary) {
-							r = 0;
-							g = 0;
-							b = 0;
-						} else {
-							r = c[0];
-							g = c[1];
-							b = c[2];
-						}
-					} else {
-						// Regression mode: Smooth gradient
-						const idx = Math.min(255, Math.round(t * 255));
-						const c = lut[idx];
-						r = c[0];
-						g = c[1];
-						b = c[2];
-					}
-
-					imgData[i * 4 + 0] = r;
-					imgData[i * 4 + 1] = g;
-					imgData[i * 4 + 2] = b;
-					imgData[i * 4 + 3] = 255;
-				}
-				return imgData;
-			}
-
-			// ── Render to output canvas ──────────────────────────
-			function renderOutput(disp, srcImg, w, h) {
-				w = w || IMG_W;
-				h = h || IMG_H;
-				
-				const ctx = outputCanvas.getContext('2d');
-				const lut = COLORMAPS[activeColormap];
-				const colored = colorizeDisp(disp, lut, w, h);
-
-				// Render the colorized depth map onto an offscreen canvas at native model output resolution
-				const offscreen = document.createElement('canvas');
-				offscreen.width = w;
-				offscreen.height = h;
-				const oCtx = offscreen.getContext('2d');
-				const imgData = new ImageData(colored, w, h);
-				oCtx.putImageData(imgData, 0, 0);
-
-				ctx.clearRect(0, 0, IMG_W, IMG_H);
-
-				if (lastBlend < 5) {
-					// Only depth map - stretch to fit 1024x320
-					ctx.drawImage(offscreen, 0, 0, IMG_W, IMG_H);
-				} else if (lastBlend > 95) {
-					// Only original image
-					ctx.drawImage(srcImg, 0, 0, IMG_W, IMG_H);
-				} else {
-					// Blend: draw original photo first, then overlay colormap using globalAlpha
-					ctx.drawImage(srcImg, 0, 0, IMG_W, IMG_H);
-					
-					ctx.save();
-					ctx.globalAlpha = lastBlend / 100;
-					ctx.drawImage(offscreen, 0, 0, IMG_W, IMG_H);
-					ctx.restore();
-				}
-
-				outputEmpty.style.display = 'none';
-			}
-
-			// ── Update depth stats ───────────────────────────────
-			function updateDepthStats(disp) {
-				const depth = dispToDepth(disp);
-				let mn = Infinity, mx = -Infinity, sum = 0;
-				for (let i = 0; i < depth.length; i++) {
-					if (depth[i] < mn) mn = depth[i];
-					if (depth[i] > mx) mx = depth[i];
-					sum += depth[i];
-				}
-				const mean = sum / depth.length;
-				statMinDepth.textContent  = mn.toFixed(1) + ' m';
-				statMaxDepth.textContent  = mx.toFixed(1) + ' m';
-				statMeanDepth.textContent = mean.toFixed(1) + ' m';
-			}
-
-			// ── Inference ────────────────────────────────────────
-			async function runInference() {
-				if (!session || !leftImage) return;
-
-				runBtn.classList.add('running');
-				runBtn.disabled = true;
-				runBtnText.textContent = 'Running...';
-
-				try {
-					// Use shape discovered from model metadata
-					const [, nCh, inH, inW] = modelInputDims;
-					console.log(`[d-Ape] Building tensor: [1, ${nCh}, ${inH}, ${inW}]`);
-
-					const leftData  = imageToTensor(leftImage, nCh);
-					const inputLeft = new ort.Tensor('float32', leftData, [1, nCh, inH, inW]);
-
-					// Build feeds based on how many inputs the model expects
-					const inputNames = session.inputNames;
-					const feeds = {};
-
-					if (inputNames.length === 1) {
-						// Single-input export (most likely case after HOG/GNN removal)
-						feeds[inputNames[0]] = inputLeft;
-					} else {
-						// Multi-input: feed left + right (or mirrored) for remaining inputs
-						const rightSrc  = (stereoMode && rightImage) ? rightImage : makeMirrorImage(leftImage);
-						const rightData = imageToTensor(rightSrc, nCh);
-						const inputRight = new ort.Tensor('float32', rightData, [1, nCh, inH, inW]);
-						feeds[inputNames[0]] = inputLeft;
-						feeds[inputNames[1]] = inputRight;
-						// Any remaining inputs (sift_disp, sift_mask, etc.) get zero tensors
-						for (let i = 2; i < inputNames.length; i++) {
-							const zeroData = new Float32Array(inH * inW);
-							feeds[inputNames[i]] = new ort.Tensor('float32', zeroData, [1, inH, inW]);
-						}
-					}
-					console.log('[d-Ape] feeds:', Object.keys(feeds));
-
-					const t0 = performance.now();
-					const results = await session.run(feeds);
-					const elapsed = (performance.now() - t0).toFixed(0);
-
-					const outNames = session.outputNames;
-
-					// Find the output tensor with the largest data size (corresponds to full-res disp1)
-					let disp1Key = outNames[0];
-					let maxLen = 0;
-					for (const name of outNames) {
-						const len = results[name].data.length;
-						if (len > maxLen) {
-							maxLen = len;
-							disp1Key = name;
-						}
-					}
-
-					const disp = results[disp1Key].data;
-					const dims = results[disp1Key].dims; // e.g. [1, 1, outH, outW]
-					lastDispW = dims[3];
-					lastDispH = dims[2];
-
-					lastDisp = disp;
-					renderOutput(disp, leftImage, lastDispW, lastDispH);
-					updateDepthStats(disp);
-
-					inferTime.textContent = `${elapsed} ms`;
-					inferTime.classList.add('visible');
-
-					dlDepthBtn.disabled = false;
-					dlRawBtn.disabled   = false;
-
-				} catch (err) {
-					console.error('[d-Ape] Inference error:', err);
-					showError('Inference failed: ' + err.message);
-				} finally {
-					runBtn.classList.remove('running');
-					runBtnText.textContent = 'Run Inference →';
-					updateRunBtn();
-				}
-			}
-
-			// ── UI helpers ───────────────────────────────────────
-			function updateRunBtn() {
-				runBtn.disabled = !(session && leftImage);
-			}
-
-			function drawPreview(canvas, emptyDiv, imgEl) {
-				canvas.width  = IMG_W;
-				canvas.height = IMG_H;
-				const ctx = canvas.getContext('2d');
-				ctx.drawImage(imgEl, 0, 0, IMG_W, IMG_H);
-				emptyDiv.style.display = 'none';
-				canvas.style.display = 'block';
-			}
-
-			function loadImageFile(file, isLeft) {
-				const url = URL.createObjectURL(file);
-				const img = new Image();
-				img.onload = () => {
-					if (isLeft) {
-						leftImage = img;
-						drawPreview(previewLeft, previewEmptyL, img);
-					} else {
-						rightImage = img;
-						drawPreview(previewRight, previewEmptyR, img);
-					}
-					updateRunBtn();
-				};
-				img.src = url;
-			}
-
-			function clearState() {
-				leftImage  = null;
-				rightImage = null;
-				lastDisp   = null;
-				// Reset previews
-				previewEmptyL.style.display = '';
-				previewEmptyR.style.display = '';
-				const ctxL = previewLeft.getContext('2d');
-				ctxL.clearRect(0, 0, previewLeft.width, previewLeft.height);
-				const ctxR = previewRight.getContext('2d');
-				ctxR.clearRect(0, 0, previewRight.width, previewRight.height);
-				// Reset output
-				const ctxO = outputCanvas.getContext('2d');
-				ctxO.clearRect(0, 0, outputCanvas.width, outputCanvas.height);
-				outputEmpty.style.display = '';
-				dlDepthBtn.disabled = true;
-				dlRawBtn.disabled   = true;
-				inferTime.classList.remove('visible');
-				statMinDepth.textContent  = '—';
-				statMaxDepth.textContent  = '—';
-				statMeanDepth.textContent = '—';
-				updateRunBtn();
-			}
-
-			// ── Sample image ─────────────────────────────────────
-			async function loadSampleImage() {
-				// Draw a synthetic urban-scene test image (gradient + shapes)
-				const offscreen = document.createElement('canvas');
-				offscreen.width  = IMG_W;
-				offscreen.height = IMG_H;
-				const ctx = offscreen.getContext('2d');
-
-				// Sky gradient
-				const sky = ctx.createLinearGradient(0, 0, 0, IMG_H * 0.45);
-				sky.addColorStop(0, '#87ceeb');
-				sky.addColorStop(1, '#c9e8f5');
-				ctx.fillStyle = sky;
-				ctx.fillRect(0, 0, IMG_W, IMG_H * 0.45);
-
-				// Road
-				const road = ctx.createLinearGradient(0, IMG_H * 0.45, 0, IMG_H);
-				road.addColorStop(0, '#555');
-				road.addColorStop(1, '#333');
-				ctx.fillStyle = road;
-				ctx.fillRect(0, IMG_H * 0.45, IMG_W, IMG_H);
-
-				// Road markings
-				ctx.strokeStyle = '#fff';
-				ctx.lineWidth = 4;
-				ctx.setLineDash([40, 30]);
-				ctx.beginPath();
-				ctx.moveTo(IMG_W * 0.5, IMG_H * 0.48);
-				ctx.lineTo(IMG_W * 0.5, IMG_H);
-				ctx.stroke();
-				ctx.setLineDash([]);
-
-				// Buildings (left side)
-				const bColors = ['#667788', '#556677', '#445566', '#778899'];
-				const bWidths  = [80, 60, 100, 70];
-				const bHeights = [100, 130, 90, 120];
-				let bx = 20;
-				for (let i = 0; i < 4; i++) {
-					ctx.fillStyle = bColors[i];
-					ctx.fillRect(bx, IMG_H * 0.45 - bHeights[i], bWidths[i], bHeights[i]);
-					// Windows
-					ctx.fillStyle = '#ffdf8a';
-					for (let wy = 0; wy < 3; wy++) {
-						for (let wx = 0; wx < 2; wx++) {
-							ctx.fillRect(bx + 8 + wx * 28, IMG_H * 0.45 - bHeights[i] + 10 + wy * 30, 14, 12);
-						}
-					}
-					bx += bWidths[i] + 10;
-				}
-
-				// Buildings (right side) 
-				bx = IMG_W - 340;
-				for (let i = 0; i < 4; i++) {
-					const bh = bHeights[(i+2)%4];
-					ctx.fillStyle = bColors[(i+1)%4];
-					ctx.fillRect(bx, IMG_H * 0.45 - bh, bWidths[i], bh);
-					ctx.fillStyle = '#ffdf8a';
-					for (let wy = 0; wy < 3; wy++) {
-						for (let wx = 0; wx < 2; wx++) {
-							ctx.fillRect(bx + 8 + wx * 22, IMG_H * 0.45 - bh + 10 + wy * 28, 10, 10);
-						}
-					}
-					bx += bWidths[i] + 8;
-				}
-
-				// Tree silhouettes
-				for (let i = 0; i < 5; i++) {
-					const tx = 60 + i * 200;
-					ctx.fillStyle = '#2d5a27';
-					ctx.beginPath();
-					ctx.arc(tx, IMG_H * 0.45, 22, 0, Math.PI * 2);
-					ctx.fill();
-					ctx.fillStyle = '#1e3d1b';
-					ctx.fillRect(tx - 4, IMG_H * 0.45, 8, 20);
-				}
-
-				// Parked car
-				ctx.fillStyle = '#c0392b';
-				ctx.beginPath();
-				ctx.roundRect(200, IMG_H * 0.6, 90, 35, 4);
-				ctx.fill();
-				ctx.fillStyle = '#85c1e9';
-				ctx.fillRect(212, IMG_H * 0.6 + 4, 28, 14);
-				ctx.fillRect(244, IMG_H * 0.6 + 4, 26, 14);
-
-				const url = offscreen.toDataURL('image/png');
-				const img = new Image();
-				img.onload = () => {
-					leftImage = img;
-					drawPreview(previewLeft, previewEmptyL, img);
-					updateRunBtn();
-				};
-				img.src = url;
-			}
-
-			// ── Colormap selection ───────────────────────────────
-			document.querySelectorAll('.cm-btn').forEach(btn => {
-				btn.addEventListener('click', () => {
-					document.querySelectorAll('.cm-btn').forEach(b => b.classList.remove('active'));
-					btn.classList.add('active');
-					activeColormap = btn.id.replace('cm-', '');
-					if (lastDisp && (leftImage || cameraMode)) {
-						const src = cameraMode ? previewLeft : leftImage;
-						renderOutput(lastDisp, src, lastDispW, lastDispH);
-					}
-				});
-			});
-
-			// ── Blend slider ─────────────────────────────────────
-			blendSlider.addEventListener('input', () => {
-				lastBlend = parseInt(blendSlider.value);
-				blendValue.textContent = lastBlend + '%';
-				if (lastDisp && (leftImage || cameraMode)) {
-					const src = cameraMode ? previewLeft : leftImage;
-					renderOutput(lastDisp, src, lastDispW, lastDispH);
-				}
-			});
-
-			// ── Visualization Mode Toggles ────────────────────────
-			btnVizRegression.addEventListener('click', () => {
-				activeVizMode = 'regression';
-				btnVizRegression.classList.add('active');
-				btnVizTopographic.classList.remove('active');
-				if (lastDisp && (leftImage || cameraMode)) {
-					const src = cameraMode ? previewLeft : leftImage;
-					renderOutput(lastDisp, src, lastDispW, lastDispH);
-				}
-			});
-
-			btnVizTopographic.addEventListener('click', () => {
-				activeVizMode = 'topographic';
-				btnVizTopographic.classList.add('active');
-				btnVizRegression.classList.remove('active');
-				if (lastDisp && (leftImage || cameraMode)) {
-					const src = cameraMode ? previewLeft : leftImage;
-					renderOutput(lastDisp, src, lastDispW, lastDispH);
-				}
-			});
-
-			// ── Tab selection and mode switches ─────────────────
-			function setMode(mode) {
-				stopCamera();
-				if (mode === 'single') {
-					cameraMode = false;
-					stereoMode = false;
-					btnSingle.classList.add('active');
-					btnStereo.classList.remove('active');
-					btnCamera.classList.remove('active');
-					uploadLeft.style.display = 'block';
-					uploadRight.style.display = 'none';
-					cameraControls.style.display = 'none';
-					previewRightBox.style.display = 'none';
-					previewRow.classList.add('single');
-					previewLabelLeft.textContent = 'Image';
-					runBtn.style.display = 'flex';
-					sampleBtn.style.display = 'inline-block';
-					clearBtn.style.display = 'inline-block';
-					clearState();
-				} else if (mode === 'stereo') {
-					cameraMode = false;
-					stereoMode = true;
-					btnStereo.classList.add('active');
-					btnSingle.classList.remove('active');
-					btnCamera.classList.remove('active');
-					uploadLeft.style.display = 'block';
-					uploadRight.style.display = 'block';
-					cameraControls.style.display = 'none';
-					previewRightBox.style.display = 'block';
-					previewRow.classList.remove('single');
-					previewLabelLeft.textContent = 'Left';
-					runBtn.style.display = 'flex';
-					sampleBtn.style.display = 'inline-block';
-					clearBtn.style.display = 'inline-block';
-					clearState();
-				} else if (mode === 'camera') {
-					cameraMode = true;
-					stereoMode = false;
-					btnCamera.classList.add('active');
-					btnSingle.classList.remove('active');
-					btnStereo.classList.remove('active');
-					uploadLeft.style.display = 'none';
-					uploadRight.style.display = 'none';
-					cameraControls.style.display = 'block';
-					previewRightBox.style.display = 'none';
-					previewRow.classList.add('single');
-					previewLabelLeft.textContent = 'Camera Feed';
-					runBtn.style.display = 'none';
-					sampleBtn.style.display = 'none';
-					clearBtn.style.display = 'none';
-					clearState();
-					detectCameras();
-				}
-			}
-
-			btnSingle.addEventListener('click', () => setMode('single'));
-			btnStereo.addEventListener('click', () => setMode('stereo'));
-			btnCamera.addEventListener('click', () => setMode('camera'));
-
-			// ── Camera API ───────────────────────────────────────
-			async function detectCameras() {
-				try {
-					cameraSelect.innerHTML = '<option value="">Requesting permission...</option>';
-					// Force immediate permission check
-					const testStream = await navigator.mediaDevices.getUserMedia({ video: true });
-					// Stop the test tracks immediately so the indicator light turns off
-					testStream.getTracks().forEach(track => track.stop());
-
-					const devices = await navigator.mediaDevices.enumerateDevices();
-					const videoDevices = devices.filter(d => d.kind === 'videoinput');
-					
-					cameraSelect.innerHTML = '';
-					if (videoDevices.length === 0) {
-						cameraSelect.innerHTML = '<option value="">No cameras found</option>';
-						btnCameraToggle.disabled = true;
-						return;
-					}
-					
-					videoDevices.forEach((device, index) => {
-						const option = document.createElement('option');
-						option.value = device.deviceId;
-						option.textContent = device.label || `Camera ${index + 1}`;
-						cameraSelect.appendChild(option);
-					});
-					btnCameraToggle.disabled = false;
-				} catch (err) {
-					console.warn('[d-Ape] Camera detection error:', err);
-					cameraSelect.innerHTML = '<option value="">Camera access denied</option>';
-					btnCameraToggle.disabled = true;
-					showError('Camera access denied: ' + err.message);
-				}
-			}
-
-			async function startCamera() {
-				if (cameraActive) return;
-				const deviceId = cameraSelect.value;
-				const constraints = {
-					video: deviceId ? { deviceId: { exact: deviceId }, width: { ideal: 640 }, height: { ideal: 480 } } : true
-				};
-
-				try {
-					cameraStream = await navigator.mediaDevices.getUserMedia(constraints);
-					cameraVideo.srcObject = cameraStream;
-					cameraActive = true;
-					btnCameraToggle.textContent = 'Stop Camera';
-					btnCameraToggle.style.background = 'var(--bh-danger)';
-					
-					previewEmptyL.style.display = 'none';
-					previewLeft.style.display = 'block';
-
-					cameraLoop();
-				} catch (err) {
-					console.error('[d-Ape] Error starting camera:', err);
-					showError('Could not start camera feed: ' + err.message);
-				}
-			}
-
-			function stopCamera() {
-				cameraActive = false;
-				if (cameraAnimFrame) {
-					cancelAnimationFrame(cameraAnimFrame);
-					cameraAnimFrame = null;
-				}
-				if (cameraStream) {
-					cameraStream.getTracks().forEach(track => track.stop());
-					cameraStream = null;
-				}
-				cameraVideo.srcObject = null;
-				btnCameraToggle.textContent = 'Start Camera';
-				btnCameraToggle.style.background = '';
-				isProcessingCamera = false;
-			}
-
-			function cameraLoop() {
-				if (!cameraActive) return;
-
-				if (cameraVideo.readyState === cameraVideo.HAVE_ENOUGH_DATA) {
-					drawVideoToCanvas(cameraVideo, previewLeft);
-					if (session) {
-						runLiveCameraInference();
-					}
-				}
-				cameraAnimFrame = requestAnimationFrame(cameraLoop);
-			}
-
-			function drawVideoToCanvas(video, canvas) {
-				const ctx = canvas.getContext('2d');
-				const cw = canvas.width = IMG_W;
-				const ch = canvas.height = IMG_H;
-				const vw = video.videoWidth;
-				const vh = video.videoHeight;
-				
-				const canvasAspect = cw / ch;
-				const videoAspect = vw / vh;
-				
-				let sx, sy, sw, sh;
-				if (videoAspect > canvasAspect) {
-					sh = vh;
-					sw = vh * canvasAspect;
-					sx = (vw - sw) / 2;
-					sy = 0;
-				} else {
-					sw = vw;
-					sh = vw / canvasAspect;
-					sx = 0;
-					sy = (vh - sh) / 2;
-				}
-				ctx.drawImage(video, sx, sy, sw, sh, 0, 0, cw, ch);
-			}
-
-			async function runLiveCameraInference() {
-				if (!session || !cameraActive || isProcessingCamera) return;
-				isProcessingCamera = true;
-
-				try {
-					const [, nCh, inH, inW] = modelInputDims;
-					const leftData  = imageToTensor(previewLeft, nCh);
-					const inputLeft = new ort.Tensor('float32', leftData, [1, nCh, inH, inW]);
-
-					const inputNames = session.inputNames;
-					const feeds = {};
-
-					if (inputNames.length === 1) {
-						feeds[inputNames[0]] = inputLeft;
-					} else {
-						// For camera mode, feed left to both or mirrored
-						const rightData = imageToTensor(previewLeft, nCh);
-						const inputRight = new ort.Tensor('float32', rightData, [1, nCh, inH, inW]);
-						feeds[inputNames[0]] = inputLeft;
-						feeds[inputNames[1]] = inputRight;
-						for (let i = 2; i < inputNames.length; i++) {
-							const zeroData = new Float32Array(inH * inW);
-							feeds[inputNames[i]] = new ort.Tensor('float32', zeroData, [1, inH, inW]);
-						}
-					}
-
-					const t0 = performance.now();
-					const results = await session.run(feeds);
-					const elapsed = (performance.now() - t0).toFixed(0);
-
-					const outNames = session.outputNames;
-					// Find the output tensor with the largest data size (corresponds to full-res disp1)
-					let disp1Key = outNames[0];
-					let maxLen = 0;
-					for (const name of outNames) {
-						const len = results[name].data.length;
-						if (len > maxLen) {
-							maxLen = len;
-							disp1Key = name;
-						}
-					}
-
-					const disp = results[disp1Key].data;
-					const dims = results[disp1Key].dims; // e.g. [1, 1, outH, outW]
-					lastDispW = dims[3];
-					lastDispH = dims[2];
-
-					lastDisp = disp;
-					renderOutput(disp, previewLeft, lastDispW, lastDispH);
-					updateDepthStats(disp);
-
-					inferTime.textContent = `${elapsed} ms`;
-					inferTime.classList.add('visible');
-
-					dlDepthBtn.disabled = false;
-					dlRawBtn.disabled   = false;
-
-				} catch (err) {
-					console.error('[d-Ape] Realtime inference error:', err);
-				} finally {
-					isProcessingCamera = false;
-				}
-			}
-
-			btnRefreshCameras.addEventListener('click', detectCameras);
-			btnCameraToggle.addEventListener('click', () => {
-				if (cameraActive) {
-					stopCamera();
-				} else {
-					startCamera();
-				}
-			});
-
-			// ── File upload ──────────────────────────────────────
-			function setupDropZone(zone, inputEl, isLeft) {
-				zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
-				zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-				zone.addEventListener('drop', e => {
-					e.preventDefault();
-					zone.classList.remove('drag-over');
-					const file = e.dataTransfer?.files?.[0];
-					if (file && file.type.startsWith('image/')) loadImageFile(file, isLeft);
-				});
-				inputEl.addEventListener('change', () => {
-					const file = inputEl.files?.[0];
-					if (file) loadImageFile(file, isLeft);
-				});
-			}
-
-			setupDropZone(document.getElementById('dropZoneLeft'),  document.getElementById('fileLeft'),  true);
-			setupDropZone(document.getElementById('dropZoneRight'), document.getElementById('fileRight'), false);
-
-			// ── Buttons ──────────────────────────────────────────
-			runBtn.addEventListener('click', () => runInference());
-			sampleBtn.addEventListener('click', loadSampleImage);
-			clearBtn.addEventListener('click', () => {
-				stopCamera();
-				clearState();
-			});
-
-			dlDepthBtn.addEventListener('click', () => {
-				if (!lastDisp) return;
-				const link = document.createElement('a');
-				link.download = 'monolithic_dape_depth.png';
-				link.href = outputCanvas.toDataURL('image/png');
-				link.click();
-			});
-
-			dlRawBtn.addEventListener('click', () => {
-				if (!lastDisp) return;
-				const blob = new Blob([lastDisp.buffer], { type: 'application/octet-stream' });
-				const url  = URL.createObjectURL(blob);
-				const link = document.createElement('a');
-				link.download = 'monolithic_dape_disp1_float32.bin';
-				link.href = url;
-				link.click();
-				setTimeout(() => URL.revokeObjectURL(url), 1000);
-			});
-
-			// ── Back button transition ───────────────────────────
-			const backBtn = document.getElementById('backBtn');
-			if (backBtn) {
-				backBtn.addEventListener('click', e => {
-					e.preventDefault();
-					stopCamera();
-					document.body.classList.add('is-exiting');
-					setTimeout(() => { window.location.href = backBtn.getAttribute('href'); }, 280);
-				});
-			}
-
-			// ── Load ORT dynamically, then auto-load model ───────
-			// Dynamic injection guarantees ort is defined before loadModel() runs.
-			function injectORT(callback) {
-				// If already loaded (e.g. hot-reload), just proceed
-				if (typeof ort !== 'undefined') { callback(); return; }
-
-				const s = document.createElement('script');
-				s.src = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.2/dist/ort.min.js';
-				s.crossOrigin = 'anonymous';
-
-				s.onload = () => {
-					console.log('[d-Ape] ORT loaded:', typeof ort);
-					callback();
-				};
-
-				s.onerror = () => {
-					setStatus('error', 'Load Failed');
-					showError('Failed to load ONNX Runtime Web from CDN. Check your internet connection.');
-				};
-
-				document.head.appendChild(s);
-			}
-
-			// ── Intro Animation Sequence ───────────────────────
-			function runIntroSequence() {
-				const overlay = document.getElementById('sprayIntroOverlay');
-				const group = document.getElementById('sprayCanGroup');
-				const shakeGroup = document.getElementById('sprayShakeGroup');
-				const mist = document.getElementById('sprayMist');
-				const bgVideo = document.getElementById('bg-video');
-				const page = document.querySelector('.bh-page');
-
-				// Skip if already played this session
-				if (sessionStorage.getItem('dapeIntroPlayed')) {
-					overlay.style.display = 'none';
-					bgVideo.classList.remove('intro-hidden');
-					bgVideo.classList.add('intro-ready');
-					page.classList.remove('intro-active');
-					setTimeout(() => injectORT(loadModel), 100);
-					return;
-				}
-				sessionStorage.setItem('dapeIntroPlayed', 'true');
-
-				// Sequence
-				setTimeout(() => {
-					// Phase 1: Enter & spray background
-					group.classList.add('phase-1');
-					setTimeout(() => {
-						shakeGroup.classList.add('shaking');
-						mist.classList.add('burst');
-						overlay.classList.add('bg-revealed');
-						bgVideo.classList.remove('intro-hidden');
-						bgVideo.classList.add('intro-ready');
-					}, 500);
-				}, 100);
-
-				setTimeout(() => {
-					// Phase 2: Spray Shards
-					shakeGroup.classList.remove('shaking');
-					mist.classList.remove('burst');
-					group.classList.remove('phase-1');
-					group.classList.add('phase-2');
-					setTimeout(() => {
-						shakeGroup.classList.add('shaking');
-						mist.classList.add('burst');
-						// Now shards appear sequentially
-						page.classList.add('intro-shards-ready');
-					}, 400);
-				}, 1600);
-
-				setTimeout(() => {
-					// Phase 3: Spray Text & Exit
-					shakeGroup.classList.remove('shaking');
-					mist.classList.remove('burst');
-					group.classList.remove('phase-2');
-					group.classList.add('phase-3');
-					setTimeout(() => {
-						mist.style.background = 'radial-gradient(circle at center, rgba(255, 26, 108, 0.45) 0%, transparent 60%)';
-						shakeGroup.classList.add('shaking');
-						mist.classList.add('burst');
-						// Now text appears
-						page.classList.add('intro-text-ready');
-					}, 500);
-					
-					setTimeout(() => {
-						shakeGroup.classList.remove('shaking');
-						mist.classList.remove('burst');
-						group.classList.remove('phase-3');
-						group.classList.add('phase-exit');
-					}, 1300);
-				}, 2800);
-
-				setTimeout(() => {
-					// Cleanup
-					overlay.classList.add('intro-done');
-					page.classList.remove('intro-active');
-					setTimeout(() => {
-						overlay.style.display = 'none';
-						injectORT(loadModel);
-					}, 500);
-				}, 4600);
-			}
-
-			// Run intro instead of directly injecting ORT
-			// It will call injectORT at the end of the animation
-			runIntroSequence();
-
-		})();
-		</script>
-
-	</body>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TinyConvMemLM — On-Device LM · site(.)moss</title>
+    <meta
+      name="description"
+      content="A 41M-parameter dilated-CNN + GRU-memory language model distilled from Qwen2.5-0.5B, compiled to WASM. Every token is generated entirely by your browser."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@1,6..72,400;1,6..72,500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ============================
+         CLAUDE THEME TOKENS
+      ============================ */
+      :root {
+        --bg-app: #181816;
+        --bg-sidebar: #131312;
+        --bg-card: #20201e;
+        --bg-input: #262624;
+        --bg-hover: #2c2c29;
+        --border: #2e2e2b;
+        --border-subtle: #242421;
+        --text-primary: #ecebe6;
+        --text-secondary: #a3a29e;
+        --text-muted: #666562;
+        --accent-orange: #d97757;
+        --accent-orange-soft: rgba(217, 119, 87, 0.15);
+        --accent-green: #4ade80;
+        --accent-blue: #60a5fa;
+        --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-serif: "Newsreader", Georgia, serif;
+        --font-mono: "JetBrains Mono", monospace;
+        --sidebar-w: 300px;
+        --r-lg: 20px;
+        --r-md: 12px;
+        --r-sm: 8px;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: var(--bg-app);
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .app-shell {
+        display: flex;
+        width: 100vw;
+        height: 100vh;
+      }
+
+      /* ============================
+         SIDEBAR (LEFT) - PROJECT EXPLANATION
+      ============================ */
+      .sidebar {
+        width: var(--sidebar-w);
+        background: var(--bg-sidebar);
+        border-right: 1px solid var(--border-subtle);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 16px 14px;
+        flex-shrink: 0;
+        overflow-y: auto;
+      }
+
+      .sidebar-section {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .brand-title {
+        font-family: var(--font-serif);
+        font-size: 20px;
+        font-weight: 500;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .brand-title svg {
+        color: var(--accent-orange);
+      }
+
+      .project-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--r-md);
+        padding: 12px 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .card-label {
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--accent-orange);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .project-desc {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .spec-item {
+        background: var(--bg-input);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--r-sm);
+        padding: 6px 8px;
+      }
+      .spec-val {
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent-green);
+      }
+      .spec-lbl {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+
+      /* Sidebar Sliders */
+      .slider-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .slider-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .slider-header {
+        display: flex;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-secondary);
+      }
+      .slider-header span.val {
+        color: var(--accent-orange);
+      }
+      .slider-item input[type="range"] {
+        accent-color: var(--accent-orange);
+        cursor: pointer;
+      }
+
+      .back-link-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        border-radius: var(--r-sm);
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        font-size: 13px;
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+        margin-top: auto;
+      }
+      .back-link-btn:hover {
+        background: var(--bg-hover);
+        color: var(--text-primary);
+      }
+
+      /* ============================
+         MAIN CONTENT AREA
+      ============================ */
+      .main-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-app);
+        height: 100vh;
+        position: relative;
+      }
+
+      .top-bar {
+        height: 52px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid var(--border-subtle);
+      }
+      .model-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        background: var(--bg-card);
+        padding: 5px 12px;
+        border-radius: 16px;
+        border: 1px solid var(--border);
+      }
+      .model-badge strong {
+        color: var(--text-primary);
+      }
+
+      /* Chat Container */
+      .chat-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 32px 20px 180px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* Hero Greeting */
+      .hero-greeting {
+        max-width: 680px;
+        width: 100%;
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .sparkle-icon {
+        color: var(--accent-orange);
+        margin-bottom: 16px;
+      }
+      .hero-title {
+        font-family: var(--font-serif);
+        font-size: 34px;
+        font-weight: 400;
+        color: var(--text-primary);
+        letter-spacing: -0.01em;
+        margin-bottom: 8px;
+      }
+      .hero-sub {
+        font-size: 14px;
+        color: var(--text-secondary);
+        max-width: 540px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+
+      /* Signal Stage Pills */
+      .signal-pills {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .sig-pill {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        transition: all 0.2s;
+      }
+      .sig-pill.active {
+        border-color: var(--accent-orange);
+        color: var(--accent-orange);
+        background: var(--accent-orange-soft);
+      }
+
+      /* Messages Stream */
+      .messages-list {
+        width: 100%;
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+      .msg-row {
+        display: flex;
+        gap: 14px;
+        width: 100%;
+      }
+      .msg-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .msg-user .msg-avatar {
+        background: #3a3834;
+        color: #d8d4cc;
+      }
+      .msg-assistant .msg-avatar {
+        background: var(--accent-orange-soft);
+        color: var(--accent-orange);
+      }
+      .msg-content {
+        flex: 1;
+        font-size: 14px;
+        line-height: 1.7;
+        color: var(--text-primary);
+      }
+      .msg-user .msg-content {
+        font-family: var(--font-mono);
+        font-size: 13.5px;
+        background: var(--bg-card);
+        padding: 12px 16px;
+        border-radius: var(--r-md);
+        border: 1px solid var(--border);
+      }
+      .msg-assistant .msg-content {
+        font-family: var(--font-mono);
+        font-size: 13.5px;
+        padding-top: 4px;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      /* ============================
+         CONFIRM & LOADING OVERLAY
+      ============================ */
+      .init-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--r-md);
+        padding: 20px 24px;
+        width: 100%;
+        max-width: 540px;
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        text-align: left;
+      }
+      .init-header {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .init-desc {
+        font-size: 12.5px;
+        color: var(--text-secondary);
+        line-height: 1.6;
+      }
+      .load-start-btn {
+        background: var(--accent-orange);
+        color: #181816;
+        border: none;
+        border-radius: var(--r-sm);
+        padding: 10px 18px;
+        font-family: var(--font-mono);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: filter 0.15s, transform 0.1s;
+        align-self: flex-start;
+      }
+      .load-start-btn:hover {
+        filter: brightness(1.1);
+      }
+      .load-start-btn:active {
+        transform: scale(0.98);
+      }
+
+      .loading-box {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 4px;
+      }
+      .loading-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        color: var(--text-secondary);
+      }
+      .loading-spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--border);
+        border-top-color: var(--accent-orange);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .loading-track {
+        height: 6px;
+        background: var(--bg-input);
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+      }
+      .loading-bar {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--accent-orange), var(--accent-green));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+      .pulse-text {
+        font-size: 11.5px;
+        color: var(--text-muted);
+        animation: pulseText 1.5s ease-in-out infinite;
+      }
+      @keyframes pulseText {
+        0%, 100% { opacity: 0.6; }
+        50% { opacity: 1; }
+      }
+
+      /* Floating Prompt Box */
+      .prompt-wrapper {
+        position: absolute;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 720px;
+        padding: 0 20px;
+        z-index: 10;
+      }
+
+      .prompt-box {
+        background: var(--bg-input);
+        border: 1px solid var(--border);
+        border-radius: var(--r-lg);
+        padding: 14px 16px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition: border-color 0.15s;
+      }
+      .prompt-box:focus-within {
+        border-color: #44433f;
+      }
+
+      #status-banner {
+        font-family: var(--font-mono);
+        font-size: 11.5px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      #status-banner.ok { color: var(--accent-green); }
+      #status-banner.warn { color: var(--accent-orange); }
+
+      textarea#prompt {
+        width: 100%;
+        background: transparent;
+        border: none;
+        outline: none;
+        color: var(--text-primary);
+        font-family: var(--font-sans);
+        font-size: 14.5px;
+        resize: none;
+        min-height: 48px;
+        max-height: 160px;
+        line-height: 1.5;
+      }
+      textarea#prompt::placeholder {
+        color: var(--text-muted);
+      }
+
+      .prompt-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 4px;
+      }
+
+      .right-tools {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .model-tag {
+        font-family: var(--font-mono);
+        font-size: 11px;
+        color: var(--text-muted);
+        background: var(--bg-card);
+        padding: 4px 10px;
+        border-radius: 12px;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .send-btn {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--accent-orange);
+        color: #181816;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: filter 0.15s, transform 0.1s;
+      }
+      .send-btn:hover:not(:disabled) {
+        filter: brightness(1.1);
+      }
+      .send-btn:disabled {
+        background: var(--border);
+        color: var(--text-muted);
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar { display: none; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="app-shell">
+
+      <!-- ── SIDEBAR (LEFT) - PROJECT EXPLANATION ── -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="brand-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+            </svg>
+            site(.)moss / LM
+          </div>
+
+          <!-- Project Description Card -->
+          <div class="project-card">
+            <div class="card-label">PROJECT OVERVIEW</div>
+            <div class="project-desc">
+              <strong>TinyConvMemLM</strong> is a 41M-parameter distilled language model derived from <code>Qwen2.5-0.5B</code>. It uses a Dilated-CNN + GRU Memory architecture running 100% locally in your browser via WebAssembly.
+            </div>
+          </div>
+
+          <!-- Spec Cards -->
+          <div class="project-card">
+            <div class="card-label">PERFORMANCE METRICS</div>
+            <div class="spec-grid">
+              <div class="spec-item">
+                <div class="spec-val">12.0×</div>
+                <div class="spec-lbl">Smaller (41M vs 494M)</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-val">12.5×</div>
+                <div class="spec-lbl">Faster Pass</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-val">0</div>
+                <div class="spec-lbl">API Calls</div>
+              </div>
+              <div class="spec-item">
+                <div class="spec-val" id="side-tps">—</div>
+                <div class="spec-lbl">Tokens / Sec</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parameters Sliders Card -->
+          <div class="project-card">
+            <div class="card-label">SAMPLING SETTINGS</div>
+            <div class="slider-group">
+              <div class="slider-item">
+                <div class="slider-header">
+                  <span>Temperature</span>
+                  <span class="val" id="temp-val">0.7</span>
+                </div>
+                <input type="range" id="temp" min="0.1" max="1.5" step="0.1" value="0.7" />
+              </div>
+              <div class="slider-item">
+                <div class="slider-header">
+                  <span>Top-K Sampling</span>
+                  <span class="val" id="topk-val">40</span>
+                </div>
+                <input type="range" id="topk" min="1" max="100" step="1" value="40" />
+              </div>
+              <div class="slider-item">
+                <div class="slider-header">
+                  <span>Repetition Penalty</span>
+                  <span class="val" id="reppen-val">1.25</span>
+                </div>
+                <input type="range" id="reppen" min="1.0" max="2.0" step="0.05" value="1.25" />
+              </div>
+              <div class="slider-item">
+                <div class="slider-header">
+                  <span>Max Tokens</span>
+                  <span class="val" id="maxlen-val">80</span>
+                </div>
+                <input type="range" id="maxlen" min="10" max="200" step="10" value="80" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+       
+      </aside>
+
+      <!-- ── MAIN CONTENT (RIGHT) ── -->
+      <main class="main-area">
+
+        <!-- Top Bar -->
+        <div class="top-bar">
+          <div class="model-badge">
+            <span>Model:</span>
+            <strong>TinyConvMemLM (41M WASM)</strong>
+          </div>
+          <div class="top-links">
+            <a href="/" style="color: var(--text-secondary); font-size: 13px; text-decoration: none;">← site(.)moss</a>
+          </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+
+          <!-- Hero Greeting -->
+          <div class="hero-greeting" id="heroGreeting">
+            <div class="sparkle-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/>
+              </svg>
+            </div>
+            <h1 class="hero-title">On-Device LLM Playground</h1>
+            <p class="hero-sub">
+              Execute a 41M parameter language model locally in your browser. All computations remain private and run on-device.
+            </p>
+
+            <!-- Signal Pills -->
+            <div class="signal-pills" id="signalPills">
+              <span class="sig-pill active" data-stage="input">Stage 1: Input</span>
+              <span class="sig-pill" data-stage="cnn">Stage 2: Dilated CNN</span>
+              <span class="sig-pill" data-stage="gru">Stage 3: GRU Gate</span>
+              <span class="sig-pill" data-stage="output">Stage 4: Output</span>
+            </div>
+
+            <!-- Pre-Load Confirmation Card -->
+            <div class="init-card" id="initCard">
+              <div class="init-header">
+                <span>Model Initialization</span>
+                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--accent-orange);">~488 MB Total</span>
+              </div>
+              <div class="init-desc">
+                The WASM model weights total ~488 MB (Prefill graph: 320 MB, Decode weights: 165 MB). Once downloaded, weights are cached by your browser for offline use. Are you ready to initialize?
+              </div>
+              <button class="load-start-btn" id="startLoadBtn">Initialize and Load Model</button>
+
+              <!-- Loading Bar (hidden until button clicked) -->
+              <div class="loading-box" id="loadingBox">
+                <div class="loading-header">
+                  <span id="loadProgressTitle">Preparing WASM model...</span>
+                  <span class="loading-spinner" id="loadSpinner"></span>
+                </div>
+                <div class="loading-track">
+                  <div class="loading-bar" id="loadingBar"></div>
+                </div>
+                <div class="pulse-text" id="loadDetailText">
+                  Initializing ONNX Runtime Web engine...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Stream -->
+          <div class="messages-list" id="messagesList"></div>
+
+        </div>
+
+        <!-- Floating Prompt Input Box -->
+        <div class="prompt-wrapper">
+          <div class="prompt-box">
+            <div id="status-banner">
+              Click 'Initialize and Load Model' above to start
+            </div>
+
+            <textarea
+              id="prompt"
+              placeholder="Enter a prompt to run inference..."
+              rows="1"
+              disabled
+            ></textarea>
+
+            <div class="prompt-toolbar">
+              <div></div>
+              <div class="right-tools">
+                <span class="model-tag" id="tps-tag">WASM 41M</span>
+                <button class="send-btn" id="sendBtn" disabled title="Run Inference">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+    <!-- ONNX Runtime Web Script -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js"></script>
+
+    <!-- INFERENCE SCRIPT -->
+    <script type="module">
+      import { AutoTokenizer, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0/dist/transformers.min.js";
+
+      env.allowLocalModels = false;
+
+      // Config
+      const MODEL_CONFIG_URL  = "/tiny_convmem_lm_onnx_export/model_config.json";
+      const PREFILL_MODEL_URL = "/tiny_convmem_lm_onnx_export/tiny_convmem_lm_prefill.onnx";
+      const DECODE_MODEL_URL  = "/tiny_convmem_lm_onnx_export/tiny_convmem_lm_decode.onnx";
+      const TOKENIZER_REPO    = "Qwen/Qwen2.5-0.5B-Instruct";
+
+      // DOM
+      const statusBanner    = document.getElementById("status-banner");
+      const promptEl        = document.getElementById("prompt");
+      const sendBtn         = document.getElementById("sendBtn");
+      const heroGreeting    = document.getElementById("heroGreeting");
+      const messagesList    = document.getElementById("messagesList");
+      const startLoadBtn    = document.getElementById("startLoadBtn");
+      const loadingBox      = document.getElementById("loadingBox");
+      const loadTitle       = document.getElementById("loadProgressTitle");
+      const loadingBar      = document.getElementById("loadingBar");
+      const loadDetail      = document.getElementById("loadDetailText");
+      const loadSpinner     = document.getElementById("loadSpinner");
+      const tpsTag          = document.getElementById("tps-tag");
+      const sideTps         = document.getElementById("side-tps");
+      const sigPills        = document.querySelectorAll(".sig-pill");
+
+      const tempSlider   = document.getElementById("temp");
+      const topkSlider   = document.getElementById("topk");
+      const reppenSlider = document.getElementById("reppen");
+      const maxlenSlider = document.getElementById("maxlen");
+
+      [["temp", tempSlider], ["topk", topkSlider], ["reppen", reppenSlider], ["maxlen", maxlenSlider]].forEach(function (pair) {
+        var valEl = document.getElementById(pair[0] + "-val");
+        pair[1].addEventListener("input", function () { valEl.textContent = pair[1].value; });
+      });
+
+      var prefillSession, decodeSession, tokenizer, modelConfig, ort;
+
+      function setStatus(text, cls) {
+        statusBanner.innerHTML = text;
+        statusBanner.className = cls || "";
+      }
+
+      function updateProgress(title, detail, pct) {
+        if (loadTitle) loadTitle.textContent = title;
+        if (loadDetail) loadDetail.textContent = detail;
+        if (loadingBar) loadingBar.style.width = pct + "%";
+        setStatus(title);
+      }
+
+      function setActiveStage(name) {
+        sigPills.forEach(function (p) {
+          p.classList.toggle("active", p.dataset.stage === name);
+        });
+      }
+
+      function getOrtInstance() {
+        if (window.ort) return Promise.resolve(window.ort);
+        return new Promise(function (resolve) {
+          var check = setInterval(function () {
+            if (window.ort) {
+              clearInterval(check);
+              resolve(window.ort);
+            }
+          }, 50);
+        });
+      }
+
+      // Sampling with Repetition Penalty & Temperature & Top-K
+      function sampleWithRepetitionPenalty(logits, vocabSize, temperature, topK, repPenalty, seenTokenSet) {
+        var logitsCopy = new Float32Array(logits);
+
+        if (repPenalty !== 1.0 && seenTokenSet.size > 0) {
+          seenTokenSet.forEach(function (id) {
+            if (id < vocabSize) {
+              if (logitsCopy[id] < 0) {
+                logitsCopy[id] *= repPenalty;
+              } else {
+                logitsCopy[id] /= repPenalty;
+              }
+            }
+          });
+        }
+
+        var scaled = logitsCopy.map(function (v) { return v / temperature; });
+
+        var indices = Array.from({ length: vocabSize }, function (_, i) { return i; });
+        indices.sort(function (a, b) { return scaled[b] - scaled[a]; });
+        var top = indices.slice(0, topK);
+
+        var maxVal = scaled[top[0]];
+        var exps = top.map(function (i) { return Math.exp(scaled[i] - maxVal); });
+        var sum = exps.reduce(function (a, b) { return a + b; }, 0);
+        var probs = exps.map(function (v) { return v / sum; });
+
+        var r = Math.random(), cum = 0;
+        for (var i = 0; i < top.length; i++) {
+          cum += probs[i];
+          if (r <= cum) return top[i];
+        }
+        return top[0];
+      }
+
+      async function startLoadingModel() {
+        startLoadBtn.style.display = "none";
+        loadingBox.style.display = "flex";
+
+        try {
+          updateProgress("Initializing ONNX Runtime Web engine...", "Loading WASM runtime...", 10);
+          ort = await getOrtInstance();
+
+          if (ort && ort.env && ort.env.wasm) {
+            ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/";
+            if (typeof SharedArrayBuffer === "undefined") {
+              ort.env.wasm.numThreads = 1;
+            } else {
+              ort.env.wasm.numThreads = Math.min(navigator.hardwareConcurrency || 4, 4);
+            }
+          }
+
+          updateProgress("Fetching model configuration...", "Reading model_config.json...", 25);
+          var configRes = await fetch(MODEL_CONFIG_URL);
+          if (!configRes.ok) throw new Error("Could not fetch model_config.json");
+          modelConfig = await configRes.json();
+
+          updateProgress("Loading tokenizer (Qwen2.5)...", "Preparing vocabulary table (151.6K tokens)...", 40);
+          tokenizer = await AutoTokenizer.from_pretrained(TOKENIZER_REPO);
+
+          updateProgress("Downloading prefill model (320 MB)...", "Loading prompt encoding graph...", 60);
+          var prefillRes = await fetch(PREFILL_MODEL_URL);
+          if (!prefillRes.ok) throw new Error("Could not fetch tiny_convmem_lm_prefill.onnx");
+          var prefillBuf = new Uint8Array(await prefillRes.arrayBuffer());
+
+          updateProgress("Compiling prefill WASM session...", "Building neural network graph for context analysis...", 75);
+          prefillSession = await ort.InferenceSession.create(prefillBuf, { executionProviders: ["wasm"] });
+
+          updateProgress("Downloading decode weights (165 MB)...", "Loading generation weights...", 90);
+          var decodeRes = await fetch(DECODE_MODEL_URL);
+          if (!decodeRes.ok) throw new Error("Could not fetch tiny_convmem_lm_decode.onnx");
+          var decodeBuf = new Uint8Array(await decodeRes.arrayBuffer());
+
+          var decodeDataRes = await fetch("/tiny_convmem_lm_onnx_export/tiny_convmem_lm_decode.onnx.data");
+          if (!decodeDataRes.ok) throw new Error("Could not fetch tiny_convmem_lm_decode.onnx.data");
+          var decodeDataBuf = new Uint8Array(await decodeDataRes.arrayBuffer());
+
+          updateProgress("Compiling decode WASM session...", "Finalizing session compilation...", 100);
+          decodeSession = await ort.InferenceSession.create(decodeBuf, {
+            executionProviders: ["wasm"],
+            externalData: [
+              {
+                data: decodeDataBuf,
+                path: "tiny_convmem_lm_decode.onnx.data"
+              }
+            ]
+          });
+
+          setTimeout(function() {
+            if (loadingBox) loadingBox.style.display = "none";
+          }, 800);
+
+          setStatus("Model loaded and ready.", "ok");
+          promptEl.disabled = false;
+          sendBtn.disabled = false;
+          promptEl.focus();
+        } catch (err) {
+          console.error(err);
+          var msg = (err && err.message) ? err.message : String(err);
+          updateProgress("Initialization Error", msg, 0);
+          if (loadSpinner) loadSpinner.style.display = "none";
+          setStatus("Failed to load model: " + msg, "warn");
+        }
+      }
+
+      async function generate() {
+        var promptText = promptEl.value.trim();
+        if (!promptText) return;
+
+        heroGreeting.style.display = "none";
+        promptEl.value = "";
+        promptEl.disabled = true;
+        sendBtn.disabled = true;
+
+        // User message bubble
+        var userRow = document.createElement("div");
+        userRow.className = "msg-row msg-user";
+        userRow.innerHTML = '<div class="msg-avatar">M</div><div class="msg-content"></div>';
+        userRow.querySelector(".msg-content").textContent = promptText;
+        messagesList.appendChild(userRow);
+
+        // Assistant message bubble
+        var assistantRow = document.createElement("div");
+        assistantRow.className = "msg-row msg-assistant";
+        assistantRow.innerHTML = '<div class="msg-avatar">LM</div><div class="msg-content" id="active-target"></div>';
+        messagesList.appendChild(assistantRow);
+        var targetEl = assistantRow.querySelector("#active-target");
+        targetEl.removeAttribute("id");
+
+        var temperature  = parseFloat(tempSlider.value);
+        var topK         = parseInt(topkSlider.value, 10);
+        var repPenalty   = parseFloat(reppenSlider.value);
+        var maxNewTokens = parseInt(maxlenSlider.value, 10);
+
+        setActiveStage("input");
+        setStatus("Encoding prompt (Prefill)...");
+
+        try {
+          var encoded  = await tokenizer(promptText, { return_tensor: false });
+          var inputIds = encoded.input_ids;
+          var vocabSize = modelConfig.vocab_size;
+          var t0 = performance.now();
+
+          var seenTokens = new Set(inputIds);
+
+          // Prefill
+          setActiveStage("cnn");
+          var bigIds = new BigInt64Array(inputIds.length);
+          for (var i = 0; i < inputIds.length; i++) bigIds[i] = BigInt(inputIds[i]);
+          var prefillInput = new ort.Tensor("int64", bigIds, [1, inputIds.length]);
+          var prefillResult = await prefillSession.run({ input_ids: prefillInput });
+          var hidden = prefillResult.hidden_out;
+
+          setActiveStage("gru");
+          var start = (inputIds.length - 1) * vocabSize;
+          var lastLogits = Array.from(prefillResult.logits.data.slice(start, start + vocabSize));
+
+          var nextId = sampleWithRepetitionPenalty(lastLogits, vocabSize, temperature, topK, repPenalty, seenTokens);
+          var generatedIds = [nextId];
+          seenTokens.add(nextId);
+          targetEl.textContent += await tokenizer.decode([nextId]);
+
+          // Decode loop
+          setActiveStage("output");
+          setStatus("Generating response tokens...");
+          
+          var consecutiveSameCount = 0;
+          var lastSeenId = nextId;
+
+          for (var step = 1; step < maxNewTokens; step++) {
+            var tokenBig = new BigInt64Array([BigInt(nextId)]);
+            var tokenTensor = new ort.Tensor("int64", tokenBig, [1, 1]);
+            var decResult = await decodeSession.run({ input_ids: tokenTensor, hidden_in: hidden });
+            hidden = decResult.hidden_out;
+
+            var stepLogits = Array.from(decResult.logits.data.slice(0, vocabSize));
+            nextId = sampleWithRepetitionPenalty(stepLogits, vocabSize, temperature, topK, repPenalty, seenTokens);
+
+            // EOS token check
+            if (tokenizer.eos_token_id != null && nextId === tokenizer.eos_token_id) break;
+
+            // Loop detector: stop if same token repeats 3 times consecutively
+            if (nextId === lastSeenId) {
+              consecutiveSameCount++;
+              if (consecutiveSameCount >= 3) break;
+            } else {
+              consecutiveSameCount = 0;
+              lastSeenId = nextId;
+            }
+
+            generatedIds.push(nextId);
+            seenTokens.add(nextId);
+            targetEl.textContent += await tokenizer.decode([nextId]);
+
+            var currentElapsed = performance.now() - t0;
+            var currentTps = (generatedIds.length / (currentElapsed / 1000)).toFixed(1);
+            tpsTag.textContent = currentTps + " tok/s";
+            if (sideTps) sideTps.textContent = currentTps;
+
+            if (step % 3 === 0) await new Promise(function (r) { setTimeout(r, 0); });
+          }
+
+          var elapsed = performance.now() - t0;
+          var tps = (generatedIds.length / (elapsed / 1000)).toFixed(1);
+          tpsTag.textContent = tps + " tok/s";
+          if (sideTps) sideTps.textContent = tps;
+          setStatus("Generation complete (" + generatedIds.length + " tokens, " + tps + " tok/s)", "ok");
+          setActiveStage("input");
+        } catch (err) {
+          console.error(err);
+          var msg = (err && err.message) ? err.message : String(err);
+          setStatus("Generation error: " + msg, "warn");
+        } finally {
+          promptEl.disabled = false;
+          sendBtn.disabled = false;
+          promptEl.focus();
+        }
+      }
+
+      startLoadBtn.addEventListener("click", startLoadingModel);
+      sendBtn.addEventListener("click", generate);
+      promptEl.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          generate();
+        }
+      });
+    </script>
+  </body>
 </html>
