@@ -12,8 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^10.1.4",
     "@astrojs/react": "^6.0.1",
+    "@astrojs/vercel": "^10.0.8",
     "@fontsource/google-sans-flex": "^5.2.4",
     "@gradio/client": "^2.3.0",
     "@libsql/client": "^0.17.4",
