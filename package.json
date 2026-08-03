@@ -12,7 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/node": "^11.0.2",
+    "@astrojs/node": "^10.1.4",
     "@astrojs/react": "^6.0.1",
     "@fontsource/google-sans-flex": "^5.2.4",
     "@gradio/client": "^2.3.0",
