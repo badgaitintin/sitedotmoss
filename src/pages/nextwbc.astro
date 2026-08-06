@@ -1,5 +1,5 @@
 ---
-import '@fontsource/google-sans-flex';
+import "@fontsource/google-sans-flex";
 ---
 
 <!doctype html>
@@ -9,7 +9,10 @@ import '@fontsource/google-sans-flex';
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="generator" content={Astro.generator} />
-		<meta name="description" content="NextWBC white blood cell classification dashboard." />
+		<meta
+			name="description"
+			content="NextWBC white blood cell classification dashboard."
+		/>
 		<title>NextWBC</title>
 
 		<style is:global>
@@ -42,7 +45,9 @@ import '@fontsource/google-sans-flex';
 				height: 100vh;
 				overflow: hidden;
 				background: transparent;
-				font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+				font-family:
+					"Google Sans Flex", "Google Sans", "Helvetica Neue",
+					sans-serif;
 				color: var(--bh-text);
 				line-height: 1.5;
 				margin: 0;
@@ -55,7 +60,7 @@ import '@fontsource/google-sans-flex';
 				position: fixed;
 				inset: -40px;
 				z-index: -2;
-				background-image: url('/frutigif_3.gif');
+				background-image: url("/frutigif_3.gif");
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
@@ -120,8 +125,18 @@ import '@fontsource/google-sans-flex';
 			.bh-main-card {
 				position: relative;
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.52) 0%, rgba(255,255,255,0.18) 30%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0.32) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.45) 0%, transparent 40%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.52) 0%,
+						rgba(255, 255, 255, 0.18) 30%,
+						rgba(255, 255, 255, 0.12) 50%,
+						rgba(255, 255, 255, 0.32) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.45) 0%,
+						transparent 40%
+					);
 				backdrop-filter: blur(32px) saturate(170%);
 				-webkit-backdrop-filter: blur(32px) saturate(170%);
 				border: 1px solid rgba(255, 255, 255, 0.65);
@@ -144,20 +159,20 @@ import '@fontsource/google-sans-flex';
 
 			/* Thick gradient border ring — visible curved glass edge */
 			.bh-main-card::before {
-				content: '';
+				content: "";
 				position: absolute;
 				inset: 0;
 				border-radius: inherit;
 				padding: 4px;
 				background: linear-gradient(
 					135deg,
-					rgba(255,255,255,1) 0%,
-					rgba(255,255,255,0.6) 10%,
-					rgba(255,255,255,0.15) 30%,
-					rgba(255,255,255,0.04) 50%,
-					rgba(255,255,255,0.12) 70%,
-					rgba(255,255,255,0.45) 90%,
-					rgba(255,255,255,0.8) 100%
+					rgba(255, 255, 255, 1) 0%,
+					rgba(255, 255, 255, 0.6) 10%,
+					rgba(255, 255, 255, 0.15) 30%,
+					rgba(255, 255, 255, 0.04) 50%,
+					rgba(255, 255, 255, 0.12) 70%,
+					rgba(255, 255, 255, 0.45) 90%,
+					rgba(255, 255, 255, 0.8) 100%
 				);
 				-webkit-mask:
 					linear-gradient(#fff 0 0) content-box,
@@ -170,7 +185,7 @@ import '@fontsource/google-sans-flex';
 
 			/* Edge curvature vignette */
 			.bh-main-card::after {
-				content: '';
+				content: "";
 				position: absolute;
 				inset: 0;
 				border-radius: inherit;
@@ -183,8 +198,6 @@ import '@fontsource/google-sans-flex';
 				pointer-events: none;
 				z-index: 1;
 			}
-
-
 
 			/* ===========================
 			   DASHBOARD SPLIT LAYOUT
@@ -268,8 +281,15 @@ import '@fontsource/google-sans-flex';
 				animation: wbc-pulse 3s infinite ease-in-out;
 			}
 			@keyframes wbc-pulse {
-				0%, 100% { transform: scale(1); opacity: 0.7; }
-				50% { transform: scale(1.05); opacity: 1; }
+				0%,
+				100% {
+					transform: scale(1);
+					opacity: 0.7;
+				}
+				50% {
+					transform: scale(1.05);
+					opacity: 1;
+				}
 			}
 			.wbc-empty-title {
 				font-size: 1.4rem;
@@ -321,26 +341,36 @@ import '@fontsource/google-sans-flex';
 			.wbc-back-btn {
 				width: 40px;
 				height: 40px;
-				background:
-					linear-gradient(180deg, rgba(186,230,253,0.9) 0%, rgba(125,211,252,0.7) 48%, rgba(56,189,248,0.8) 50%, rgba(14,165,233,0.9) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(186, 230, 253, 0.9) 0%,
+					rgba(125, 211, 252, 0.7) 48%,
+					rgba(56, 189, 248, 0.8) 50%,
+					rgba(14, 165, 233, 0.9) 100%
+				);
 				color: #ffffff;
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				border: 1px solid rgba(3,105,161,0.5);
-				border-top: 1.5px solid rgba(186,230,253,0.9);
+				border: 1px solid rgba(3, 105, 161, 0.5);
+				border-top: 1.5px solid rgba(186, 230, 253, 0.9);
 				border-radius: 50%;
 				box-shadow:
 					inset 0 2px 0 rgba(255, 255, 255, 0.7),
-					inset 0 -1px 0 rgba(0,0,0,0.1),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.1),
 					0 4px 16px rgba(14, 165, 233, 0.25);
 				cursor: pointer;
 				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				flex-shrink: 0;
 			}
 			.wbc-back-btn:hover {
-				background:
-					linear-gradient(180deg, rgba(224,242,254,0.95) 0%, rgba(186,230,253,0.8) 48%, rgba(125,211,252,0.85) 50%, rgba(56,189,248,0.95) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(224, 242, 254, 0.95) 0%,
+					rgba(186, 230, 253, 0.8) 48%,
+					rgba(125, 211, 252, 0.85) 50%,
+					rgba(56, 189, 248, 0.95) 100%
+				);
 				box-shadow:
 					inset 0 2px 0 rgba(255, 255, 255, 0.9),
 					0 6px 20px rgba(14, 165, 233, 0.35);
@@ -409,8 +439,12 @@ import '@fontsource/google-sans-flex';
 				position: relative;
 				border: 2px dashed rgba(0, 0, 0, 0.12);
 				border-radius: 28px;
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.05) 100%);
+				background: linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.08) 0%,
+					rgba(255, 255, 255, 0.02) 50%,
+					rgba(255, 255, 255, 0.05) 100%
+				);
 				backdrop-filter: blur(12px) saturate(120%);
 				-webkit-backdrop-filter: blur(12px) saturate(120%);
 				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
@@ -427,8 +461,12 @@ import '@fontsource/google-sans-flex';
 			}
 			.wbc-upload-zone:hover {
 				border-color: rgba(14, 165, 233, 0.45);
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(224,242,254,0.05) 50%, rgba(255,255,255,0.08) 100%);
+				background: linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.12) 0%,
+					rgba(224, 242, 254, 0.05) 50%,
+					rgba(255, 255, 255, 0.08) 100%
+				);
 				box-shadow: 0 4px 20px rgba(14, 165, 233, 0.06);
 			}
 			.wbc-upload-zone.dragging {
@@ -490,19 +528,29 @@ import '@fontsource/google-sans-flex';
 			.wbc-guide-note {
 				font-size: 0.75rem;
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 60%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.4) 0%,
+						rgba(255, 255, 255, 0.12) 40%,
+						rgba(255, 255, 255, 0.05) 60%,
+						rgba(255, 255, 255, 0.2) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.15) 0%,
+						transparent 60%
+					);
 				backdrop-filter: blur(20px) saturate(160%);
 				-webkit-backdrop-filter: blur(20px) saturate(160%);
-				border: 1px solid rgba(255,255,255,0.5);
-				border-top: 1.5px solid rgba(255,255,255,0.75);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.75);
 				border-radius: 18px;
 				padding: 12px;
 				color: var(--bh-muted);
 				line-height: 1.4;
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.5),
-					0 2px 8px rgba(0,0,0,0.04);
+					inset 0 2px 0 rgba(255, 255, 255, 0.5),
+					0 2px 8px rgba(0, 0, 0, 0.04);
 			}
 			.wbc-upload-icon-wrapper {
 				width: 56px;
@@ -535,8 +583,18 @@ import '@fontsource/google-sans-flex';
 				gap: 16px;
 				padding: 24px;
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.08) 40%, rgba(255,255,255,0.02) 60%, rgba(255,255,255,0.12) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.25) 0%,
+						rgba(255, 255, 255, 0.08) 40%,
+						rgba(255, 255, 255, 0.02) 60%,
+						rgba(255, 255, 255, 0.12) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.12) 0%,
+						transparent 50%
+					);
 				backdrop-filter: blur(24px) saturate(160%);
 				-webkit-backdrop-filter: blur(24px) saturate(160%);
 				border: 1px solid rgba(255, 255, 255, 0.5);
@@ -544,9 +602,9 @@ import '@fontsource/google-sans-flex';
 				border-radius: 28px;
 				margin-top: 16px;
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.6),
-					inset 0 -1px 0 rgba(0,0,0,0.04),
-					0 6px 24px rgba(0,0,0,0.06);
+					inset 0 2px 0 rgba(255, 255, 255, 0.6),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+					0 6px 24px rgba(0, 0, 0, 0.06);
 			}
 			.wbc-preview-img {
 				max-height: 280px;
@@ -634,8 +692,18 @@ import '@fontsource/google-sans-flex';
 			.wbc-image-panel {
 				flex: 1;
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 50%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.4) 0%,
+						rgba(255, 255, 255, 0.12) 40%,
+						rgba(255, 255, 255, 0.05) 60%,
+						rgba(255, 255, 255, 0.2) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.15) 0%,
+						transparent 50%
+					);
 				backdrop-filter: blur(20px) saturate(150%);
 				-webkit-backdrop-filter: blur(20px) saturate(150%);
 				border: 1px solid rgba(255, 255, 255, 0.5);
@@ -646,13 +714,16 @@ import '@fontsource/google-sans-flex';
 				min-width: 0;
 				min-height: 0;
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.6),
-					inset 0 -1px 0 rgba(0,0,0,0.04),
-					0 4px 16px rgba(0,0,0,0.06);
+					inset 0 2px 0 rgba(255, 255, 255, 0.6),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+					0 4px 16px rgba(0, 0, 0, 0.06);
 			}
 			.wbc-image-wrapper {
 				position: absolute;
-				top: 0; left: 0; right: 0; bottom: 0;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
 				display: flex;
 				align-items: center;
 				justify-content: center;
@@ -674,14 +745,18 @@ import '@fontsource/google-sans-flex';
 				z-index: 2;
 				font-size: 0.65rem;
 				font-weight: bold;
-				background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.9) 0%,
+					rgba(255, 255, 255, 0.4) 100%
+				);
 				color: var(--bh-accent);
 				padding: 4px 10px;
 				border-radius: 99px;
 				letter-spacing: 1px;
 				text-transform: uppercase;
-				border: 1px solid rgba(255,255,255,0.8);
-				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				border: 1px solid rgba(255, 255, 255, 0.8);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 			}
 
 			.wbc-stats-panel {
@@ -697,15 +772,26 @@ import '@fontsource/google-sans-flex';
 					flex-direction: row;
 					flex-wrap: wrap;
 				}
-				.wbc-count-card, .wbc-chart-card {
+				.wbc-count-card,
+				.wbc-chart-card {
 					flex: 1;
 					min-width: 140px;
 				}
 			}
 			.wbc-count-card {
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.4) 0%,
+						rgba(255, 255, 255, 0.12) 40%,
+						rgba(255, 255, 255, 0.05) 60%,
+						rgba(255, 255, 255, 0.2) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.12) 0%,
+						transparent 50%
+					);
 				backdrop-filter: blur(20px) saturate(150%);
 				-webkit-backdrop-filter: blur(20px) saturate(150%);
 				border: 1px solid rgba(255, 255, 255, 0.5);
@@ -718,15 +804,25 @@ import '@fontsource/google-sans-flex';
 				align-items: center;
 				justify-content: center;
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.6),
-					inset 0 -1px 0 rgba(0,0,0,0.04),
-					0 4px 16px rgba(0,0,0,0.05);
+					inset 0 2px 0 rgba(255, 255, 255, 0.6),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+					0 4px 16px rgba(0, 0, 0, 0.05);
 			}
 
 			.wbc-chart-card {
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 50%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.4) 0%,
+						rgba(255, 255, 255, 0.12) 40%,
+						rgba(255, 255, 255, 0.05) 60%,
+						rgba(255, 255, 255, 0.2) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.12) 0%,
+						transparent 50%
+					);
 				backdrop-filter: blur(20px) saturate(150%);
 				-webkit-backdrop-filter: blur(20px) saturate(150%);
 				border: 1px solid rgba(255, 255, 255, 0.5);
@@ -734,9 +830,9 @@ import '@fontsource/google-sans-flex';
 				border-radius: 24px;
 				padding: 16px;
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.6),
-					inset 0 -1px 0 rgba(0,0,0,0.04),
-					0 4px 16px rgba(0,0,0,0.05);
+					inset 0 2px 0 rgba(255, 255, 255, 0.6),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04),
+					0 4px 16px rgba(0, 0, 0, 0.05);
 			}
 
 			.wbc-count-number {
@@ -754,11 +850,15 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-chart-card {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.4) 0%,
+					rgba(255, 255, 255, 0.1) 100%
+				);
 				border: 1px solid rgba(255, 255, 255, 0.6);
 				border-radius: 20px;
 				padding: 16px;
-				box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
+				box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
 			}
 			.wbc-chart-title {
 				font-size: 0.72rem;
@@ -829,22 +929,27 @@ import '@fontsource/google-sans-flex';
 				height: 8px;
 			}
 			.wbc-crops-grid::-webkit-scrollbar-thumb {
-				background: rgba(0,0,0,0.2);
+				background: rgba(0, 0, 0, 0.2);
 				border-radius: 4px;
 			}
 			.wbc-crop-card {
 				flex: 0 0 auto;
 				width: 90px;
-				background:
-					linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.15) 48%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.3) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.6) 0%,
+					rgba(255, 255, 255, 0.15) 48%,
+					rgba(255, 255, 255, 0.08) 50%,
+					rgba(255, 255, 255, 0.3) 100%
+				);
 				backdrop-filter: blur(12px) saturate(140%);
 				-webkit-backdrop-filter: blur(12px) saturate(140%);
 				border-radius: 20px;
 				overflow: hidden;
 				box-shadow:
-					0 4px 16px rgba(0,0,0,0.08),
-					inset 0 2px 0 rgba(255,255,255,0.7),
-					inset 0 -1px 0 rgba(0,0,0,0.04);
+					0 4px 16px rgba(0, 0, 0, 0.08),
+					inset 0 2px 0 rgba(255, 255, 255, 0.7),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04);
 				display: flex;
 				flex-direction: column;
 				border: 1px solid rgba(255, 255, 255, 0.65);
@@ -854,8 +959,8 @@ import '@fontsource/google-sans-flex';
 			.wbc-crop-card:hover {
 				transform: scale(1.05) translateY(-2px);
 				box-shadow:
-					0 8px 24px rgba(0,0,0,0.12),
-					inset 0 2px 0 rgba(255,255,255,0.9);
+					0 8px 24px rgba(0, 0, 0, 0.12),
+					inset 0 2px 0 rgba(255, 255, 255, 0.9);
 			}
 			.wbc-crop-img-wrap {
 				width: 100%;
@@ -882,7 +987,7 @@ import '@fontsource/google-sans-flex';
 				font-size: 0.6rem;
 				font-weight: bold;
 				background: transparent;
-				border-top: 1px solid rgba(255,255,255,0.4);
+				border-top: 1px solid rgba(255, 255, 255, 0.4);
 			}
 
 			/* Quick Try Sample Image */
@@ -898,27 +1003,41 @@ import '@fontsource/google-sans-flex';
 				gap: 12px;
 				padding: 8px;
 				background:
-					linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.12) 40%, rgba(255,255,255,0.05) 60%, rgba(255,255,255,0.2) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.1) 0%, transparent 50%);
+					linear-gradient(
+						135deg,
+						rgba(255, 255, 255, 0.4) 0%,
+						rgba(255, 255, 255, 0.12) 40%,
+						rgba(255, 255, 255, 0.05) 60%,
+						rgba(255, 255, 255, 0.2) 100%
+					),
+					linear-gradient(
+						to bottom,
+						rgba(255, 255, 255, 0.1) 0%,
+						transparent 50%
+					);
 				backdrop-filter: blur(16px) saturate(140%);
 				-webkit-backdrop-filter: blur(16px) saturate(140%);
-				border: 1px solid rgba(255,255,255,0.5);
-				border-top: 1.5px solid rgba(255,255,255,0.75);
+				border: 1px solid rgba(255, 255, 255, 0.5);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.75);
 				border-radius: 20px;
 				cursor: pointer;
 				text-align: left;
 				width: 100%;
 				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.5),
-					0 2px 8px rgba(0,0,0,0.04);
+					inset 0 2px 0 rgba(255, 255, 255, 0.5),
+					0 2px 8px rgba(0, 0, 0, 0.04);
 			}
 			.wbc-sample-btn:hover:not(:disabled) {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(224,242,254,0.15) 50%, rgba(255,255,255,0.25) 100%);
+				background: linear-gradient(
+					135deg,
+					rgba(255, 255, 255, 0.5) 0%,
+					rgba(224, 242, 254, 0.15) 50%,
+					rgba(255, 255, 255, 0.25) 100%
+				);
 				border-color: rgba(14, 165, 233, 0.4);
 				box-shadow:
-					inset 0 2px 0 rgba(255,255,255,0.7),
+					inset 0 2px 0 rgba(255, 255, 255, 0.7),
 					0 4px 16px rgba(14, 165, 233, 0.08);
 				transform: translateY(-1px);
 			}
@@ -973,12 +1092,17 @@ import '@fontsource/google-sans-flex';
 			}
 
 			.wbc-reset-btn {
-				background:
-					linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 48%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.3) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.6) 0%,
+					rgba(255, 255, 255, 0.2) 48%,
+					rgba(255, 255, 255, 0.08) 50%,
+					rgba(255, 255, 255, 0.3) 100%
+				);
 				backdrop-filter: blur(12px) saturate(140%);
 				-webkit-backdrop-filter: blur(12px) saturate(140%);
-				border: 1px solid rgba(255,255,255,0.6);
-				border-top: 1.5px solid rgba(255,255,255,0.85);
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				border-top: 1.5px solid rgba(255, 255, 255, 0.85);
 				color: var(--bh-text);
 				cursor: pointer;
 				padding: 6px 14px;
@@ -988,18 +1112,22 @@ import '@fontsource/google-sans-flex';
 				justify-content: center;
 				gap: 8px;
 				box-shadow:
-					0 3px 10px rgba(0,0,0,0.06),
-					inset 0 2px 0 rgba(255,255,255,0.7),
-					inset 0 -1px 0 rgba(0,0,0,0.04);
+					0 3px 10px rgba(0, 0, 0, 0.06),
+					inset 0 2px 0 rgba(255, 255, 255, 0.7),
+					inset 0 -1px 0 rgba(0, 0, 0, 0.04);
 				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
 			}
 			.wbc-reset-btn:hover {
-				background: linear-gradient(135deg, rgba(255,200,200,0.3) 0%, rgba(239,68,68,0.08) 100%);
-				color: #EF4444;
+				background: linear-gradient(
+					135deg,
+					rgba(255, 200, 200, 0.3) 0%,
+					rgba(239, 68, 68, 0.08) 100%
+				);
+				color: #ef4444;
 				border-color: rgba(239, 68, 68, 0.35);
 				box-shadow:
-					0 4px 12px rgba(239,68,68,0.08),
-					inset 0 1px 0 rgba(255,255,255,0.5);
+					0 4px 12px rgba(239, 68, 68, 0.08),
+					inset 0 1px 0 rgba(255, 255, 255, 0.5);
 			}
 			.wbc-reset-btn span {
 				font-size: 0.8rem;
@@ -1040,8 +1168,21 @@ import '@fontsource/google-sans-flex';
 				inset: 0;
 				border-radius: 50%;
 				background:
-					radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.75) 15%, rgba(192, 132, 252, 0.45) 40%, rgba(56, 189, 248, 0.4) 65%, rgba(34, 197, 94, 0.35) 85%, transparent 100%),
-					linear-gradient(135deg, #38bdf8 0%, #a855f7 50%, #22c55e 100%);
+					radial-gradient(
+						circle at 35% 26%,
+						rgba(255, 255, 255, 1) 0%,
+						rgba(255, 255, 255, 0.75) 15%,
+						rgba(192, 132, 252, 0.45) 40%,
+						rgba(56, 189, 248, 0.4) 65%,
+						rgba(34, 197, 94, 0.35) 85%,
+						transparent 100%
+					),
+					linear-gradient(
+						135deg,
+						#38bdf8 0%,
+						#a855f7 50%,
+						#22c55e 100%
+					);
 				background-blend-mode: overlay;
 				border: 1.8px solid rgba(255, 255, 255, 0.95);
 				box-shadow:
@@ -1050,7 +1191,9 @@ import '@fontsource/google-sans-flex';
 					0 0 16px rgba(168, 85, 247, 0.5),
 					0 0 28px rgba(56, 189, 248, 0.4);
 				animation: rgb-hue-rotate 5s infinite linear;
-				transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25), opacity 0.25s ease;
+				transition:
+					transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25),
+					opacity 0.25s ease;
 			}
 
 			/* Top Crescent Specular Glare */
@@ -1062,13 +1205,21 @@ import '@fontsource/google-sans-flex';
 				width: 38%;
 				height: 26%;
 				border-radius: 50%;
-				background: linear-gradient(180deg, #ffffff 0%, rgba(255, 255, 255, 0.25) 100%);
+				background: linear-gradient(
+					180deg,
+					#ffffff 0%,
+					rgba(255, 255, 255, 0.25) 100%
+				);
 				transform: rotate(-30deg);
 			}
 
 			@keyframes rgb-hue-rotate {
-				0% { filter: hue-rotate(0deg); }
-				100% { filter: hue-rotate(360deg); }
+				0% {
+					filter: hue-rotate(0deg);
+				}
+				100% {
+					filter: hue-rotate(360deg);
+				}
 			}
 
 			/* Ghost Outline (OFF State - Faint & Blurry) */
@@ -1083,7 +1234,10 @@ import '@fontsource/google-sans-flex';
 				box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.5);
 				opacity: 0;
 				transform: scale(0.85);
-				transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s ease;
+				transition:
+					opacity 0.3s ease,
+					transform 0.3s ease,
+					border-color 0.2s ease;
 				pointer-events: none;
 			}
 
@@ -1129,10 +1283,24 @@ import '@fontsource/google-sans-flex';
 				border-radius: 50%;
 				background:
 					/* Primary specular light spot */
-					radial-gradient(circle at 35% 26%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.7) 14%, rgba(224, 242, 254, 0.45) 30%, rgba(56, 189, 248, 0.25) 55%, rgba(14, 165, 233, 0.12) 78%, rgba(255, 255, 255, 0.5) 94%, transparent 100%),
+					radial-gradient(
+						circle at 35% 26%,
+						rgba(255, 255, 255, 1) 0%,
+						rgba(255, 255, 255, 0.7) 14%,
+						rgba(224, 242, 254, 0.45) 30%,
+						rgba(56, 189, 248, 0.25) 55%,
+						rgba(14, 165, 233, 0.12) 78%,
+						rgba(255, 255, 255, 0.5) 94%,
+						transparent 100%
+					),
 					/* Iridescent thin-film rainbow reflection */
-					radial-gradient(circle at 75% 75%, rgba(192, 132, 252, 0.2) 0%, rgba(56, 189, 248, 0.18) 50%, transparent 80%);
-				box-shadow: 
+					radial-gradient(
+							circle at 75% 75%,
+							rgba(192, 132, 252, 0.2) 0%,
+							rgba(56, 189, 248, 0.18) 50%,
+							transparent 80%
+						);
+				box-shadow:
 					inset -5px -7px 16px rgba(2, 132, 199, 0.5),
 					inset 5px 6px 14px rgba(255, 255, 255, 0.98),
 					inset 0 0 10px rgba(255, 255, 255, 0.85),
@@ -1147,7 +1315,9 @@ import '@fontsource/google-sans-flex';
 			.aero-glass-bubble.is-popping {
 				transform: scale(1.4) !important;
 				opacity: 0 !important;
-				transition: transform 0.18s ease-out, opacity 0.18s ease-out !important;
+				transition:
+					transform 0.18s ease-out,
+					opacity 0.18s ease-out !important;
 			}
 
 			.aero-pop-particle {
@@ -1157,8 +1327,14 @@ import '@fontsource/google-sans-flex';
 				width: 5px;
 				height: 5px;
 				border-radius: 50%;
-				background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(56,189,248,0.9) 70%);
-				box-shadow: 0 0 8px rgba(56, 189, 248, 0.9), 0 0 2px #ffffff;
+				background: radial-gradient(
+					circle,
+					rgba(255, 255, 255, 1) 0%,
+					rgba(56, 189, 248, 0.9) 70%
+				);
+				box-shadow:
+					0 0 8px rgba(56, 189, 248, 0.9),
+					0 0 2px #ffffff;
 				pointer-events: none;
 				will-change: transform, opacity;
 			}
@@ -1172,7 +1348,11 @@ import '@fontsource/google-sans-flex';
 				width: 40%;
 				height: 26%;
 				border-radius: 50%;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.3) 100%);
+				background: linear-gradient(
+					180deg,
+					rgba(255, 255, 255, 0.98) 0%,
+					rgba(255, 255, 255, 0.3) 100%
+				);
 				transform: rotate(-30deg);
 			}
 
@@ -1185,7 +1365,12 @@ import '@fontsource/google-sans-flex';
 				width: 32%;
 				height: 24%;
 				border-radius: 50%;
-				background: radial-gradient(circle, rgba(186, 230, 253, 0.85) 0%, rgba(125, 211, 252, 0.4) 70%, transparent 100%);
+				background: radial-gradient(
+					circle,
+					rgba(186, 230, 253, 0.85) 0%,
+					rgba(125, 211, 252, 0.4) 70%,
+					transparent 100%
+				);
 				filter: blur(1.5px);
 			}
 
@@ -1213,7 +1398,8 @@ import '@fontsource/google-sans-flex';
 				object-fit: cover;
 				object-position: bottom center;
 				display: block;
-				filter: drop-shadow(0 -8px 22px rgba(14, 165, 233, 0.45)) saturate(1.25);
+				filter: drop-shadow(0 -8px 22px rgba(14, 165, 233, 0.45))
+					saturate(1.25);
 				opacity: 0.95;
 			}
 
@@ -1225,8 +1411,12 @@ import '@fontsource/google-sans-flex';
 				animation: spin 1s linear infinite;
 			}
 			@keyframes spin {
-				from { transform: rotate(0deg); }
-				to { transform: rotate(360deg); }
+				from {
+					transform: rotate(0deg);
+				}
+				to {
+					transform: rotate(360deg);
+				}
 			}
 		</style>
 	</head>
@@ -1238,25 +1428,35 @@ import '@fontsource/google-sans-flex';
 		</div>
 
 		<!-- Aero Floating Glass Bubbles Stage (80% Back, 20% Front) -->
-		<div class="aero-bubble-stage aero-stage-back" id="bubbleStageBack"></div>
-		<div class="aero-bubble-stage aero-stage-front" id="bubbleStageFront"></div>
+		<div class="aero-bubble-stage aero-stage-back" id="bubbleStageBack">
+		</div>
+		<div class="aero-bubble-stage aero-stage-front" id="bubbleStageFront">
+		</div>
 
 		<div class="page-wrap">
 			<div class="bh-page">
 				<!-- MAIN CONTENT CARD (Split Columns) -->
 				<div class="bh-main-card">
 					<!-- Top-Right RGB Bubble Toggle Button -->
-					<button id="rgbBubbleToggleBtn" class="rgb-bubble-toggle-btn" title="Toggle Glass Bubbles">
+					<button
+						id="rgbBubbleToggleBtn"
+						class="rgb-bubble-toggle-btn"
+						title="Toggle Glass Bubbles"
+					>
 						<div class="rgb-bubble-inner"></div>
 						<div class="ghost-bubble-outline"></div>
 					</button>
 
 					<!-- LEFT SIDEBAR -->
 					<aside class="wbc-sidebar">
-
 						<!-- HEADER (Title, Summary) -->
 						<header class="bh-header">
-							<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
+							<a
+								href="/"
+								class="wbc-back-btn"
+								id="backBtn"
+								title="Back to Home"
+							>
 								<svg
 									width="16"
 									height="16"
@@ -1274,7 +1474,8 @@ import '@fontsource/google-sans-flex';
 								<span class="title-nextwbc">NextWBC</span>
 							</h1>
 							<p class="bh-subtitle">
-								Avian white blood cell classification using YOLO12. Connects to badgaitintin/hawkwbc models.
+								Avian white blood cell classification using
+								YOLO12. Connects to badgaitintin/hawkwbc models.
 							</p>
 						</header>
 
@@ -1284,30 +1485,56 @@ import '@fontsource/google-sans-flex';
 							<ul class="wbc-guide-list">
 								<li>
 									<span class="wbc-step-num">1</span>
-									<span class="wbc-step-text">Drag and drop or click the workspace area on the right to select an avian blood smear image.</span>
+									<span class="wbc-step-text"
+										>Drag and drop or click the workspace
+										area on the right to select an avian
+										blood smear image.</span
+									>
 								</li>
 								<li>
 									<span class="wbc-step-num">2</span>
-									<span class="wbc-step-text">Wait for the YOLO12 pipeline to connect to Hugging Face Spaces and analyze the cell contours.</span>
+									<span class="wbc-step-text"
+										>Wait for the YOLO12 pipeline to connect
+										to Hugging Face Spaces and analyze the
+										cell contours.</span
+									>
 								</li>
 								<li>
 									<span class="wbc-step-num">3</span>
-									<span class="wbc-step-text">Review the overall counts, cell type distribution, and inspect individual cell crops.</span>
+									<span class="wbc-step-text"
+										>Review the overall counts, cell type
+										distribution, and inspect individual
+										cell crops.</span
+									>
 								</li>
 							</ul>
 							<div class="wbc-guide-note">
-								<strong>Note:</strong> Supported formats are JPG and PNG up to 20MB.
+								<strong>Note:</strong> Supported formats are JPG and
+								PNG up to 20MB.
 							</div>
 						</div>
 
 						<!-- Quick Try Sample Image -->
 						<div class="wbc-sample-section">
 							<h3 class="wbc-guide-title">Quick Try</h3>
-							<button id="wbcSampleBtn" class="wbc-sample-btn" title="Click to test with raptor_wbc_00001.jpeg">
-								<img src="/raptor_wbc_00001.jpeg" alt="Sample Smear" class="wbc-sample-thumb" />
+							<button
+								id="wbcSampleBtn"
+								class="wbc-sample-btn"
+								title="Click to test with raptor_wbc_00001.jpeg"
+							>
+								<img
+									src="/raptor_wbc_00001.jpeg"
+									alt="Sample Smear"
+									class="wbc-sample-thumb"
+								/>
 								<div class="wbc-sample-info">
-									<span class="wbc-sample-name">raptor_wbc_00001.jpeg</span>
-									<span class="wbc-sample-desc">Click to try with this sample avian blood smear</span>
+									<span class="wbc-sample-name"
+										>raptor_wbc_00001.jpeg</span
+									>
+									<span class="wbc-sample-desc"
+										>Click to try with this sample avian
+										blood smear</span
+									>
 								</div>
 							</button>
 						</div>
@@ -1321,33 +1548,89 @@ import '@fontsource/google-sans-flex';
 						<!-- Upload Prompt Area (Acting as Empty State) -->
 						<div id="wbcUploadPrompt">
 							<div class="wbc-upload-zone" id="wbcDropzone">
-								<input type="file" id="wbcFileInput" accept="image/*" class="hidden" />
+								<input
+									type="file"
+									id="wbcFileInput"
+									accept="image/*"
+									class="hidden"
+								/>
 								<div class="wbc-upload-icon-wrapper">
-									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path
+											d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"
+										></path>
 									</svg>
 								</div>
-								<p class="wbc-upload-text">Drop a blood smear image here or click to upload</p>
-								<p class="wbc-upload-subtext">JPG, PNG — Max 20MB</p>
+								<p class="wbc-upload-text">
+									Drop a blood smear image here or click to
+									upload
+								</p>
+								<p class="wbc-upload-subtext">
+									JPG, PNG — Max 20MB
+								</p>
 							</div>
 						</div>
 
 						<!-- Connection / Progress Preview Area -->
-						<div id="wbcPreview" class="wbc-preview-container hidden">
-							<img id="wbcPreviewImg" class="wbc-preview-img" src="" alt="Smear Preview" />
+						<div
+							id="wbcPreview"
+							class="wbc-preview-container hidden"
+						>
+							<img
+								id="wbcPreviewImg"
+								class="wbc-preview-img"
+								src=""
+								alt="Smear Preview"
+							/>
 							<div class="wbc-progress-bar-wrapper">
-								<div class="wbc-progress-bar-fill" id="wbcProgressFill"></div>
+								<div
+									class="wbc-progress-bar-fill"
+									id="wbcProgressFill"
+								>
+								</div>
 							</div>
-							<div class="wbc-status-text" id="wbcStatusText">Connecting to model...</div>
+							<div class="wbc-status-text" id="wbcStatusText">
+								Connecting to model...
+							</div>
 						</div>
 
 						<!-- Inference Results Panel -->
-						<div id="wbcResult" class="wbc-results-container hidden">
+						<div
+							id="wbcResult"
+							class="wbc-results-container hidden"
+						>
 							<div class="wbc-results-header">
-								<h3 class="wbc-results-heading">Inference Result</h3>
-								<button id="wbcResetBtn" class="wbc-reset-btn" title="Upload New Image">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-										<path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+								<h3 class="wbc-results-heading">
+									Inference Result
+								</h3>
+								<button
+									id="wbcResetBtn"
+									class="wbc-reset-btn"
+									title="Upload New Image"
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="16"
+										height="16"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="2.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<path
+											d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"
+										></path>
 									</svg>
 									<span>New Image</span>
 								</button>
@@ -1356,21 +1639,36 @@ import '@fontsource/google-sans-flex';
 							<div class="wbc-results-top">
 								<!-- Annotated Detection Image -->
 								<div class="wbc-image-panel">
-									<span class="wbc-panel-badge" id="panelBadge">Detection</span>
+									<span
+										class="wbc-panel-badge"
+										id="panelBadge">Detection</span
+									>
 									<div class="wbc-image-wrapper">
-										<img id="wbcAnnotatedImg" src="" alt="Annotated Detections" title="Click to toggle boxes" />
+										<img
+											id="wbcAnnotatedImg"
+											src=""
+											alt="Annotated Detections"
+											title="Click to toggle boxes"
+										/>
 									</div>
 								</div>
 
 								<!-- Side statistics counts -->
 								<div class="wbc-stats-panel">
 									<div class="wbc-count-card">
-										<span class="wbc-count-number" id="wbcCellCountNum">0</span>
-										<span class="wbc-count-label">Cells Detected</span>
+										<span
+											class="wbc-count-number"
+											id="wbcCellCountNum">0</span
+										>
+										<span class="wbc-count-label"
+											>Cells Detected</span
+										>
 									</div>
 
 									<div class="wbc-chart-card">
-										<h4 class="wbc-chart-title">Distribution</h4>
+										<h4 class="wbc-chart-title">
+											Distribution
+										</h4>
 										<div id="wbcDistributionContainer">
 											<!-- Dynamic Distribution Bars Injected Here -->
 										</div>
@@ -1380,20 +1678,21 @@ import '@fontsource/google-sans-flex';
 
 							<!-- Individual Cell Crops Panel -->
 							<div class="wbc-crops-panel">
-								<h4 class="wbc-crops-title">Detected Cell Crops</h4>
+								<h4 class="wbc-crops-title">
+									Detected Cell Crops
+								</h4>
 								<div class="wbc-crops-grid" id="wbcCropsGrid">
 									<!-- Dynamic crops Injected Here -->
 								</div>
 							</div>
 						</div>
 					</main>
-
 				</div>
 			</div>
 		</div>
 
+		<!-- ── Page exit transition (stays inline — pure DOM, tiny) ── -->
 		<script>
-			// ── Page exit transition ──
 			const backBtn = document.getElementById("backBtn");
 			if (backBtn) {
 				backBtn.addEventListener("click", (e) => {
@@ -1406,615 +1705,29 @@ import '@fontsource/google-sans-flex';
 			}
 		</script>
 
-		<!-- ── NextWBC WebSocket inference integration client ── -->
+		<!-- ── NextWBC Application (OOP Modules) ── -->
 		<script type="module">
-			const CLASSES = [
-				'heterophil',
-				'eosinophil',
-				'basophil',
-				'lymphocyte',
-				'monocyte',
-				'thrombocyte',
-			];
+			import { GradioSpaceClient } from "../lib/nextwbc/gradio-client";
+			import { NextWbcUI } from "../lib/nextwbc/nextwbc-ui";
+			import { AeroBubbleEngine } from "../lib/nextwbc/bubble-engine";
 
-			const CLASS_COLORS = {
-				heterophil:  '#FFC800',
-				eosinophil:  '#FF0000',
-				basophil:    '#8000FF',
-				lymphocyte:  '#00C8FF',
-				monocyte:    '#00FF00',
-				thrombocyte: '#C8C8C8',
-			};
+			// ── Initialize the Gradio API client & UI controller ──
+			const client = new GradioSpaceClient();
+			const ui = new NextWbcUI(client);
+			ui.init();
 
-			const CLASS_LABELS = {
-				heterophil:  'Heterophil',
-				eosinophil:  'Eosinophil',
-				basophil:    'Basophil',
-				lymphocyte:  'Lymphocyte',
-				monocyte:    'Monocyte',
-				thrombocyte: 'Thrombocyte',
-			};
+			// ── Initialize the Aero Bubble Physics Engine ──
+			document.addEventListener("DOMContentLoaded", () => {
+				const stageBack = document.getElementById("bubbleStageBack");
+				const stageFront = document.getElementById("bubbleStageFront");
+				if (!stageBack || !stageFront) return;
 
-			const SPACE_URL = "https://badgaitintin-nextwbc.hf.space";
-
-			let loading = false;
-			let currentResultData = null;
-			let bboxVisible = true;
-			let uploadedImageBase64 = null;
-
-			const dropzone = document.getElementById('wbcDropzone');
-			const fileInput = document.getElementById('wbcFileInput');
-			const errorContainer = document.getElementById('wbcError');
-			const resultContainer = document.getElementById('wbcResult');
-			const previewContainer = document.getElementById('wbcPreview');
-			const progressFill = document.getElementById('wbcProgressFill');
-			const statusText = document.getElementById('wbcStatusText');
-			const uploadPrompt = document.getElementById('wbcUploadPrompt');
-			const resetBtn = document.getElementById('wbcResetBtn');
-			const annotatedImg = document.getElementById('wbcAnnotatedImg');
-			const panelBadge = document.getElementById('panelBadge');
-			const sampleBtn = document.getElementById('wbcSampleBtn');
-
-			async function wakeSpace() {
-				await fetch(SPACE_URL + '/gradio_api/info').catch(() => {});
-			}
-
-			async function uploadFile(file) {
-				const formData = new FormData();
-				formData.append('files', file);
-				const res = await fetch(SPACE_URL + '/gradio_api/upload', {
-					method: 'POST',
-					body: formData
+				const engine = new AeroBubbleEngine(stageBack, stageFront, {
+					coralReefLayer: document.getElementById("coralReefLayer"),
+					toggleBtn: document.getElementById("rgbBubbleToggleBtn"),
 				});
-				if (!res.ok) throw new Error('Upload failed');
-				const data = await res.json();
-				return data[0]; 
-			}
-
-			async function runPredict(filePath) {
-				const res = await fetch(SPACE_URL + '/gradio_api/call/predict', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						data: [{ path: filePath, meta: { _type: "gradio.FileData" } }]
-					})
-				});
-				if (!res.ok) throw new Error('Run failed');
-				const data = await res.json();
-				return data.event_id;
-			}
-
-			async function pollResult(eventId) {
-				const res = await fetch(SPACE_URL + '/gradio_api/call/predict/' + eventId);
-				if (!res.ok) throw new Error('Poll failed (' + res.status + ')');
-				const reader = res.body.getReader();
-				const decoder = new TextDecoder();
-				let buffer = '';
-				let lastEvent = null;
-				
-				while (true) {
-					const { done, value } = await reader.read();
-					if (done) {
-						if (buffer.trim()) {
-							if (buffer.startsWith('data:') && lastEvent === 'complete') {
-								try {
-									const payload = JSON.parse(buffer.slice(5).trim());
-									return Array.isArray(payload) ? payload[0] : payload;
-								} catch (_) {}
-							}
-						}
-						break;
-					}
-					
-					buffer += decoder.decode(value, { stream: true });
-					const lines = buffer.split('\n');
-					buffer = lines.pop(); 
-					
-					for (const line of lines) {
-						const trimmed = line.trim();
-						if (!trimmed) continue;
-						
-						if (trimmed.startsWith('event:')) {
-							lastEvent = trimmed.slice(6).trim();
-						} else if (trimmed.startsWith('data:')) {
-							const raw = trimmed.slice(5).trim();
-							if (lastEvent === 'complete') {
-								try {
-									const payload = JSON.parse(raw);
-									reader.cancel();
-									return Array.isArray(payload) ? payload[0] : payload;
-								} catch (e) {
-									reader.cancel();
-									throw new Error('Failed to parse result');
-								}
-							}
-							if (lastEvent === 'error') {
-								reader.cancel();
-								let msg = raw;
-								try { msg = JSON.parse(raw); } catch (_) {}
-								throw new Error(typeof msg === 'string' ? msg : JSON.stringify(msg));
-							}
-						}
-					}
-				}
-				throw new Error('Stream ended without result');
-			}
-
-			function resetState() {
-				previewContainer.classList.add('hidden');
-				resultContainer.classList.add('hidden');
-				uploadPrompt.classList.remove('hidden');
-				errorContainer.classList.add('hidden');
-				errorContainer.innerText = '';
-				progressFill.style.width = '0%';
-				fileInput.value = '';
-				loading = false;
-				currentResultData = null;
-				uploadedImageBase64 = null;
-			}
-
-			resetBtn.addEventListener('click', resetState);
-
-			dropzone.addEventListener('click', () => {
-				if (loading) return;
-				fileInput.click();
+				engine.start();
 			});
-
-			dropzone.addEventListener('dragover', (e) => {
-				e.preventDefault();
-				if (loading) return;
-				dropzone.classList.add('dragging');
-			});
-
-			dropzone.addEventListener('dragleave', () => {
-				dropzone.classList.remove('dragging');
-			});
-
-			dropzone.addEventListener('drop', (e) => {
-				e.preventDefault();
-				dropzone.classList.remove('dragging');
-				if (loading) return;
-				const file = e.dataTransfer.files[0];
-				if (file) processFile(file);
-			});
-
-			fileInput.addEventListener('change', (e) => {
-				const file = e.target.files[0];
-				if (file) processFile(file);
-			});
-
-			if (sampleBtn) {
-				sampleBtn.addEventListener('click', async () => {
-					if (loading) return;
-					try {
-						sampleBtn.disabled = true;
-						const res = await fetch('/raptor_wbc_00001.jpeg');
-						if (!res.ok) throw new Error('Could not fetch sample image');
-						const blob = await res.blob();
-						const file = new File([blob], 'raptor_wbc_00001.jpeg', { type: 'image/jpeg' });
-						processFile(file);
-					} catch (e) {
-						showError('Failed to load sample image: ' + e.message);
-					} finally {
-						sampleBtn.disabled = false;
-					}
-				});
-			}
-
-			function showError(msg) {
-				errorContainer.innerText = msg;
-				errorContainer.classList.remove('hidden');
-				previewContainer.classList.add('hidden');
-				uploadPrompt.classList.remove('hidden');
-				loading = false;
-			}
-
-			function readAsBase64(file) {
-				return new Promise((resolve, reject) => {
-					const reader = new FileReader();
-					reader.onload = () => resolve(reader.result);
-					reader.onerror = error => reject(error);
-					reader.readAsDataURL(file);
-				});
-			}
-
-			async function processFile(file) {
-				if (!file.type.startsWith('image/')) {
-					showError('Please upload an image file (JPG, PNG, etc.)');
-					return;
-				}
-				if (file.size > 20 * 1024 * 1024) {
-					showError('Image too large. Maximum 20MB.');
-					return;
-				}
-
-				loading = true;
-				errorContainer.classList.add('hidden');
-				uploadPrompt.classList.add('hidden');
-				previewContainer.classList.remove('hidden');
-				progressFill.style.width = '0%';
-				
-				uploadedImageBase64 = await readAsBase64(file);
-				document.getElementById('wbcPreviewImg').src = uploadedImageBase64;
-
-				try {
-					statusText.innerText = 'Waking up Space...';
-					progressFill.style.width = '5%';
-					await wakeSpace();
-
-					statusText.innerText = 'Uploading image...';
-					progressFill.style.width = '20%';
-					const filePath = await uploadFile(file);
-
-					statusText.innerText = 'Submitting detection task...';
-					progressFill.style.width = '40%';
-					const eventId = await runPredict(filePath);
-
-					statusText.innerText = 'Waiting for model (this may take a moment)...';
-					progressFill.style.width = '65%';
-					const result = await pollResult(eventId);
-
-					statusText.innerText = 'Processing result...';
-					progressFill.style.width = '100%';
-					
-					renderResult(result);
-				} catch (err) {
-					showError(`Detection failed: ${err.message || 'Unknown error'}`);
-				} finally {
-					loading = false;
-				}
-			}
-
-			function renderResult(data) {
-				currentResultData = data;
-				previewContainer.classList.add('hidden');
-				resultContainer.classList.remove('hidden');
-				
-				bboxVisible = true;
-				panelBadge.textContent = 'Detection';
-				annotatedImg.src = data.annotated_image;
-				
-				document.getElementById('wbcCellCountNum').innerText = data.total_cells;
-				
-				const counts = data.class_counts || {};
-				const total = data.total_cells || 0;
-				
-				let distributionHTML = '';
-				CLASSES.forEach(cls => {
-					const count = counts[cls] || 0;
-					const pct = total > 0 ? (count / total) * 100 : 0;
-					const color = CLASS_COLORS[cls];
-					const label = CLASS_LABELS[cls];
-					
-					distributionHTML += `
-						<div class="wbc-count-bar-item">
-							<div class="wbc-bar-dot" style="background-color: ${color}"></div>
-							<span class="wbc-bar-label">${label}</span>
-							<div class="wbc-bar-track">
-								<div class="wbc-bar-fill" style="width: ${pct}%; background-color: ${color}; opacity: ${count > 0 ? 0.85 : 0.15}"></div>
-							</div>
-							<span class="wbc-bar-val" style="color: ${count > 0 ? color : 'rgba(255,255,255,0.3)'}">${count}</span>
-						</div>
-					`;
-				});
-				document.getElementById('wbcDistributionContainer').innerHTML = distributionHTML;
-				
-				renderCrops();
-			}
-
-			function renderCrops() {
-				if (!currentResultData) return;
-				const cells = currentResultData.cells || [];
-				
-				let cropsHTML = '';
-				cells.forEach(cell => {
-					const color = CLASS_COLORS[cell.class] || '#888';
-					const label = CLASS_LABELS[cell.class] || cell.class;
-					const confPct = Math.round(cell.confidence * 100);
-					
-					cropsHTML += `
-						<div class="wbc-crop-card" style="border: 2px solid ${color}80; box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8), inset 0 -16px 24px ${color}20;">
-							<div class="wbc-crop-img-wrap">
-								<img src="${cell.crop_base64}" alt="${label}" />
-							</div>
-							<div class="wbc-crop-info">
-								<span class="wbc-crop-label" style="color: ${color}; filter: brightness(0.65);">${label}</span>
-								<span class="wbc-crop-conf" style="color: ${color}; filter: brightness(0.65); opacity: 0.8;">${confPct}%</span>
-							</div>
-						</div>
-					`;
-				});
-				
-				document.getElementById('wbcCropsGrid').innerHTML = cropsHTML;
-			}
-
-			annotatedImg.addEventListener('click', () => {
-				if (!currentResultData || !uploadedImageBase64) return;
-				bboxVisible = !bboxVisible;
-				annotatedImg.src = bboxVisible ? currentResultData.annotated_image : uploadedImageBase64;
-				panelBadge.textContent = bboxVisible ? 'Detection' : 'Original';
-			});
-
-			// ── Aero Bouncing & Popping Glass Bubbles Physics Engine ──
-			(function initAeroBubbleEngine() {
-				document.addEventListener('DOMContentLoaded', () => {
-					const stageBack = document.getElementById('bubbleStageBack');
-					const stageFront = document.getElementById('bubbleStageFront');
-					const rgbToggleBtn = document.getElementById('rgbBubbleToggleBtn');
-					const coralReefLayer = document.getElementById('coralReefLayer');
-					if (!stageBack || !stageFront) return;
-
-					let bubblesEnabled = localStorage.getItem('aero_bubbles_enabled') !== 'false';
-
-					function updateToggleUI() {
-						if (bubblesEnabled) {
-							stageBack.style.opacity = '1';
-							stageFront.style.opacity = '1';
-							if (coralReefLayer) coralReefLayer.style.opacity = '0.95';
-							if (rgbToggleBtn) rgbToggleBtn.classList.remove('is-off');
-						} else {
-							stageBack.style.opacity = '0';
-							stageFront.style.opacity = '0';
-							if (coralReefLayer) coralReefLayer.style.opacity = '0.25';
-							if (rgbToggleBtn) rgbToggleBtn.classList.add('is-off');
-						}
-					}
-
-					updateToggleUI();
-
-					function triggerButtonPopSplash() {
-						if (!rgbToggleBtn) return;
-						const rect = rgbToggleBtn.getBoundingClientRect();
-						const centerX = rect.left + rect.width / 2;
-						const centerY = rect.top + rect.height / 2;
-
-						// Spawn 8 colorful RGB splash particles
-						const particleCount = 8;
-						for (let p = 0; p < particleCount; p++) {
-							const particle = document.createElement('div');
-							particle.className = 'aero-pop-particle';
-							document.body.appendChild(particle);
-
-							const angle = (p / particleCount) * Math.PI * 2 + (Math.random() * 0.4);
-							const speed = Math.random() * 5 + 3;
-							const pVx = Math.cos(angle) * speed;
-							const pVy = Math.sin(angle) * speed;
-
-							let px = centerX;
-							let py = centerY;
-							let pOpacity = 1;
-
-							function animateParticle() {
-								px += pVx;
-								py += pVy;
-								pOpacity -= 0.045;
-								particle.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
-								particle.style.opacity = Math.max(pOpacity, 0).toString();
-
-								if (pOpacity > 0) {
-									requestAnimationFrame(animateParticle);
-								} else {
-									if (particle.parentNode) particle.parentNode.removeChild(particle);
-								}
-							}
-							requestAnimationFrame(animateParticle);
-						}
-					}
-
-					if (rgbToggleBtn) {
-						rgbToggleBtn.addEventListener('click', () => {
-							if (bubblesEnabled) {
-								// Turning OFF: Pop the RGB button with splash particle burst!
-								triggerButtonPopSplash();
-								bubblesEnabled = false;
-							} else {
-								// Turning ON: Reform the RGB bubble!
-								bubblesEnabled = true;
-							}
-							localStorage.setItem('aero_bubbles_enabled', bubblesEnabled ? 'true' : 'false');
-							updateToggleUI();
-						});
-					}
-
-					const TOTAL_BUBBLES = 20;
-					const BACK_RATIO = 0.8; // 80% behind UI, 20% in front
-					const bubbles = [];
-
-					function createBubble(isFront = false, isInitial = false) {
-						const stage = isFront ? stageFront : stageBack;
-						const bubble = document.createElement('div');
-						bubble.className = 'aero-glass-bubble';
-						
-						const size = Math.floor(Math.random() * 54) + 24; // 24px - 78px
-						const x = Math.random() * (window.innerWidth - size - 40) + 20;
-						// Emerges from bottom coral reef unless initial load
-						const y = isInitial 
-							? Math.random() * (window.innerHeight - size - 60) + 20 
-							: window.innerHeight + size + Math.random() * 50;
-						const opacity = Math.random() * 0.35 + 0.65;
-
-						bubble.style.width = `${size}px`;
-						bubble.style.height = `${size}px`;
-						bubble.style.opacity = opacity.toString();
-
-						stage.appendChild(bubble);
-
-						const bObj = {
-							el: bubble,
-							isFront,
-							x,
-							y,
-							size,
-							vx: (Math.random() - 0.5) * 1.5,
-							vy: -(Math.random() * 1.2 + 0.6),
-							buoyancy: -(Math.random() * 0.3 + 0.2),
-							wobbleSpeed: Math.random() * 0.025 + 0.01,
-							wobbleAmp: Math.random() * 20 + 8,
-							phase: Math.random() * Math.PI * 2,
-							age: 0,
-							maxAge: Math.floor(Math.random() * 900) + 500, // 8-25 seconds
-							isPopping: false
-						};
-
-						bubbles.push(bObj);
-					}
-
-					// Spawn 80% in back stage, 20% in front stage (initially scattered, then emerging from bottom)
-					const backCount = Math.round(TOTAL_BUBBLES * BACK_RATIO);
-					const frontCount = TOTAL_BUBBLES - backCount;
-
-					for (let i = 0; i < backCount; i++) createBubble(false, true);
-					for (let i = 0; i < frontCount; i++) createBubble(true, true);
-
-					function triggerPop(b) {
-						if (b.isPopping) return;
-						b.isPopping = true;
-
-						const stage = b.isFront ? stageFront : stageBack;
-						const centerX = b.x + b.size / 2;
-						const centerY = b.y + b.size / 2;
-
-						// Add popping animation class
-						b.el.classList.add('is-popping');
-
-						// Spawn 6 glass splash particles
-						const particleCount = 6;
-						for (let p = 0; p < particleCount; p++) {
-							const particle = document.createElement('div');
-							particle.className = 'aero-pop-particle';
-							stage.appendChild(particle);
-
-							const angle = (p / particleCount) * Math.PI * 2 + (Math.random() * 0.5);
-							const speed = Math.random() * 4 + 2;
-							const pVx = Math.cos(angle) * speed;
-							const pVy = Math.sin(angle) * speed;
-
-							let px = centerX;
-							let py = centerY;
-							let pOpacity = 1;
-
-							function animateParticle() {
-								px += pVx;
-								py += pVy;
-								pOpacity -= 0.05;
-								particle.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
-								particle.style.opacity = Math.max(pOpacity, 0).toString();
-
-								if (pOpacity > 0) {
-									requestAnimationFrame(animateParticle);
-								} else {
-									if (particle.parentNode) particle.parentNode.removeChild(particle);
-								}
-							}
-							requestAnimationFrame(animateParticle);
-						}
-
-						// Remove popped bubble element and spawn replacement from bottom coral reef
-						setTimeout(() => {
-							if (b.el.parentNode) b.el.parentNode.removeChild(b.el);
-							const idx = bubbles.indexOf(b);
-							if (idx !== -1) bubbles.splice(idx, 1);
-
-							// Respawn replacement bubble from bottom coral reef
-							setTimeout(() => {
-								createBubble(b.isFront, false);
-							}, Math.random() * 1200 + 400);
-						}, 200);
-					}
-
-					let mouseX = -1000;
-					let mouseY = -1000;
-
-					window.addEventListener('mousemove', (e) => {
-						mouseX = e.clientX;
-						mouseY = e.clientY;
-					});
-
-					let time = 0;
-					function animate() {
-						time += 1;
-						if (bubblesEnabled) {
-							const screenWidth = window.innerWidth;
-							const screenHeight = window.innerHeight;
-
-							for (let i = bubbles.length - 1; i >= 0; i--) {
-								const b = bubbles[i];
-								if (b.isPopping) continue;
-
-								b.age += 1;
-								if (b.age > b.maxAge || (Math.random() < 0.0006)) {
-									triggerPop(b);
-									continue;
-								}
-
-								// Buoyancy and sway physics (Emerging upward from bottom reef)
-								b.vy += b.buoyancy * 0.04;
-								b.vx += Math.sin(time * b.wobbleSpeed + b.phase) * 0.12;
-
-								// Recycle when floating off top screen edge back to bottom coral reef
-								if (b.y < -b.size * 1.5) {
-									b.y = screenHeight + b.size + Math.random() * 30;
-									b.x = Math.random() * (screenWidth - b.size);
-									b.vy = -(Math.random() * 0.8 + 0.4);
-									b.vx = (Math.random() - 0.5) * 1.5;
-									b.age = 0;
-								}
-
-								// Mouse Repulsion
-								const centerX = b.x + b.size / 2;
-								const centerY = b.y + b.size / 2;
-								const dx = centerX - mouseX;
-								const dy = centerY - mouseY;
-								const dist = Math.sqrt(dx * dx + dy * dy);
-								const maxDist = 180;
-
-								if (dist < maxDist) {
-									const force = (1 - dist / maxDist) * 3.5;
-									b.vx += (dx / dist) * force;
-									b.vy += (dy / dist) * force;
-								}
-
-								// Apply velocity
-								b.x += b.vx;
-								b.y += b.vy;
-
-								// Damping
-								b.vx *= 0.94;
-								b.vy *= 0.94;
-
-								// Border Boundary Bounce Physics (Rebounds off left & right screen edges)
-								const bounceDamping = 0.8;
-								if (b.x < 0) {
-									b.x = 0;
-									b.vx = Math.abs(b.vx) * bounceDamping + 0.6;
-								} else if (b.x + b.size > screenWidth) {
-									b.x = screenWidth - b.size;
-									b.vx = -Math.abs(b.vx) * bounceDamping - 0.6;
-								}
-
-								if (b.y < 0) {
-									b.y = 0;
-									b.vy = Math.abs(b.vy) * bounceDamping + 0.6;
-								} else if (b.y + b.size > screenHeight) {
-									b.y = screenHeight - b.size;
-									b.vy = -Math.abs(b.vy) * bounceDamping - 0.6;
-								}
-
-								// Organic Squash & Stretch deformation based on movement speed & wobble
-								const speed = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
-								const scaleX = (1 + Math.sin(time * 0.06 + b.phase) * 0.05 + Math.min(speed * 0.02, 0.12)).toFixed(3);
-								const scaleY = (1 - Math.sin(time * 0.06 + b.phase) * 0.05 - Math.min(speed * 0.02, 0.12)).toFixed(3);
-
-								b.el.style.transform = `translate3d(${b.x.toFixed(1)}px, ${b.y.toFixed(1)}px, 0) scale(${scaleX}, ${scaleY})`;
-							}
-						}
-
-						requestAnimationFrame(animate);
-					}
-
-					requestAnimationFrame(animate);
-				});
-			})();
 		</script>
 	</body>
 </html>
