@@ -12,6 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.10",
     "@astrojs/react": "^6.0.1",
     "@astrojs/vercel": "^10.0.8",
     "@fontsource/google-sans-flex": "^5.2.4",
@@ -21,7 +22,8 @@
     "drizzle-orm": "^0.45.2",
     "lucide-react": "^1.26.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "vitest": "^4.1.10"
