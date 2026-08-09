@@ -39,6 +39,19 @@
     <!-- Bio -->
     <p class="modal-bio">Computer Engineering &amp; AI Graduate. Building things at the intersection of AI and design.</p>
 
+    <!-- Personal Information -->
+    <div class="modal-personal-info">
+      <div class="info-badge"><strong>DOB:</strong> Jan 13, 2004</div>
+      <div class="info-badge"><strong>Age:</strong> 22</div>
+      <div class="info-badge"><strong>Nationality:</strong> Thai</div>
+      <div class="info-badge"><strong>Religion:</strong> Buddhism</div>
+      <div class="info-badge"><strong>Gender:</strong> Male (LGBTQ+)</div>
+      <div class="info-badge info-badge-full">
+        <strong>Military Status:</strong> Pending Draft
+        <span class="info-subtext">(Eligible for Gender Identity Certificate Exemption for next draft)</span>
+      </div>
+    </div>
+
     <!-- Contact Info -->
     <div class="modal-contact-info">
       <a href="mailto:tinnaphop.moss@gmail.com" class="contact-row">
@@ -85,11 +98,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px;
+    padding: 16px;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s ease;
-    perspective: 1200px;
     overflow: hidden;
   }
 
@@ -157,7 +169,7 @@
     opacity: 1;
   }
 
-  /* 3D Glassmorphism Card with Dynamic Cast Shadow & Refraction */
+  /* Glassmorphism Card (Static - Mobile Responsive) */
   .modal-card {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.28) 100%);
     backdrop-filter: blur(28px) saturate(1.5);
@@ -165,9 +177,9 @@
     border: 1px solid rgba(255, 255, 255, 0.65);
     border-top: 2.5px solid rgba(255, 255, 255, 0.95);
     border-left: 1.8px solid rgba(255, 255, 255, 0.8);
-    border-radius: 36px; 
+    border-radius: 32px; 
     box-shadow: 
-      var(--shadow-x, 0px) var(--shadow-y, 35px) var(--shadow-blur, 60px) rgba(0, 0, 0, 0.42), 
+      0 35px 60px rgba(0, 0, 0, 0.42), 
       0 12px 24px rgba(0, 0, 0, 0.2),
       inset 0 3px 6px rgba(255, 255, 255, 0.95), 
       inset 0 -4px 14px rgba(0, 0, 0, 0.25),
@@ -175,35 +187,37 @@
       0 0 45px rgba(255, 255, 255, 0.2);
     width: 100%;
     max-width: 390px;
-    padding: 28px 24px 24px 24px;
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+    padding: 24px 20px 20px 20px;
     position: relative;
-    transform: perspective(1000px) rotateX(14deg) rotateY(-4deg) scale(0.86) translateY(36px);
-    transform-style: preserve-3d;
-    transition: transform 0.1s cubic-bezier(0.1, 0.9, 0.2, 1), box-shadow 0.1s ease-out;
-    overflow: hidden;
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
     z-index: 10;
+    box-sizing: border-box;
   }
-
-  /* Dynamic Specular Light Spot on Glass surface following cursor */
-  .modal-card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 30%), rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 45%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
-    transition: background 0.08s ease;
+  .modal-card::-webkit-scrollbar {
+    width: 4px;
+  }
+  .modal-card::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .modal-card::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 99px;
   }
 
   .modal-backdrop.is-open .modal-card {
-    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
 
-  /* Clean High-Contrast 3D Close Button */
+  /* Clean High-Contrast Close Button */
   .modal-close {
     position: absolute;
-    top: 16px;
-    right: 16px;
+    top: 14px;
+    right: 14px;
     width: 32px;
     height: 32px;
     border-radius: 50%;
@@ -232,16 +246,16 @@
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 16px;
-    margin-top: 12px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-top: 4px;
+    margin-bottom: 16px;
     position: relative;
     z-index: 2;
   }
   .modal-photo-wrap {
     width: 100%;
     aspect-ratio: 1125 / 563;
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
     flex-shrink: 0;
     border: 2px solid rgba(255, 255, 255, 0.85);
@@ -262,12 +276,12 @@
   .modal-hero-text {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     position: relative;
     z-index: 2;
   }
   .modal-name {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: #ffffff;
@@ -276,7 +290,7 @@
     margin: 0;
   }
   .modal-handle {
-    font-size: 12px;
+    font-size: 11.5px;
     color: rgba(255, 255, 255, 0.85);
     letter-spacing: 0.02em;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
@@ -286,7 +300,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    margin-top: 6px;
+    margin-top: 4px;
     font-size: 11px;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -305,43 +319,81 @@
   .modal-divider {
     border: none;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
-    margin: 0 0 20px 0;
+    margin: 0 0 14px 0;
     position: relative;
     z-index: 2;
   }
 
   /* Bio */
   .modal-bio {
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 12.5px;
+    line-height: 1.6;
     color: rgba(255, 255, 255, 0.95);
     text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    margin-bottom: 20px;
+    margin: 0 0 14px 0;
     position: relative;
     z-index: 2;
+  }
+
+  /* Personal Info Badges */
+  .modal-personal-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 2;
+  }
+  .info-badge {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    padding: 4px 9px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+    line-height: 1.4;
+  }
+  .info-badge-full {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .info-badge strong {
+    color: #bef264; /* Aero lime accent */
+    font-weight: 600;
+  }
+  .info-subtext {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 10.5px;
+    display: block;
+    margin-top: 2px;
+    line-height: 1.35;
   }
 
   /* Contact Info */
   .modal-contact-info {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 16px;
     position: relative;
     z-index: 2;
   }
   .contact-row {
     display: flex;
     align-items: center;
-    gap: 10px;
-    font-size: 13px;
+    gap: 8px;
+    font-size: 12.5px;
     color: #ffffff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
     text-decoration: none;
     transition: color 0.2s;
+    word-break: break-all;
   }
   .contact-row svg {
     opacity: 0.85;
+    flex-shrink: 0;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
   }
   .contact-row:hover {
@@ -349,11 +401,11 @@
     text-decoration: underline;
   }
 
-  /* 3D Social Pills */
+  /* Social Pills */
   .modal-socials {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
     position: relative;
     z-index: 2;
   }
@@ -361,7 +413,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 99px;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
     border: 1px solid rgba(255, 255, 255, 0.5);
@@ -370,7 +422,7 @@
     text-decoration: none;
     color: #ffffff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 600;
     transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -379,7 +431,7 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), inset 0 1px 3px #ffffff;
     color: #0f172a;
     text-shadow: none;
-    transform: translateY(-3px) scale(1.02);
+    transform: translateY(-2px);
   }
   .modal-social-pill svg { opacity: 0.7; flex-shrink: 0; }
 </style>
@@ -409,61 +461,19 @@
     if (e.key === 'Escape') closeAboutModal();
   });
 
-  // ── Interactive 3D Cursor Light & Dynamic Cast Shadow ──
-  (function init3DCursorLight() {
+  // ── Cursor Light Follower (Static Card Position) ──
+  (function initCursorLight() {
     document.addEventListener('DOMContentLoaded', function() {
       const backdrop = document.getElementById('about-modal');
-      const card = backdrop ? backdrop.querySelector('.modal-card') : null;
       const cursorLight = document.getElementById('cursor-light');
-      if (!backdrop || !card) return;
+      if (!backdrop) return;
 
       backdrop.addEventListener('mousemove', function(e) {
         if (!backdrop.classList.contains('is-open')) return;
 
-        // 1. Update cursor light spotlight position
         if (cursorLight) {
           cursorLight.style.left = e.clientX + 'px';
           cursorLight.style.top = e.clientY + 'px';
-        }
-
-        // 2. Calculate card dimensions and relative mouse position
-        const rect = card.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const mouseXPct = Math.min(Math.max((mouseX / rect.width) * 100, 0), 100);
-        const mouseYPct = Math.min(Math.max((mouseY / rect.height) * 100, 0), 100);
-
-        // 3. Dynamic cast shadow calculation (shadow points opposite to light source)
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        const deltaX = centerX - e.clientX;
-        const deltaY = centerY - e.clientY;
-
-        const shadowX = (deltaX * 0.15).toFixed(1);
-        const shadowY = (deltaY * 0.15 + 24).toFixed(1);
-        const shadowBlur = (45 + Math.abs(deltaX * 0.04) + Math.abs(deltaY * 0.04)).toFixed(1);
-
-        // 4. Interactive 3D Tilt Angle
-        const rotateX = ((e.clientY - centerY) / (window.innerHeight / 2)) * -12;
-        const rotateY = ((e.clientX - centerX) / (window.innerWidth / 2)) * 12;
-
-        // Update CSS custom variables dynamically
-        card.style.setProperty('--mouse-x', `${mouseXPct.toFixed(1)}%`);
-        card.style.setProperty('--mouse-y', `${mouseYPct.toFixed(1)}%`);
-        card.style.setProperty('--shadow-x', `${shadowX}px`);
-        card.style.setProperty('--shadow-y', `${shadowY}px`);
-        card.style.setProperty('--shadow-blur', `${shadowBlur}px`);
-        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale(1.02) translateY(0)`;
-      });
-
-      backdrop.addEventListener('mouseleave', function() {
-        if (backdrop.classList.contains('is-open')) {
-          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateY(0)';
-          card.style.setProperty('--shadow-x', '0px');
-          card.style.setProperty('--shadow-y', '35px');
-          card.style.setProperty('--shadow-blur', '60px');
-          card.style.setProperty('--mouse-x', '50%');
-          card.style.setProperty('--mouse-y', '30%');
         }
       });
     });

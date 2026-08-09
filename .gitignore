@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+public/3d_grid_sentence_classifier_v13.ipynb
+public/hf_space/
+.vercel/
+CODEBASE_REPORT.md
+tests/auth.test.mjs
+tests/nextwbc.test.ts
+tests/spotify.test.ts
+
+.gitignore

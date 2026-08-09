@@ -36,6 +36,8 @@ if (slug) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{post ? `${post.title} | sitedotmoss` : "Post Not Found"}</title>
     <meta name="description" content={post ? post.caption.substring(0, 150) : "Blog Post"} />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body class="bg-zinc-950 text-white min-h-screen">
     {post ? (
