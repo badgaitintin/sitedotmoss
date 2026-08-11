@@ -1,5 +1,7 @@
 ---
 import { BlogCrud } from "../../components/blog/BlogCrud";
+import '@fontsource/google-sans-flex';
+import "../../styles/blog.css";
 
 export const prerender = false;
 ---
@@ -14,28 +16,27 @@ export const prerender = false;
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
   </head>
-  <body>
+  <body class="admin-body">
     <!-- Top Header Navigation -->
     <header id="admin-header">
       <div class="header-container">
         <a href="/blog" class="back-link">
           <div class="back-icon-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M19 12H5M12 5l-7 7 7 7"/>
             </svg>
           </div>
-          <span>← Journal</span>
+          <span>Back to Journal</span>
         </a>
         <h1 class="header-title">Blog Admin</h1>
-        <div style="width: 100px;"></div>
+        <div style="width: 140px;"></div>
       </div>
     </header>
 
-    <BlogCrud client:load />
+    <main className="admin-content">
+      <BlogCrud client:load />
+    </main>
   </body>
 </html>
 
@@ -46,33 +47,43 @@ export const prerender = false;
     padding: 0;
   }
 
-  :root {
-    --bg-color: #f8f7f5;
-    --fg-color: #1a1410;
+  .admin-body {
+    min-height: 100vh;
+    background: transparent;
+    color: #111827;
+    font-family: "Google Sans Flex", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    margin: 0;
   }
 
-  html, body {
-    width: 100%;
-    min-height: 100vh;
-    background-color: var(--bg-color);
-    color: var(--fg-color);
-    font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
-    font-size: 15px;
-    -webkit-font-smoothing: antialiased;
+  .admin-body::before {
+    content: "";
+    position: fixed;
+    inset: -40px;
+    z-index: -1;
+    background-image: url('/frutigif_1.webp');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: blur(8px);
+    background-color: rgba(255, 255, 255, 0.05);
+    background-blend-mode: overlay;
   }
 
   #admin-header {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(248, 247, 245, 0.85);
+    background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    width: 100%;
   }
 
   .header-container {
-    max-width: 960px;
+    max-width: 1040px;
     margin: 0 auto;
     padding: 14px 24px;
     display: flex;
@@ -84,30 +95,35 @@ export const prerender = false;
     display: flex;
     align-items: center;
     gap: 10px;
-    color: var(--fg-color);
+    color: #111827;
     text-decoration: none;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
     transition: opacity 0.2s ease;
   }
 
-  .back-link:hover { opacity: 0.65; }
+  .back-link:hover { opacity: 0.75; }
 
   .back-icon-btn {
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    background: #fff;
-    border: 1px solid #eee;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--fg-color);
+    color: #111827;
   }
 
   .header-title {
     font-size: 18px;
-    font-weight: 600;
-    color: var(--fg-color);
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
+
+  .admin-content {
+    width: 100%;
   }
 </style>

@@ -23,6 +23,7 @@ export const POST: APIRoute = async ({ request }) => {
       authorAvatar: authorAvatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(authorName)}`,
       content: content.trim(),
       parentId: parentId || null,
+      likesCount: 0,
     };
 
     await db.insert(comments).values(newComment);

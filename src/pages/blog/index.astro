@@ -1,7 +1,60 @@
 ---
-import { BlogPage } from "../../components/blog/BlogPage";
+import { db } from "../../db/client";
+import { posts, comments } from "../../db/schema";
+import { eq, desc } from "drizzle-orm";
+import { BlogFeed } from "../../components/blog/BlogFeed";
+import '@fontsource/google-sans-flex';
+import "../../styles/blog.css";
 
 export const prerender = false;
+
+// Fetch published posts from DB (server-side)
+const dbPosts = await db
+  .select()
+  .from(posts)
+  .where(eq(posts.published, true))
+  .orderBy(desc(posts.createdAt));
+
+// Parse JSON fields and attach comments
+const initialPosts = await Promise.all(
+  dbPosts.map(async (raw) => {
+    const postComments = await db
+      .select({
+        id: comments.id,
+        postSlug: comments.postSlug,
+        authorName: comments.authorName,
+        authorAvatar: comments.authorAvatar,
+        content: comments.content,
+        parentId: comments.parentId,
+        createdAt: comments.createdAt,
+      })
+      .from(comments)
+      .where(eq(comments.postSlug, raw.slug));
+
+    return {
+      id: raw.id,
+      slug: raw.slug,
+      title: raw.title,
+      caption: raw.caption,
+      coverImage: raw.coverImage,
+      images: raw.images ? JSON.parse(raw.images) : [raw.coverImage],
+      location: raw.location || "",
+      tags: raw.tags ? JSON.parse(raw.tags) : [],
+      likesCount: raw.likesCount,
+      viewsCount: raw.viewsCount,
+      createdAt: raw.createdAt,
+      comments: postComments.map((c: any) => ({
+        id: c.id,
+        authorName: c.authorName,
+        authorAvatar: c.authorAvatar || undefined,
+        content: c.content,
+        parentId: c.parentId || null,
+        likesCount: c.likesCount || 0,
+        createdAt: c.createdAt,
+      })),
+    };
+  })
+);
 ---
 
 <!DOCTYPE html>
@@ -9,44 +62,12 @@ export const prerender = false;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Blog | sitedotmoss</title>
-    <meta name="description" content="Blog by Moss" />
+    <title>Journal | sitedotmoss</title>
+    <meta name="description" content="Personal journal by Moss — code, AI research & design experiments." />
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body>
-    <BlogPage client:only="react" />
+  <body style="margin: 0; padding: 0; background: transparent; overflow-x: hidden;">
+    <BlogFeed client:load initialPosts={initialPosts} />
   </body>
 </html>
-
-<style is:global>
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html, body {
-    width: 100%;
-    min-height: 100vh;
-    background: #ffffff;
-    color: #111;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    font-size: 15px;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #d1d5db;
-    border-radius: 99px;
-  }
-</style>

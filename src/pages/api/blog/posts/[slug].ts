@@ -30,7 +30,15 @@ export const GET: APIRoute = async ({ params }) => {
 
     // Fetch comments
     const postComments = await db
-      .select()
+      .select({
+        id: comments.id,
+        postSlug: comments.postSlug,
+        authorName: comments.authorName,
+        authorAvatar: comments.authorAvatar,
+        content: comments.content,
+        parentId: comments.parentId,
+        createdAt: comments.createdAt,
+      })
       .from(comments)
       .where(eq(comments.postSlug, slug))
       .orderBy(desc(comments.createdAt));

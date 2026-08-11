@@ -3,6 +3,8 @@ import { db } from "../../db/client";
 import { posts, comments } from "../../db/schema";
 import { eq, desc } from "drizzle-orm";
 import { InstagramPostModal } from "../../components/blog/InstagramPostModal";
+import '@fontsource/google-sans-flex';
+import "../../styles/blog.css";
 
 export const prerender = false;
 
@@ -14,7 +16,15 @@ if (slug) {
   if (dbPosts.length > 0) {
     const rawPost = dbPosts[0];
     const postComments = await db
-      .select()
+      .select({
+        id: comments.id,
+        postSlug: comments.postSlug,
+        authorName: comments.authorName,
+        authorAvatar: comments.authorAvatar,
+        content: comments.content,
+        parentId: comments.parentId,
+        createdAt: comments.createdAt,
+      })
       .from(comments)
       .where(eq(comments.postSlug, slug))
       .orderBy(desc(comments.createdAt));
@@ -23,14 +33,22 @@ if (slug) {
       ...rawPost,
       images: rawPost.images ? JSON.parse(rawPost.images) : [rawPost.coverImage],
       tags: rawPost.tags ? JSON.parse(rawPost.tags) : [],
-      comments: postComments,
+      comments: postComments.map((c: any) => ({
+        id: c.id,
+        authorName: c.authorName,
+        authorAvatar: c.authorAvatar || undefined,
+        content: c.content,
+        parentId: c.parentId || null,
+        likesCount: c.likesCount || 0,
+        createdAt: c.createdAt,
+      })),
     };
   }
 }
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,18 +57,16 @@ if (slug) {
     <link rel="icon" href="/favicon.ico" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body class="bg-zinc-950 text-white min-h-screen">
+  <body class="ig-root" style="margin: 0; min-height: 100vh;">
     {post ? (
-      <div>
-        <div class="fixed inset-0 bg-zinc-950 flex items-center justify-center p-4">
-          <InstagramPostModal post={post} onClose={() => { window.location.href = "/blog"; }} client:load />
-        </div>
+      <div style="position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 1000;">
+        <InstagramPostModal post={post} onClose={() => { window.location.href = "/blog"; }} client:load />
       </div>
     ) : (
-      <div class="flex flex-col items-center justify-center h-screen space-y-4">
-        <h1 class="text-2xl font-bold text-red-400">Post Not Found</h1>
-        <a href="/blog" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm">
-          Return to Blog Feed
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; gap: 16px; width: 100%;">
+        <h1 style="font-size: 22px; font-weight: 500; color: #111827;">Post Not Found</h1>
+        <a href="/blog" style="padding: 10px 24px; border-radius: 10px; background: #0f172a; color: #fff; text-decoration: none; font-size: 14px; font-weight: 600;">
+          Back to Journal
         </a>
       </div>
     )}

@@ -40,6 +40,7 @@ export const comments = sqliteTable("comments", {
   authorAvatar: text("author_avatar"),
   content: text("content").notNull(),
   parentId: text("parent_id"), // Optional nested parent comment ID
+  likesCount: integer("likes_count").default(0).notNull(),
   createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(unixepoch())`).notNull(),
 }, (table) => ([
   index("idx_comments_post").on(table.postSlug, table.createdAt),

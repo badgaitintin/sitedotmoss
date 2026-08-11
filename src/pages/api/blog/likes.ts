@@ -5,6 +5,35 @@ import { eq, sql, and } from "drizzle-orm";
 
 export const prerender = false;
 
+// ─── GET: Fetch all post IDs liked by a specific userHash ───
+export const GET: APIRoute = async ({ url }) => {
+  try {
+    const userHash = url.searchParams.get("userHash");
+    if (!userHash) {
+      return new Response(JSON.stringify({ success: true, likedPostIds: [] }), { status: 200 });
+    }
+
+    const likes = await db
+      .select({ postId: postLikes.postId })
+      .from(postLikes)
+      .where(eq(postLikes.userHash, userHash));
+
+    const likedPostIds = likes.map((l) => l.postId);
+
+    return new Response(
+      JSON.stringify({ success: true, likedPostIds }),
+      { status: 200, headers: { "Content-Type": "application/json" } }
+    );
+  } catch (error: any) {
+    console.error("API GET Likes error:", error);
+    return new Response(
+      JSON.stringify({ success: false, likedPostIds: [], error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json" } }
+    );
+  }
+};
+
+// ─── POST: Toggle like on a post for userHash ───
 export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json();

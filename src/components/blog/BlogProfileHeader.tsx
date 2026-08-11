@@ -13,6 +13,7 @@ interface ProfileProps {
   searchQuery: string;
   onSearchChange: (q: string) => void;
   onAddPost: (newPost: any) => void;
+  onAuthChange?: (loggedIn: boolean) => void;
 }
 
 export const BlogProfileHeader: React.FC<ProfileProps> = ({
@@ -27,6 +28,7 @@ export const BlogProfileHeader: React.FC<ProfileProps> = ({
   searchQuery,
   onSearchChange,
   onAddPost,
+  onAuthChange,
 }) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -76,6 +78,7 @@ export const BlogProfileHeader: React.FC<ProfileProps> = ({
         setIsAdmin(true);
         setShowLoginModal(false);
         setPassword("");
+        onAuthChange?.(true);
       } else {
         setLoginError(data.error || "Login failed");
       }
@@ -90,6 +93,7 @@ export const BlogProfileHeader: React.FC<ProfileProps> = ({
     try {
       await fetch("/api/auth/logout", { method: "POST" });
       setIsAdmin(false);
+      onAuthChange?.(false);
     } catch (err) {
       console.error("Logout failed:", err);
     }
