@@ -1,6 +1,7 @@
 ---
 // spotify-analysis.astro — Spotify Sonic Atlas Page matching cv.astro theme
 import "@fontsource/google-sans-flex";
+import Watermark from "../components/Watermark.astro";
 import clusterSummary from "../../public/assets/spotify/cluster_summary.json";
 import musicGalaxy from "../../public/assets/spotify/music_galaxy.json";
 import personalRating from "../../public/assets/spotify/personal_rating.json";
@@ -1374,6 +1375,7 @@ const clustersCount = clusterSummary.length;
 				setInterval(rotateBg, 15000);
 			})();
 		</script>
+		<Watermark />
 	</body>
 </html>
 

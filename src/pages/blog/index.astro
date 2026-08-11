@@ -5,6 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { BlogFeed } from "../../components/blog/BlogFeed";
 import '@fontsource/google-sans-flex';
 import "../../styles/blog.css";
+import Watermark from "../../components/Watermark.astro";
 
 export const prerender = false;
 
@@ -69,5 +70,6 @@ const initialPosts = await Promise.all(
   </head>
   <body style="margin: 0; padding: 0; background: transparent; overflow-x: hidden;">
     <BlogFeed client:load initialPosts={initialPosts} />
+    <Watermark />
   </body>
 </html>

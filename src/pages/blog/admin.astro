@@ -2,6 +2,7 @@
 import { BlogCrud } from "../../components/blog/BlogCrud";
 import '@fontsource/google-sans-flex';
 import "../../styles/blog.css";
+import Watermark from "../../components/Watermark.astro";
 
 export const prerender = false;
 ---
@@ -37,6 +38,7 @@ export const prerender = false;
     <main className="admin-content">
       <BlogCrud client:load />
     </main>
+    <Watermark />
   </body>
 </html>
 

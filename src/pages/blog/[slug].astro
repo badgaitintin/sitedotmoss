@@ -5,6 +5,7 @@ import { eq, desc } from "drizzle-orm";
 import { InstagramPostModal } from "../../components/blog/InstagramPostModal";
 import '@fontsource/google-sans-flex';
 import "../../styles/blog.css";
+import Watermark from "../../components/Watermark.astro";
 
 export const prerender = false;
 
@@ -70,5 +71,6 @@ if (slug) {
         </a>
       </div>
     )}
+    <Watermark />
   </body>
 </html>
