@@ -63,22 +63,22 @@ export class NextWbcUI {
 	/** Bind all DOM elements and event listeners. Call once on page load. */
 	init(): void {
 		this.elements = {
-			dropzone: document.getElementById('wbcDropzone')!,
-			fileInput: document.getElementById('wbcFileInput') as HTMLInputElement,
-			errorContainer: document.getElementById('wbcError')!,
-			resultContainer: document.getElementById('wbcResult')!,
-			previewContainer: document.getElementById('wbcPreview')!,
-			progressFill: document.getElementById('wbcProgressFill')!,
-			statusText: document.getElementById('wbcStatusText')!,
-			uploadPrompt: document.getElementById('wbcUploadPrompt')!,
-			resetBtn: document.getElementById('wbcResetBtn')!,
-			annotatedImg: document.getElementById('wbcAnnotatedImg') as HTMLImageElement,
-			panelBadge: document.getElementById('panelBadge')!,
+			dropzone: document.getElementById('wbcDropzone') || document.createElement('div'),
+			fileInput: (document.getElementById('wbcFileInput') as HTMLInputElement) || document.createElement('input'),
+			errorContainer: document.getElementById('wbcError') || document.createElement('div'),
+			resultContainer: document.getElementById('wbcResult') || document.createElement('div'),
+			previewContainer: document.getElementById('wbcPreview') || document.createElement('div'),
+			progressFill: document.getElementById('wbcProgressFill') || document.createElement('div'),
+			statusText: document.getElementById('wbcStatusText') || document.createElement('div'),
+			uploadPrompt: document.getElementById('wbcUploadPrompt') || document.createElement('div'),
+			resetBtn: document.getElementById('wbcResetBtn') || document.createElement('div'),
+			annotatedImg: (document.getElementById('wbcAnnotatedImg') as HTMLImageElement) || document.createElement('img'),
+			panelBadge: document.getElementById('panelBadge') || document.createElement('div'),
 			sampleBtn: document.getElementById('wbcSampleBtn') as HTMLButtonElement | null,
-			cellCountNum: document.getElementById('wbcCellCountNum')!,
-			distributionContainer: document.getElementById('wbcDistributionContainer')!,
-			cropsGrid: document.getElementById('wbcCropsGrid')!,
-			previewImg: document.getElementById('wbcPreviewImg') as HTMLImageElement,
+			cellCountNum: document.getElementById('wbcCellCountNum') || document.createElement('div'),
+			distributionContainer: document.getElementById('wbcDistributionContainer') || document.createElement('div'),
+			cropsGrid: document.getElementById('wbcCropsGrid') || document.createElement('div'),
+			previewImg: (document.getElementById('wbcPreviewImg') as HTMLImageElement) || document.createElement('img'),
 		};
 
 		this.bindEvents();
@@ -134,8 +134,9 @@ export class NextWbcUI {
 		const { dropzone, fileInput, resetBtn, annotatedImg, sampleBtn } = this.elements;
 
 		// Dropzone click → open file picker
-		dropzone.addEventListener('click', () => {
+		dropzone.addEventListener('click', (e) => {
 			if (this.state !== AppState.Idle) return;
+			if (e.target === fileInput) return;
 			fileInput.click();
 		});
 
@@ -185,6 +186,10 @@ export class NextWbcUI {
 			return;
 		}
 
+		if (this.state === AppState.ShowingResult) {
+			await this.handleReset();
+		}
+
 		this.transition(AppState.Uploading);
 		this.setProgress(0, 'Preparing...');
 
@@ -206,12 +211,15 @@ export class NextWbcUI {
 	}
 
 	private async handleSampleClick(): Promise<void> {
-		if (this.state !== AppState.Idle) return;
+		if (this.state !== AppState.Idle && this.state !== AppState.ShowingResult) return;
 		const sampleBtn = this.elements.sampleBtn;
 		if (!sampleBtn) return;
 
 		try {
 			sampleBtn.disabled = true;
+			if (this.state === AppState.ShowingResult) {
+				await this.handleReset();
+			}
 			const res = await fetch('/raptor_wbc_00001.jpeg');
 			if (!res.ok) throw new Error('Could not fetch sample image');
 			const blob = await res.blob();
@@ -225,13 +233,33 @@ export class NextWbcUI {
 		}
 	}
 
-	private handleReset(): void {
+	private async handleReset(): Promise<void> {
+		const isFromShowingResult = this.state === AppState.ShowingResult;
+
+		if (isFromShowingResult) {
+			// 1. Pop all crop bubbles
+			const cropBubbles = this.elements.cropsGrid.querySelectorAll('.wbc-crop-bubble');
+			cropBubbles.forEach((el, idx) => {
+				(el as HTMLElement).style.animationDelay = `${idx * 0.04}s`;
+				el.classList.add('is-popping');
+			});
+
+			// 2. Magic mirror dissolve on central detection image
+			this.elements.resultContainer.classList.add('is-dissolving');
+
+			// Wait for the magic animation to finish
+			await new Promise((resolve) => setTimeout(resolve, 400));
+		}
+
 		this.currentResult = null;
 		this.bboxVisible = true;
 		this.uploadedImageBase64 = null;
 		this.elements.fileInput.value = '';
 		this.elements.progressFill.style.width = '0%';
 		this.elements.errorContainer.innerText = '';
+		this.elements.cropsGrid.innerHTML = '';
+		this.elements.resultContainer.classList.remove('is-dissolving');
+
 		// Force state back to Idle regardless
 		this.state = AppState.Idle;
 		this.applyStateToDOM();
@@ -313,20 +341,32 @@ export class NextWbcUI {
 	static renderCropCards(cells: DetectedCell[]): string {
 		let html = '';
 
-		for (const cell of cells) {
+		const orbitClasses = [
+			'wbc-crop-orbit-tr',
+			'wbc-crop-orbit-bl',
+			'wbc-crop-orbit-br',
+			'wbc-crop-orbit-tl',
+			'wbc-crop-orbit-mr',
+			'wbc-crop-orbit-ml',
+		];
+
+		for (let i = 0; i < cells.length; i++) {
+			const cell = cells[i];
 			const config = WBC_CLASS_MAP.get(cell.class);
 			const color = config?.color ?? '#888';
 			const label = config?.label ?? cell.class;
 			const confPct = Math.round(cell.confidence * 100);
+			const floatClass = `aero-float-${(i % 4) + 1}`;
+			const orbitClass = orbitClasses[i % orbitClasses.length];
 
 			html += `
-				<div class="wbc-crop-card" style="border: 2px solid ${color}80; box-shadow: 0 4px 12px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.8), inset 0 -16px 24px ${color}20;">
+				<div class="wbc-crop-card wbc-crop-bubble aero-component-bubble ${floatClass} ${orbitClass}" style="border: 2.5px solid ${color}; box-shadow: 0 10px 30px ${color}60, inset -5px -7px 16px rgba(2, 132, 199, 0.4), inset 5px 6px 14px rgba(255, 255, 255, 0.98);">
 					<div class="wbc-crop-img-wrap">
 						<img src="${cell.cropBase64}" alt="${label}" />
 					</div>
-					<div class="wbc-crop-info">
-						<span class="wbc-crop-label" style="color: ${color}; filter: brightness(0.65);">${label}</span>
-						<span class="wbc-crop-conf" style="color: ${color}; filter: brightness(0.65); opacity: 0.8;">${confPct}%</span>
+					<div class="wbc-crop-info" style="background: ${color}; color: #ffffff;">
+						<span class="wbc-crop-label">${label}</span>
+						<span class="wbc-crop-conf">${confPct}%</span>
 					</div>
 				</div>
 			`;
