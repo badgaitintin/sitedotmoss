@@ -56,16 +56,17 @@ import Watermark from "../components/Watermark.astro";
 				position: relative;
 			}
 
-			body::before {
+		body::before {
 			content: "";
 			position: fixed;
-			inset: 0;
+			inset: -20px;
 			z-index: -2;
-			background-image: url("/optimized/bg_blurred_3.webp");
+			background-image: url("/optimized/anim_bg_3.webp");
 			background-size: cover;
 			background-position: center;
 			background-repeat: no-repeat;
-			/* Pre-blurred image — no CSS filter needed (saves GPU) */
+			filter: blur(5px) brightness(0.95) saturate(1.25);
+			-webkit-filter: blur(5px) brightness(0.95) saturate(1.25);
 			background-color: rgba(255, 255, 255, 0.05);
 			background-blend-mode: overlay;
 		}

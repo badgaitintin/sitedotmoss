@@ -42,7 +42,7 @@ const ICONS = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
-    <link rel="preload" as="image" href="/optimized/bg_blurred_1.webp" />
+    <link rel="preload" as="image" href="/optimized/anim_bg_1.webp" />
   </head>
   <body>
 
@@ -174,7 +174,7 @@ const ICONS = {
 
               <!-- Blog Tile 3×2 -->
               <a href="/blog" class="tile t-3x2 tile-dark tile-has-image" id="tile-blog-promo">
-                <div class="tile-bg-img" style="background-image: url('/optimized/bg_blurred_1.webp')"></div>
+                <div class="tile-bg-img" style="background-image: url('/optimized/anim_bg_1.webp')"></div>
                 <div class="tile-bg-overlay dark-overlay"></div>
                 <div class="tile-promo-content">
                   <h3 class="tile-promo-title">sitedotmoss Journal</h3>
@@ -255,13 +255,14 @@ const ICONS = {
   body::before {
     content: "";
     position: fixed;
-    inset: 0;
+    inset: -20px;
     z-index: -1;
-    background-image: url('/optimized/bg_blurred_1.webp');
+    background-image: url('/optimized/anim_bg_1.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    /* Pre-blurred image — no CSS filter needed (saves GPU) */
+    filter: blur(6px);
+    -webkit-filter: blur(6px);
     background-color: rgba(255, 255, 255, 0.1);
     background-blend-mode: overlay;
   }
