@@ -57,19 +57,18 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			body::before {
-				content: "";
-				position: fixed;
-				inset: -40px;
-				z-index: -2;
-				background-image: url("/frutigif_3.gif");
-				background-size: cover;
-				background-position: center;
-				background-repeat: no-repeat;
-				filter: blur(10px) brightness(0.95) saturate(1.25);
-				-webkit-filter: blur(10px) brightness(0.95) saturate(1.25);
-				background-color: rgba(255, 255, 255, 0.05);
-				background-blend-mode: overlay;
-			}
+			content: "";
+			position: fixed;
+			inset: 0;
+			z-index: -2;
+			background-image: url("/optimized/bg_blurred_3.webp");
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			/* Pre-blurred image — no CSS filter needed (saves GPU) */
+			background-color: rgba(255, 255, 255, 0.05);
+			background-blend-mode: overlay;
+		}
 
 			a {
 				color: var(--bh-accent);
@@ -316,6 +315,8 @@ import Watermark from "../components/Watermark.astro";
 					gap: 24px;
 					height: auto;
 					overflow: visible;
+					backdrop-filter: blur(16px) saturate(130%);
+					-webkit-backdrop-filter: blur(16px) saturate(130%);
 				}
 				.wbc-sidebar {
 					width: 100% !important;
@@ -329,6 +330,18 @@ import Watermark from "../components/Watermark.astro";
 					overflow: visible;
 					height: auto;
 					padding-right: 0;
+				}
+				/* Reduce GPU-heavy backdrop-filter on mobile */
+				.wbc-upload-zone,
+				.wbc-preview-container,
+				.wbc-image-panel,
+				.wbc-count-card,
+				.wbc-chart-card,
+				.wbc-crop-card,
+				.wbc-guide-note {
+					backdrop-filter: none;
+					-webkit-backdrop-filter: none;
+					background: rgba(255, 255, 255, 0.35);
 				}
 			}
 

@@ -33,3 +33,4 @@ tests/spotify.test.ts
 .gitignore
 tests/blog.integration.test.ts
 tests/blog.unit.test.ts
+tmp-ref-repo/

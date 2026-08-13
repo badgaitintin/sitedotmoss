@@ -22,7 +22,7 @@ const clustersCount = clusterSummary.length;
 			content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard"
 		/>
 		<title>Madonna Sonic Atlas — site(.)moss</title>
-		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline
+		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline defer
 		></script>
 
 		<style is:global>
@@ -386,8 +386,17 @@ const clustersCount = clusterSummary.length;
 				.tab-content.equal-split {
 					grid-template-columns: 1fr 1fr;
 				}
-				.tab-content.full-width {
-					grid-template-columns: 1fr;
+			}
+			@media (max-width: 768px) {
+				.wbc-sidebar,
+				.panel,
+				.cluster-btn,
+				.metric-box,
+				.timeline-slider-box,
+				.neighbor-card {
+					backdrop-filter: none !important;
+					-webkit-backdrop-filter: none !important;
+					background-color: rgba(15, 23, 42, 0.92) !important;
 				}
 			}
 

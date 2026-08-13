@@ -740,14 +740,22 @@ import Watermark from '../components/Watermark.astro';
       </main>
     </div>
 
-    <!-- ONNX Runtime Web Script -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js"></script>
+    <!-- ONNX Runtime Web Script (deferred to avoid blocking) -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.19.0/dist/ort.min.js" defer></script>
 
     <!-- INFERENCE SCRIPT -->
     <script type="module">
-      import { AutoTokenizer, env } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0/dist/transformers.min.js";
+      // Lazy-load tokenizer library — only imported when user clicks "Initialize"
+      let AutoTokenizer, transformersEnv;
+      async function loadTransformers() {
+        const mod = await import("https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.0.0/dist/transformers.min.js");
+        AutoTokenizer = mod.AutoTokenizer;
+        transformersEnv = mod.env;
+        transformersEnv.allowLocalModels = false;
+      }
 
-      env.allowLocalModels = false;
+      // Will be called in startLoadBtn handler
+      var transformersLoaded = false;
 
       // Config
       const MODEL_CONFIG_URL  = "/tiny_convmem_lm_onnx_export/model_config.json";
@@ -869,6 +877,12 @@ import Watermark from '../components/Watermark.astro';
           var configRes = await fetch(MODEL_CONFIG_URL);
           if (!configRes.ok) throw new Error("Could not fetch model_config.json");
           modelConfig = await configRes.json();
+
+          updateProgress("Loading tokenizer library...", "Importing Hugging Face Transformers...", 35);
+          if (!transformersLoaded) {
+            await loadTransformers();
+            transformersLoaded = true;
+          }
 
           updateProgress("Loading tokenizer (Qwen2.5)...", "Preparing vocabulary table (151.6K tokens)...", 40);
           tokenizer = await AutoTokenizer.from_pretrained(TOKENIZER_REPO);

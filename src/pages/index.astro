@@ -42,6 +42,7 @@ const ICONS = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+    <link rel="preload" as="image" href="/optimized/bg_blurred_1.webp" />
   </head>
   <body>
 
@@ -103,7 +104,7 @@ const ICONS = {
 
               <!-- Quote 3×2 with image -->
               <div class="tile t-3x2 tile-has-image" id="tile-quote">
-                <div class="tile-bg-img" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=70')"></div>
+                <div class="tile-bg-img" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=70')" loading="lazy"></div>
                 <div class="tile-bg-overlay"></div>
                 <div class="tile-quote-content">
                   <p class="tile-quote-text">"The only way to do great work is to love what you do."</p>
@@ -125,7 +126,7 @@ const ICONS = {
 
               <!-- About Me 2×1 — opens modal -->
               <button class="tile t-2x1 tile-has-image" id="tile-about" onclick="openAboutModal()">
-                <div class="tile-bg-img" style="background-image: url('/IMG_1405.PNG'); background-position: center top;"></div>
+                <div class="tile-bg-img" style="background-image: url('/optimized/profile_photo.webp'); background-position: center top;"></div>
                 <div class="tile-bg-overlay"></div>
                 <span class="tile-label tile-label-light">About Me</span>
               </button>
@@ -173,7 +174,7 @@ const ICONS = {
 
               <!-- Blog Tile 3×2 -->
               <a href="/blog" class="tile t-3x2 tile-dark tile-has-image" id="tile-blog-promo">
-                <div class="tile-bg-img" style="background-image: url('/frutigif_1.webp')"></div>
+                <div class="tile-bg-img" style="background-image: url('/optimized/bg_blurred_1.webp')"></div>
                 <div class="tile-bg-overlay dark-overlay"></div>
                 <div class="tile-promo-content">
                   <h3 class="tile-promo-title">sitedotmoss Journal</h3>
@@ -182,17 +183,12 @@ const ICONS = {
                 </div>
               </a>
 
-              <!-- Spotify tile 3×3 -->
+              <!-- Spotify tile 3×3 — Facade pattern: click to load -->
               <div class="tile t-3x3 tile-spotify-card" id="tile-spotify">
-                <iframe
-                  src="https://open.spotify.com/embed/album/1CWY6mfnuLlF4BKRLFcUDQ?utm_source=generator&si=93502f090cbc40e4"
-                  width="100%"
-                  height="100%"
-                  frameborder="0"
-                  allowfullscreen
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                ></iframe>
+                <div class="spotify-facade" id="spotify-facade" role="button" tabindex="0" aria-label="Load Spotify Player">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="#1DB954"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                  <span class="spotify-facade-text">Click to load Spotify</span>
+                </div>
               </div>
 
             </div>
@@ -259,14 +255,14 @@ const ICONS = {
   body::before {
     content: "";
     position: fixed;
-    inset: -40px; /* Expands to hide the blurred edges */
+    inset: 0;
     z-index: -1;
-    background-image: url('/frutigif_1.webp');
+    background-image: url('/optimized/bg_blurred_1.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    filter: blur(24px);
-    background-color: rgba(255, 255, 255, 0.1); /* Very light overlay to not wash it out too much */
+    /* Pre-blurred image — no CSS filter needed (saves GPU) */
+    background-color: rgba(255, 255, 255, 0.1);
     background-blend-mode: overlay;
   }
 
@@ -387,10 +383,10 @@ const ICONS = {
                 border-color 0.25s ease,
                 background 0.2s ease;
     transform: translateZ(0);
-    will-change: transform;
     backface-visibility: hidden;
   }
   .tile:hover {
+    will-change: transform;
     transform: translateY(-3px) scale(1.015);
     box-shadow: var(--tile-shadow-hover);
     border-color: rgba(0,0,0,0.13);
@@ -440,6 +436,25 @@ const ICONS = {
     width: 100%;
     height: 100%;
     border: none;
+  }
+  .spotify-facade {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+  .spotify-facade:hover { opacity: 0.8; }
+  .spotify-facade-text {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
   }
 
   /* ===========================
@@ -881,16 +896,34 @@ const ICONS = {
   tickClock();
   setInterval(tickClock, 1000);
 
-  // ── Mouse glow on tiles ──
+  // ── Mouse glow on tiles (rAF-throttled) ──
   document.querySelectorAll<HTMLElement>('.tile').forEach(tile => {
+    let ticking = false;
     tile.addEventListener('mousemove', e => {
-      const r = tile.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
-      const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
-      tile.style.setProperty('--mx', `${x}%`);
-      tile.style.setProperty('--my', `${y}%`);
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const r = tile.getBoundingClientRect();
+        const x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+        const y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+        tile.style.setProperty('--mx', `${x}%`);
+        tile.style.setProperty('--my', `${y}%`);
+        ticking = false;
+      });
     });
   });
+
+  // ── Spotify facade → real embed on click ──
+  const spotifyFacade = document.getElementById('spotify-facade');
+  if (spotifyFacade) {
+    const loadSpotify = () => {
+      const container = spotifyFacade.parentElement;
+      if (!container) return;
+      container.innerHTML = `<iframe src="https://open.spotify.com/embed/album/1CWY6mfnuLlF4BKRLFcUDQ?utm_source=generator&si=93502f090cbc40e4" width="100%" height="100%" frameborder="0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+    };
+    spotifyFacade.addEventListener('click', loadSpotify);
+    spotifyFacade.addEventListener('keydown', (e: KeyboardEvent) => { if (e.key === 'Enter') loadSpotify(); });
+  }
 
   // ── Drag-to-scroll ──
   const scroll = document.querySelector<HTMLElement>('.dashboard-scroll');

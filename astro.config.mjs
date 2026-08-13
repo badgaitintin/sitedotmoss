@@ -7,8 +7,14 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
 	integrations: [react()],
 	adapter: vercel(),
+	compressHTML: true,
 	redirects: {
 		'/monolithic-det': '/monolithic-detection',
+	},
+	vite: {
+		build: {
+			cssMinify: true,
+		},
 	},
 });
 

@@ -69,7 +69,7 @@ const initialPosts = await Promise.all(
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body style="margin: 0; padding: 0; background: transparent; overflow-x: hidden;">
-    <BlogFeed client:load initialPosts={initialPosts} />
+    <BlogFeed client:visible initialPosts={initialPosts} />
     <Watermark />
   </body>
 </html>

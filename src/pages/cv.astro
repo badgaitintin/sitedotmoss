@@ -53,13 +53,13 @@ import Watermark from '../components/Watermark.astro';
 			body::before {
 				content: "";
 				position: fixed;
-				inset: -40px; /* Expands to hide the blurred edges */
+				inset: 0;
 				z-index: -1;
-				background-image: url('/frutigif_1.webp');
+				background-image: url('/optimized/bg_blurred_1.webp');
 				background-size: cover;
 				background-position: center;
 				background-repeat: no-repeat;
-				filter: blur(8px);
+				/* Pre-blurred image — no CSS filter needed (saves GPU) */
 				background-color: rgba(255, 255, 255, 0.05);
 				background-blend-mode: overlay;
 			}
