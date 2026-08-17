@@ -93,10 +93,13 @@ export class FishSpawner {
 			fishEl.classList.add('swim-right-to-left');
 		}
 
-		// Cursor hover interaction: dart forward slightly with bubbles
+		// Cursor hover interaction: smooth glow & tail wiggle without warping position
 		fishEl.addEventListener('mouseenter', () => {
-			fishEl.style.animationDuration = `${Math.max(4, duration * 0.45)}s`;
-			fishEl.style.filter = 'drop-shadow(0 0 12px rgba(56,189,248,0.7)) brightness(1.15)';
+			fishEl.classList.add('is-hovered');
+		});
+
+		fishEl.addEventListener('mouseleave', () => {
+			fishEl.classList.remove('is-hovered');
 		});
 
 		this.activeFishCount++;

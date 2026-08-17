@@ -195,7 +195,7 @@ export class AeroBubbleEngine {
 
 		stage.appendChild(el);
 
-		this.bubbles.push({
+		const bubbleObj: Bubble = {
 			el,
 			isFront,
 			x,
@@ -210,7 +210,17 @@ export class AeroBubbleEngine {
 			age: 0,
 			maxAge: Math.floor(Math.random() * (maxMaxAge - minMaxAge)) + minMaxAge,
 			isPopping: false,
+		};
+
+		el.addEventListener('click', (e) => {
+			e.stopPropagation();
+			const idx = this.bubbles.indexOf(bubbleObj);
+			if (idx !== -1) {
+				this.popBubble(idx);
+			}
 		});
+
+		this.bubbles.push(bubbleObj);
 	}
 
 	// ── Pop effect ───────────────────────────────────────────
@@ -226,8 +236,8 @@ export class AeroBubbleEngine {
 
 		b.el.classList.add('is-popping');
 
-		// Spawn splash particles
-		this.spawnPopParticles(stage, centerX, centerY, this.config.popParticleCount);
+		// Spawn 7 radial droplets splash burst
+		this.spawnPopParticles(stage, centerX, centerY, b.size);
 
 		const isFront = b.isFront;
 
@@ -260,36 +270,30 @@ export class AeroBubbleEngine {
 		stage: HTMLElement,
 		cx: number,
 		cy: number,
-		count: number,
+		size: number = 32,
 	): void {
-		for (let p = 0; p < count; p++) {
-			const particle = document.createElement('div');
-			particle.className = 'aero-pop-particle';
-			stage.appendChild(particle);
+		const burst = document.createElement('div');
+		burst.className = 'aero-pop-burst';
+		burst.style.left = `${cx}px`;
+		burst.style.top = `${cy}px`;
 
-			const angle = (p / count) * Math.PI * 2 + Math.random() * 0.5;
-			const speed = Math.random() * 4 + 2;
-			const pvx = Math.cos(angle) * speed;
-			const pvy = Math.sin(angle) * speed;
-			let px = cx;
-			let py = cy;
-			let pOpacity = 1;
+		const numDrops = 7;
+		const dropDist = Math.max(size * 0.75, 24);
+		burst.style.setProperty('--drop-dist', `${dropDist}px`);
 
-			const animate = () => {
-				px += pvx;
-				py += pvy;
-				pOpacity -= 0.05;
-				particle.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
-				particle.style.opacity = Math.max(pOpacity, 0).toString();
-
-				if (pOpacity > 0) {
-					requestAnimationFrame(animate);
-				} else {
-					if (particle.parentNode) particle.parentNode.removeChild(particle);
-				}
-			};
-			requestAnimationFrame(animate);
+		for (let d = 0; d < numDrops; d++) {
+			const angle = (360 / numDrops) * d;
+			const drop = document.createElement('div');
+			drop.className = 'aero-pop-drop';
+			drop.style.transform = `rotate(${angle.toFixed(1)}deg)`;
+			burst.appendChild(drop);
 		}
+
+		stage.appendChild(burst);
+
+		setTimeout(() => {
+			if (burst.parentNode) burst.parentNode.removeChild(burst);
+		}, 450);
 	}
 
 	private triggerButtonPopSplash(): void {
@@ -297,36 +301,7 @@ export class AeroBubbleEngine {
 		const rect = this.toggleBtn.getBoundingClientRect();
 		const cx = rect.left + rect.width / 2;
 		const cy = rect.top + rect.height / 2;
-
-		// Spawn 8 colorful splash particles on document body
-		for (let p = 0; p < 8; p++) {
-			const particle = document.createElement('div');
-			particle.className = 'aero-pop-particle';
-			document.body.appendChild(particle);
-
-			const angle = (p / 8) * Math.PI * 2 + Math.random() * 0.4;
-			const speed = Math.random() * 5 + 3;
-			const pvx = Math.cos(angle) * speed;
-			const pvy = Math.sin(angle) * speed;
-			let px = cx;
-			let py = cy;
-			let pOpacity = 1;
-
-			const animate = () => {
-				px += pvx;
-				py += pvy;
-				pOpacity -= 0.045;
-				particle.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0)`;
-				particle.style.opacity = Math.max(pOpacity, 0).toString();
-
-				if (pOpacity > 0) {
-					requestAnimationFrame(animate);
-				} else {
-					if (particle.parentNode) particle.parentNode.removeChild(particle);
-				}
-			};
-			requestAnimationFrame(animate);
-		}
+		this.spawnPopParticles(document.body, cx, cy, 48);
 	}
 
 	// ── Physics loop ─────────────────────────────────────────

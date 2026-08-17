@@ -360,7 +360,7 @@ export class NextWbcUI {
 			const orbitClass = orbitClasses[i % orbitClasses.length];
 
 			html += `
-				<div class="wbc-crop-card wbc-crop-bubble aero-component-bubble ${floatClass} ${orbitClass}" style="border: 2.5px solid ${color}; box-shadow: 0 10px 30px ${color}60, inset -5px -7px 16px rgba(2, 132, 199, 0.4), inset 5px 6px 14px rgba(255, 255, 255, 0.98);">
+				<div class="wbc-crop-card wbc-crop-bubble aero-component-bubble ${floatClass} ${orbitClass}" style="border: 2px solid ${color}; box-shadow: 0 8px 24px ${color}50, inset 0 -0.0625em 0 0.0625em rgba(255, 255, 255, 0.95), inset 0 0 0 0.0625em ${color}, inset 0 0 0.25em 0.25em ${color}80;">
 					<div class="wbc-crop-img-wrap">
 						<img src="${cell.cropBase64}" alt="${label}" />
 					</div>
