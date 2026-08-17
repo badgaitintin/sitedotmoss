@@ -1,9 +1,15 @@
 /**
- * dot-matrix-engine.ts — Performance-optimized Dot Matrix Canvas Engine.
+ * dot-matrix-engine.ts — Performance-optimized Geometric Halftone & Dot Matrix Canvas Engine.
  * 
- * Uses packed Float32Array for dot properties to avoid JS object allocations and GC pressure:
- * Layout per dot (10 floats):
- *   [0] x, [1] y, [2] radius, [3] r, [4] g, [5] b, [6] targetRadius, [7] targetR, [8] targetG, [9] targetB
+ * Supports diverse geometric glyphs (Circles, Squares, Triangles, 4-Pointed Stars, Crosses)
+ * and randomized Bauhaus accent color pops (Crimson Red, Cobalt Blue, Gold Yellow, Electric Cyan)
+ * layered over Madonna album halftone imagery.
+ * 
+ * Layout per dot (Stride 12 floats):
+ *   [0] x, [1] y, [2] radius, [3] r, [4] g, [5] b,
+ *   [6] targetRadius, [7] targetR, [8] targetG, [9] targetB,
+ *   [10] shapeType (0: circle, 1: square, 2: triangle, 3: star, 4: plus),
+ *   [11] accentType (0: standard RGB, 1: red, 2: blue, 3: yellow, 4: cyan)
  */
 
 export interface DotMatrixConfig {
@@ -13,6 +19,7 @@ export interface DotMatrixConfig {
 	darkPixelBrighten: number;
 	backgroundColor: string;
 	imageIntervalMs: number;
+	accentFrequency: number; // probability of accent dot (0.0 to 1.0)
 }
 
 export const DEFAULT_DOT_CONFIG: DotMatrixConfig = {
@@ -22,9 +29,19 @@ export const DEFAULT_DOT_CONFIG: DotMatrixConfig = {
 	darkPixelBrighten: 70,
 	backgroundColor: '#ffffff',
 	imageIntervalMs: 20000,
+	accentFrequency: 0.08,
 };
 
-const STRIDE = 10;
+const STRIDE = 12;
+
+// Bauhaus accent RGB color definitions
+const ACCENT_COLORS = [
+	null, // 0: natural image color
+	{ r: 239, g: 35, b: 60 },  // 1: Crimson Red (#ef233c)
+	{ r: 22, g: 66, b: 232 },  // 2: Cobalt Blue (#1642e8)
+	{ r: 251, g: 191, b: 36 }, // 3: Gold Yellow (#fbbf24)
+	{ r: 56, g: 189, b: 248 }, // 4: Electric Cyan (#38bdf8)
+];
 
 export class DotMatrixEngine {
 	private readonly canvas: HTMLCanvasElement;
@@ -36,6 +53,7 @@ export class DotMatrixEngine {
 	private dots: Float32Array = new Float32Array(0);
 	private animId: number | null = null;
 	private intervalId: number | null = null;
+	private shimmerIntervalId: number | null = null;
 	private currentImg: HTMLImageElement | null = null;
 	private images: string[] = [];
 
@@ -59,6 +77,11 @@ export class DotMatrixEngine {
 		if (this.config.imageIntervalMs > 0) {
 			this.intervalId = window.setInterval(() => this.loadNextImage(), this.config.imageIntervalMs);
 		}
+
+		// Subtle randomized color shimmer on accent dots every 3.5 seconds
+		this.shimmerIntervalId = window.setInterval(() => {
+			this.randomizeSomeAccents();
+		}, 3500);
 	}
 
 	stop(): void {
@@ -70,6 +93,10 @@ export class DotMatrixEngine {
 		if (this.intervalId !== null) {
 			clearInterval(this.intervalId);
 			this.intervalId = null;
+		}
+		if (this.shimmerIntervalId !== null) {
+			clearInterval(this.shimmerIntervalId);
+			this.shimmerIntervalId = null;
 		}
 	}
 
@@ -106,8 +133,49 @@ export class DotMatrixEngine {
 				this.dots[ptr + 7] = 255;                      // targetR
 				this.dots[ptr + 8] = 255;                      // targetG
 				this.dots[ptr + 9] = 255;                      // targetB
+
+				// Assign Geometric Shape: 0: Circle (55%), 1: Square (15%), 2: Triangle (12%), 3: Star (12%), 4: Cross (6%)
+				const shapeRand = (Math.sin(c * 12.9898 + r * 78.233) * 43758.5453) % 1;
+				const absRand = Math.abs(shapeRand);
+				let shapeType = 0;
+				if (absRand > 0.94) shapeType = 4;      // Cross
+				else if (absRand > 0.82) shapeType = 3; // 4-Point Star
+				else if (absRand > 0.70) shapeType = 2; // Triangle
+				else if (absRand > 0.55) shapeType = 1; // Square
+				else shapeType = 0;                     // Circle
+
+				this.dots[ptr + 10] = shapeType;
+
+				// Random accent color pop
+				const accentRand = (Math.sin(c * 93.9898 + r * 37.233) * 12758.5453) % 1;
+				if (Math.abs(accentRand) < this.config.accentFrequency) {
+					// 1: Red, 2: Blue, 3: Yellow, 4: Cyan
+					this.dots[ptr + 11] = 1 + Math.floor(Math.abs(accentRand) * 400) % 4;
+				} else {
+					this.dots[ptr + 11] = 0;
+				}
+
 				ptr += STRIDE;
 			}
+		}
+	}
+
+	private randomizeSomeAccents(): void {
+		const totalDots = this.dots.length / STRIDE;
+		const countToShift = Math.floor(totalDots * 0.03); // shift 3% of dots
+
+		for (let i = 0; i < countToShift; i++) {
+			const idx = Math.floor(Math.random() * totalDots);
+			const ptr = idx * STRIDE;
+			if (Math.random() < 0.5) {
+				this.dots[ptr + 11] = 1 + Math.floor(Math.random() * 4); // assign new random accent
+			} else {
+				this.dots[ptr + 11] = 0; // return to natural color
+			}
+		}
+
+		if (this.animId === null && this.currentImg) {
+			this.renderLoop();
 		}
 	}
 
@@ -160,11 +228,19 @@ export class DotMatrixEngine {
 					b = Math.min(255, b + this.config.darkPixelBrighten);
 				}
 
+				const accent = this.dots[ptr + 11] | 0;
+				if (accent > 0 && ACCENT_COLORS[accent]) {
+					const ac = ACCENT_COLORS[accent]!;
+					r = ac.r;
+					g = ac.g;
+					b = ac.b;
+				}
+
 				this.dots[ptr + 7] = r;
 				this.dots[ptr + 8] = g;
 				this.dots[ptr + 9] = b;
 
-				let targetRadius = ((255 - brightness) / 255) * (cellSize / 1.5);
+				let targetRadius = ((255 - brightness) / 255) * (cellSize / 1.6);
 				if (targetRadius < this.config.minRadius) targetRadius = this.config.minRadius;
 				if (targetRadius > this.config.maxRadius) targetRadius = this.config.maxRadius;
 
@@ -190,27 +266,67 @@ export class DotMatrixEngine {
 			const dG = this.dots[ptr + 8] - this.dots[ptr + 4];
 			const dB = this.dots[ptr + 9] - this.dots[ptr + 5];
 
-			if (Math.abs(dr) > 0.1 || Math.abs(dR) > 1 || Math.abs(dG) > 1 || Math.abs(dB) > 1) {
+			if (Math.abs(dr) > 0.08 || Math.abs(dR) > 1 || Math.abs(dG) > 1 || Math.abs(dB) > 1) {
 				needsMoreFrames = true;
 			}
 
-			this.dots[ptr + 2] += dr * 0.06;
-			this.dots[ptr + 3] += dR * 0.06;
-			this.dots[ptr + 4] += dG * 0.06;
-			this.dots[ptr + 5] += dB * 0.06;
+			this.dots[ptr + 2] += dr * 0.065;
+			this.dots[ptr + 3] += dR * 0.065;
+			this.dots[ptr + 4] += dG * 0.065;
+			this.dots[ptr + 5] += dB * 0.065;
 
 			const radius = this.dots[ptr + 2];
-			if (radius > 0.1) {
+			if (radius > 0.15) {
 				const r = this.dots[ptr + 3] | 0;
 				const g = this.dots[ptr + 4] | 0;
 				const b = this.dots[ptr + 5] | 0;
 				const x = this.dots[ptr] + halfCell;
 				const y = this.dots[ptr + 1] + halfCell;
+				const shapeType = this.dots[ptr + 10] | 0;
 
 				this.ctx.fillStyle = `rgb(${r},${g},${b})`;
-				this.ctx.beginPath();
-				this.ctx.arc(x, y, radius, 0, Math.PI * 2);
-				this.ctx.fill();
+
+				switch (shapeType) {
+					case 1: { // Square
+						const side = radius * 1.6;
+						this.ctx.fillRect(x - side / 2, y - side / 2, side, side);
+						break;
+					}
+					case 2: { // Triangle
+						this.ctx.beginPath();
+						this.ctx.moveTo(x, y - radius * 1.3);
+						this.ctx.lineTo(x + radius * 1.15, y + radius * 0.85);
+						this.ctx.lineTo(x - radius * 1.15, y + radius * 0.85);
+						this.ctx.closePath();
+						this.ctx.fill();
+						break;
+					}
+					case 3: { // 4-Pointed Diamond Star
+						const rOuter = radius * 1.35;
+						this.ctx.beginPath();
+						this.ctx.moveTo(x, y - rOuter);
+						this.ctx.quadraticCurveTo(x, y, x + rOuter, y);
+						this.ctx.quadraticCurveTo(x, y, x, y + rOuter);
+						this.ctx.quadraticCurveTo(x, y, x - rOuter, y);
+						this.ctx.quadraticCurveTo(x, y, x, y - rOuter);
+						this.ctx.closePath();
+						this.ctx.fill();
+						break;
+					}
+					case 4: { // Cross / Plus
+						const armW = radius * 0.4;
+						const armL = radius * 1.25;
+						this.ctx.fillRect(x - armW, y - armL, armW * 2, armL * 2);
+						this.ctx.fillRect(x - armL, y - armW, armL * 2, armW * 2);
+						break;
+					}
+					default: { // Circle (0)
+						this.ctx.beginPath();
+						this.ctx.arc(x, y, radius, 0, Math.PI * 2);
+						this.ctx.fill();
+						break;
+					}
+				}
 			}
 		}
 

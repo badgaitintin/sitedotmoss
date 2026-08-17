@@ -63,12 +63,12 @@ export class GalaxyRenderer {
 		let featuresHTML = AUDIO_FEATURE_KEYS.map((k) => {
 			const val = selTrack ? Number(selTrack[k]) : 0;
 			return `
-				<div>
-					<div style="display: flex; justify-content: space-between; font-size: 0.7rem; margin-bottom: 1px; color: var(--bh-muted);">
-						<span style="text-transform: capitalize;">${k}</span>
-						<span style="font-weight: bold; color: var(--bh-text);">${Math.round(val * 100)}%</span>
+				<div class="geo-feature-row">
+					<div class="geo-feature-meta">
+						<span style="text-transform: uppercase; font-weight: 800; font-size: 0.65rem; color: var(--geo-black);">${k}</span>
+						<span style="font-weight: 900; font-family: monospace; font-size: 0.72rem; color: var(--geo-black);">${Math.round(val * 100)}%</span>
 					</div>
-					<div class="metric-bar" style="height: 4px;">
+					<div class="metric-bar">
 						<div class="metric-fill" style="width: ${val * 100}%; background-color: ${clusterColor};"></div>
 					</div>
 				</div>
@@ -80,18 +80,18 @@ export class GalaxyRenderer {
 			const loudness = (selTrack.loudness || 0).toFixed(1);
 			const popularity = selTrack.popularity || 0;
 			featuresHTML += `
-				<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px;">
-					<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
-						<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Pop</div>
-						<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${popularity}%</div>
+				<div class="geo-hud-stats-grid">
+					<div class="geo-hud-stat-chip">
+						<div class="geo-hud-stat-label">POPULARITY</div>
+						<div class="geo-hud-stat-val" style="color: var(--geo-blue);">${popularity}%</div>
 					</div>
-					<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
-						<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Tempo</div>
-						<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${tempo} <span style="font-size:0.5rem;font-weight:normal;">BPM</span></div>
+					<div class="geo-hud-stat-chip">
+						<div class="geo-hud-stat-label">TEMPO</div>
+						<div class="geo-hud-stat-val" style="color: var(--geo-red);">${tempo} <small>BPM</small></div>
 					</div>
-					<div style="text-align: center; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);">
-						<div style="font-size: 0.55rem; color: var(--bh-muted); text-transform: uppercase; font-weight: bold;">Loud</div>
-						<div style="font-size: 0.72rem; font-weight: bold; color: var(--bh-text);">${loudness} <span style="font-size:0.5rem;font-weight:normal;">dB</span></div>
+					<div class="geo-hud-stat-chip">
+						<div class="geo-hud-stat-label">LOUDNESS</div>
+						<div class="geo-hud-stat-val" style="color: #b45309;">${loudness} <small>dB</small></div>
 					</div>
 				</div>
 			`;
@@ -104,8 +104,8 @@ export class GalaxyRenderer {
 			const track = store.tracks[w.index];
 			return `
 				<button class="track-list-item" data-idx="${w.index}">
-					<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">${track.name}</span>
-					<span style="opacity: 0.6; font-size: 0.7rem;">${Math.round(w.similarity * 100)}%</span>
+					<span class="track-item-title">${track.name}</span>
+					<span class="track-item-badge" style="background: var(--geo-blue); color: #fff;">${Math.round(w.similarity * 100)}% SIMILAR</span>
 				</button>
 			`;
 		}).join('');

@@ -1,5 +1,5 @@
 ---
-// spotify-analysis.astro — Spotify Sonic Atlas Page matching cv.astro theme
+// spotify-analysis.astro — Spotify Sonic Atlas Page in Bold Abstract Geometric Graphic Style
 import "@fontsource/google-sans-flex";
 import Watermark from "../components/Watermark.astro";
 import clusterSummary from "../../public/assets/spotify/cluster_summary.json";
@@ -19,31 +19,39 @@ const clustersCount = clusterSummary.length;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta
 			name="description"
-			content="Madonna Sonic Atlas — Interactive Spotify analysis and clustering dashboard"
+			content="Sonic Atlas — Geometric Data Analysis & Clustering Dashboard"
 		/>
-		<title>Madonna Sonic Atlas — site(.)moss</title>
+		<title>Sonic Atlas — site(.)moss</title>
 		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline defer
 		></script>
 
 		<style is:global>
 			/* ===========================
-			   GLASSMORPHISM TOKEN SYSTEM
+			   ABSTRACT GEOMETRIC DESIGN SYSTEM
 			=========================== */
 			:root {
-				--bh-void: #000000;
-				--bh-deep: #0f172a;
-				--bh-surface: #1e293b;
-				--bh-card: transparent;
-				--bh-border: rgba(255, 255, 255, 0.1);
-				--bh-border-hi: rgba(255, 255, 255, 0.25);
-				--bh-text: #f8fafc;
-				--bh-muted: #94a3b8;
-				--bh-accent: #ffffff;
-				--bh-accent2: #cbd5e1;
-				--bh-accent3: #64748b;
-				--bh-danger: #ef4444;
-				--bh-glow: transparent;
-				--bh-glow-sm: transparent;
+				--geo-black: #0a0a0d;
+				--geo-white: #ffffff;
+				--geo-blue: #1642e8;   /* Bauhaus Royal Cobalt */
+				--geo-red: #ef233c;    /* Crimson Coral */
+				--geo-yellow: #fbbf24; /* Warm Gold Amber */
+				--geo-cyan: #38bdf8;   /* Electric Aqua */
+				--geo-purple: #31108d;
+				--geo-surface: rgba(255, 255, 255, 0.90);
+				--geo-surface-dark: #0f121d;
+				--geo-border: #0a0a0d;
+				--geo-text: #0a0a0d;
+				--geo-muted: #475569;
+				
+				/* Solid crisp neo-brutalist / geometric graphic shadows */
+				--geo-shadow: 4px 4px 0px #0a0a0d;
+				--geo-shadow-lg: 6px 6px 0px #0a0a0d;
+				--geo-shadow-sm: 2.5px 2.5px 0px #0a0a0d;
+
+				/* Backwards compatible tokens */
+				--bh-text: #0a0a0d;
+				--bh-muted: #475569;
+				--bh-accent: #1642e8;
 			}
 
 			/* ===========================
@@ -54,11 +62,11 @@ const clustersCount = clusterSummary.length;
 				width: 100%;
 				height: 100vh;
 				overflow: hidden;
-				background: transparent;
+				background: transparent !important;
 				font-family:
 					"Google Sans Flex", "Google Sans", "Helvetica Neue",
 					sans-serif;
-				color: var(--bh-text);
+				color: var(--geo-text);
 				line-height: 1.5;
 				margin: 0;
 				padding: 0;
@@ -69,10 +77,8 @@ const clustersCount = clusterSummary.length;
 				color: inherit;
 			}
 
-			/* body::before removed in favor of canvas dot matrix background */
-
 			a {
-				color: var(--bh-accent);
+				color: var(--geo-blue);
 				text-decoration: none;
 			}
 			a:hover {
@@ -80,13 +86,15 @@ const clustersCount = clusterSummary.length;
 			}
 
 			.page-wrap {
-				animation: bh-enter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+				animation: geo-enter 0.45s cubic-bezier(0.1, 0.9, 0.2, 1) both;
 				height: 100%;
+				position: relative;
+				z-index: 1;
 			}
-			@keyframes bh-enter {
+			@keyframes geo-enter {
 				from {
 					opacity: 0;
-					transform: translateY(20px);
+					transform: translateY(14px);
 				}
 				to {
 					opacity: 1;
@@ -94,17 +102,17 @@ const clustersCount = clusterSummary.length;
 				}
 			}
 			body.is-exiting .page-wrap {
-				animation: bh-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+				animation: geo-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
 				pointer-events: none;
 			}
-			@keyframes bh-exit {
+			@keyframes geo-exit {
 				from {
 					opacity: 1;
 					transform: translateY(0);
 				}
 				to {
 					opacity: 0;
-					transform: translateY(20px);
+					transform: translateY(14px);
 				}
 			}
 
@@ -114,10 +122,10 @@ const clustersCount = clusterSummary.length;
 			.bh-page {
 				position: relative;
 				z-index: 1;
-				max-width: 1120px;
+				max-width: 1180px;
 				margin: 0 auto;
 				height: 100vh;
-				padding: 32px 24px;
+				padding: 16px 26px 26px 16px; /* Generous breathing room so 4px-6px shadows never clip */
 				box-sizing: border-box;
 				display: flex;
 				flex-direction: column;
@@ -128,15 +136,15 @@ const clustersCount = clusterSummary.length;
 				position: relative;
 				display: flex;
 				flex-direction: column;
-				gap: 20px;
-				height: calc(100vh - 64px);
+				gap: 16px;
+				height: calc(100vh - 42px);
 				align-items: stretch;
 				box-sizing: border-box;
-				overflow: hidden;
+				overflow: visible; /* Prevent any clipping on card shadows */
 			}
 
 			/* ===========================
-			   SIDEBAR
+			   BAUHAUS TOPBAR / SIDEBAR
 			=========================== */
 			.wbc-sidebar {
 				width: 100%;
@@ -146,146 +154,74 @@ const clustersCount = clusterSummary.length;
 				flex-direction: row;
 				align-items: center;
 				justify-content: space-between;
-				gap: 24px;
-				padding: 16px 24px;
+				gap: 16px;
+				padding: 12px 20px;
 				position: relative;
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.04) 35%, rgba(255,255,255,0.01) 55%, rgba(255,255,255,0.08) 100%),
-					linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.75) 100%);
-				backdrop-filter: blur(40px) saturate(180%);
-				-webkit-backdrop-filter: blur(40px) saturate(180%);
-				border: none;
-				border-radius: 28px;
-				box-shadow:
-					0 0 80px rgba(100, 150, 255, 0.08),
-					0 0 30px rgba(255, 255, 255, 0.05),
-					0 20px 60px rgba(0, 0, 0, 0.3),
-					0 4px 16px rgba(0, 0, 0, 0.2);
+				background: var(--geo-surface);
+				backdrop-filter: blur(16px);
+				-webkit-backdrop-filter: blur(16px);
+				border: 2px solid var(--geo-border);
+				border-radius: 18px;
+				box-shadow: var(--geo-shadow);
 				box-sizing: border-box;
 				z-index: 10;
+				transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 			}
 
-			/* Waterfall edge glow ring — sidebar */
-			.wbc-sidebar::before {
-				content: '';
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				padding: 3px;
-				background: linear-gradient(
-					135deg,
-					rgba(255,255,255,0.8) 0%,
-					rgba(255,255,255,0.3) 15%,
-					rgba(255,255,255,0.08) 40%,
-					rgba(255,255,255,0.02) 60%,
-					rgba(255,255,255,0.15) 85%,
-					rgba(255,255,255,0.5) 100%
-				);
-				-webkit-mask:
-					linear-gradient(#fff 0 0) content-box,
-					linear-gradient(#fff 0 0);
-				-webkit-mask-composite: xor;
-				mask-composite: exclude;
-				pointer-events: none;
-				z-index: 2;
-			}
-
-			/* Inner vignette — sidebar */
-			.wbc-sidebar::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				box-shadow:
-					inset 0 0 60px 10px rgba(0, 0, 0, 0.2),
-					inset 0 4px 15px rgba(255, 255, 255, 0.15),
-					inset 4px 0 15px rgba(255, 255, 255, 0.1),
-					inset 0 -4px 15px rgba(0, 0, 0, 0.2),
-					inset -4px 0 15px rgba(0, 0, 0, 0.15);
-				pointer-events: none;
-				z-index: 1;
-			}
-
-			.wbc-workspace {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				min-width: 0;
-				height: 100%;
-				overflow: hidden;
-			}
-
-			/* ===========================
-			   BACK BUTTON
-			=========================== */
-			.wbc-back-btn {
-				flex-shrink: 0;
-				width: 36px;
-				height: 36px;
-				background: linear-gradient(
-					180deg,
-					rgba(255, 255, 255, 0.8) 0%,
-					rgba(255, 255, 255, 0.3) 50%,
-					rgba(255, 255, 255, 0.1) 51%,
-					rgba(255, 255, 255, 0.45) 100%
-				);
-				color: var(--bh-text);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 50%;
-				cursor: pointer;
-				box-shadow:
-					0 4px 12px rgba(0, 0, 0, 0.05),
-					inset 0 1px 0 rgba(255, 255, 255, 0.5);
-				transition:
-					background 0.2s,
-					transform 0.2s,
-					box-shadow 0.2s;
-			}
-			.wbc-back-btn:hover {
-				background: linear-gradient(
-					180deg,
-					rgba(255, 255, 255, 0.95) 0%,
-					rgba(255, 255, 255, 0.45) 50%,
-					rgba(255, 255, 255, 0.18) 51%,
-					rgba(255, 255, 255, 0.6) 100%
-				);
-				transform: scale(1.06);
-				box-shadow: 0 6px 16px rgba(255, 255, 255, 0.1);
-			}
-
-			/* ===========================
-			   HEADER & TITLE
-			=========================== */
 			.bh-header {
 				display: flex;
 				flex-direction: row;
-				gap: 16px;
+				gap: 14px;
 				margin: 0;
 				width: auto;
 				align-items: center;
 				text-align: left;
 			}
 
-			.title-tag {
-				font-size: 0.65rem;
-				font-weight: 700;
-				letter-spacing: 0.18em;
-				color: var(--bh-muted);
-				opacity: 0.65;
-				text-transform: uppercase;
+			/* Back Button */
+			.wbc-back-btn {
+				flex-shrink: 0;
+				width: 38px;
+				height: 38px;
+				background: #ffffff;
+				color: var(--geo-black);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				border: 2px solid var(--geo-border);
+				border-radius: 50%;
+				cursor: pointer;
+				box-shadow: var(--geo-shadow-sm);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+			}
+			.wbc-back-btn:hover {
+				background: var(--geo-yellow);
+				transform: translate(-1px, -1px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+			}
+
+			.title-tag-pill {
 				display: inline-flex;
 				align-items: center;
-				gap: 6px;
+				gap: 4px;
+				font-size: 0.62rem;
+				font-weight: 900;
+				letter-spacing: 0.14em;
+				text-transform: uppercase;
+				color: var(--geo-blue);
+				background: #ffffff;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 99px;
+				padding: 1px 8px;
+				box-shadow: 1.5px 1.5px 0px var(--geo-border);
+				width: fit-content;
 				margin-bottom: 2px;
 			}
 
 			.bh-title {
-				font-size: 1.8rem;
+				font-size: 1.6rem;
 				font-weight: 900;
-				line-height: 1.1;
+				line-height: 1;
 				letter-spacing: -0.5px;
 				margin: 0;
 				display: flex;
@@ -293,24 +229,19 @@ const clustersCount = clusterSummary.length;
 				align-items: center;
 				justify-content: flex-start;
 				gap: 6px;
-				flex-wrap: wrap;
 			}
-			.title-nextwbc {
+			.title-sonic {
+				color: var(--geo-blue);
 				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				color: var(--bh-accent);
 			}
-			.title-classifier {
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				color: var(--bh-muted);
+			.title-atlas {
+				color: var(--geo-red);
+				font-family: Georgia, serif;
+				font-style: italic;
+				font-weight: bold;
 			}
 
-			.bh-subtitle {
-				display: none;
-			}
-
-			/* ===========================
-			   NAV MENU
-			=========================== */
+			/* ── NAV MENU ── */
 			.wbc-nav-menu {
 				display: flex;
 				flex-direction: row;
@@ -321,333 +252,445 @@ const clustersCount = clusterSummary.length;
 			.nav-item {
 				display: flex;
 				align-items: center;
-				gap: 10px;
-				padding: 10px 16px;
-				font-size: 0.82rem;
-				font-weight: 600;
-				color: var(--bh-muted);
-				background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 100%);
-				backdrop-filter: blur(12px) saturate(140%);
-				-webkit-backdrop-filter: blur(12px) saturate(140%);
-				border: 1px solid rgba(255, 255, 255, 0.1);
+				gap: 6px;
+				padding: 7px 15px;
+				font-size: 0.74rem;
+				font-weight: 800;
+				color: var(--geo-black);
+				background: #ffffff;
+				border: 2px solid var(--geo-border);
 				border-radius: 99px;
 				cursor: pointer;
 				text-align: left;
-				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
 				font-family: inherit;
-				box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.08);
+				box-shadow: 2px 2px 0px var(--geo-border);
+				letter-spacing: 0.02em;
 			}
 			.nav-item:hover {
-				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
-				color: var(--bh-text);
-				box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+				background: #f8fafc;
+				transform: translate(-1px, -1px);
+				box-shadow: 3px 3px 0px var(--geo-border);
 			}
 			.nav-item.active {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 35%, rgba(255,255,255,0.02) 55%, rgba(255,255,255,0.1) 100%),
-					linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 60%);
-				border: 1px solid rgba(255, 255, 255, 0.3);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.6);
-				color: var(--bh-accent);
-				box-shadow:
-					0 6px 20px rgba(0, 0, 0, 0.2),
-					inset 0 2px 0 rgba(255, 255, 255, 0.4),
-					inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+				color: #ffffff;
+				transform: translate(-1.5px, -1.5px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+			}
+			#nav-personas.active { background: var(--geo-red); }
+			#nav-galaxy.active { background: var(--geo-blue); }
+			#nav-rating.active { background: var(--geo-yellow); color: var(--geo-black); }
+			#nav-pipeline.active { background: var(--geo-black); }
+
+			.nav-geo-icon {
+				font-size: 0.8rem;
+				line-height: 1;
 			}
 
-			.sidebar-footer {
-				display: none;
+			/* ── Right-side Resume Style Quadrant Wheel Widget & Canvas View Button ── */
+			.geo-header-right {
+				display: flex;
+				align-items: center;
+				gap: 10px;
 			}
-			.footer-meta {
-				font-size: 0.7rem;
-				text-transform: uppercase;
-				letter-spacing: 0.1em;
-				color: var(--bh-accent3);
-				font-weight: bold;
+
+			/* Canvas View Toggle Button */
+			.geo-canvas-toggle-btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+				padding: 6px 12px;
+				font-size: 0.68rem;
+				font-weight: 900;
+				letter-spacing: 0.06em;
+				color: var(--geo-black);
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 99px;
+				cursor: pointer;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				font-family: inherit;
+			}
+			.geo-canvas-toggle-btn:hover {
+				background: var(--geo-yellow);
+				transform: translate(-1px, -1px);
+				box-shadow: 3px 3px 0px var(--geo-border);
+			}
+			.geo-canvas-toggle-btn.active {
+				background: var(--geo-blue);
+				color: #ffffff;
+				border-color: var(--geo-black);
+				box-shadow: 3px 3px 0px var(--geo-border);
+			}
+
+			.geo-quadrant-badge {
+				width: 38px;
+				height: 38px;
+				border-radius: 50%;
+				border: 2px solid var(--geo-black);
+				position: relative;
+				overflow: hidden;
+				box-shadow: 2px 2px 0px var(--geo-black);
+				background: #ffffff;
+				flex-shrink: 0;
+				animation: geo-spin-slow 20s linear infinite;
+			}
+			.geo-quadrant-slice {
+				position: absolute;
+				width: 50%;
+				height: 50%;
+			}
+			.slice-tl { top: 0; left: 0; background: var(--geo-red); }
+			.slice-tr { top: 0; right: 0; background: var(--geo-blue); }
+			.slice-bl { bottom: 0; left: 0; background: var(--geo-yellow); }
+			.slice-br { bottom: 0; right: 0; background: var(--geo-black); }
+			.geo-quadrant-center {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				width: 12px;
+				height: 12px;
+				border-radius: 50%;
+				background: var(--geo-white);
+				border: 1.5px solid var(--geo-black);
+				z-index: 2;
+			}
+			@keyframes geo-spin-slow {
+				from { transform: rotate(0deg); }
+				to { transform: rotate(360deg); }
+			}
+
+			.geo-dot-chip {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 2.5px;
+				padding: 5px;
+				background: var(--geo-black);
+				border: 1.5px solid var(--geo-black);
+				border-radius: 6px;
+				width: 22px;
+				height: 22px;
+				box-sizing: border-box;
+				box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+			}
+			.geo-dot-chip span {
+				width: 3.5px;
+				height: 3.5px;
+				border-radius: 50%;
+				background: #ffffff;
+			}
+			.geo-dot-chip span.active {
+				background: var(--geo-yellow);
 			}
 
 			/* ===========================
 			   WORKSPACE / TABS
 			=========================== */
+			.wbc-workspace {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				min-width: 0;
+				height: 100%;
+				overflow: visible;
+				transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+				            transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+			}
+
+			/* Canvas Zen Mode Transitions */
+			body.is-zen-canvas .wbc-workspace {
+				opacity: 0;
+				pointer-events: none;
+				transform: translateY(32px) scale(0.97);
+			}
+			body.is-zen-canvas .wbc-sidebar {
+				background: rgba(255, 255, 255, 0.72);
+				box-shadow: 2.5px 2.5px 0px rgba(10, 10, 13, 0.4);
+			}
+
+			.geo-zen-exit-pill {
+				position: fixed;
+				bottom: 24px;
+				left: 50%;
+				transform: translateX(-50%) translateY(70px);
+				opacity: 0;
+				pointer-events: none;
+				z-index: 9999;
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				padding: 8px 18px;
+				font-size: 0.74rem;
+				font-weight: 900;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				background: #ffffff;
+				color: var(--geo-black);
+				border: 2px solid var(--geo-border);
+				border-radius: 99px;
+				box-shadow: 4px 4px 0px var(--geo-border);
+				cursor: pointer;
+				transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+			}
+			.geo-zen-exit-pill:hover {
+				background: var(--geo-yellow);
+				transform: translateX(-50%) translateY(-2px);
+				box-shadow: 5px 5px 0px var(--geo-border);
+			}
+			body.is-zen-canvas .geo-zen-exit-pill {
+				transform: translateX(-50%) translateY(0);
+				opacity: 1;
+				pointer-events: auto;
+			}
+			.zen-esc-kbd {
+				background: var(--geo-black);
+				color: #ffffff;
+				font-size: 0.6rem;
+				padding: 2px 6px;
+				border-radius: 4px;
+				font-family: monospace;
+			}
+
 			.tab-content {
 				display: grid;
 				grid-template-columns: 1fr;
-				gap: 28px;
+				gap: 18px;
 				height: 100%;
 				min-height: 0;
+				padding-right: 6px;
+				padding-bottom: 6px;
+				box-sizing: border-box;
 			}
 			@media (min-width: 768px) {
-				.tab-content {
-					grid-template-columns: 1fr 280px;
-				}
 				.tab-content.wide-left {
-					grid-template-columns: 1.4fr 1fr;
+					grid-template-columns: 1.45fr 1fr;
 				}
 				.tab-content.equal-split {
 					grid-template-columns: 1fr 1fr;
 				}
 			}
-			@media (max-width: 768px) {
-				.wbc-sidebar,
-				.panel,
-				.cluster-btn,
-				.metric-box,
-				.timeline-slider-box,
-				.neighbor-card {
-					backdrop-filter: none !important;
-					-webkit-backdrop-filter: none !important;
-					background-color: rgba(15, 23, 42, 0.92) !important;
-				}
-			}
 
+			/* ── PANELS ── */
 			.panel {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.04) 35%, rgba(255,255,255,0.01) 55%, rgba(255,255,255,0.08) 100%),
-					linear-gradient(180deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.75) 100%);
-				backdrop-filter: blur(40px) saturate(180%);
-				-webkit-backdrop-filter: blur(40px) saturate(180%);
-				border: none;
-				border-radius: 36px;
-				padding: 28px;
+				background: var(--geo-surface);
+				backdrop-filter: blur(16px);
+				-webkit-backdrop-filter: blur(16px);
+				border: 2px solid var(--geo-border);
+				border-radius: 20px;
+				padding: 20px;
 				display: flex;
 				flex-direction: column;
 				height: 100%;
 				min-height: 0;
 				box-sizing: border-box;
 				position: relative;
-				box-shadow:
-					0 0 80px rgba(100, 150, 255, 0.08),
-					0 0 30px rgba(255, 255, 255, 0.05),
-					0 24px 60px rgba(0, 0, 0, 0.3),
-					0 4px 16px rgba(0, 0, 0, 0.2);
-				transition:
-					transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1),
-					box-shadow 0.3s ease;
+				box-shadow: var(--geo-shadow);
+				transition: transform 0.18s cubic-bezier(0.1, 0.8, 0.2, 1), box-shadow 0.18s ease;
 				overflow: hidden;
 			}
 
-			/* Waterfall edge glow ring — panel */
-			.panel::before {
-				content: '';
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				padding: 3px;
-				background: linear-gradient(
-					135deg,
-					rgba(255,255,255,0.8) 0%,
-					rgba(255,255,255,0.3) 15%,
-					rgba(255,255,255,0.08) 40%,
-					rgba(255,255,255,0.02) 60%,
-					rgba(255,255,255,0.15) 85%,
-					rgba(255,255,255,0.5) 100%
-				);
-				-webkit-mask:
-					linear-gradient(#fff 0 0) content-box,
-					linear-gradient(#fff 0 0);
-				-webkit-mask-composite: xor;
-				mask-composite: exclude;
-				pointer-events: none;
-				z-index: 2;
-			}
-
-			/* Inner vignette — panel */
-			.panel::after {
-				content: '';
-				position: absolute;
-				inset: 0;
-				border-radius: inherit;
-				box-shadow:
-					inset 0 0 80px 15px rgba(0, 0, 0, 0.2),
-					inset 0 4px 15px rgba(255, 255, 255, 0.15),
-					inset 4px 0 15px rgba(255, 255, 255, 0.1),
-					inset 0 -4px 15px rgba(0, 0, 0, 0.2),
-					inset -4px 0 15px rgba(0, 0, 0, 0.15);
-				pointer-events: none;
-				z-index: 1;
-			}
-
 			.panel:hover {
-				transform: translateY(-2px);
-				box-shadow:
-					0 0 80px rgba(100, 150, 255, 0.06),
-					0 28px 70px rgba(0, 0, 0, 0.3),
-					inset 0 0 80px rgba(0, 0, 0, 0.1),
-					inset 0 2px 0 rgba(255, 255, 255, 0.5),
-					inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+				transform: translate(-1px, -1px);
+				box-shadow: 5px 5px 0px var(--geo-border);
 			}
 
-			/* Personas Tab styling */
-			.cluster-rail {
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-				margin-top: 12px;
-			}
-			.cluster-btn {
-				position: relative;
-				width: 100%;
-				padding: 12px 20px;
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.04) 100%);
-				backdrop-filter: blur(12px) saturate(140%);
-				-webkit-backdrop-filter: blur(12px) saturate(140%);
-				border: 1px solid rgba(255, 255, 255, 0.15);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.3);
-				border-radius: 99px;
-				text-align: left;
-				cursor: pointer;
-				transition: all 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
-				font-family: inherit;
-				box-shadow:
-					inset 0 1px 0 rgba(255, 255, 255, 0.15),
-					inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-			}
-			.cluster-btn:hover {
-				box-shadow:
-					0 6px 20px rgba(0, 0, 0, 0.3),
-					inset 0 1px 0 rgba(255, 255, 255, 0.25);
-			}
-			.cluster-btn.active {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.08) 100%);
-				border-color: rgba(255, 255, 255, 0.25);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.45);
-				box-shadow:
-					0 6px 20px rgba(0, 0, 0, 0.15),
-					inset 0 2px 0 rgba(255, 255, 255, 0.3),
-					inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-			}
-			.cluster-color-bar {
-				position: absolute;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				width: 4px;
-				border-top-left-radius: 8px;
-				border-bottom-left-radius: 8px;
-			}
-			.cluster-title-wrap {
-				display: flex;
+			/* Geometric Section Pill Badge */
+			.section-title {
+				display: inline-flex;
 				align-items: center;
-				justify-content: space-between;
-				font-size: 0.8rem;
-				font-weight: 700;
-			}
-			.cluster-dot {
-				width: 8px;
-				height: 8px;
-				border-radius: 50%;
-				display: inline-block;
-				margin-right: 6px;
+				gap: 6px;
+				font-size: 0.65rem;
+				text-transform: uppercase;
+				letter-spacing: 0.12em;
+				color: var(--geo-black);
+				font-weight: 900;
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 99px;
+				padding: 3px 10px;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				margin-bottom: 8px;
+				width: fit-content;
 			}
 
-			/* Detailed cluster card */
+			.panel-header-title {
+				font-size: 1.25rem;
+				font-weight: 900;
+				color: var(--geo-black);
+				margin: 0 0 4px 0;
+				letter-spacing: -0.3px;
+			}
+
+			/* Cluster detail card */
 			.cluster-detail-card {
 				display: flex;
 				flex-direction: column;
 				height: 100%;
 				justify-content: space-between;
 				position: relative;
-				overflow: hidden;
 			}
-			.cluster-bg-image {
-				position: absolute;
-				inset: 0;
-				background-size: cover;
-				background-position: center;
-				opacity: 0.22;
-				z-index: 0;
-				pointer-events: none;
-				transition:
-					opacity 0.5s ease,
-					background-image 0.5s ease;
-			}
+
 			.cluster-detail-header {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				z-index: 1;
-			}
-			.cluster-badge {
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid rgba(255, 255, 255, 0.08);
-				padding: 3px 10px;
-				border-radius: 20px;
-				font-size: 0.65rem;
-				font-weight: 700;
-				letter-spacing: 0.05em;
-				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-			}
-			.cluster-desc {
-				font-size: 0.8rem;
-				color: var(--bh-muted);
-				margin-top: 6px;
-				z-index: 1;
+				border-bottom: 2px solid var(--geo-border);
+				padding-bottom: 8px;
 			}
 
+			.cluster-badge {
+				background: var(--geo-blue);
+				color: #ffffff;
+				border: 1.5px solid var(--geo-border);
+				padding: 3px 10px;
+				border-radius: 99px;
+				font-size: 0.68rem;
+				font-weight: 900;
+				letter-spacing: 0.05em;
+				box-shadow: 2px 2px 0px var(--geo-border);
+			}
+
+			.cluster-desc {
+				font-size: 0.78rem;
+				color: var(--geo-muted);
+				font-weight: 600;
+				margin: 8px 0 0 0;
+			}
+
+			/* Metrics grid */
 			.metrics-grid {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
-				gap: 10px;
-				margin-top: 14px;
-				z-index: 1;
+				gap: 8px;
+				margin-top: 10px;
 			}
+
 			.metric-box {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.04) 100%);
-				backdrop-filter: blur(12px) saturate(130%);
-				-webkit-backdrop-filter: blur(12px) saturate(130%);
-				border: 1px solid rgba(255, 255, 255, 0.1);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.2);
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
 				padding: 8px 12px;
-				border-radius: 16px;
-				box-shadow:
-					0 2px 8px rgba(0, 0, 0, 0.15),
-					inset 0 1px 0 rgba(255, 255, 255, 0.12);
+				box-shadow: 2px 2px 0px var(--geo-border);
 			}
-			.metric-box.wide {
-				grid-column: span 2;
-			}
+
 			.metric-meta {
 				display: flex;
 				justify-content: space-between;
-				font-size: 0.72rem;
-				font-weight: bold;
-				color: var(--bh-muted);
+				font-size: 0.7rem;
+				font-weight: 800;
 				margin-bottom: 4px;
 			}
+
 			.metric-bar {
-				height: 5px;
-				background: rgba(0, 0, 0, 0.06);
-				border-radius: 4px;
+				height: 6px;
+				background: #e2e8f0;
+				border: 1.2px solid var(--geo-border);
+				border-radius: 99px;
 				overflow: hidden;
 			}
+
 			.metric-fill {
 				height: 100%;
-				border-radius: 4px;
+				border-radius: 99px;
 				transition: width 0.6s cubic-bezier(0.1, 0.8, 0.2, 1);
 			}
 
-			/* Scrollable List for Tracks */
+			.metric-chip-stat {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				padding: 8px 12px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				box-shadow: 2px 2px 0px var(--geo-border);
+			}
+			.metric-chip-title {
+				font-size: 0.62rem;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+				font-weight: 900;
+				letter-spacing: 0.05em;
+			}
+			.metric-chip-val {
+				font-size: 0.85rem;
+				font-weight: 900;
+				font-family: monospace;
+			}
+
+			/* Cluster rail buttons */
+			.cluster-rail {
+				display: flex;
+				flex-direction: column;
+				gap: 8px;
+				margin-top: 8px;
+			}
+
+			.cluster-btn {
+				position: relative;
+				width: 100%;
+				padding: 10px 14px;
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				text-align: left;
+				cursor: pointer;
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				font-family: inherit;
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+			}
+			.cluster-btn:hover {
+				transform: translate(-1px, -1px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+				background: #f8fafc;
+			}
+			.cluster-btn.active {
+				background: var(--geo-black);
+				color: #ffffff;
+				transform: translate(-1.5px, -1.5px);
+				box-shadow: 3.5px 3.5px 0px var(--cluster-theme-color, var(--geo-red));
+			}
+			.cluster-btn.active .cluster-count-pill {
+				background: #ffffff;
+				color: var(--geo-black);
+			}
+
+			.cluster-title-wrap {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				font-size: 0.78rem;
+				font-weight: 800;
+			}
+
+			.cluster-count-pill {
+				font-size: 0.65rem;
+				font-weight: 800;
+				padding: 2px 8px;
+				border-radius: 99px;
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				color: var(--geo-muted);
+			}
+
+			/* Track list items */
 			.list-scroll {
 				flex: 1;
 				overflow-y: auto;
-				margin-top: 8px;
+				margin-top: 6px;
 				padding-right: 4px;
 				display: flex;
 				flex-direction: column;
-				gap: 4px;
+				gap: 5px;
 				min-height: 0;
 			}
 			.list-scroll::-webkit-scrollbar {
-				width: 3px;
-			}
-			.list-scroll::-webkit-scrollbar-track {
-				background: transparent;
+				width: 4px;
 			}
 			.list-scroll::-webkit-scrollbar-thumb {
-				background: rgba(0, 0, 0, 0.12);
+				background: var(--geo-border);
 				border-radius: 4px;
 			}
 
@@ -655,259 +698,195 @@ const clustersCount = clusterSummary.length;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				padding: 8px 12px;
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid rgba(255, 255, 255, 0.08);
-				border-radius: 6px;
-				font-size: 0.78rem;
+				padding: 7px 10px;
+				background: #ffffff;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 8px;
+				font-size: 0.74rem;
+				font-weight: 700;
 				cursor: pointer;
 				text-align: left;
 				transition: all 0.15s ease;
 				font-family: inherit;
-				box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+				box-shadow: 2px 2px 0px var(--geo-border);
 			}
 			.track-list-item:hover {
-				background: rgba(255, 255, 255, 0.1);
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+				background: #f8fafc;
+				transform: translateX(3px);
+				box-shadow: 3px 3px 0px var(--geo-border);
 			}
 			.track-list-item.selected {
-				background: rgba(255, 255, 255, 0.15);
-				border-color: rgba(255, 255, 255, 0.15);
-				font-weight: bold;
+				background: var(--geo-blue);
+				color: #ffffff;
+				border-color: var(--geo-black);
+			}
+			.track-list-item.selected .track-item-badge {
+				background: #ffffff;
+				color: var(--geo-blue);
 			}
 
-			/* Galaxy Tab styling */
+			.track-item-title {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 170px;
+			}
+
+			.track-item-badge {
+				font-size: 0.62rem;
+				font-weight: 900;
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				padding: 2px 6px;
+				border-radius: 4px;
+				flex-shrink: 0;
+			}
+
+			/* ── GALAXY TAB STYLING ── */
 			.galaxy-svg-container {
 				width: 100%;
 				height: 100%;
 				min-height: 0;
-				background: rgba(0, 0, 0, 0.02);
-				border-radius: 12px;
+				border: 2px solid var(--geo-border);
+				border-radius: 16px;
 				overflow: hidden;
 				position: relative;
-			}
-			.galaxy-svg {
-				width: 100%;
-				height: 100%;
-				display: block;
+				box-shadow: 3px 3px 0px var(--geo-border);
 			}
 
-			/* Custom timeline slider input */
-			.timeline-slider-box {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.04) 100%);
-				backdrop-filter: blur(16px) saturate(140%);
-				-webkit-backdrop-filter: blur(16px) saturate(140%);
-				border: 1px solid rgba(255, 255, 255, 0.12);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.25);
-				border-radius: 20px;
-				padding: 16px;
-				margin-top: 10px;
-				box-shadow:
-					0 4px 16px rgba(0, 0, 0, 0.2),
-					inset 0 1px 0 rgba(255, 255, 255, 0.12);
+			.geo-feature-row {
+				margin-bottom: 6px;
 			}
-			.timeline-input {
-				-webkit-appearance: none;
-				width: 100%;
-				height: 6px;
-				background: rgba(255, 255, 255, 0.1);
-				border-radius: 99px;
-				outline: none;
-				margin-top: 12px;
-				cursor: pointer;
-			}
-			.timeline-input::-webkit-slider-thumb {
-				-webkit-appearance: none;
-				width: 16px;
-				height: 16px;
-				border-radius: 50%;
-				background: var(--bh-accent);
-				border: 2px solid #fff;
-				cursor: pointer;
-				box-shadow: 0 2px 6px rgba(255, 255, 255, 0.2);
-				transition: transform 0.1s ease;
-			}
-			.timeline-input::-webkit-slider-thumb:hover {
-				transform: scale(1.2);
+			.geo-feature-meta {
+				display: flex;
+				justify-content: space-between;
+				font-size: 0.68rem;
+				margin-bottom: 2px;
 			}
 
-			.neighbors-grid {
+			.geo-hud-stats-grid {
 				display: grid;
-				grid-template-columns: 1fr 1fr;
-				gap: 8px;
-				margin-top: 8px;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 6px;
+				margin-top: 10px;
+				border-top: 2px solid var(--geo-border);
+				padding-top: 8px;
 			}
-			.neighbor-card {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
-				backdrop-filter: blur(10px) saturate(130%);
-				-webkit-backdrop-filter: blur(10px) saturate(130%);
-				border: 1px solid rgba(255, 255, 255, 0.1);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.2);
-				border-radius: 16px;
-				padding: 10px 12px;
-				font-size: 0.7rem;
-				transition: all 0.2s;
-				box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+			.geo-hud-stat-chip {
+				text-align: center;
+				background: #ffffff;
+				border: 1.5px solid var(--geo-border);
+				padding: 4px;
+				border-radius: 8px;
+				box-shadow: 1.5px 1.5px 0px var(--geo-border);
 			}
-			.neighbor-card:hover {
-				background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 100%);
-				box-shadow:
-					0 4px 12px rgba(0,0,0,0.2),
-					inset 0 1px 0 rgba(255,255,255,0.15);
-			}
-
-			.neighbor-header {
-				display: flex;
-				justify-content: space-between;
-				font-weight: bold;
-				font-size: 0.75rem;
-				margin-bottom: 6px;
-			}
-
-			.neighbor-stats {
-				display: flex;
-				flex-direction: column;
-				gap: 3px;
-				opacity: 0.7;
-			}
-			.neighbor-stat-row {
-				display: flex;
-				justify-content: space-between;
-			}
-
-			.section-title {
-				font-size: 0.65rem;
+			.geo-hud-stat-label {
+				font-size: 0.55rem;
+				color: var(--geo-muted);
 				text-transform: uppercase;
-				letter-spacing: 0.15em;
-				color: var(--bh-muted);
-				font-weight: bold;
-				margin-bottom: 6px;
+				font-weight: 900;
+			}
+			.geo-hud-stat-val {
+				font-size: 0.75rem;
+				font-weight: 900;
+				font-family: monospace;
 			}
 
-			.panel-header-title {
-				font-size: 1rem;
-				font-weight: bold;
-				margin: 0 0 2px 0;
-			}
-
-			.hidden {
-				display: none !important;
-			}
-
-			/* ===========================
-			   ALBUM EXPANDABLE CARDS (TAB 3)
-			=========================== */
+			/* ── ALBUM EXPANDABLE CARDS (TAB 3) ── */
 			.album-card {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.01) 50%, rgba(255,255,255,0.03) 100%);
-				backdrop-filter: blur(16px) saturate(140%);
-				-webkit-backdrop-filter: blur(16px) saturate(140%);
-				border: 1px solid rgba(255, 255, 255, 0.1);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.25);
-				border-radius: 24px;
-				margin-bottom: 12px;
+				background: #ffffff;
+				border: 2px solid var(--geo-border);
+				border-radius: 14px;
+				margin-bottom: 10px;
 				overflow: hidden;
-				box-shadow:
-					0 6px 20px rgba(0, 0, 0, 0.2),
-					inset 0 1px 0 rgba(255, 255, 255, 0.12);
-				transition: all 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
 			}
 			.album-card:hover {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.06) 100%);
-				border-color: rgba(255, 255, 255, 0.18);
-				box-shadow:
-					0 10px 32px rgba(0, 0, 0, 0.3),
-					inset 0 1px 0 rgba(255, 255, 255, 0.2);
+				transform: translate(-1px, -1px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-border);
 			}
 			.album-card.active {
-				background:
-					linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.08) 100%);
-				border-color: rgba(255, 255, 255, 0.22);
-				border-top: 1.5px solid rgba(255, 255, 255, 0.4);
-				box-shadow:
-					0 14px 40px rgba(0, 0, 0, 0.35),
-					inset 0 2px 0 rgba(255, 255, 255, 0.25);
+				border: 2.5px solid var(--geo-border);
+				box-shadow: 4px 4px 0px var(--geo-blue);
 			}
 			.album-card-header {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
-				padding: 16px 20px;
+				padding: 12px 16px;
 				cursor: pointer;
 				user-select: none;
+				background: #ffffff;
 			}
 			.album-card-info {
 				display: flex;
 				flex-direction: column;
-				gap: 2px;
+				gap: 1px;
 			}
 			.album-card-title {
-				font-size: 0.95rem;
-				font-weight: 800;
-				color: var(--bh-text);
+				font-size: 0.88rem;
+				font-weight: 900;
+				color: var(--geo-black);
 			}
 			.album-card-subtitle {
-				font-size: 0.72rem;
-				color: var(--bh-muted);
-				font-weight: 500;
+				font-size: 0.65rem;
+				color: var(--geo-muted);
+				font-weight: 700;
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+			.album-card-arrow {
+				width: 26px;
+				height: 26px;
+				border-radius: 50%;
+				background: #f1f5f9;
+				border: 1.5px solid var(--geo-border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				transition: transform 0.25s ease, background 0.2s;
+			}
+			.album-card.active .album-card-arrow {
+				transform: rotate(180deg);
+				background: var(--geo-yellow);
 			}
 			.album-card-chevron {
-				width: 18px;
-				height: 18px;
-				color: var(--bh-muted);
-				transition: transform 0.3s cubic-bezier(0.1, 0.8, 0.2, 1);
-			}
-			.album-card.active .album-card-chevron {
-				transform: rotate(180deg);
-				color: var(--bh-text);
+				width: 14px;
+				height: 14px;
+				color: var(--geo-black);
 			}
 			.album-card-body {
 				max-height: 0;
 				overflow-y: hidden;
 				transition:
-					max-height 0.4s cubic-bezier(0.1, 0.8, 0.2, 1),
-					padding 0.4s cubic-bezier(0.1, 0.8, 0.2, 1);
-				padding: 0 20px;
+					max-height 0.35s cubic-bezier(0.1, 0.8, 0.2, 1),
+					padding 0.35s cubic-bezier(0.1, 0.8, 0.2, 1);
+				padding: 0 16px;
+				background: #fafafa;
 			}
 			.album-card.active .album-card-body {
-				max-height: 250px;
+				max-height: 240px;
 				overflow-y: auto;
-				padding-bottom: 20px;
+				padding-bottom: 14px;
+				border-top: 1.5px solid var(--geo-border);
 			}
 			.album-card-body::-webkit-scrollbar {
 				width: 3px;
 			}
-			.album-card-body::-webkit-scrollbar-track {
-				background: transparent;
-			}
 			.album-card-body::-webkit-scrollbar-thumb {
-				background: rgba(255, 255, 255, 0.1);
-				border-radius: 99px;
+				background: var(--geo-border);
+				border-radius: 4px;
 			}
-			.pipeline-scroll::-webkit-scrollbar {
-				width: 3px;
-			}
-			.pipeline-scroll::-webkit-scrollbar-track {
-				background: transparent;
-			}
-			.pipeline-scroll::-webkit-scrollbar-thumb {
-				background: rgba(255, 255, 255, 0.1);
-				border-radius: 99px;
-			}
+
 			.rating-group-sec {
-				margin-top: 10px;
+				margin-top: 8px;
 				padding-left: 8px;
-			}
-			.rating-group-sec:first-child {
-				margin-top: 2px;
 			}
 			.rating-group-title-sec {
 				font-size: 0.65rem;
-				font-weight: 800;
-				letter-spacing: 0.05em;
+				font-weight: 900;
+				letter-spacing: 0.06em;
 				text-transform: uppercase;
 				margin-bottom: 4px;
 				display: block;
@@ -917,15 +896,112 @@ const clustersCount = clusterSummary.length;
 				flex-direction: column;
 				gap: 2px;
 			}
+
+			.geo-track-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 4px 6px;
+				border-bottom: 1px dashed rgba(10,10,13,0.12);
+				transition: background-color 0.15s;
+			}
+			.geo-track-row:hover {
+				background-color: #f1f5f9;
+			}
+			.geo-track-name {
+				font-weight: 800;
+				font-size: 0.72rem;
+				color: var(--geo-black);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 175px;
+			}
+			.geo-bias-pill {
+				font-size: 0.62rem;
+				font-weight: 800;
+				color: var(--geo-muted);
+				background: #ffffff;
+				border: 1px solid var(--geo-border);
+				padding: 1px 6px;
+				border-radius: 4px;
+			}
+			.geo-track-none {
+				font-size: 0.68rem;
+				color: var(--geo-muted);
+				font-style: italic;
+			}
+
+			/* ── ML PIPELINE STEP CARDS (TAB 4) ── */
+			.pipeline-scroll {
+				flex: 1;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				padding-right: 6px;
+			}
+			.pipeline-scroll::-webkit-scrollbar {
+				width: 4px;
+			}
+			.pipeline-scroll::-webkit-scrollbar-thumb {
+				background: var(--geo-border);
+				border-radius: 4px;
+			}
+
+			.pipeline-card {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 14px;
+				padding: 14px 18px;
+				display: flex;
+				gap: 14px;
+				align-items: flex-start;
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				transition: transform 0.2s, box-shadow 0.2s;
+			}
+			.pipeline-card:hover {
+				transform: translate(-1px, -1px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+			}
+			.pipeline-num {
+				width: 32px;
+				height: 32px;
+				border-radius: 8px;
+				border: 1.8px solid var(--geo-border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-weight: 900;
+				font-size: 0.95rem;
+				color: #ffffff;
+				flex-shrink: 0;
+				box-shadow: 2px 2px 0px var(--geo-border);
+			}
+
+			.hidden {
+				display: none !important;
+			}
 		</style>
 	</head>
 
 	<body>
-		<canvas id="dotMatrixCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; background: #ffffff;"></canvas>
+		<!-- High-Contrast Multi-Shape Dot Matrix Canvas Engine -->
+		<canvas id="dotMatrixCanvas" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; background: #ffffff;"></canvas>
+
+		<!-- Floating Exit Zen/Canvas Mode Pill -->
+		<div id="zenExitPill" class="geo-zen-exit-pill" title="Click to show dashboard (or press Esc)">
+			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+				<polyline points="15 18 9 12 15 6"></polyline>
+			</svg>
+			<span>SHOW DASHBOARD</span>
+			<span class="zen-esc-kbd">ESC</span>
+		</div>
+
 		<div class="page-wrap">
 			<div class="bh-page">
 				<div class="bh-main-card">
-					<!-- LEFT SIDEBAR (Now Top Navigation Bar) -->
+					<!-- TOP BAUHAUS HEADER & NAVIGATION -->
 					<aside class="wbc-sidebar">
 						<header class="bh-header">
 							<a
@@ -940,7 +1016,7 @@ const clustersCount = clusterSummary.length;
 									viewBox="0 0 14 14"
 									fill="none"
 									stroke="currentColor"
-									stroke-width="2.5"
+									stroke-width="2.8"
 									stroke-linecap="round"
 									stroke-linejoin="round"
 								>
@@ -948,30 +1024,12 @@ const clustersCount = clusterSummary.length;
 								</svg>
 							</a>
 							<div style="display: flex; flex-direction: column;">
-								<span class="title-tag">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										width="10"
-										height="10"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2.5"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										style="margin-right: 4px;"
-										><circle cx="12" cy="12" r="10"
-										></circle><circle cx="12" cy="12" r="3"
-										></circle></svg
-									>
-									AI LAB PROJECT
+								<span class="title-tag-pill">
+									★ SPOTIFY SONIC ATLAS ★
 								</span>
 								<h1 class="bh-title">
-									<span class="title-nextwbc">Sonic</span>
-									<span
-										class="title-classifier"
-										style="color: #1DB954;">Atlas</span
-									>
+									<span class="title-sonic">Sonic</span>
+									<span class="title-atlas">Atlas</span>
 								</h1>
 							</div>
 						</header>
@@ -982,20 +1040,7 @@ const clustersCount = clusterSummary.length;
 								data-tab="personas"
 								id="nav-personas"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="13"
-									height="13"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><path
-										d="m12 3-1.912 5.886L4.2 10.8 10.088 12.71 12 18.6l1.912-5.89 5.888-1.91-5.888-1.912Z"
-									></path></svg
-								>
+								<span class="nav-geo-icon" style="color: var(--geo-red);">●</span>
 								Sonic Personas
 							</button>
 							<button
@@ -1003,20 +1048,7 @@ const clustersCount = clusterSummary.length;
 								data-tab="galaxy"
 								id="nav-galaxy"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="13"
-									height="13"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><path
-										d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
-									></path></svg
-								>
+								<span class="nav-geo-icon" style="color: var(--geo-blue);">▲</span>
 								Music Galaxy
 							</button>
 							<button
@@ -1024,20 +1056,7 @@ const clustersCount = clusterSummary.length;
 								data-tab="rating"
 								id="nav-rating"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="13"
-									height="13"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><path
-										d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
-									></path></svg
-								>
+								<span class="nav-geo-icon" style="color: var(--geo-yellow);">■</span>
 								Personal Rating
 							</button>
 							<button
@@ -1045,48 +1064,51 @@ const clustersCount = clusterSummary.length;
 								data-tab="pipeline"
 								id="nav-pipeline"
 							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									width="13"
-									height="13"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									><path
-										d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
-									></path><path
-										d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
-									></path></svg
-								>
+								<span class="nav-geo-icon" style="color: var(--geo-black);">◫</span>
 								ML Pipeline
 							</button>
 						</nav>
 
-						<div class="sidebar-footer">
-							<span class="footer-meta"
-								>Tracks: {tracksCount} • Clusters: {
-									clustersCount
-								}</span
+						<!-- Right Geometric Accents (Canvas Toggle + Resume 4-Quadrant Wheel + Dot Chip) -->
+						<div class="geo-header-right">
+							<button
+								id="toggleCanvasBtn"
+								class="geo-canvas-toggle-btn"
+								title="Hide UI to view Full Background Canvas (Press H or Esc)"
+								aria-label="Toggle canvas art view"
 							>
+								<svg class="canvas-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+									<circle cx="12" cy="12" r="3"></circle>
+								</svg>
+								<span>CANVAS</span>
+							</button>
+							<div class="geo-dot-chip" title="3x3 Matrix Unit" aria-hidden="true">
+								<span></span><span></span><span></span>
+								<span></span><span class="active"></span><span></span>
+								<span></span><span></span><span></span>
+							</div>
+							<div class="geo-quadrant-badge" title="Audio Archetype Wheel" aria-hidden="true">
+								<div class="geo-quadrant-slice slice-tl"></div>
+								<div class="geo-quadrant-slice slice-tr"></div>
+								<div class="geo-quadrant-slice slice-bl"></div>
+								<div class="geo-quadrant-slice slice-br"></div>
+								<div class="geo-quadrant-center"></div>
+							</div>
 						</div>
 					</aside>
 
-					<!-- RIGHT WORKSPACE -->
+					<!-- WORKSPACE TABS -->
 					<main class="wbc-workspace">
 						<!-- ── TAB 1: SONIC PERSONAS ── -->
 						<div id="tab-personas" class="tab-content wide-left">
 							<div class="panel">
 								<div class="cluster-detail-card">
-
-									<div style="z-index: 1;">
+									<div>
 										<div class="cluster-detail-header">
 											<h3
 												class="panel-header-title"
 												id="cluster-name"
-												style="font-size: 1.15rem;"
 											>
 												The Disco Dynamo
 											</h3>
@@ -1112,20 +1134,20 @@ const clustersCount = clusterSummary.length;
 									</div>
 
 									<div
-										style="z-index: 1; margin-top: 14px; display: flex; flex-direction: column; min-height: 0; flex: 1;"
+										style="margin-top: 12px; display: flex; flex-direction: column; min-height: 0; flex: 1;"
 									>
 										<span class="section-title"
-											>Tracks in cluster</span
+											>★ Tracks in Cluster ★</span
 										>
 										<div
 											class="search-box-wrap"
-											style="position: relative; margin-bottom: 8px;"
+											style="position: relative; margin-bottom: 6px;"
 										>
 											<input
 												type="text"
 												id="personas-search"
-												placeholder="Search tracks..."
-												style="width: 100%; padding: 7px 10px; font-size: 0.72rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--bh-text); outline: none;"
+												placeholder="Search tracks in cluster..."
+												style="width: 100%; padding: 7px 12px; font-size: 0.74rem; font-weight: 700; background: #ffffff; border: 1.8px solid var(--geo-border); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--geo-text); outline: none; box-shadow: 2px 2px 0px var(--geo-border);"
 											/>
 										</div>
 										<div
@@ -1139,13 +1161,11 @@ const clustersCount = clusterSummary.length;
 							</div>
 
 							<div class="panel">
-								<span class="section-title">Sonic Personas</span
-								>
+								<span class="section-title">★ Sonic Archetypes ★</span>
 								<p
-									style="font-size: 0.72rem; color: var(--bh-muted); margin: 0 0 10px 0; line-height: 1.3;"
+									style="font-size: 0.72rem; font-weight: 600; color: var(--geo-muted); margin: 0 0 10px 0; line-height: 1.35;"
 								>
-									AI groups Madonna's tracks by feel, not by
-									release year.
+									Unsupervised AI clustering groups catalog tracks by sonic texture & acoustic vibe.
 								</p>
 								<div
 									class="cluster-rail"
@@ -1168,7 +1188,7 @@ const clustersCount = clusterSummary.length;
 								<div
 									class="galaxy-svg-container"
 									id="galaxy-container"
-									style="width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: #0d111e;"
+									style="width: 100%; height: 100%; border-radius: 16px; overflow: hidden; background: #0f121d;"
 								>
 									<div
 										id="plotly-galaxy-3d"
@@ -1178,28 +1198,28 @@ const clustersCount = clusterSummary.length;
 								</div>
 							</div>
 
-							<!-- DETAILS PANEL FOR SELECTED TRACK (Grid item, matches other tabs) -->
+							<!-- DETAILS PANEL FOR SELECTED TRACK -->
 							<div
 								class="panel"
-								style="display: flex; flex-direction: column; padding: 20px;"
+								style="display: flex; flex-direction: column; padding: 18px;"
 							>
 								<div
 									class="selected-track-card"
 									style="display: flex; flex-direction: column; height: 100%;"
 								>
 									<span class="section-title"
-										>Selected Track</span
+										>★ Selected Track HUD ★</span
 									>
-									<div style="margin-bottom: 12px;">
+									<div style="margin-bottom: 10px; border-bottom: 2px solid var(--geo-border); padding-bottom: 8px;">
 										<h4
 											class="panel-header-title"
 											id="galaxy-track-name"
-											style="font-size: 1.1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--bh-text); margin-bottom: 4px;"
+											style="font-size: 1.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;"
 										>
 											-
 										</h4>
 										<p
-											style="font-size: 0.72rem; color: var(--bh-muted); margin: 0;"
+											style="font-size: 0.72rem; font-weight: 700; color: var(--geo-muted); margin: 0;"
 											id="galaxy-track-year"
 										>
 											-
@@ -1207,17 +1227,17 @@ const clustersCount = clusterSummary.length;
 									</div>
 
 									<div
-										style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;"
+										style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px;"
 										id="galaxy-track-metrics"
 									>
 										<!-- Track metrics progress bars -->
 									</div>
 
 									<div
-										style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 12px;"
+										style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 6px;"
 									>
 										<span class="section-title"
-											>Closest Wormholes</span
+											>★ Closest Wormholes ★</span
 										>
 										<div
 											class="list-scroll"
@@ -1240,33 +1260,32 @@ const clustersCount = clusterSummary.length;
 								style="display: flex; flex-direction: column; height: 100%;"
 							>
 								<span class="section-title"
-									>Personal Rating</span
+									>★ Personal Rating Space ★</span
 								>
 								<h3 class="panel-header-title">
 									Album Track Clustering
 								</h3>
 								<p
-									style="font-size: 0.72rem; color: var(--bh-muted); margin-bottom: 12px;"
+									style="font-size: 0.72rem; font-weight: 600; color: var(--geo-muted); margin-bottom: 10px;"
 								>
-									Audio features and bias score clustering
-									using GMM & PCA mapping.
+									Audio features and bias score clustering using GMM & PCA 3D projection.
 								</p>
 								<div
 									id="plotly-3d-map"
-									style="flex: 1; min-height: 0; width: 100%;"
+									style="flex: 1; min-height: 0; width: 100%; border: 2px solid var(--geo-border); border-radius: 12px; overflow: hidden; background: #0f121d;"
 								>
 								</div>
 							</div>
 							<div
 								class="panel"
-								style="display: flex; flex-direction: column; gap: 16px; height: 100%; overflow: hidden;"
+								style="display: flex; flex-direction: column; gap: 12px; height: 100%; overflow: hidden;"
 							>
 								<span class="section-title"
-									>Tracks by Album & Cluster</span
+									>★ Albums & Bias Breakdown ★</span
 								>
 								<div
 									id="album-cards-container"
-									style="display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; padding-right: 4px;"
+									style="display: flex; flex-direction: column; gap: 8px; overflow-y: auto; flex: 1; padding-right: 4px;"
 								>
 									<!-- Dynamic expandable album cards populated by script -->
 								</div>
@@ -1280,221 +1299,220 @@ const clustersCount = clusterSummary.length;
 						>
 							<div
 								class="panel"
-								style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 28px 32px;"
+								style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 22px 26px;"
 							>
 								<span
 									class="section-title"
-									style="margin-bottom: 8px;"
-									>Methodology</span
+									>★ ML Methodology ★</span
 								>
 								<h3
 									class="panel-header-title"
-									style="font-size: 1.25rem; margin-bottom: 6px;"
+									style="font-size: 1.3rem; margin-bottom: 4px;"
 								>
-								<h3
-									class="panel-header-title"
-									style="font-size: 1.25rem; margin-bottom: 6px;"
-								>
-									Methodology — Madonna Sonic Atlas
+									Sonic Atlas Machine Learning Architecture
 								</h3>
 								<p
-									style="font-size: 0.74rem; color: var(--bh-muted); margin-bottom: 20px; line-height: 1.5;"
+									style="font-size: 0.74rem; font-weight: 600; color: var(--geo-muted); margin-bottom: 16px; line-height: 1.45;"
 								>
-									Each track in Madonna's catalog is represented by 9 audio features (danceability, energy, loudness, speechiness, acousticness, instrumentalness, liveness, valence, tempo). Tracks are grouped using unsupervised clustering — no genre or era labels are provided in advance; the groupings are derived entirely from the audio feature space.
+									Each track is vectorized across 9 audio features. Unsupervised clustering models group acoustic profiles into coherent archetypes without prior genre labels.
 								</p>
 
-								<div
-									class="pipeline-scroll"
-									style="flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; padding: 8px 16px 20px 4px;"
-								>
+								<div class="pipeline-scroll">
 									<!-- STEP 1 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">1</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-red);">1</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">1. Data cleaning</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Reissues and remasters produce near-duplicate entries in the source dataset. These are deduplicated before analysis, since duplicate tracks would otherwise inflate cluster counts without adding signal.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">1. Data Cleaning & Deduplication</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Remasters and reissues produce redundant entries. Deduplication filters duplicate tracks before clustering to prevent artificial cluster inflation.</p>
 										</div>
 									</div>
 
 									<!-- STEP 2 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">2</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-blue);">2</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">2. Preprocessing</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">instrumentalness, speechiness, and liveness are heavily right-skewed — most tracks sit near zero, with a small number of true outliers (spoken-word intros, live recordings, instrumental interludes) far out on the tail. Scaling by IQR alone (e.g. RobustScaler) corrects scale but not distribution shape, so these outliers remain far from the main mass in scaled space and get isolated into singleton clusters. A PowerTransformer (Yeo-Johnson) is applied instead, reshaping each feature toward a roughly Gaussian distribution before scaling, which substantially improves cluster balance.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">2. Power Transformation (Yeo-Johnson)</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Features like speechiness and acousticness are heavily right-skewed. PowerTransformer reshapes distributions toward Gaussian forms, preserving balanced cluster centroids.</p>
 										</div>
 									</div>
 
 									<!-- STEP 3 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">3</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-yellow); color: var(--geo-black);">3</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">3. Cluster count and model selection</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">K is evaluated across a range (2–10) using elbow (inertia), silhouette score, and GMM BIC/AIC as diagnostics. K is fixed at 4 for this project (to match the four persona cards on the frontend); the diagnostics are used to confirm 4 is a reasonable choice rather than to auto-select K.<br><br>Both KMeans and a Gaussian Mixture Model (GMM, covariance_type='diag' to avoid overfitting given the sample size) are fit at K=4. The final labels come from whichever model achieves the higher silhouette score — the choice of algorithm is data-driven rather than fixed to KMeans by default. Cluster size balance is reported for both candidates as a sanity check.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">3. K-Selection & GMM Modeling</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Evaluated across silhouette scores, inertia, and AIC/BIC diagnostics. Gaussian Mixture Models fit probabilistic cluster boundaries to represent nuanced song identities.</p>
 										</div>
 									</div>
 
 									<!-- STEP 4 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">4</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-black);">4</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">4. Validation</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Adjusted Rand Index (ARI) between KMeans and GMM labels quantifies agreement between the two algorithms. Bootstrap stability: the selected model is refit on 15 resamples (80% of the data each), and ARI is computed against the full-sample labels. High mean ARI indicates the cluster structure is stable rather than an artifact of one particular fit.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">4. Bootstrap Stability Validation</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Adjusted Rand Index (ARI) evaluates consistency across 15 resamples, ensuring mathematical stability rather than accidental artifacts.</p>
 										</div>
 									</div>
 
 									<!-- STEP 5 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 12px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">5</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-cyan); color: var(--geo-black);">5</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">5. Cluster naming and dimensionality reduction</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Cluster names are auto-derived from z-scores of each cluster's feature means relative to the full catalog (e.g. "Vocal-driven & Melodic"), rather than hand-assigned — names update automatically if K or the feature set changes. For visualization, UMAP reduces the 9-dimensional feature space to 2D coordinates for the track "galaxy" scatter plot.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">5. Dimensionality Reduction & Manifold Projection</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">UMAP and t-SNE reduce the 9-dimensional audio space into 2D/3D manifolds for the interactive Music Galaxy visualization.</p>
 										</div>
 									</div>
 
 									<!-- STEP 6 -->
-									<div class="pipeline-card" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 18px 24px; display: flex; gap: 16px; align-items: flex-start; box-shadow: 0 4px 16px rgba(0,0,0,0.01); transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-										<div style="background: var(--bh-accent); color: #000; border-radius: 10px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0; box-shadow: 0 3px 8px rgba(29, 185, 84, 0.25);">6</div>
+									<div class="pipeline-card">
+										<div class="pipeline-num" style="background: var(--geo-red);">6</div>
 										<div style="flex: 1;">
-											<h4 style="font-weight: 800; font-size: 0.85rem; color: var(--bh-text); margin: 0 0 6px 0;">6. Recommendations</h4>
-											<p style="font-size: 0.74rem; color: var(--bh-muted); margin: 0; line-height: 1.45;">Track-to-track similarity is computed via cosine similarity on the scaled feature vectors, used to generate content-based recommendations.</p>
+											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">6. Cosine Similarity Wormholes</h4>
+											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Pairwise cosine metrics on normalized feature spaces uncover cross-era wormholes and sonic sister tracks across albums.</p>
 										</div>
 									</div>
-								</div> <!-- .pipeline-scroll -->
-							</div> <!-- .panel -->
-						</div> <!-- #tab-pipeline -->
+								</div>
+							</div>
+						</div>
 					</main>
 				</div>
 			</div>
 		</div>
-		
-		<!-- Background rotation script -->
-		<script is:inline>
-			(function() {
-				const bgs = [
-					'/m1.jpg', '/m2.jpg', '/m3.avif', '/m4.jpg', '/m5.jpg', 
-					'/m6.jpg', '/m7.webp', '/m8.jpg', '/m9.jpg', '/m10.jpg', 
-					'/m11.jpg', '/m12.webp', '/m13.webp', '/m14.webp', '/m15.jpg'
-				];
-				function rotateBg() {
-					const rb = bgs[Math.floor(Math.random() * bgs.length)];
-					document.body.style.setProperty('--dynamic-bg', `url("${rb}")`);
-				}
-				rotateBg();
-				setInterval(rotateBg, 15000);
-			})();
-		</script>
+
 		<Watermark />
-	</body>
-</html>
 
-<!-- Script to handle page exits -->
-<script>
-	const backBtn = document.getElementById("backBtn");
-	if (backBtn) {
-		backBtn.addEventListener("click", (e) => {
-			e.preventDefault();
-			document.body.classList.add("is-exiting");
-			setTimeout(() => {
-				window.location.href = backBtn.getAttribute("href");
-			}, 280);
-		});
-	}
-</script>
+		<!-- Page exit transition -->
+		<script>
+			const backBtn = document.getElementById("backBtn");
+			if (backBtn) {
+				backBtn.addEventListener("click", (e) => {
+					e.preventDefault();
+					document.body.classList.add("is-exiting");
+					setTimeout(() => {
+						window.location.href = backBtn.getAttribute("href") || "/";
+					}, 280);
+				});
+			}
+		</script>
 
-<!-- Pass server data variables to Client JavaScript -->
-<script define:vars={{ clusterSummary, musicGalaxy, personalRating }}>
-	window.CLUSTER_SUMMARY = clusterSummary;
-	window.MUSIC_GALAXY = musicGalaxy;
-	window.PERSONAL_RATING = personalRating;
-</script>
+		<!-- Pass server data variables to Client JavaScript -->
+		<script define:vars={{ clusterSummary, musicGalaxy, personalRating }}>
+			window.CLUSTER_SUMMARY = clusterSummary;
+			window.MUSIC_GALAXY = musicGalaxy;
+			window.PERSONAL_RATING = personalRating;
+		</script>
 
-<!-- Client interactivity module -->
-<script>
-	import {
-		SpotifyDataStore,
-		SpotifyState,
-		PersonasRenderer,
-		GalaxyRenderer,
-		RatingRenderer,
-		DotMatrixEngine,
-		SpotifyTab,
-	} from "../lib/spotify";
+		<!-- Client interactivity module -->
+		<script>
+			import {
+				SpotifyDataStore,
+				SpotifyState,
+				PersonasRenderer,
+				GalaxyRenderer,
+				RatingRenderer,
+				DotMatrixEngine,
+				SpotifyTab,
+			} from "../lib/spotify";
 
-	document.addEventListener("DOMContentLoaded", () => {
-		const clusterSummary = (window as any).CLUSTER_SUMMARY;
-		const musicGalaxy = (window as any).MUSIC_GALAXY;
-		const personalRating = (window as any).PERSONAL_RATING;
+			document.addEventListener("DOMContentLoaded", () => {
+				const clusterSummary = (window as any).CLUSTER_SUMMARY;
+				const musicGalaxy = (window as any).MUSIC_GALAXY;
+				const personalRating = (window as any).PERSONAL_RATING;
 
-		if (!clusterSummary || !musicGalaxy) return;
+				if (!clusterSummary || !musicGalaxy) return;
 
-		const store = new SpotifyDataStore(musicGalaxy, clusterSummary);
-		const state = new SpotifyState();
+				const store = new SpotifyDataStore(musicGalaxy, clusterSummary);
+				const state = new SpotifyState();
 
-		const personas = new PersonasRenderer(store, state);
-		const galaxy = new GalaxyRenderer(store, state);
-		const rating = new RatingRenderer(personalRating || []);
+				const personas = new PersonasRenderer(store, state);
+				const galaxy = new GalaxyRenderer(store, state);
+				const rating = new RatingRenderer(personalRating || []);
 
-		personas.init();
-		galaxy.init();
-		rating.init();
+				personas.init();
+				galaxy.init();
+				rating.init();
 
-		// ── Tab switching ──
-		const navItems = document.querySelectorAll<HTMLButtonElement>(".nav-item");
-		const tabs: Record<string, HTMLElement | null> = {
-			personas: document.getElementById("tab-personas"),
-			galaxy: document.getElementById("tab-galaxy"),
-			rating: document.getElementById("tab-rating"),
-			pipeline: document.getElementById("tab-pipeline"),
-		};
+				// ── Tab switching ──
+				const navItems = document.querySelectorAll<HTMLButtonElement>(".nav-item");
+				const tabs: Record<string, HTMLElement | null> = {
+					personas: document.getElementById("tab-personas"),
+					galaxy: document.getElementById("tab-galaxy"),
+					rating: document.getElementById("tab-rating"),
+					pipeline: document.getElementById("tab-pipeline"),
+				};
 
-		navItems.forEach((btn) => {
-			btn.addEventListener("click", () => {
-				const targetTab = btn.dataset.tab as SpotifyTab;
-				if (!targetTab) return;
+				navItems.forEach((btn) => {
+					btn.addEventListener("click", () => {
+						const targetTab = btn.dataset.tab as SpotifyTab;
+						if (!targetTab) return;
 
-				navItems.forEach((n) => n.classList.remove("active"));
-				btn.classList.add("active");
+						navItems.forEach((n) => n.classList.remove("active"));
+						btn.classList.add("active");
 
-				Object.keys(tabs).forEach((k) => {
-					if (k === targetTab) tabs[k]?.classList.remove("hidden");
-					else tabs[k]?.classList.add("hidden");
+						Object.keys(tabs).forEach((k) => {
+							if (k === targetTab) tabs[k]?.classList.remove("hidden");
+							else tabs[k]?.classList.add("hidden");
+						});
+
+						state.setTab(targetTab);
+
+						if (targetTab === SpotifyTab.Galaxy) {
+							galaxy.render();
+							const gd = document.getElementById("plotly-galaxy-3d");
+							if (gd && (window as any).Plotly) {
+								(window as any).Plotly.Plots.resize(gd);
+							}
+						}
+						if (targetTab === SpotifyTab.Rating) {
+							rating.render();
+							const gd = document.getElementById("plotly-3d-map");
+							if (gd && (window as any).Plotly) {
+								(window as any).Plotly.Plots.resize(gd);
+							}
+						}
+					});
 				});
 
-				state.setTab(targetTab);
+				// ── Canvas / Zen Mode Toggle ──
+				const toggleCanvasBtn = document.getElementById("toggleCanvasBtn");
+				const zenExitPill = document.getElementById("zenExitPill");
 
-				if (targetTab === SpotifyTab.Galaxy) {
-					galaxy.render();
-					const gd = document.getElementById("plotly-galaxy-3d");
-					if (gd && (window as any).Plotly) {
-						(window as any).Plotly.Plots.resize(gd);
+				function toggleZenCanvas() {
+					const isZen = document.body.classList.toggle("is-zen-canvas");
+					if (toggleCanvasBtn) {
+						if (isZen) toggleCanvasBtn.classList.add("active");
+						else toggleCanvasBtn.classList.remove("active");
 					}
 				}
-				if (targetTab === SpotifyTab.Rating) {
-					rating.render();
-					const gd = document.getElementById("plotly-3d-map");
-					if (gd && (window as any).Plotly) {
-						(window as any).Plotly.Plots.resize(gd);
+
+				toggleCanvasBtn?.addEventListener("click", toggleZenCanvas);
+				zenExitPill?.addEventListener("click", toggleZenCanvas);
+
+				// Press Esc or H to toggle Zen Canvas mode
+				document.addEventListener("keydown", (e) => {
+					if (e.key === "Escape" && document.body.classList.contains("is-zen-canvas")) {
+						toggleZenCanvas();
+					} else if ((e.key === "h" || e.key === "H") && !["INPUT", "TEXTAREA"].includes((e.target as HTMLElement)?.tagName)) {
+						toggleZenCanvas();
 					}
+				});
+
+				// Render initial view
+				personas.render();
+				rating.render();
+
+				// Dot matrix background engine
+				const dotBgs = [
+					"/m1.jpg", "/m2.jpg", "/m3.avif", "/m4.jpg", "/m5.jpg",
+					"/m6.jpg", "/m7.webp", "/m8.jpg", "/m9.jpg", "/m10.jpg",
+					"/m11.jpg", "/m12.webp", "/m13.webp", "/m14.webp", "/m15.jpg",
+				];
+				const dotCanvas = document.getElementById("dotMatrixCanvas") as HTMLCanvasElement | null;
+				if (dotCanvas) {
+					const dotEngine = new DotMatrixEngine(dotCanvas);
+					dotEngine.start(dotBgs);
 				}
 			});
-		});
-
-		// Render initial view
-		personas.render();
-		rating.render();
-
-		// Dot matrix background engine
-		const dotBgs = [
-			"/m1.jpg", "/m2.jpg", "/m3.avif", "/m4.jpg", "/m5.jpg",
-			"/m6.jpg", "/m7.webp", "/m8.jpg", "/m9.jpg", "/m10.jpg",
-			"/m11.jpg", "/m12.webp", "/m13.webp", "/m14.webp", "/m15.jpg",
-		];
-		const dotCanvas = document.getElementById("dotMatrixCanvas") as HTMLCanvasElement | null;
-		if (dotCanvas) {
-			const dotEngine = new DotMatrixEngine(dotCanvas);
-			dotEngine.start(dotBgs);
-		}
-	});
-</script>
-
+		</script>
+	</body>
+</html>

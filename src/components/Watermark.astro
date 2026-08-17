@@ -1,43 +1,68 @@
 ---
 interface Props {
   position?: 'bottom-left' | 'bottom-right';
+  theme?: 'auto' | 'spotify' | 'nextwbc' | 'cv' | 'monolithic' | 'blog' | 'default';
 }
 
-const { position = 'bottom-right' } = Astro.props;
+const { position = 'bottom-right', theme = 'auto' } = Astro.props;
+
+// Auto-detect page art direction if theme is 'auto'
+const pathname = Astro.url.pathname;
+let activeTheme = theme;
+if (activeTheme === 'auto') {
+  if (pathname.includes('spotify')) activeTheme = 'spotify';
+  else if (pathname.includes('nextwbc')) activeTheme = 'nextwbc';
+  else if (pathname.includes('cv')) activeTheme = 'cv';
+  else if (pathname.includes('monolithic')) activeTheme = 'monolithic';
+  else if (pathname.includes('blog')) activeTheme = 'blog';
+  else activeTheme = 'default';
+}
 ---
 
-<div id="site-watermark" class={`watermark-container ${position}`} data-position={position} title="click to toggle position (left / right)">
+<div
+  id="site-watermark"
+  class={`watermark-container ${position} theme-${activeTheme}`}
+  data-position={position}
+  data-theme={activeTheme}
+  title="click to toggle position (left / right)"
+>
   <div class="watermark-content">
-    <div class="watermark-title">this website contain</div>
-    <div class="watermark-line">ai generate code in sdlc process</div>
-    <div class="watermark-line">human control every step, cv/about-me are support responsive</div>
-    <div class="watermark-line">zero ai use for art, just computer graphics</div>
+    <div class="watermark-title">manifesto: code over diffusion</div>
+    <div class="watermark-line">"computers are only as creative as the humans who program them" — john maeda</div>
+    <div class="watermark-line">ai empowers algorithms & computational graphics • zero synthetic art</div>
+    <div class="watermark-line">every pixel is mathematically rendered, human-directed</div>
   </div>
 </div>
 
 <style>
+  /* ==========================================================================
+     BASE WATERMARK STYLING
+     ========================================================================== */
   .watermark-container {
     position: fixed;
     bottom: 16px;
     z-index: 99999;
-    font-family: Helvetica, Arial, sans-serif;
-    text-transform: lowercase;
     user-select: none;
     -webkit-user-select: none;
     pointer-events: auto;
     cursor: pointer;
-    background: transparent !important;
-    border: none !important;
-    outline: none !important;
-    box-shadow: none !important;
-    padding: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 6px 10px;
     margin: 0;
-    opacity: 0.38;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s ease, left 0.3s ease, right 0.3s ease;
+    opacity: 0.42;
+    border-radius: 12px;
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                background 0.25s ease,
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                transform 0.25s ease;
   }
 
   .watermark-container:hover {
-    opacity: 0.95;
+    opacity: 1;
+    transform: translateY(-2px);
   }
 
   .watermark-container.bottom-right {
@@ -56,30 +81,157 @@ const { position = 'bottom-right' } = Astro.props;
     display: flex;
     flex-direction: column;
     gap: 1px;
+    text-transform: lowercase;
   }
 
+  /* Exact original font size preservation */
   .watermark-title {
     font-size: 13.5px;
-    font-weight: 400;
-    color: #ffffff;
-    line-height: 1.18;
+    font-weight: 500;
+    line-height: 1.2;
     letter-spacing: -0.1px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
   }
 
   .watermark-line {
     font-size: 11px;
-    font-weight: 300;
-    color: rgba(255, 255, 255, 0.9);
-    line-height: 1.2;
+    font-weight: 400;
+    line-height: 1.25;
     letter-spacing: 0;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.4);
   }
 
-  /* Mobile responsiveness for CV, About, and smaller viewports */
+  /* ==========================================================================
+     ART DIRECTION: SPOTIFY SONIC ATLAS (Geometric Graphic / Bauhaus / Swiss)
+     ========================================================================== */
+  .theme-spotify {
+    font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+    color: #0a0a0d;
+  }
+  .theme-spotify .watermark-title {
+    font-weight: 800;
+    color: #0a0a0d;
+    letter-spacing: -0.2px;
+  }
+  .theme-spotify .watermark-line {
+    font-weight: 600;
+    color: #334155;
+  }
+  .theme-spotify:hover {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1.8px solid #0a0a0d;
+    box-shadow: 3px 3px 0px #0a0a0d;
+  }
+
+  /* ==========================================================================
+     ART DIRECTION: NEXTWBC (Frutiger Aero / Aqua Glass Y2K)
+     ========================================================================== */
+  .theme-nextwbc {
+    font-family: "Google Sans Flex", "Segoe UI", "Google Sans", sans-serif;
+    color: #ffffff;
+  }
+  .theme-nextwbc .watermark-title {
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 50, 100, 0.9), 0 0 10px rgba(56, 189, 248, 0.6);
+  }
+  .theme-nextwbc .watermark-line {
+    font-weight: 400;
+    color: rgba(240, 249, 255, 0.95);
+    text-shadow: 0 1px 2px rgba(0, 50, 100, 0.8), 0 0 6px rgba(56, 189, 248, 0.4);
+  }
+  .theme-nextwbc:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(14, 165, 233, 0.25) 100%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: 0 6px 20px rgba(0, 150, 255, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  }
+
+  /* ==========================================================================
+     ART DIRECTION: CV / RESUME (Sleek Slate Glass)
+     ========================================================================== */
+  .theme-cv {
+    font-family: "Google Sans Flex", "Google Sans", -apple-system, sans-serif;
+    color: #f8fafc;
+  }
+  .theme-cv .watermark-title {
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+  }
+  .theme-cv .watermark-line {
+    font-weight: 400;
+    color: rgba(226, 232, 240, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  }
+  .theme-cv:hover {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+  }
+
+  /* ==========================================================================
+     ART DIRECTION: MONOLITHIC DETECTION (Cyber HUD Terminal)
+     ========================================================================== */
+  .theme-monolithic {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, "Courier New", monospace;
+    color: #4ade80;
+  }
+  .theme-monolithic .watermark-title {
+    font-weight: 700;
+    color: #4ade80;
+    text-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+  }
+  .theme-monolithic .watermark-line {
+    font-weight: 500;
+    color: rgba(74, 222, 128, 0.9);
+    text-shadow: 0 0 5px rgba(74, 222, 128, 0.4);
+  }
+  .theme-monolithic:hover {
+    background: rgba(10, 15, 20, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #4ade80;
+    box-shadow: 0 0 14px rgba(74, 222, 128, 0.35);
+  }
+
+  /* ==========================================================================
+     ART DIRECTION: DEFAULT / BLOG / HOME (Modern Minimalist)
+     ========================================================================== */
+  .theme-default,
+  .theme-blog {
+    font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
+    color: #ffffff;
+  }
+  .theme-default .watermark-title,
+  .theme-blog .watermark-title {
+    font-weight: 500;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
+  }
+  .theme-default .watermark-line,
+  .theme-blog .watermark-line {
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8), 0 0 6px rgba(0, 0, 0, 0.4);
+  }
+  .theme-default:hover,
+  .theme-blog:hover {
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  /* ==========================================================================
+     RESPONSIVE BREAKPOINTS
+     ========================================================================== */
   @media (max-width: 640px) {
     .watermark-container {
       bottom: 8px;
+      padding: 4px 8px;
     }
 
     .watermark-container.bottom-right {
@@ -130,12 +282,29 @@ const { position = 'bottom-right' } = Astro.props;
     const watermark = document.getElementById('site-watermark');
     if (!watermark) return;
 
+    // Load saved left/right position
     const savedPos = localStorage.getItem('sitedotmoss_watermark_pos');
     if (savedPos === 'bottom-left' || savedPos === 'bottom-right') {
       watermark.classList.remove('bottom-left', 'bottom-right');
       watermark.classList.add(savedPos);
     }
 
+    // Dynamic art direction detection on client-side routing
+    const pathname = window.location.pathname;
+    let currentTheme = 'default';
+    if (pathname.includes('spotify')) currentTheme = 'spotify';
+    else if (pathname.includes('nextwbc')) currentTheme = 'nextwbc';
+    else if (pathname.includes('cv')) currentTheme = 'cv';
+    else if (pathname.includes('monolithic')) currentTheme = 'monolithic';
+    else if (pathname.includes('blog')) currentTheme = 'blog';
+
+    // Remove all old theme-* classes and add new one
+    ['theme-spotify', 'theme-nextwbc', 'theme-cv', 'theme-monolithic', 'theme-blog', 'theme-default'].forEach(t => {
+      watermark.classList.remove(t);
+    });
+    watermark.classList.add(`theme-${currentTheme}`);
+
+    // Click to toggle position
     watermark.onclick = () => {
       const isRight = watermark.classList.contains('bottom-right');
       const newPos = isRight ? 'bottom-left' : 'bottom-right';

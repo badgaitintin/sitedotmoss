@@ -135,9 +135,9 @@ export class RatingRenderer {
 		let favHtml = '', goodHtml = '', notfavHtml = '';
 		for (const t of sorted) {
 			const row = `
-				<div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 6px; border-bottom: 1px dashed rgba(0,0,0,0.05); transition: background-color 0.15s;" onmouseover="this.style.backgroundColor='rgba(255,255,255,0.2)'" onmouseout="this.style.backgroundColor='transparent'">
-					<span style="font-weight: 700; font-size: 0.72rem; color: var(--bh-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 175px;" title="${t.track}">${t.track}</span>
-					<span style="font-size: 0.62rem; color: var(--bh-muted); flex-shrink: 0;">Bias: <strong style="color: var(--bh-text); font-size: 0.68rem;">${t.bias_score}</strong></span>
+				<div class="geo-track-row">
+					<span class="geo-track-name" title="${t.track}">${t.track}</span>
+					<span class="geo-bias-pill">BIAS <strong>${t.bias_score}</strong></span>
 				</div>
 			`;
 			if (t.label === 'My Favorite') favHtml += row;
@@ -145,7 +145,7 @@ export class RatingRenderer {
 			else notfavHtml += row;
 		}
 
-		const none = `<span style="font-size:0.7rem; color:var(--bh-muted); font-style:italic;">None</span>`;
+		const none = `<span class="geo-track-none">None</span>`;
 		return `
 			<div class="album-card ${isActive ? 'active' : ''}" data-album="${albumName}">
 				<div class="album-card-header">
@@ -153,21 +153,23 @@ export class RatingRenderer {
 						<span class="album-card-title">${albumName}</span>
 						<span class="album-card-subtitle">${tracks.length} tracks rated</span>
 					</div>
-					<svg class="album-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-						<polyline points="6 9 12 15 18 9"></polyline>
-					</svg>
+					<div class="album-card-arrow">
+						<svg class="album-card-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+							<polyline points="6 9 12 15 18 9"></polyline>
+						</svg>
+					</div>
 				</div>
 				<div class="album-card-body">
-					<div class="rating-group-sec" style="border-left: 4px solid #10B981;">
-						<span class="rating-group-title-sec" style="color: #10B981;">My Favorite</span>
+					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-red);">
+						<span class="rating-group-title-sec" style="color: var(--geo-red);">★ My Favorite</span>
 						<div class="rating-group-tracks-sec">${favHtml || none}</div>
 					</div>
-					<div class="rating-group-sec" style="border-left: 4px solid #F59E0B;">
-						<span class="rating-group-title-sec" style="color: #F59E0B;">So Far, So Good</span>
+					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-yellow);">
+						<span class="rating-group-title-sec" style="color: #b45309;">★ So Far, So Good</span>
 						<div class="rating-group-tracks-sec">${goodHtml || none}</div>
 					</div>
-					<div class="rating-group-sec" style="border-left: 4px solid #EF4444;">
-						<span class="rating-group-title-sec" style="color: #EF4444;">Not My Favorite</span>
+					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-blue);">
+						<span class="rating-group-title-sec" style="color: var(--geo-blue);">★ Not My Favorite</span>
 						<div class="rating-group-tracks-sec">${notfavHtml || none}</div>
 					</div>
 				</div>
