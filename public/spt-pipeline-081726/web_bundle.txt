@@ -1,0 +1,79 @@
+{
+  "metadata": {
+    "total_tracks": 169,
+    "year_range": [
+      1983,
+      2015
+    ],
+    "clustering": {
+      "method": "KMeans",
+      "k": 4,
+      "silhouette": 0.17898773266592896,
+      "davies_bouldin": 1.7843239363737127,
+      "kmeans_gmm_ari": 0.28130990858154853,
+      "bootstrap_stability_ari": 0.8576339152231007
+    }
+  },
+  "clusters": {
+    "0": {
+      "name": "Acoustic & Mellow",
+      "size": 36,
+      "profile": {
+        "danceability": 0.5510555555555556,
+        "energy": 0.40208055555555555,
+        "loudness": -12.451027777777778,
+        "speechiness": 0.036175,
+        "acousticness": 0.5790519444444445,
+        "instrumentalness": 0.01676111861111111,
+        "liveness": 0.15303333333333333,
+        "valence": 0.3612527777777778,
+        "tempo": 104.68372222222223
+      }
+    },
+    "1": {
+      "name": "Uplifting & Danceable",
+      "size": 54,
+      "profile": {
+        "danceability": 0.7406851851851852,
+        "energy": 0.6772037037037038,
+        "loudness": -10.721888888888888,
+        "speechiness": 0.05402592592592593,
+        "acousticness": 0.2281775925925926,
+        "instrumentalness": 0.01327372537037037,
+        "liveness": 0.09111296296296295,
+        "valence": 0.8206666666666668,
+        "tempo": 126.66105555555556
+      }
+    },
+    "2": {
+      "name": "Instrumental & Produced",
+      "size": 28,
+      "profile": {
+        "danceability": 0.6757142857142858,
+        "energy": 0.6898928571428572,
+        "loudness": -10.300785714285714,
+        "speechiness": 0.060564285714285716,
+        "acousticness": 0.06834967857142857,
+        "instrumentalness": 0.4136107142857143,
+        "liveness": 0.12948928571428572,
+        "valence": 0.47235714285714286,
+        "tempo": 113.41025
+      }
+    },
+    "3": {
+      "name": "Bold & Energetic",
+      "size": 51,
+      "profile": {
+        "danceability": 0.7139607843137254,
+        "energy": 0.7715098039215686,
+        "loudness": -6.732176470588236,
+        "speechiness": 0.055766666666666666,
+        "acousticness": 0.09192686274509804,
+        "instrumentalness": 0.0025616550980392156,
+        "liveness": 0.19181176470588235,
+        "valence": 0.6313725490196079,
+        "tempo": 119.46403921568628
+      }
+    }
+  }
+}

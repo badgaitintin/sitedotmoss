@@ -161,15 +161,15 @@ export class RatingRenderer {
 				</div>
 				<div class="album-card-body">
 					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-red);">
-						<span class="rating-group-title-sec" style="color: var(--geo-red);">★ My Favorite</span>
+						<span class="rating-group-title-sec" style="color: var(--geo-red);">My Favorite</span>
 						<div class="rating-group-tracks-sec">${favHtml || none}</div>
 					</div>
 					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-yellow);">
-						<span class="rating-group-title-sec" style="color: #b45309;">★ So Far, So Good</span>
+						<span class="rating-group-title-sec" style="color: #b45309;">So Far, So Good</span>
 						<div class="rating-group-tracks-sec">${goodHtml || none}</div>
 					</div>
 					<div class="rating-group-sec" style="border-left: 4px solid var(--geo-blue);">
-						<span class="rating-group-title-sec" style="color: var(--geo-blue);">★ Not My Favorite</span>
+						<span class="rating-group-title-sec" style="color: var(--geo-blue);">Not My Favorite</span>
 						<div class="rating-group-tracks-sec">${notfavHtml || none}</div>
 					</div>
 				</div>

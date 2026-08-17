@@ -104,3 +104,29 @@ export const RATING_GROUPS = [
 	{ label: 'So Far, So Good', color: '#F59E0B', border: '#B45309' },
 	{ label: 'Not My Favorite', color: '#EF4444', border: '#B91C1C' },
 ] as const;
+
+// ── ML Pipeline Architecture & Stage Types ──────────────────────────────────────
+
+export type PipelineStageType = 'preprocessing' | 'transformation' | 'clustering' | 'validation' | 'projection' | 'similarity';
+export type PipelineViewMode = 'stage' | 'grid';
+
+export interface PipelineStage {
+	readonly id: string;
+	readonly stageNumber: number;
+	readonly title: string;
+	readonly subtitle: string;
+	readonly stageTag: string;
+	readonly stageType: PipelineStageType;
+	readonly themeColor: string;
+	readonly categoryBadge: string;
+	readonly objective: string;
+	readonly formulaBadge: string;
+	readonly latexFormula?: string;
+	readonly metricBadge: string;
+	readonly keyStatLabel: string;
+	readonly keyStatValue: string;
+	readonly techSummary: string;
+	readonly bullets: readonly string[];
+	readonly graphicType: 'dedup' | 'power-transform' | 'k-stability' | 'gmm' | 'personas' | 'bootstrap' | 'manifold' | 'wormhole';
+	readonly imageSrc?: string;
+}

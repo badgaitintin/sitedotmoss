@@ -1,0 +1,1010 @@
+{
+  "Hung Up": [
+    "Hung Up",
+    "Sky Fits Heaven",
+    "Skin",
+    "The Power of Good-Bye",
+    "Justify My Love"
+  ],
+  "Material Girl": [
+    "Papa Don't Preach",
+    "Celebration",
+    "Into the Groove",
+    "Material Girl",
+    "Into the Groove - Edit"
+  ],
+  "Like a Prayer": [
+    "Vogue",
+    "Where's the Party",
+    "Vogue",
+    "Hollywood",
+    "Can't Stop"
+  ],
+  "Like a Virgin": [
+    "Waiting",
+    "Papa Don't Preach",
+    "Like a Virgin",
+    "Like a Virgin",
+    "True Blue"
+  ],
+  "La Isla Bonita": [
+    "Cherish",
+    "Like a Virgin",
+    "Spotlight",
+    "Pretender",
+    "Over and Over"
+  ],
+  "4 Minutes (feat. Justin Timberlake & Timbaland)": [
+    "Express Yourself",
+    "Express Yourself",
+    "Me Against the Music (feat. Madonna) - LP Version / Video Mix",
+    "Burning Up",
+    "Girl Gone Wild"
+  ],
+  "Vogue": [
+    "Vogue",
+    "Like a Prayer",
+    "Where's the Party",
+    "Can't Stop",
+    "Give Me All Your Luvin'"
+  ],
+  "Papa Don't Preach": [
+    "Papa Don't Preach",
+    "True Blue",
+    "Express Yourself",
+    "Like a Virgin",
+    "Like a Virgin"
+  ],
+  "Crazy for You": [
+    "Borderline",
+    "Celebration",
+    "Like a Prayer",
+    "Into the Groove",
+    "American Pie"
+  ],
+  "Into the Groove": [
+    "True Blue - The Color Mix",
+    "Fever",
+    "Physical Attraction",
+    "Holiday",
+    "Holiday"
+  ],
+  "Holiday": [
+    "Over and Over",
+    "Cherish",
+    "Spotlight",
+    "Papa Don't Preach",
+    "Express Yourself"
+  ],
+  "Frozen": [
+    "American Pie",
+    "Like a Prayer",
+    "Frozen",
+    "Oh What a Circus",
+    "He's a Man"
+  ],
+  "Me Against the Music (feat. Madonna) - LP Version / Video Mix": [
+    "Burning Up",
+    "Bitch I'm Madonna",
+    "Buenos Aires",
+    "Die Another Day",
+    "Act of Contrition"
+  ],
+  "Sorry": [
+    "Shanti / Ashtangi",
+    "Ray of Light",
+    "Deeper and Deeper",
+    "Sky Fits Heaven",
+    "Hung Up"
+  ],
+  "Bitch I'm Madonna": [
+    "Love Song",
+    "Hanky Panky",
+    "I'm Going Bananas",
+    "Die Another Day",
+    "Burning Up"
+  ],
+  "American Pie": [
+    "Frozen",
+    "Like a Prayer",
+    "He's a Man",
+    "Beautiful Stranger",
+    "Material Girl"
+  ],
+  "True Blue": [
+    "Papa Don't Preach",
+    "Papa Don't Preach",
+    "Spotlight",
+    "Burning Up - 12\" Version",
+    "Like a Virgin"
+  ],
+  "Music": [
+    "Justify My Love - Hip Hop Mix",
+    "Justify My Love",
+    "Justify My Love",
+    "Justify My Love - The Beast Within Mix",
+    "Over and Over - Extended Version"
+  ],
+  "Ray of Light": [
+    "Where Life Begins",
+    "Sky Fits Heaven",
+    "Bye Bye Baby",
+    "Vogue - Bette Davis Dub",
+    "Skin"
+  ],
+  "Live to Tell": [
+    "Oh Father",
+    "Crazy for You - Edit",
+    "Pray for Spanish Eyes",
+    "Sooner or Later",
+    "In This Life"
+  ],
+  "Jump": [
+    "Music",
+    "Now I'm Following You (Pt. 2)",
+    "Justify My Love - Hip Hop Mix",
+    "Justify My Love",
+    "Justify My Love"
+  ],
+  "Give It 2 Me": [
+    "Holiday",
+    "Lucky Star",
+    "Material Girl",
+    "Miles Away",
+    "Like a Virgin"
+  ],
+  "Crazy for You - Edit": [
+    "Pray for Spanish Eyes",
+    "Live to Tell",
+    "Oh Father",
+    "Sooner or Later",
+    "What Can You Lose"
+  ],
+  "Borderline": [
+    "Borderline",
+    "Material Girl",
+    "Into the Groove",
+    "Like a Virgin",
+    "Everybody - Original Version"
+  ],
+  "The Power of Good-Bye": [
+    "Sky Fits Heaven",
+    "Vogue - Bette Davis Dub",
+    "Bye Bye Baby",
+    "Skin",
+    "Vogue - Strike-A-Pose Dub"
+  ],
+  "Express Yourself": [
+    "4 Minutes (feat. Justin Timberlake & Timbaland)",
+    "Express Yourself",
+    "4 Minutes (feat. Justin Timberlake and Timbaland)",
+    "Burning Up",
+    "Don't Stop"
+  ],
+  "Girl Gone Wild": [
+    "What It Feels Like for a Girl",
+    "Burning Up",
+    "Act of Contrition",
+    "4 Minutes (feat. Justin Timberlake & Timbaland)",
+    "Hollywood"
+  ],
+  "Don't Cry for Me Argentina": [
+    "You Must Love Me",
+    "Oh What a Circus",
+    "This Used to Be My Playground",
+    "Sooner or Later",
+    "What Can You Lose"
+  ],
+  "Take a Bow": [
+    "Take a Bow",
+    "Something to Remember",
+    "This Used to Be My Playground",
+    "You'll See",
+    "Sooner or Later"
+  ],
+  "Don't Tell Me": [
+    "Bitch I'm Madonna",
+    "Die Another Day",
+    "I'm Going Bananas",
+    "Buenos Aires",
+    "Hanky Panky"
+  ],
+  "Who's That Girl": [
+    "To Have and Not to Hold",
+    "Bedtime Story",
+    "Skin",
+    "Over and Over - Extended Version",
+    "Where Life Begins"
+  ],
+  "Celebration": [
+    "Into the Groove",
+    "Material Girl",
+    "Material Girl",
+    "Like a Virgin",
+    "Open Your Heart"
+  ],
+  "4 Minutes (feat. Justin Timberlake and Timbaland)": [
+    "Don't Stop",
+    "Hanky Panky - Bare Bottom 12\" Mix",
+    "Hanky Panky - Bare Bones Single Mix",
+    "Die Another Day",
+    "Buenos Aires"
+  ],
+  "Get Together": [
+    "Back in Business",
+    "Amazing",
+    "Hanky Panky",
+    "Bitch I'm Madonna",
+    "I'm Going Bananas"
+  ],
+  "Lucky Star": [
+    "Lucky Star - New Mix",
+    "La Isla Bonita - Extended Remix",
+    "Holiday",
+    "Give It 2 Me",
+    "Give Me All Your Luvin'"
+  ],
+  "Die Another Day": [
+    "Buenos Aires",
+    "Bitch I'm Madonna",
+    "Don't Stop",
+    "Don't Tell Me",
+    "4 Minutes (feat. Justin Timberlake and Timbaland)"
+  ],
+  "Hung Up - Radio Version": [
+    "Hung Up",
+    "Hung Up",
+    "Sorry",
+    "Ray of Light",
+    "Shanti / Ashtangi"
+  ],
+  "Vogue - Edit": [
+    "Amazing",
+    "Rescue Me",
+    "Express Yourself",
+    "Sorry",
+    "Don't Stop"
+  ],
+  "Secret": [
+    "Borderline",
+    "Words",
+    "Holiday",
+    "Lucky Star",
+    "Everybody - Original Version"
+  ],
+  "I'll Remember (Theme from the Motion Picture With Honors)": [
+    "Shoo-Bee-Doo",
+    "White Heat",
+    "Frozen",
+    "Over and Over",
+    "La Isla Bonita"
+  ],
+  "Beautiful Stranger": [
+    "Hollywood",
+    "Give Me All Your Luvin'",
+    "Vogue",
+    "Vogue",
+    "Like a Prayer"
+  ],
+  "Give Me All Your Luvin'": [
+    "Vogue",
+    "Lucky Star - New Mix",
+    "Vogue",
+    "Where's the Party",
+    "Hollywood"
+  ],
+  "Rain": [
+    "In This Life",
+    "Take a Bow",
+    "Live to Tell",
+    "You'll See",
+    "Crazy for You"
+  ],
+  "Open Your Heart": [
+    "Open Your Heart",
+    "Into the Groove - Edit",
+    "Material Girl",
+    "Till Death Do Us Part",
+    "Express Yourself"
+  ],
+  "Hollywood": [
+    "Like a Prayer",
+    "Beautiful Stranger",
+    "Where's the Party",
+    "Vogue",
+    "Give Me All Your Luvin'"
+  ],
+  "Justify My Love": [
+    "Justify My Love",
+    "Justify My Love - Orbit Edit",
+    "Justify My Love - The Beast Within Mix",
+    "Skin",
+    "Vogue - Strike-A-Pose Dub"
+  ],
+  "You'll See": [
+    "Something to Remember",
+    "This Used to Be My Playground",
+    "He's a Man",
+    "Take a Bow",
+    "Another Suitcase in Another Hall"
+  ],
+  "Into the Groove - Edit": [
+    "Material Girl",
+    "Till Death Do Us Part",
+    "Celebration",
+    "Spotlight",
+    "Open Your Heart"
+  ],
+  "La Isla Bonita - Extended Remix": [
+    "Lucky Star",
+    "Material Girl",
+    "Like a Virgin",
+    "Holiday",
+    "Give It 2 Me"
+  ],
+  "Cherish": [
+    "Hanky Panky - Bare Bones Single Mix",
+    "Papa Don't Preach",
+    "Over and Over",
+    "Hanky Panky - Bare Bottom 12\" Mix",
+    "Papa Don't Preach"
+  ],
+  "Nothing Really Matters": [
+    "Borderline",
+    "Borderline",
+    "Thief of Hearts",
+    "Why's It so Hard",
+    "Crazy for You"
+  ],
+  "This Used to Be My Playground": [
+    "Something to Remember",
+    "Another Suitcase in Another Hall",
+    "You'll See",
+    "Sooner or Later",
+    "Oh Father"
+  ],
+  "Angel": [
+    "Stay",
+    "Now I'm Following You (Part I)",
+    "Where's the Party",
+    "Like a Prayer",
+    "Lucky Star - US ReMix Version"
+  ],
+  "Miles Away": [
+    "Into the Groove",
+    "Holiday",
+    "Give It 2 Me",
+    "Everybody - Original Version",
+    "Like a Virgin"
+  ],
+  "Drowned World / Substitute for Love": [
+    "To Have and Not to Hold",
+    "Bedtime Story",
+    "Sky Fits Heaven",
+    "The Power of Good-Bye",
+    "Skin"
+  ],
+  "Human Nature": [
+    "Bye Bye Baby",
+    "Sky Fits Heaven",
+    "The Power of Good-Bye",
+    "Where Life Begins",
+    "Vogue - Bette Davis Dub"
+  ],
+  "Causing a Commotion": [
+    "Love Makes the World Go Round",
+    "Lucky Star",
+    "Burning Up - 12\" Version",
+    "Express Yourself",
+    "Papa Don't Preach"
+  ],
+  "Masterpiece": [
+    "Get Together",
+    "Jump",
+    "Why's It so Hard",
+    "Hung Up - Radio Version",
+    "Sorry"
+  ],
+  "Dress You Up": [
+    "Where Life Begins",
+    "Human Nature",
+    "Ray of Light",
+    "Sorry",
+    "Bye Bye Baby"
+  ],
+  "What It Feels Like for a Girl": [
+    "Girl Gone Wild",
+    "Santa Baby",
+    "Act of Contrition",
+    "Stay",
+    "Love Don't Live Here Anymore"
+  ],
+  "Deeper and Deeper": [
+    "Erotica",
+    "The Power of Good-Bye",
+    "Human Nature",
+    "Vogue - Strike-A-Pose Dub",
+    "Sorry"
+  ],
+  "Dear Jessie": [
+    "Santa Baby",
+    "Now I'm Following You (Part I)",
+    "Angel",
+    "Love Don't Live Here Anymore",
+    "Stay"
+  ],
+  "Borderline - Remix": [
+    "Papa Don't Preach",
+    "Papa Don't Preach",
+    "Pretender",
+    "True Blue",
+    "Express Yourself"
+  ],
+  "Love Profusion": [
+    "Santa Baby",
+    "Now I'm Following You (Part I)",
+    "Hollywood",
+    "What It Feels Like for a Girl",
+    "Dear Jessie"
+  ],
+  "La Isla Bonita - Remix": [
+    "Till Death Do Us Part",
+    "Jimmy Jimmy",
+    "Spotlight",
+    "Cherish",
+    "La Isla Bonita"
+  ],
+  "Pray for Spanish Eyes": [
+    "Oh Father",
+    "Crazy for You - Edit",
+    "Sooner or Later",
+    "High Flying, Adored",
+    "Live to Tell"
+  ],
+  "Swim": [
+    "Frozen",
+    "Live to Tell",
+    "This Used to Be My Playground",
+    "Like a Prayer",
+    "High Flying, Adored"
+  ],
+  "Sky Fits Heaven": [
+    "The Power of Good-Bye",
+    "Vogue - Bette Davis Dub",
+    "Bye Bye Baby",
+    "Skin",
+    "Justify My Love - Orbit Edit"
+  ],
+  "Skin": [
+    "Justify My Love - Orbit Edit",
+    "Vogue - Bette Davis Dub",
+    "Sky Fits Heaven",
+    "Bye Bye Baby",
+    "The Power of Good-Bye"
+  ],
+  "To Have and Not to Hold": [
+    "Bedtime Story",
+    "Skin",
+    "Sky Fits Heaven",
+    "The Power of Good-Bye",
+    "Vogue - Bette Davis Dub"
+  ],
+  "Oh Father": [
+    "Sooner or Later",
+    "Another Suitcase in Another Hall",
+    "What Can You Lose",
+    "This Used to Be My Playground",
+    "High Flying, Adored"
+  ],
+  "Burning Up": [
+    "Me Against the Music (feat. Madonna) - LP Version / Video Mix",
+    "Bitch I'm Madonna",
+    "Physical Attraction",
+    "Die Another Day",
+    "Act of Contrition"
+  ],
+  "Erotica": [
+    "Vogue - Strike-A-Pose Dub",
+    "Justify My Love - The Beast Within Mix",
+    "The Power of Good-Bye",
+    "Justify My Love - Orbit Edit",
+    "Skin"
+  ],
+  "Where's the Party": [
+    "Like a Prayer",
+    "Stay",
+    "Vogue",
+    "Vogue",
+    "Give Me All Your Luvin'"
+  ],
+  "Shanti / Ashtangi": [
+    "Sorry",
+    "Ray of Light",
+    "The Power of Good-Bye",
+    "Erotica",
+    "Hung Up"
+  ],
+  "Bedtime Story": [
+    "To Have and Not to Hold",
+    "Skin",
+    "Over and Over - Extended Version",
+    "Justify My Love - Orbit Edit",
+    "Bye Bye Baby"
+  ],
+  "Over and Over": [
+    "Holiday",
+    "Cherish",
+    "Express Yourself",
+    "Papa Don't Preach",
+    "La Isla Bonita"
+  ],
+  "Hanky Panky": [
+    "Love Song",
+    "I'm Going Bananas",
+    "Bitch I'm Madonna",
+    "Buenos Aires",
+    "Back in Business"
+  ],
+  "Lucky Star - US ReMix Version": [
+    "Angel",
+    "Stay",
+    "Where's the Party",
+    "Like a Prayer",
+    "Santa Baby"
+  ],
+  "You Must Love Me": [
+    "Don't Cry for Me Argentina",
+    "What Can You Lose",
+    "Another Suitcase in Another Hall",
+    "Promise to Try",
+    "Sooner or Later"
+  ],
+  "Love Don't Live Here Anymore": [
+    "Santa Baby",
+    "Now I'm Following You (Part I)",
+    "Oh What a Circus",
+    "Don't Cry for Me Argentina",
+    "Dear Jessie"
+  ],
+  "True Blue - The Color Mix": [
+    "Physical Attraction",
+    "Fever",
+    "Into the Groove",
+    "Justify My Love - Hip Hop Mix",
+    "Music"
+  ],
+  "Like a Virgin - Extended Dance Remix": [
+    "Lucky Star - US ReMix Version",
+    "I Know It",
+    "Physical Attraction",
+    "Borderline",
+    "Holiday"
+  ],
+  "Everybody - Original Version": [
+    "Miles Away",
+    "Borderline",
+    "Borderline",
+    "Holiday",
+    "Holiday"
+  ],
+  "Material Girl - Extended Dance Remix": [
+    "Burning Up - 12\" Version",
+    "White Heat",
+    "Hanky Panky - Bare Bottom 12\" Mix",
+    "True Blue",
+    "Express Yourself - Shep's 'Spressin Himself Re-Remix"
+  ],
+  "Vogue - 12\" Version": [
+    "Vogue - Strike-A-Pose Dub",
+    "Erotica",
+    "Justify My Love - The Beast Within Mix",
+    "The Power of Good-Bye",
+    "Justify My Love - Orbit Edit"
+  ],
+  "Rescue Me": [
+    "Bitch I'm Madonna",
+    "Die Another Day",
+    "Vogue - Edit",
+    "Hanky Panky",
+    "Love Song"
+  ],
+  "White Heat": [
+    "Physical Attraction",
+    "Keep It Together",
+    "True Blue - The Color Mix",
+    "Who's That Girl",
+    "I'll Remember (Theme from the Motion Picture With Honors)"
+  ],
+  "Bad Girl": [
+    "Live to Tell",
+    "Borderline",
+    "Pray for Spanish Eyes",
+    "Sooner or Later",
+    "Take a Bow"
+  ],
+  "Fever": [
+    "True Blue - The Color Mix",
+    "Music",
+    "Physical Attraction",
+    "Into the Groove",
+    "Holiday"
+  ],
+  "Amazing": [
+    "Get Together",
+    "Sorry",
+    "4 Minutes (feat. Justin Timberlake and Timbaland)",
+    "Hanky Panky - Bare Bones Single Mix",
+    "Express Yourself"
+  ],
+  "Where Life Begins": [
+    "Bye Bye Baby",
+    "Ray of Light",
+    "Vogue - Bette Davis Dub",
+    "Sky Fits Heaven",
+    "The Power of Good-Bye"
+  ],
+  "Buenos Aires": [
+    "Die Another Day",
+    "Hanky Panky",
+    "Bitch I'm Madonna",
+    "I'm Going Bananas",
+    "Love Song"
+  ],
+  "Survival": [
+    "Waiting",
+    "Like a Virgin",
+    "Like a Virgin",
+    "Spotlight",
+    "La Isla Bonita"
+  ],
+  "Another Suitcase in Another Hall": [
+    "What Can You Lose",
+    "Sooner or Later",
+    "You Must Love Me",
+    "I'd Be Surprisingly Good for You",
+    "Oh Father"
+  ],
+  "Oh What a Circus": [
+    "Don't Cry for Me Argentina",
+    "You Must Love Me",
+    "Love Don't Live Here Anymore",
+    "Frozen",
+    "Like a Prayer"
+  ],
+  "Keep It Together": [
+    "Music",
+    "Over and Over - Extended Version",
+    "Think of Me",
+    "Justify My Love",
+    "Justify My Love - The Beast Within Mix"
+  ],
+  "Physical Attraction": [
+    "Burning Up",
+    "Holiday",
+    "Me Against the Music (feat. Madonna) - LP Version / Video Mix",
+    "Physical Attraction",
+    "Die Another Day"
+  ],
+  "Jimmy Jimmy": [
+    "La Isla Bonita - Remix",
+    "Cherish",
+    "Till Death Do Us Part",
+    "Spotlight",
+    "Like a Virgin"
+  ],
+  "Love Makes the World Go Round": [
+    "Causing a Commotion",
+    "Lucky Star",
+    "La Isla Bonita - Extended Remix",
+    "Lucky Star",
+    "Lucky Star - New Mix"
+  ],
+  "Till Death Do Us Part": [
+    "La Isla Bonita - Remix",
+    "Jimmy Jimmy",
+    "Holiday",
+    "Spotlight",
+    "Cherish"
+  ],
+  "Don't Stop": [
+    "4 Minutes (feat. Justin Timberlake and Timbaland)",
+    "Die Another Day",
+    "Buenos Aires",
+    "Hanky Panky - Bare Bottom 12\" Mix",
+    "Hanky Panky - Bare Bones Single Mix"
+  ],
+  "I'd Be Surprisingly Good for You": [
+    "Another Suitcase in Another Hall",
+    "What Can You Lose",
+    "You Must Love Me",
+    "Shoo-Bee-Doo",
+    "Promise to Try"
+  ],
+  "The Look of Love": [
+    "Promise to Try",
+    "Goodnight and Thank You",
+    "What Can You Lose",
+    "Shoo-Bee-Doo",
+    "You Must Love Me"
+  ],
+  "Spotlight": [
+    "Like a Virgin",
+    "Holiday",
+    "Cherish",
+    "True Blue",
+    "La Isla Bonita"
+  ],
+  "Promise to Try": [
+    "What Can You Lose",
+    "You Must Love Me",
+    "Another Suitcase in Another Hall",
+    "Sooner or Later",
+    "I'd Be Surprisingly Good for You"
+  ],
+  "Shoo-Bee-Doo": [
+    "I'd Be Surprisingly Good for You",
+    "Another Suitcase in Another Hall",
+    "He's a Man",
+    "What Can You Lose",
+    "You Must Love Me"
+  ],
+  "Stay": [
+    "Angel",
+    "Where's the Party",
+    "Now I'm Following You (Part I)",
+    "Like a Prayer",
+    "Santa Baby"
+  ],
+  "High Flying, Adored": [
+    "Another Suitcase in Another Hall",
+    "Oh Father",
+    "I'd Be Surprisingly Good for You",
+    "This Used to Be My Playground",
+    "Sooner or Later"
+  ],
+  "Love Song": [
+    "Hanky Panky",
+    "I'm Going Bananas",
+    "Bitch I'm Madonna",
+    "Buenos Aires",
+    "Back in Business"
+  ],
+  "Burning Up - 12\" Version": [
+    "True Blue",
+    "Causing a Commotion",
+    "Like a Virgin",
+    "Papa Don't Preach",
+    "Material Girl - Extended Dance Remix"
+  ],
+  "Pretender": [
+    "La Isla Bonita",
+    "Like a Virgin",
+    "Cherish",
+    "True Blue",
+    "Papa Don't Preach"
+  ],
+  "Goodnight and Thank You": [
+    "Oh What a Circus",
+    "Shoo-Bee-Doo",
+    "You Must Love Me",
+    "Don't Cry for Me Argentina",
+    "The Look of Love"
+  ],
+  "Bye Bye Baby": [
+    "Vogue - Bette Davis Dub",
+    "Sky Fits Heaven",
+    "Justify My Love - Orbit Edit",
+    "Where Life Begins",
+    "The Power of Good-Bye"
+  ],
+  "Think of Me": [
+    "Over and Over - Extended Version",
+    "Bye Bye Baby",
+    "Human Nature",
+    "Where Life Begins",
+    "Ray of Light"
+  ],
+  "Lucky Star - New Mix": [
+    "Lucky Star",
+    "Give Me All Your Luvin'",
+    "Where's the Party",
+    "Vogue",
+    "Holiday"
+  ],
+  "Sooner or Later": [
+    "Oh Father",
+    "Another Suitcase in Another Hall",
+    "What Can You Lose",
+    "This Used to Be My Playground",
+    "You Must Love Me"
+  ],
+  "Waiting": [
+    "Like a Virgin",
+    "Survival",
+    "Like a Virgin",
+    "Miles Away",
+    "Papa Don't Preach"
+  ],
+  "Thief of Hearts": [
+    "Think of Me",
+    "Human Nature",
+    "Bye Bye Baby",
+    "Hung Up",
+    "Vogue - Bette Davis Dub"
+  ],
+  "Can't Stop": [
+    "Vogue",
+    "Vogue",
+    "Like a Prayer",
+    "Where's the Party",
+    "Give Me All Your Luvin'"
+  ],
+  "I Know It": [
+    "Borderline",
+    "Cry Baby",
+    "Like a Virgin - Extended Dance Remix",
+    "Pretender",
+    "Pray for Spanish Eyes"
+  ],
+  "Act of Contrition": [
+    "Bitch I'm Madonna",
+    "Love Song",
+    "Burning Up",
+    "Hanky Panky",
+    "Me Against the Music (feat. Madonna) - LP Version / Video Mix"
+  ],
+  "Why's It so Hard": [
+    "Shanti / Ashtangi",
+    "Hung Up",
+    "Hung Up",
+    "Sorry",
+    "Sky Fits Heaven"
+  ],
+  "Words": [
+    "Secret",
+    "Crazy for You",
+    "Borderline",
+    "Thief of Hearts",
+    "Rain"
+  ],
+  "Santa Baby": [
+    "Now I'm Following You (Part I)",
+    "Dear Jessie",
+    "Love Don't Live Here Anymore",
+    "Stay",
+    "Angel"
+  ],
+  "In This Life": [
+    "Rain",
+    "Live to Tell",
+    "Don't Cry for Me Argentina",
+    "Love Don't Live Here Anymore",
+    "Take a Bow"
+  ],
+  "Something to Remember": [
+    "You'll See",
+    "This Used to Be My Playground",
+    "Take a Bow",
+    "He's a Man",
+    "Take a Bow"
+  ],
+  "He's a Man": [
+    "You'll See",
+    "Something to Remember",
+    "Shoo-Bee-Doo",
+    "Frozen",
+    "This Used to Be My Playground"
+  ],
+  "Back in Business": [
+    "More",
+    "Hanky Panky",
+    "I'm Going Bananas",
+    "Love Song",
+    "Get Together"
+  ],
+  "I'm Going Bananas": [
+    "Hanky Panky",
+    "Love Song",
+    "Bitch I'm Madonna",
+    "Buenos Aires",
+    "Back in Business"
+  ],
+  "Now I'm Following You (Part I)": [
+    "Santa Baby",
+    "Angel",
+    "Stay",
+    "Love Don't Live Here Anymore",
+    "Where's the Party"
+  ],
+  "More": [
+    "Back in Business",
+    "Love Song",
+    "I'm Going Bananas",
+    "Hanky Panky",
+    "Bitch I'm Madonna"
+  ],
+  "Cry Baby": [
+    "High Flying, Adored",
+    "I'd Be Surprisingly Good for You",
+    "I Know It",
+    "Pray for Spanish Eyes",
+    "Another Suitcase in Another Hall"
+  ],
+  "What Can You Lose": [
+    "Promise to Try",
+    "Another Suitcase in Another Hall",
+    "You Must Love Me",
+    "Sooner or Later",
+    "Oh Father"
+  ],
+  "Now I'm Following You (Pt. 2)": [
+    "Jump",
+    "Music",
+    "4 Minutes (feat. Justin Timberlake & Timbaland)",
+    "Physical Attraction",
+    "Fever"
+  ],
+  "Over and Over - Extended Version": [
+    "Skin",
+    "Justify My Love - Orbit Edit",
+    "Justify My Love - The Beast Within Mix",
+    "Bye Bye Baby",
+    "Where Life Begins"
+  ],
+  "Justify My Love - The Beast Within Mix": [
+    "Erotica",
+    "Vogue - Strike-A-Pose Dub",
+    "Skin",
+    "Justify My Love - Orbit Edit",
+    "Over and Over - Extended Version"
+  ],
+  "Vogue - Bette Davis Dub": [
+    "Bye Bye Baby",
+    "Sky Fits Heaven",
+    "Justify My Love - Orbit Edit",
+    "Skin",
+    "The Power of Good-Bye"
+  ],
+  "Vogue - Strike-A-Pose Dub": [
+    "Erotica",
+    "Justify My Love - Orbit Edit",
+    "The Power of Good-Bye",
+    "Justify My Love - The Beast Within Mix",
+    "Vogue - Bette Davis Dub"
+  ],
+  "Express Yourself - Shep's 'Spressin Himself Re-Remix": [
+    "Into the Groove",
+    "Burning Up - 12\" Version",
+    "Borderline",
+    "Material Girl - Extended Dance Remix",
+    "Holiday"
+  ],
+  "Justify My Love - Orbit Edit": [
+    "Bye Bye Baby",
+    "Skin",
+    "Vogue - Bette Davis Dub",
+    "Vogue - Strike-A-Pose Dub",
+    "Sky Fits Heaven"
+  ],
+  "Justify My Love - Hip Hop Mix": [
+    "Justify My Love",
+    "Justify My Love",
+    "Justify My Love - The Beast Within Mix",
+    "Justify My Love - Orbit Edit",
+    "Erotica"
+  ],
+  "Hanky Panky - Bare Bones Single Mix": [
+    "Hanky Panky - Bare Bottom 12\" Mix",
+    "4 Minutes (feat. Justin Timberlake and Timbaland)",
+    "I'm Going Bananas",
+    "Buenos Aires",
+    "Don't Stop"
+  ],
+  "Hanky Panky - Bare Bottom 12\" Mix": [
+    "Hanky Panky - Bare Bones Single Mix",
+    "4 Minutes (feat. Justin Timberlake and Timbaland)",
+    "Don't Stop",
+    "Buenos Aires",
+    "I'm Going Bananas"
+  ]
+}

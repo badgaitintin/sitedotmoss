@@ -22,8 +22,9 @@ const clustersCount = clusterSummary.length;
 			content="Sonic Atlas — Geometric Data Analysis & Clustering Dashboard"
 		/>
 		<title>Sonic Atlas — site(.)moss</title>
-		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline defer
-		></script>
+		<script src="https://cdn.plot.ly/plotly-2.24.1.min.js" is:inline defer></script>
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
+		<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" is:inline defer></script>
 
 		<style is:global>
 			/* ===========================
@@ -125,19 +126,20 @@ const clustersCount = clusterSummary.length;
 				max-width: 1180px;
 				margin: 0 auto;
 				height: 100vh;
-				padding: 16px 26px 26px 16px; /* Generous breathing room so 4px-6px shadows never clip */
+				padding: 14px 20px 20px 16px; /* Generous breathing room so 4px-6px shadows never clip and screen never overflows */
 				box-sizing: border-box;
 				display: flex;
 				flex-direction: column;
-				justify-content: center;
+				justify-content: flex-start;
 			}
 
 			.bh-main-card {
 				position: relative;
 				display: flex;
 				flex-direction: column;
-				gap: 16px;
-				height: calc(100vh - 42px);
+				gap: 12px;
+				height: 100%;
+				min-height: 0;
 				align-items: stretch;
 				box-sizing: border-box;
 				overflow: visible; /* Prevent any clipping on card shadows */
@@ -393,7 +395,8 @@ const clustersCount = clusterSummary.length;
 				display: flex;
 				flex-direction: column;
 				min-width: 0;
-				height: 100%;
+				min-height: 0;
+				height: auto;
 				overflow: visible;
 				transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
 				            transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -456,11 +459,11 @@ const clustersCount = clusterSummary.length;
 			.tab-content {
 				display: grid;
 				grid-template-columns: 1fr;
-				gap: 18px;
+				gap: 14px;
 				height: 100%;
 				min-height: 0;
-				padding-right: 6px;
-				padding-bottom: 6px;
+				padding-right: 4px;
+				padding-bottom: 4px;
 				box-sizing: border-box;
 			}
 			@media (min-width: 768px) {
@@ -478,8 +481,8 @@ const clustersCount = clusterSummary.length;
 				backdrop-filter: blur(16px);
 				-webkit-backdrop-filter: blur(16px);
 				border: 2px solid var(--geo-border);
-				border-radius: 20px;
-				padding: 20px;
+				border-radius: 18px;
+				padding: 16px 18px;
 				display: flex;
 				flex-direction: column;
 				height: 100%;
@@ -563,28 +566,28 @@ const clustersCount = clusterSummary.length;
 			.metrics-grid {
 				display: grid;
 				grid-template-columns: 1fr 1fr;
-				gap: 8px;
-				margin-top: 10px;
+				gap: 6px;
+				margin-top: 6px;
 			}
 
 			.metric-box {
 				background: #ffffff;
 				border: 1.8px solid var(--geo-border);
-				border-radius: 12px;
-				padding: 8px 12px;
+				border-radius: 10px;
+				padding: 6px 10px;
 				box-shadow: 2px 2px 0px var(--geo-border);
 			}
 
 			.metric-meta {
 				display: flex;
 				justify-content: space-between;
-				font-size: 0.7rem;
+				font-size: 0.68rem;
 				font-weight: 800;
-				margin-bottom: 4px;
+				margin-bottom: 3px;
 			}
 
 			.metric-bar {
-				height: 6px;
+				height: 5px;
 				background: #e2e8f0;
 				border: 1.2px solid var(--geo-border);
 				border-radius: 99px;
@@ -600,57 +603,362 @@ const clustersCount = clusterSummary.length;
 			.metric-chip-stat {
 				background: #ffffff;
 				border: 1.8px solid var(--geo-border);
-				border-radius: 12px;
-				padding: 8px 12px;
+				border-radius: 10px;
+				padding: 6px 10px;
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				box-shadow: 2px 2px 0px var(--geo-border);
 			}
 			.metric-chip-title {
-				font-size: 0.62rem;
+				font-size: 0.58rem;
 				color: var(--geo-muted);
 				text-transform: uppercase;
 				font-weight: 900;
 				letter-spacing: 0.05em;
 			}
 			.metric-chip-val {
-				font-size: 0.85rem;
+				font-size: 0.82rem;
 				font-weight: 900;
 				font-family: monospace;
+			}
+
+			/* ── PERSONAS INTERACTIVE GIMMICKS (RADAR, SOUNDWAVE, PASSPORT, ERA) ── */
+			.personas-radar-wrap {
+				display: grid;
+				grid-template-columns: 1fr 1.15fr;
+				gap: 8px;
+				margin-top: 6px;
+			}
+			.persona-radar-card {
+				background: #090c15;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 10px;
+				padding: 6px 8px;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				display: flex;
+				flex-direction: column;
+			}
+			.radar-card-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 2px;
+			}
+			.radar-title {
+				font-size: 0.52rem;
+				font-weight: 900;
+				color: #94a3b8;
+				letter-spacing: 0.05em;
+			}
+			.radar-live-badge {
+				font-size: 0.5rem;
+				font-weight: 900;
+				padding: 1px 4px;
+				border-radius: 99px;
+			}
+			.radar-svg-canvas {
+				width: 100%;
+				max-height: 95px;
+			}
+
+			.persona-soundwave-card {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 10px;
+				padding: 6px 8px;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			.soundwave-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 3px;
+			}
+			.soundwave-label {
+				font-size: 0.52rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+			}
+			.soundwave-tempo {
+				font-size: 0.62rem;
+				font-weight: 900;
+				font-family: monospace;
+				color: var(--geo-black);
+			}
+			.soundwave-canvas-box {
+				height: 68px;
+				width: 100%;
+				background: #090c15;
+				border: 1.2px solid var(--geo-border);
+				border-radius: 6px;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.soundwave-canvas {
+				width: 100%;
+				height: 100%;
+				display: block;
+			}
+
+			.persona-vibe-tag {
+				font-size: 0.56rem;
+				font-weight: 900;
+				padding: 1px 6px;
+				border-radius: 99px;
+				background: #ffffff;
+				border: 1.2px solid var(--geo-border);
+				display: inline-block;
+				margin-right: 4px;
+				margin-top: 4px;
+			}
+
+			/* Track Passport Card */
+			.track-passport-card {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				padding: 10px 12px;
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				margin-top: 8px;
+			}
+			.passport-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 2px;
+			}
+			.passport-tag {
+				font-size: 0.55rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				letter-spacing: 0.05em;
+			}
+			.passport-era-pill {
+				font-size: 0.52rem;
+				font-weight: 900;
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				padding: 1px 5px;
+				border-radius: 4px;
+			}
+			.passport-title {
+				font-size: 0.85rem;
+				font-weight: 900;
+				color: var(--geo-black);
+				margin: 2px 0 4px 0;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.passport-meta-row {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				font-size: 0.6rem;
+				font-weight: 800;
+			}
+			.passport-cluster-badge {
+				padding: 1px 6px;
+				border-radius: 4px;
+				font-size: 0.55rem;
+				font-weight: 900;
+			}
+			.passport-year, .passport-pop {
+				color: var(--geo-muted);
+				font-family: monospace;
+			}
+			.passport-fingerprint-grid {
+				display: grid;
+				grid-template-columns: repeat(4, 1fr);
+				gap: 4px;
+				margin-top: 6px;
+				background: #f8fafc;
+				border: 1.2px solid var(--geo-border);
+				border-radius: 6px;
+				padding: 4px;
+			}
+			.fp-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				text-align: center;
+			}
+			.fp-lbl {
+				font-size: 0.48rem;
+				font-weight: 800;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+			}
+			.fp-val {
+				font-size: 0.62rem;
+				font-weight: 900;
+				font-family: monospace;
+				color: var(--geo-black);
+			}
+
+			.passport-sister-section {
+				margin-top: 6px;
+				border-top: 1px solid #e2e8f0;
+				padding-top: 4px;
+			}
+			.sister-section-lbl {
+				font-size: 0.5rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				letter-spacing: 0.05em;
+				display: block;
+				margin-bottom: 3px;
+			}
+			.sister-list {
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+			}
+			.sister-jump-btn {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 3px 6px;
+				background: #ffffff;
+				border: 1px solid var(--geo-border);
+				border-radius: 6px;
+				cursor: pointer;
+				font-family: inherit;
+				font-size: 0.6rem;
+				font-weight: 800;
+				transition: all 0.12s ease;
+			}
+			.sister-jump-btn:hover {
+				background: #f8fafc;
+				transform: translateX(2px);
+			}
+			.sister-dot {
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				margin-right: 4px;
+			}
+			.sister-name {
+				flex: 1;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-align: left;
+			}
+			.sister-sim {
+				font-family: monospace;
+				color: var(--geo-blue);
+				font-weight: 900;
+			}
+
+			/* Era Histogram Card */
+			.persona-era-card {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				padding: 8px 10px;
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				margin-top: 8px;
+			}
+			.era-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 4px;
+			}
+			.era-title {
+				font-size: 0.55rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				letter-spacing: 0.05em;
+			}
+			.era-count {
+				font-size: 0.58rem;
+				font-weight: 900;
+				font-family: monospace;
+			}
+			.era-histogram-box {
+				display: flex;
+				justify-content: space-between;
+				align-items: flex-end;
+				gap: 8px;
+				height: 48px;
+				padding-top: 4px;
+			}
+			.era-bar-col {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 2px;
+				height: 100%;
+			}
+			.era-pct {
+				font-size: 0.52rem;
+				font-weight: 900;
+				font-family: monospace;
+				color: var(--geo-muted);
+			}
+			.era-bar-track {
+				flex: 1;
+				width: 100%;
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				border-radius: 4px;
+				overflow: hidden;
+				display: flex;
+				align-items: flex-end;
+			}
+			.era-bar-fill {
+				width: 100%;
+				border-radius: 2px;
+				transition: height 0.5s ease;
+			}
+			.era-lbl {
+				font-size: 0.55rem;
+				font-weight: 900;
+				color: var(--geo-black);
 			}
 
 			/* Cluster rail buttons */
 			.cluster-rail {
 				display: flex;
 				flex-direction: column;
-				gap: 8px;
-				margin-top: 8px;
+				gap: 5px;
+				margin-top: 5px;
 			}
 
 			.cluster-btn {
 				position: relative;
 				width: 100%;
-				padding: 10px 14px;
+				padding: 7px 11px;
 				background: #ffffff;
-				border: 1.8px solid var(--geo-border);
-				border-radius: 12px;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 9px;
 				text-align: left;
 				cursor: pointer;
-				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				transition: all 0.16s cubic-bezier(0.1, 0.8, 0.2, 1);
 				font-family: inherit;
-				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				box-shadow: 2px 2px 0px var(--geo-border);
 			}
 			.cluster-btn:hover {
-				transform: translate(-1px, -1px);
-				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+				transform: translate(-0.8px, -0.8px);
+				box-shadow: 2.8px 2.8px 0px var(--geo-border);
 				background: #f8fafc;
 			}
 			.cluster-btn.active {
 				background: var(--geo-black);
 				color: #ffffff;
-				transform: translate(-1.5px, -1.5px);
-				box-shadow: 3.5px 3.5px 0px var(--cluster-theme-color, var(--geo-red));
+				transform: translate(-1px, -1px);
+				box-shadow: 2.8px 2.8px 0px var(--cluster-theme-color, var(--geo-red));
 			}
 			.cluster-btn.active .cluster-count-pill {
 				background: #ffffff;
@@ -661,14 +969,14 @@ const clustersCount = clusterSummary.length;
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				font-size: 0.78rem;
+				font-size: 0.72rem;
 				font-weight: 800;
 			}
 
 			.cluster-count-pill {
-				font-size: 0.65rem;
+				font-size: 0.6rem;
 				font-weight: 800;
-				padding: 2px 8px;
+				padding: 1.5px 7px;
 				border-radius: 99px;
 				background: #f1f5f9;
 				border: 1px solid var(--geo-border);
@@ -932,51 +1240,1080 @@ const clustersCount = clusterSummary.length;
 				font-style: italic;
 			}
 
-			/* ── ML PIPELINE STEP CARDS (TAB 4) ── */
-			.pipeline-scroll {
-				flex: 1;
-				overflow-y: auto;
+			/* ── ML PIPELINE GAME-STAGE STYLES (TAB 4) ── */
+			.pipeline-interactive-root {
 				display: flex;
 				flex-direction: column;
-				gap: 12px;
-				padding-right: 6px;
-			}
-			.pipeline-scroll::-webkit-scrollbar {
-				width: 4px;
-			}
-			.pipeline-scroll::-webkit-scrollbar-thumb {
-				background: var(--geo-border);
-				border-radius: 4px;
+				height: 100%;
+				min-height: 0;
+				gap: 10px;
+				overflow: hidden;
+				box-sizing: border-box;
 			}
 
-			.pipeline-card {
+			.pipeline-top-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				flex-shrink: 0;
+				gap: 12px;
+			}
+
+			.pipeline-header-controls {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+			}
+
+			.pipeline-hud-btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 5px;
+				padding: 5px 12px;
+				font-size: 0.68rem;
+				font-weight: 900;
+				letter-spacing: 0.05em;
+				color: var(--geo-black);
 				background: #ffffff;
 				border: 1.8px solid var(--geo-border);
-				border-radius: 14px;
-				padding: 14px 18px;
-				display: flex;
-				gap: 14px;
-				align-items: flex-start;
-				box-shadow: 2.5px 2.5px 0px var(--geo-border);
-				transition: transform 0.2s, box-shadow 0.2s;
+				border-radius: 99px;
+				cursor: pointer;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				font-family: inherit;
 			}
-			.pipeline-card:hover {
+			.pipeline-hud-btn:hover {
+				background: var(--geo-yellow);
 				transform: translate(-1px, -1px);
-				box-shadow: 3.5px 3.5px 0px var(--geo-border);
+				box-shadow: 3px 3px 0px var(--geo-border);
 			}
-			.pipeline-num {
-				width: 32px;
-				height: 32px;
-				border-radius: 8px;
+			.pipeline-hud-btn.active {
+				background: var(--geo-blue);
+				color: #ffffff;
+				border-color: var(--geo-black);
+				box-shadow: 3px 3px 0px var(--geo-border);
+			}
+
+			/* ── TOP QUEST TRACK (OVERWORLD MAP) ── */
+			.pipeline-quest-track {
+				flex-shrink: 0;
+				overflow-x: auto;
+				padding: 2px 2px 6px 2px;
+			}
+			.pipeline-quest-track::-webkit-scrollbar {
+				height: 3px;
+			}
+			.pipeline-quest-track::-webkit-scrollbar-thumb {
+				background: var(--geo-border);
+				border-radius: 3px;
+			}
+
+			.quest-track-wrapper {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				width: max-content;
+				min-width: 100%;
+			}
+
+			.pipeline-node-btn {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+				padding: 6px 10px;
+				background: #ffffff;
 				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				cursor: pointer;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				font-family: inherit;
+				min-width: 132px;
+				max-width: 160px;
+				text-align: left;
+			}
+			.pipeline-node-btn:hover {
+				background: #f8fafc;
+				transform: translate(-1px, -1px);
+				box-shadow: 3px 3px 0px var(--geo-border);
+			}
+			.pipeline-node-btn.active {
+				background: var(--geo-black);
+				color: #ffffff;
+				transform: translate(-1.5px, -1.5px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-yellow);
+			}
+			.pipeline-node-btn.active .node-category-pill {
+				background: var(--geo-yellow);
+				color: var(--geo-black);
+				border-color: var(--geo-black);
+			}
+			.pipeline-node-btn.passed {
+				border-color: #059669;
+				background: #f0fdf4;
+			}
+			.pipeline-node-btn.passed .node-status-badge {
+				color: #059669;
+			}
+
+			.node-pill-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.node-num {
+				font-family: monospace;
+				font-weight: 900;
+				font-size: 0.72rem;
+			}
+			.node-category-pill {
+				font-size: 0.58rem;
+				font-weight: 900;
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				padding: 0px 5px;
+				border-radius: 99px;
+				color: var(--geo-text);
+			}
+			.node-title {
+				font-size: 0.7rem;
+				font-weight: 800;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.node-status-badge {
+				font-size: 0.58rem;
+				font-weight: 900;
+				letter-spacing: 0.05em;
+				text-transform: uppercase;
+				color: var(--geo-muted);
+			}
+			.pipeline-node-btn.active .node-status-badge {
+				color: var(--geo-yellow);
+			}
+
+			.node-connector-line {
+				width: 14px;
+				height: 2px;
+				background: var(--geo-border);
+				flex-shrink: 0;
+				position: relative;
+			}
+			.connector-pulse {
+				position: absolute;
+				top: -2px;
+				left: 0;
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--geo-yellow);
+				animation: geo-pulse-dot 1.8s infinite linear;
+			}
+			@keyframes geo-pulse-dot {
+				0% { left: 0; opacity: 0; }
+				50% { opacity: 1; }
+				100% { left: 8px; opacity: 0; }
+			}
+
+			/* ── STAGE QUEST VIEW LAYOUT ── */
+			.pipeline-quest-view {
+				flex: 1;
+				min-height: 0;
+				display: grid;
+				grid-template-columns: 1.25fr 1fr;
+				gap: 12px;
+				overflow: hidden;
+			}
+			@media (max-width: 860px) {
+				.pipeline-quest-view {
+					grid-template-columns: 1fr;
+					overflow-y: auto;
+				}
+			}
+
+			/* ── STAGE VISUALIZER GRAPHIC CARD ── */
+			.stage-sim-box {
+				background: #ffffff;
+				border: 2px solid var(--geo-border);
+				border-radius: 14px;
+				padding: 12px 14px;
+				box-shadow: 3px 3px 0px var(--geo-border);
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				min-height: 0;
+				box-sizing: border-box;
+				justify-content: space-between;
+				position: relative;
+				overflow: hidden;
+			}
+
+			.sim-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-bottom: 1.5px solid var(--geo-border);
+				padding-bottom: 6px;
+				flex-shrink: 0;
+			}
+			.sim-tag {
+				font-size: 0.62rem;
+				font-weight: 900;
+				letter-spacing: 0.08em;
+				color: var(--geo-blue);
+			}
+			.sim-metric-pill {
+				font-size: 0.62rem;
+				font-weight: 900;
+				padding: 2px 8px;
+				border-radius: 99px;
+				border: 1.5px solid var(--geo-border);
+				background: #f8fafc;
+				box-shadow: 1.5px 1.5px 0px var(--geo-border);
+			}
+
+			.sim-toggle-group {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+			}
+			.curve-mode-toggle,
+			.plot-toggle-btn {
+				font-size: 0.58rem;
+				font-weight: 900;
+				font-family: inherit;
+				background: #ffffff;
+				color: var(--geo-text);
+				border: 1.2px solid var(--geo-border);
+				border-radius: 99px;
+				padding: 2px 7px;
+				cursor: pointer;
+				transition: all 0.15s ease;
+			}
+			.curve-mode-toggle.active {
+				background: var(--geo-blue);
+				color: #ffffff;
+				border-color: var(--geo-black);
+			}
+			.plot-toggle-btn {
+				background: var(--geo-yellow);
+				color: var(--geo-black);
+				box-shadow: 1px 1px 0px var(--geo-border);
+			}
+			.plot-toggle-btn:hover {
+				background: var(--geo-black);
+				color: #ffffff;
+			}
+			.plot-toggle-btn.active {
+				background: var(--geo-blue);
+				color: #ffffff;
+			}
+
+			.notebook-plot-container {
+				flex: 1;
+				min-height: 0;
 				display: flex;
 				align-items: center;
 				justify-content: center;
+				background: #ffffff;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 8px;
+				overflow: hidden;
+				padding: 4px;
+			}
+			.notebook-plot-img {
+				max-width: 100%;
+				max-height: 165px;
+				object-fit: contain;
+				border-radius: 4px;
+			}
+
+			/* ── SIMULATION 1: DEDUPLICATION STREAM ── */
+			.dedup-visualizer-canvas {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+				padding: 8px 0;
+			}
+			.dedup-stream {
+				flex: 1;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				min-height: 0;
+			}
+			.stream-label {
+				font-size: 0.58rem;
 				font-weight: 900;
-				font-size: 0.95rem;
-				color: #ffffff;
-				flex-shrink: 0;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.05em;
+				margin-bottom: 2px;
+			}
+			.stream-tokens, .clean-tokens-grid {
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+			}
+			.stream-token {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				padding: 4px 6px;
+				border-radius: 6px;
+				font-size: 0.65rem;
+				font-weight: 700;
+				border: 1.2px solid var(--geo-border);
+			}
+			.token-dup {
+				background: #fee2e2;
+				border-color: var(--geo-red);
+				color: #991b1b;
+				text-decoration: line-through;
+				opacity: 0.75;
+			}
+			.token-orig {
+				background: #f8fafc;
+				color: var(--geo-black);
+			}
+			.token-sym {
+				font-size: 0.7rem;
+				font-weight: 900;
+			}
+			.token-name {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			.dedup-filter-gate {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 4px;
+				padding: 0 4px;
+			}
+			.gate-core {
+				width: 50px;
+				height: 50px;
+				border-radius: 12px;
+				background: var(--geo-black);
+				color: var(--geo-yellow);
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				border: 2px solid var(--geo-border);
 				box-shadow: 2px 2px 0px var(--geo-border);
+				position: relative;
+				overflow: hidden;
+			}
+			.gate-icon {
+				font-size: 1.2rem;
+				z-index: 2;
+			}
+			.gate-label {
+				display: none;
+			}
+			.gate-radar-sweep {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				background: conic-gradient(from 0deg, transparent 70%, rgba(251, 191, 36, 0.4) 100%);
+				animation: geo-spin-slow 2s linear infinite;
+			}
+			.gate-arrow {
+				font-size: 1rem;
+				font-weight: 900;
+				color: var(--geo-blue);
+			}
+
+			.clean-token-card {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 5px 8px;
+				background: #f0fdf4;
+				border: 1.5px solid #16a34a;
+				border-radius: 6px;
+				font-size: 0.65rem;
+				font-weight: 800;
+			}
+			.clean-dot {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				margin-right: 4px;
+			}
+			.clean-name {
+				flex: 1;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.clean-status {
+				font-size: 0.55rem;
+				color: #15803d;
+				font-weight: 900;
+			}
+
+			/* ── SIMULATION 2: CURVE VIEWPORT ── */
+			.transform-curve-viewport {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 4px 0;
+			}
+			.curve-svg {
+				width: 100%;
+				max-height: 155px;
+			}
+
+			/* ── SIMULATION 3: GMM DENSITY ── */
+			.gmm-density-canvas {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.gmm-svg {
+				width: 100%;
+				max-height: 155px;
+			}
+			.gmm-cluster-group {
+				cursor: pointer;
+				transition: transform 0.2s ease;
+			}
+			.gmm-cluster-group:hover {
+				transform: scale(1.03);
+			}
+
+			/* ── SIMULATION 4: BOOTSTRAP RESILIENCE ── */
+			.bootstrap-grid-layout {
+				flex: 1;
+				min-height: 0;
+				display: grid;
+				grid-template-columns: 1.3fr 1fr;
+				gap: 10px;
+				align-items: center;
+				padding: 4px 0;
+			}
+			.bars-label {
+				font-size: 0.58rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				margin-bottom: 3px;
+			}
+			.resample-bars-list {
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 3px 6px;
+				max-height: 125px;
+				overflow-y: auto;
+			}
+			.resample-bar-item {
+				display: flex;
+				align-items: center;
+				gap: 4px;
+				font-size: 0.6rem;
+				font-family: monospace;
+			}
+			.bar-num {
+				color: var(--geo-muted);
+				width: 18px;
+			}
+			.bar-track {
+				flex: 1;
+				height: 5px;
+				background: #e2e8f0;
+				border-radius: 99px;
+				overflow: hidden;
+			}
+			.bar-fill {
+				height: 100%;
+				background: #10b981;
+				border-radius: 99px;
+			}
+			.bar-val {
+				font-weight: 900;
+				color: var(--geo-black);
+			}
+
+			.gauge-card {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 6px;
+			}
+			.radial-gauge-circle {
+				width: 75px;
+				height: 75px;
+				position: relative;
+			}
+			.gauge-svg {
+				width: 100%;
+				height: 100%;
+				transform: rotate(-90deg);
+			}
+			.gauge-center-text {
+				position: absolute;
+				inset: 0;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+			}
+			.gauge-score {
+				font-size: 0.85rem;
+				font-weight: 900;
+				font-family: monospace;
+			}
+			.gauge-sub {
+				font-size: 0.5rem;
+				font-weight: 800;
+				color: var(--geo-muted);
+			}
+			.gauge-badge {
+				font-size: 0.58rem;
+				font-weight: 900;
+				background: #f0fdf4;
+				color: #15803d;
+				border: 1px solid #16a34a;
+				border-radius: 99px;
+				padding: 2px 8px;
+			}
+
+			/* ── SIMULATION 5: MANIFOLD PROJECTION ── */
+			.manifold-projection-canvas {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 8px;
+			}
+			.hyper-feature-ring {
+				flex: 1;
+				background: #f8fafc;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 10px;
+				padding: 6px;
+			}
+			.ring-title {
+				font-size: 0.58rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				margin-bottom: 4px;
+				text-transform: uppercase;
+			}
+			.ring-features {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 2.5px;
+			}
+			.feat-tag {
+				font-size: 0.55rem;
+				font-weight: 800;
+				background: #ffffff;
+				border: 1px solid var(--geo-border);
+				padding: 1px 4px;
+				border-radius: 4px;
+			}
+
+			.projection-lens-unit {
+				display: flex;
+				align-items: center;
+			}
+			.lens-body {
+				padding: 6px 8px;
+				background: var(--geo-cyan);
+				color: var(--geo-black);
+				border: 1.8px solid var(--geo-border);
+				border-radius: 8px;
+				text-align: center;
+				box-shadow: 2px 2px 0px var(--geo-border);
+			}
+			.lens-label {
+				font-size: 0.65rem;
+				font-weight: 900;
+			}
+			.lens-sub {
+				font-size: 0.5rem;
+				font-weight: 800;
+			}
+
+			.spatial-galaxy-box {
+				flex: 1;
+				height: 105px;
+				background: #0f121d;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 10px;
+				padding: 6px;
+				position: relative;
+				overflow: hidden;
+			}
+			.galaxy-label {
+				font-size: 0.55rem;
+				font-weight: 900;
+				color: #38bdf8;
+				text-transform: uppercase;
+			}
+			.galaxy-star-cloud {
+				position: relative;
+				width: 100%;
+				height: 75px;
+			}
+			.star {
+				position: absolute;
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				box-shadow: 0 0 8px currentColor;
+				animation: geo-star-pulse 2s infinite alternate;
+			}
+			@keyframes geo-star-pulse {
+				from { transform: scale(0.8); opacity: 0.6; }
+				to { transform: scale(1.3); opacity: 1; }
+			}
+			.galaxy-axis {
+				position: absolute;
+				font-size: 0.48rem;
+				font-family: monospace;
+				color: #64748b;
+			}
+			.axis-x { bottom: 2px; right: 4px; }
+			.axis-y { top: 12px; left: 4px; }
+			.axis-z { bottom: 2px; left: 4px; }
+
+			/* ── SIMULATION 6: WORMHOLE BRIDGE ── */
+			.wormhole-visualizer-canvas {
+				flex: 1;
+				min-height: 0;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 10px;
+			}
+			.wormhole-node {
+				background: #f8fafc;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 8px;
+				padding: 6px 8px;
+				flex: 1;
+				box-shadow: 1.5px 1.5px 0px var(--geo-border);
+			}
+			.node-badge {
+				font-size: 0.58rem;
+				font-weight: 900;
+				padding: 1px 5px;
+				border-radius: 4px;
+				border: 1px solid var(--geo-border);
+				display: inline-block;
+				margin-bottom: 2px;
+			}
+			.node-name {
+				font-size: 0.72rem;
+				font-weight: 900;
+			}
+			.node-specs {
+				font-size: 0.55rem;
+				color: var(--geo-muted);
+				font-family: monospace;
+			}
+
+			.wormhole-vortex-unit {
+				width: 76px;
+				height: 76px;
+				position: relative;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.vortex-rings {
+				position: absolute;
+				border-radius: 50%;
+				border: 2px dashed var(--geo-red);
+			}
+			.ring-1 {
+				width: 100%;
+				height: 100%;
+				animation: geo-spin-slow 8s linear infinite;
+			}
+			.ring-2 {
+				width: 70%;
+				height: 70%;
+				border-color: var(--geo-blue);
+				animation: geo-spin-slow 5s linear infinite reverse;
+			}
+			.vortex-core {
+				position: absolute;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				background: var(--geo-black);
+				color: #ffffff;
+				width: 52px;
+				height: 52px;
+				border-radius: 50%;
+				border: 1.5px solid var(--geo-yellow);
+				z-index: 2;
+				text-align: center;
+			}
+			.vortex-sim-val {
+				font-size: 0.52rem;
+				font-family: monospace;
+				font-weight: 900;
+				color: var(--geo-yellow);
+			}
+			.vortex-lbl {
+				font-size: 0.42rem;
+				font-weight: 900;
+				letter-spacing: 0.05em;
+			}
+
+			/* ── SIMULATION FOOTER HUD CHIPS ── */
+			.sim-footer-hud {
+				display: flex;
+				gap: 6px;
+				border-top: 1.5px solid var(--geo-border);
+				padding-top: 6px;
+				margin-top: 4px;
+				flex-shrink: 0;
+			}
+			.hud-stat-chip {
+				flex: 1;
+				background: #f8fafc;
+				border: 1.2px solid var(--geo-border);
+				border-radius: 6px;
+				padding: 3px 6px;
+				text-align: center;
+			}
+			.hud-lbl {
+				font-size: 0.52rem;
+				font-weight: 800;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+				display: block;
+			}
+			.hud-val {
+				font-size: 0.68rem;
+				font-weight: 900;
+				font-family: monospace;
+				display: block;
+			}
+
+			/* ── RIGHT COLUMN: QUEST HUD CARD ── */
+			.quest-hud-card {
+				background: #ffffff;
+				border: 2px solid var(--geo-border);
+				border-radius: 14px;
+				padding: 12px 14px;
+				box-shadow: 3px 3px 0px var(--geo-border);
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				min-height: 0;
+				box-sizing: border-box;
+				justify-content: space-between;
+				overflow: hidden;
+			}
+
+			.quest-hud-header {
+				border-bottom: 1.5px solid var(--geo-border);
+				padding-bottom: 6px;
+				flex-shrink: 0;
+			}
+			.hud-badge-row {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				margin-bottom: 4px;
+			}
+			.hud-lvl-pill {
+				font-size: 0.62rem;
+				font-weight: 900;
+				background: #ffffff;
+				border: 2px solid var(--geo-black);
+				border-radius: 99px;
+				padding: 1px 8px;
+				box-shadow: 1.5px 1.5px 0px var(--geo-border);
+			}
+			.hud-category-badge {
+				font-size: 0.58rem;
+				font-weight: 900;
+				background: var(--geo-yellow);
+				color: var(--geo-black);
+				border: 1.2px solid var(--geo-border);
+				border-radius: 99px;
+				padding: 1px 7px;
+			}
+
+			.hud-stage-title {
+				font-size: 0.95rem;
+				font-weight: 900;
+				color: var(--geo-black);
+				margin: 0;
+				line-height: 1.2;
+			}
+			.hud-quest-name {
+				font-size: 0.68rem;
+				font-weight: 700;
+				color: var(--geo-muted);
+				margin: 2px 0 0 0;
+			}
+
+			.quest-section-box {
+				margin-top: 6px;
+				flex-shrink: 0;
+			}
+			.quest-sub-label {
+				font-size: 0.58rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+				text-transform: uppercase;
+				letter-spacing: 0.06em;
+				display: block;
+				margin-bottom: 2px;
+			}
+			.quest-objective-p {
+				font-size: 0.72rem;
+				font-weight: 600;
+				color: var(--geo-black);
+				margin: 0;
+				line-height: 1.35;
+			}
+
+			.formula-chip {
+				background: #0f121d;
+				border: 1.5px solid var(--geo-border);
+				border-radius: 6px;
+				padding: 6px 10px;
+				overflow-x: auto;
+				display: flex;
+				align-items: center;
+				min-height: 28px;
+			}
+			.formula-chip .katex {
+				color: #38bdf8;
+				font-size: 0.82rem;
+			}
+			.formula-chip .katex-html {
+				color: #38bdf8;
+			}
+			.formula-chip code {
+				color: #38bdf8;
+				font-size: 0.68rem;
+				font-family: "JetBrains Mono", monospace;
+				font-weight: 700;
+				word-break: break-all;
+			}
+
+			.quest-bullets-list {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+				max-height: 100px;
+				overflow-y: auto;
+			}
+			.quest-bullet-item {
+				display: flex;
+				align-items: flex-start;
+				gap: 6px;
+				font-size: 0.68rem;
+				line-height: 1.3;
+				color: var(--geo-muted);
+				font-weight: 600;
+			}
+			.bullet-dot {
+				width: 5px;
+				height: 5px;
+				border-radius: 50%;
+				margin-top: 5px;
+				flex-shrink: 0;
+			}
+
+			.quest-hud-actions {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				border-top: 1.5px solid var(--geo-border);
+				padding-top: 8px;
+				margin-top: 6px;
+				flex-shrink: 0;
+			}
+			.stage-nav-btn {
+				padding: 6px 12px;
+				font-size: 0.68rem;
+				font-weight: 900;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 99px;
+				cursor: pointer;
+				background: #ffffff;
+				box-shadow: 2px 2px 0px var(--geo-border);
+				font-family: inherit;
+				transition: all 0.15s ease;
+			}
+			.stage-nav-btn:hover:not(:disabled) {
+				background: var(--geo-yellow);
+				transform: translate(-1px, -1px);
+				box-shadow: 3px 3px 0px var(--geo-border);
+			}
+			.stage-nav-btn:disabled {
+				opacity: 0.4;
+				cursor: not-allowed;
+				box-shadow: none;
+			}
+			.stage-nav-btn.next-btn {
+				background: var(--geo-blue);
+				color: #ffffff;
+			}
+			.stage-nav-btn.next-btn:hover {
+				background: var(--geo-black);
+				color: #ffffff;
+			}
+
+			.stage-progress-indicator {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 2px;
+				font-size: 0.58rem;
+				font-weight: 900;
+				color: var(--geo-muted);
+			}
+			.prog-dots {
+				display: flex;
+				gap: 3px;
+			}
+			.prog-dot {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: #cbd5e1;
+				border: 1px solid var(--geo-border);
+			}
+			.prog-dot.done {
+				background: #10b981;
+			}
+			.prog-dot.active {
+				background: var(--geo-yellow);
+				transform: scale(1.2);
+			}
+
+			/* ── GRID OVERVIEW (VIEW MODE 2) ── */
+			.pipeline-grid-view {
+				flex: 1;
+				min-height: 0;
+				overflow-y: auto;
+				display: flex;
+				flex-direction: column;
+			}
+			.pipeline-grid-overview-wrapper {
+				display: flex;
+				flex-direction: column;
+				gap: 10px;
+				height: 100%;
+			}
+			.grid-overview-header {
+				flex-shrink: 0;
+			}
+			.grid-overview-sub {
+				font-size: 0.72rem;
+				font-weight: 600;
+				color: var(--geo-muted);
+				margin: 0;
+			}
+			.pipeline-grid-6cards {
+				display: grid;
+				grid-template-columns: repeat(3, 1fr);
+				gap: 8px;
+				flex: 1;
+			}
+			@media (max-width: 768px) {
+				.pipeline-grid-6cards {
+					grid-template-columns: 1fr;
+				}
+			}
+			.stage-grid-card {
+				background: #ffffff;
+				border: 1.8px solid var(--geo-border);
+				border-radius: 12px;
+				padding: 10px 12px;
+				box-shadow: 2.5px 2.5px 0px var(--geo-border);
+				cursor: pointer;
+				transition: all 0.18s cubic-bezier(0.1, 0.8, 0.2, 1);
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+			}
+			.stage-grid-card:hover {
+				transform: translate(-1.5px, -1.5px);
+				box-shadow: 3.5px 3.5px 0px var(--geo-blue);
+				background: #f8fafc;
+			}
+			.stage-grid-card.current-stage {
+				border-color: var(--geo-blue);
+				box-shadow: 3.5px 3.5px 0px var(--geo-blue);
+			}
+			.grid-card-top {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 4px;
+			}
+			.grid-lvl-badge {
+				font-size: 0.6rem;
+				font-weight: 900;
+				padding: 1px 6px;
+				border-radius: 4px;
+				border: 1.2px solid var(--geo-border);
+			}
+			.grid-xp-badge {
+				font-size: 0.58rem;
+				font-weight: 800;
+				color: var(--geo-muted);
+			}
+			.grid-card-title {
+				font-size: 0.78rem;
+				font-weight: 900;
+				margin: 0 0 2px 0;
+			}
+			.grid-card-desc {
+				font-size: 0.65rem;
+				color: var(--geo-muted);
+				line-height: 1.3;
+				margin: 0 0 6px 0;
+			}
+			.grid-card-metric {
+				font-size: 0.6rem;
+				font-weight: 900;
+				color: var(--geo-blue);
+				background: #f1f5f9;
+				border: 1px solid var(--geo-border);
+				border-radius: 4px;
+				padding: 2px 6px;
+				width: fit-content;
+			}
+			.grid-card-footer {
+				margin-top: 6px;
+				text-align: right;
+			}
+			.grid-jump-hint {
+				font-size: 0.58rem;
+				font-weight: 900;
+				color: var(--geo-black);
 			}
 
 			.hidden {
@@ -1025,7 +2362,7 @@ const clustersCount = clusterSummary.length;
 							</a>
 							<div style="display: flex; flex-direction: column;">
 								<span class="title-tag-pill">
-									★ SPOTIFY SONIC ATLAS ★
+									SPOTIFY SONIC ATLAS
 								</span>
 								<h1 class="bh-title">
 									<span class="title-sonic">Sonic</span>
@@ -1101,58 +2438,52 @@ const clustersCount = clusterSummary.length;
 					<!-- WORKSPACE TABS -->
 					<main class="wbc-workspace">
 						<!-- ── TAB 1: SONIC PERSONAS ── -->
-						<div id="tab-personas" class="tab-content wide-left">
-							<div class="panel">
-								<div class="cluster-detail-card">
-									<div>
+						<div
+							id="tab-personas"
+							class="tab-content wide-left"
+						>
+							<!-- LEFT PANEL: PERSONA ACOUSTIC PROFILE & DISCOGRAPHY -->
+							<div class="panel" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 14px 16px;">
+								<div class="cluster-detail-card" style="display: flex; flex-direction: column; height: 100%; min-height: 0; gap: 8px;">
+									<!-- Top Header + Vibe Tags + Share Badge -->
+									<div class="cluster-hero-top" style="flex-shrink: 0;">
 										<div class="cluster-detail-header">
-											<h3
-												class="panel-header-title"
-												id="cluster-name"
-											>
-												The Disco Dynamo
-											</h3>
-											<span
-												class="cluster-badge"
-												id="cluster-share"
-												>45% share</span
-											>
+											<div style="display: flex; align-items: center; gap: 8px;">
+												<h3 class="panel-header-title" id="cluster-name" style="margin: 0;">
+													Acoustic & Mellow
+												</h3>
+												<div id="persona-vibe-tags"></div>
+											</div>
+											<span class="cluster-badge" id="cluster-share">21% share</span>
 										</div>
-										<p
-											class="cluster-desc"
-											id="cluster-desc"
-										>
-											High energy, danceable pop hits
-										</p>
 
-										<div
-											class="metrics-grid"
-											id="cluster-metrics"
-										>
-											<!-- Dynamic features populated by script -->
+										<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+											<span class="section-title" style="margin-bottom: 0;">Acoustic Fingerprint</span>
+											<button type="button" id="persona-submode-btn" class="plot-toggle-btn" style="padding: 1px 8px; font-size: 0.55rem;">
+												<span>BARS</span>
+											</button>
+										</div>
+
+										<div id="cluster-metrics">
+											<!-- Dynamic radar / metrics populated by PersonasRenderer -->
 										</div>
 									</div>
 
-									<div
-										style="margin-top: 12px; display: flex; flex-direction: column; min-height: 0; flex: 1;"
-									>
-										<span class="section-title"
-											>★ Tracks in Cluster ★</span
-										>
-										<div
-											class="search-box-wrap"
-											style="position: relative; margin-bottom: 6px;"
-										>
+									<!-- Tracks section expanding to fill all remaining vertical space -->
+									<div class="cluster-tracks-section" style="display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden;">
+										<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-shrink: 0;">
+											<span class="section-title" style="margin-bottom: 0;">Tracks</span>
 											<input
 												type="text"
 												id="personas-search"
-												placeholder="Search tracks in cluster..."
-												style="width: 100%; padding: 7px 12px; font-size: 0.74rem; font-weight: 700; background: #ffffff; border: 1.8px solid var(--geo-border); border-radius: 8px; box-sizing: border-box; font-family: inherit; color: var(--geo-text); outline: none; box-shadow: 2px 2px 0px var(--geo-border);"
+												placeholder="Search tracks..."
+												style="width: 140px; padding: 3px 8px; font-size: 0.68rem; font-weight: 700; background: #ffffff; border: 1.5px solid var(--geo-border); border-radius: 6px; box-sizing: border-box; font-family: inherit; color: var(--geo-text); outline: none; box-shadow: 1.5px 1.5px 0px var(--geo-border);"
 											/>
 										</div>
 										<div
 											class="list-scroll"
 											id="cluster-tracks-list"
+											style="flex: 1; min-height: 0; overflow-y: auto;"
 										>
 											<!-- Dynamic tracks in cluster -->
 										</div>
@@ -1160,18 +2491,26 @@ const clustersCount = clusterSummary.length;
 								</div>
 							</div>
 
-							<div class="panel">
-								<span class="section-title">★ Sonic Archetypes ★</span>
-								<p
-									style="font-size: 0.72rem; font-weight: 600; color: var(--geo-muted); margin: 0 0 10px 0; line-height: 1.35;"
-								>
-									Unsupervised AI clustering groups catalog tracks by sonic texture & acoustic vibe.
-								</p>
-								<div
-									class="cluster-rail"
-									id="cluster-rail-list"
-								>
-									<!-- Rail buttons -->
+							<!-- RIGHT PANEL: ARCHETYPES & TRACK PASSPORT -->
+							<div class="panel" style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 14px 16px; justify-content: space-between;">
+								<div>
+									<span class="section-title" style="margin-bottom: 4px;">Sonic Archetypes</span>
+									<div
+										class="cluster-rail"
+										id="cluster-rail-list"
+									>
+										<!-- Rail buttons -->
+									</div>
+								</div>
+
+								<!-- Live Track Inspector Passport HUD -->
+								<div id="persona-track-inspector">
+									<!-- Dynamic Selected Track Passport -->
+								</div>
+
+								<!-- Era Histogram Breakdown -->
+								<div id="persona-era-breakdown">
+									<!-- Dynamic Era Breakdown -->
 								</div>
 							</div>
 						</div>
@@ -1208,7 +2547,7 @@ const clustersCount = clusterSummary.length;
 									style="display: flex; flex-direction: column; height: 100%;"
 								>
 									<span class="section-title"
-										>★ Selected Track HUD ★</span
+										>Selected Track HUD</span
 									>
 									<div style="margin-bottom: 10px; border-bottom: 2px solid var(--geo-border); padding-bottom: 8px;">
 										<h4
@@ -1237,7 +2576,7 @@ const clustersCount = clusterSummary.length;
 										style="flex: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 6px;"
 									>
 										<span class="section-title"
-											>★ Closest Wormholes ★</span
+											>Closest Wormholes</span
 										>
 										<div
 											class="list-scroll"
@@ -1260,7 +2599,7 @@ const clustersCount = clusterSummary.length;
 								style="display: flex; flex-direction: column; height: 100%;"
 							>
 								<span class="section-title"
-									>★ Personal Rating Space ★</span
+									>Personal Rating Space</span
 								>
 								<h3 class="panel-header-title">
 									Album Track Clustering
@@ -1281,7 +2620,7 @@ const clustersCount = clusterSummary.length;
 								style="display: flex; flex-direction: column; gap: 12px; height: 100%; overflow: hidden;"
 							>
 								<span class="section-title"
-									>★ Albums & Bias Breakdown ★</span
+									>Albums & Bias Breakdown</span
 								>
 								<div
 									id="album-cards-container"
@@ -1292,84 +2631,57 @@ const clustersCount = clusterSummary.length;
 							</div>
 						</div>
 
-						<!-- ── TAB 4: ML PIPELINE ── -->
+						<!-- ── TAB 4: ML PIPELINE GAME-STAGE ARENA ── -->
 						<div
 							id="tab-pipeline"
 							class="tab-content full-width hidden"
 						>
 							<div
 								class="panel"
-								style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 22px 26px;"
+								style="display: flex; flex-direction: column; height: 100%; overflow: hidden; padding: 14px 18px;"
 							>
-								<span
-									class="section-title"
-									>★ ML Methodology ★</span
-								>
-								<h3
-									class="panel-header-title"
-									style="font-size: 1.3rem; margin-bottom: 4px;"
-								>
-									Sonic Atlas Machine Learning Architecture
-								</h3>
-								<p
-									style="font-size: 0.74rem; font-weight: 600; color: var(--geo-muted); margin-bottom: 16px; line-height: 1.45;"
-								>
-									Each track is vectorized across 9 audio features. Unsupervised clustering models group acoustic profiles into coherent archetypes without prior genre labels.
-								</p>
-
-								<div class="pipeline-scroll">
-									<!-- STEP 1 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-red);">1</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">1. Data Cleaning & Deduplication</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Remasters and reissues produce redundant entries. Deduplication filters duplicate tracks before clustering to prevent artificial cluster inflation.</p>
+								<div class="pipeline-interactive-root" id="pipeline-interactive-root">
+									<!-- Top Level / Stage Header Bar -->
+									<div class="pipeline-top-header">
+										<div style="display: flex; align-items: center; gap: 8px;">
+											<span class="section-title" style="margin-bottom: 0;">ML PIPELINE FLOW</span>
+											<h3 class="panel-header-title" style="font-size: 1.1rem; margin: 0;">
+												Architecture Pipeline
+											</h3>
+										</div>
+										<div class="pipeline-header-controls">
+											<button type="button" id="pipeline-autoplay-btn" class="pipeline-hud-btn" title="Auto-advance through pipeline stages">
+												<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+												<span>TOUR PIPELINE</span>
+											</button>
+											<button type="button" id="pipeline-view-mode-btn" class="pipeline-hud-btn" title="Toggle between Step Flow View and Architecture Grid Overview">
+												<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+												<span>ARCHITECTURE GRID</span>
+											</button>
 										</div>
 									</div>
 
-									<!-- STEP 2 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-blue);">2</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">2. Power Transformation (Yeo-Johnson)</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Features like speechiness and acousticness are heavily right-skewed. PowerTransformer reshapes distributions toward Gaussian forms, preserving balanced cluster centroids.</p>
+									<!-- Stage Quest Track (Top Level Navigator) -->
+									<div class="pipeline-quest-track" id="pipeline-quest-track">
+										<!-- Populated dynamically by PipelineRenderer.renderQuestTrack -->
+									</div>
+
+									<!-- VIEW MODE 1: Interactive Stage Quest Arena -->
+									<div class="pipeline-quest-view" id="pipeline-quest-view">
+										<!-- Left: Visualization Simulation Graphic -->
+										<div id="pipeline-stage-visualizer" style="height: 100%; min-height: 0;">
+											<!-- Populated dynamically by PipelineRenderer.renderStageGraphic -->
+										</div>
+
+										<!-- Right: Quest Stage HUD Card -->
+										<div id="pipeline-stage-hud" style="height: 100%; min-height: 0;">
+											<!-- Populated dynamically by PipelineRenderer.renderStageHud -->
 										</div>
 									</div>
 
-									<!-- STEP 3 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-yellow); color: var(--geo-black);">3</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">3. K-Selection & GMM Modeling</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Evaluated across silhouette scores, inertia, and AIC/BIC diagnostics. Gaussian Mixture Models fit probabilistic cluster boundaries to represent nuanced song identities.</p>
-										</div>
-									</div>
-
-									<!-- STEP 4 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-black);">4</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">4. Bootstrap Stability Validation</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Adjusted Rand Index (ARI) evaluates consistency across 15 resamples, ensuring mathematical stability rather than accidental artifacts.</p>
-										</div>
-									</div>
-
-									<!-- STEP 5 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-cyan); color: var(--geo-black);">5</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">5. Dimensionality Reduction & Manifold Projection</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">UMAP and t-SNE reduce the 9-dimensional audio space into 2D/3D manifolds for the interactive Music Galaxy visualization.</p>
-										</div>
-									</div>
-
-									<!-- STEP 6 -->
-									<div class="pipeline-card">
-										<div class="pipeline-num" style="background: var(--geo-red);">6</div>
-										<div style="flex: 1;">
-											<h4 style="font-weight: 900; font-size: 0.85rem; color: var(--geo-black); margin: 0 0 4px 0;">6. Cosine Similarity Wormholes</h4>
-											<p style="font-size: 0.72rem; color: var(--geo-muted); margin: 0; line-height: 1.4;">Pairwise cosine metrics on normalized feature spaces uncover cross-era wormholes and sonic sister tracks across albums.</p>
-										</div>
+									<!-- VIEW MODE 2: Full Architecture Grid View (Hidden by default) -->
+									<div class="pipeline-grid-view hidden" id="pipeline-grid-view">
+										<!-- Populated dynamically by PipelineRenderer.renderGridOverview -->
 									</div>
 								</div>
 							</div>
@@ -1410,6 +2722,7 @@ const clustersCount = clusterSummary.length;
 				PersonasRenderer,
 				GalaxyRenderer,
 				RatingRenderer,
+				PipelineRenderer,
 				DotMatrixEngine,
 				SpotifyTab,
 			} from "../lib/spotify";
@@ -1427,10 +2740,12 @@ const clustersCount = clusterSummary.length;
 				const personas = new PersonasRenderer(store, state);
 				const galaxy = new GalaxyRenderer(store, state);
 				const rating = new RatingRenderer(personalRating || []);
+				const pipeline = new PipelineRenderer(store);
 
 				personas.init();
 				galaxy.init();
 				rating.init();
+				pipeline.init(store);
 
 				// ── Tab switching ──
 				const navItems = document.querySelectorAll<HTMLButtonElement>(".nav-item");
@@ -1470,7 +2785,19 @@ const clustersCount = clusterSummary.length;
 								(window as any).Plotly.Plots.resize(gd);
 							}
 						}
+						if (targetTab === SpotifyTab.Pipeline) {
+							pipeline.render();
+						}
 					});
+				});
+
+				// Delegate HUD next/prev button clicks in Tab 4
+				document.getElementById("pipeline-stage-hud")?.addEventListener("click", (e) => {
+					const btn = (e.target as Element).closest<HTMLButtonElement>(".stage-nav-btn");
+					if (!btn) return;
+					const action = btn.dataset.action;
+					if (action === "next") pipeline.nextStage();
+					else if (action === "prev") pipeline.prevStage();
 				});
 
 				// ── Canvas / Zen Mode Toggle ──
@@ -1500,6 +2827,7 @@ const clustersCount = clusterSummary.length;
 				// Render initial view
 				personas.render();
 				rating.render();
+				pipeline.render();
 
 				// Dot matrix background engine
 				const dotBgs = [

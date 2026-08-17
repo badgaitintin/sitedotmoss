@@ -6,4 +6,6 @@ export * from './spotify-state';
 export * from './personas-renderer';
 export * from './galaxy-renderer';
 export * from './rating-renderer';
+export * from './pipeline-data';
+export * from './pipeline-renderer';
 export * from './dot-matrix-engine';
