@@ -1,96 +1,106 @@
 ---
-// AboutModal.astro
+// AboutModal.astro — Business Card Style Glassmorphism Profile Modal
 ---
 
 <!-- ===== ABOUT ME MODAL ===== -->
 <div id="about-modal" class="modal-backdrop" onclick="closeAboutModal(event)" aria-hidden="true">
   
-  <!-- Blurred GIF Background Layer -->
+  <!-- Blurred background -->
   <div class="modal-bg-layer"></div>
   <div class="modal-backdrop-darkener"></div>
 
-  <!-- Dynamic Cursor Light Source Spotlight -->
+  <!-- Dynamic Cursor Spotlight -->
   <div class="cursor-light-source" id="cursor-light"></div>
 
-  <!-- 3D Glass Card with Dynamic Shadow & Refraction -->
-  <div class="modal-card" role="dialog" aria-modal="true" aria-label="About Tinnaphop Sonsang">
+  <!-- Business Card -->
+  <div class="bcard" role="dialog" aria-modal="true" aria-label="About Tinnaphop Sonsang">
 
     <!-- Close button -->
-    <button class="modal-close" onclick="closeAboutModal()" aria-label="Close">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+    <button class="bcard-close" onclick="closeAboutModal()" aria-label="Close">
+      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
     </button>
 
-    <!-- Photo + name header -->
-    <div class="modal-hero">
-      <div class="modal-photo-wrap">
-        <img src="/optimized/profile_photo.webp" alt="Tinnaphop Sonsang" class="modal-photo" width="600" height="300" />
+    <!-- Diagonal specular reflection -->
+    <div class="bcard-sheen"></div>
+
+    <!-- LEFT: Photo Column -->
+    <div class="bcard-photo-col">
+      <div class="photo-frame">
+        <img src="/IMG_1591_2.JPG" alt="" class="photo-blur-bg" aria-hidden="true" />
+        <div class="photo-inner">
+          <img src="/IMG_1591_2.JPG" alt="Tinnaphop Sonsang" class="photo-img" />
+        </div>
+        <div class="photo-glare"></div>
       </div>
-      <div class="modal-hero-text">
-        <h2 class="modal-name">Tinnaphop Sonsang</h2>
-        <p class="modal-handle">@badgaitintin</p>
-        <a href="/cv" class="modal-cv-btn">View Full CV
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      <!-- Socials row under photo -->
+      <div class="bcard-socials">
+        <a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="soc-icon" title="GitHub">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        </a>
+        <a href="https://instagram.com/badgaitintin" target="_blank" rel="noopener" class="soc-icon" title="Instagram">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
+        </a>
+        <a href="https://tiktok.com/@badgaitintin" target="_blank" rel="noopener" class="soc-icon" title="TikTok">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
+        </a>
+        <a href="https://tiktok.com/@badgaitintin_roblox" target="_blank" rel="noopener" class="soc-icon" title="TikTok Gaming">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
         </a>
       </div>
     </div>
 
-    <hr class="modal-divider" />
+    <!-- Vertical Glass Divider -->
+    <div class="bcard-divider"></div>
 
-    <!-- Bio -->
-    <p class="modal-bio">Computer Engineering &amp; AI Graduate. Building things at the intersection of AI and design.</p>
+    <!-- RIGHT: Info Column -->
+    <div class="bcard-info-col">
 
-    <!-- Personal Information -->
-    <div class="modal-personal-info">
-      <div class="info-badge"><strong>DOB:</strong> Jan 13, 2004</div>
-      <div class="info-badge"><strong>Age:</strong> 22</div>
-      <div class="info-badge"><strong>Nationality:</strong> Thai</div>
-      <div class="info-badge"><strong>Religion:</strong> Buddhism</div>
-      <div class="info-badge"><strong>Gender:</strong> Male (LGBTQ+)</div>
-      <div class="info-badge info-badge-full">
-        <strong>Military Status:</strong> Pending Draft
-        <span class="info-subtext">(Eligible for Gender Identity Certificate Exemption for next draft)</span>
+      <!-- Name & Title -->
+      <div class="bcard-identity">
+        <h2 class="bcard-name">Tinnaphop Sonsang</h2>
+        <span class="bcard-handle">@badgaitintin</span>
+        <p class="bcard-title">Computer Engineering &amp; AI Graduate</p>
       </div>
+
+      <!-- Thin separator -->
+      <div class="info-sep"></div>
+
+      <!-- Contact Details -->
+      <div class="bcard-contact">
+        <a href="mailto:tinnaphop.moss@gmail.com" class="ct-row">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
+          <span>tinnaphop.moss@gmail.com</span>
+        </a>
+        <a href="tel:+66649481740" class="ct-row">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16h.27"/></svg>
+          <span>064-948-1740</span>
+        </a>
+      </div>
+
+      <!-- Thin separator -->
+      <div class="info-sep"></div>
+
+      <!-- Personal Info Pills -->
+      <div class="bcard-details">
+        <span class="dtl"><strong>DOB</strong> Jan 13, 2004</span>
+        <span class="dtl"><strong>Age</strong> 22</span>
+        <span class="dtl"><strong>Nationality</strong> Thai</span>
+        <span class="dtl"><strong>Religion</strong> Buddhism</span>
+        <span class="dtl"><strong>Gender</strong> Male (LGBTQ+)</span>
+      </div>
+
+      <!-- CV Button -->
+      <a href="/cv" class="bcard-cv-btn">
+        <span>View Full CV</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+
     </div>
-
-    <!-- Contact Info -->
-    <div class="modal-contact-info">
-      <a href="mailto:tinnaphop.moss@gmail.com" class="contact-row">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>
-        <span>tinnaphop.moss@gmail.com</span>
-      </a>
-      <a href="tel:+66649481740" class="contact-row">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.61 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16h.27"/></svg>
-        <span>064-948-1740</span>
-      </a>
-    </div>
-
-    <hr class="modal-divider" />
-
-    <!-- Socials -->
-    <div class="modal-socials">
-      <a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-        <span>badgaitintin</span>
-      </a>
-      <a href="https://instagram.com/badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
-        <span>badgaitintin</span>
-      </a>
-      <a href="https://tiktok.com/@badgaitintin" target="_blank" rel="noopener" class="modal-social-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-        <span>badgaitintin</span>
-      </a>
-      <a href="https://tiktok.com/@badgaitintin_roblox" target="_blank" rel="noopener" class="modal-social-pill">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"/></svg>
-        <span>badgaitintin_gaming</span>
-      </a>
-    </div>
-
   </div>
 </div>
 
-<style>
-  /* Base Modal Backdrop */
+<style is:global>
+  /* ── Backdrop ── */
   .modal-backdrop {
     position: fixed;
     inset: 0;
@@ -101,131 +111,129 @@
     padding: 16px;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.35s ease;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
   }
-
-  /* Animated GIF Background Layer (frutigif_2.gif) */
   .modal-bg-layer {
     position: absolute;
-    inset: -30px;
+    inset: -40px;
     background-image: url('/optimized/anim_bg_2.webp');
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    filter: blur(5px) brightness(0.85) saturate(1.2);
-    -webkit-filter: blur(5px) brightness(0.85) saturate(1.2);
+    filter: blur(8px) brightness(0.85) saturate(1.3);
     z-index: 1;
     opacity: 0;
-    transition: opacity 0.4s ease, transform 0.6s ease;
-    transform: scale(1.05);
+    transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    transform: scale(1.08);
     pointer-events: none;
   }
-
-  /* Translucent Darkener Overlay for contrast */
   .modal-backdrop-darkener {
     position: absolute;
     inset: 0;
-    background: rgba(15, 23, 42, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: radial-gradient(circle at center, rgba(15, 23, 42, 0.35) 0%, rgba(15, 23, 42, 0.65) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     z-index: 2;
     opacity: 0;
     transition: opacity 0.35s ease;
     pointer-events: none;
   }
-
-  /* Interactive Cursor Light Source Spotlight */
   .cursor-light-source {
     position: absolute;
-    width: 420px;
-    height: 420px;
+    width: 440px;
+    height: 440px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.45) 0%, rgba(190, 242, 100, 0.25) 30%, rgba(255, 255, 255, 0.08) 55%, transparent 70%);
+    background: radial-gradient(circle, rgba(255,255,255,0.45) 0%, rgba(190,242,100,0.22) 30%, transparent 70%);
     pointer-events: none;
     transform: translate(-50%, -50%);
     z-index: 3;
     mix-blend-mode: overlay;
     opacity: 0;
     transition: opacity 0.35s ease;
-    filter: blur(12px);
+    filter: blur(16px);
   }
 
-  .modal-backdrop.is-open {
-    opacity: 1;
-    pointer-events: auto;
-  }
+  .modal-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop.is-open .modal-bg-layer { opacity: 1; transform: scale(1); }
+  .modal-backdrop.is-open .modal-backdrop-darkener { opacity: 1; }
+  .modal-backdrop.is-open .cursor-light-source { opacity: 1; }
 
-  .modal-backdrop.is-open .modal-bg-layer {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  .modal-backdrop.is-open .modal-backdrop-darkener {
-    opacity: 1;
-  }
-
-  .modal-backdrop.is-open .cursor-light-source {
-    opacity: 1;
-  }
-
-  /* Glassmorphism Card (Static - Mobile Responsive) */
-  .modal-card {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0.14) 50%, rgba(255, 255, 255, 0.28) 100%);
-    backdrop-filter: blur(28px) saturate(1.5);
-    -webkit-backdrop-filter: blur(28px) saturate(1.5);
-    border: 1px solid rgba(255, 255, 255, 0.65);
-    border-top: 2.5px solid rgba(255, 255, 255, 0.95);
-    border-left: 1.8px solid rgba(255, 255, 255, 0.8);
-    border-radius: 32px; 
-    box-shadow: 
-      0 35px 60px rgba(0, 0, 0, 0.42), 
-      0 12px 24px rgba(0, 0, 0, 0.2),
-      inset 0 3px 6px rgba(255, 255, 255, 0.95), 
-      inset 0 -4px 14px rgba(0, 0, 0, 0.25),
-      inset 0 0 2px rgba(255, 255, 255, 0.8),
-      0 0 45px rgba(255, 255, 255, 0.2);
-    width: 100%;
-    max-width: 390px;
-    max-height: calc(100vh - 32px);
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
-    padding: 24px 20px 20px 20px;
+  /* ═══════════════════════════════════════════════
+     BUSINESS CARD — Landscape Glass Card
+     ═══════════════════════════════════════════════ */
+  .bcard {
     position: relative;
-    transform: translateY(20px) scale(0.95);
-    transition: transform 0.25s ease-out, opacity 0.25s ease-out;
-    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    width: 100%;
+    max-width: 600px;
+    /* Business card proportions ~1.75:1 */
+    aspect-ratio: 1.75 / 1;
+    max-height: 340px;
     box-sizing: border-box;
+    padding: 0;
+    overflow: hidden;
+
+    background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.52) 0%,
+      rgba(255,255,255,0.18) 35%,
+      rgba(255,255,255,0.28) 100%
+    );
+    backdrop-filter: blur(40px) saturate(210%) contrast(108%);
+    -webkit-backdrop-filter: blur(40px) saturate(210%) contrast(108%);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-top: 2.5px solid rgba(255,255,255,0.97);
+    border-left: 2px solid rgba(255,255,255,0.85);
+    border-radius: 22px;
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.35),
+      0 12px 24px rgba(0,0,0,0.2),
+      inset 0 2px 5px rgba(255,255,255,0.95),
+      inset 0 -2px 10px rgba(0,0,0,0.15),
+      inset 0 0 20px rgba(255,255,255,0.3),
+      0 0 50px rgba(255,255,255,0.15);
+    transform: translateY(20px) scale(0.95) rotateX(2deg);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    z-index: 10;
+    transform-style: preserve-3d;
+    perspective: 800px;
   }
-  .modal-card::-webkit-scrollbar {
-    width: 4px;
-  }
-  .modal-card::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .modal-card::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 99px;
+  .modal-backdrop.is-open .bcard {
+    transform: translateY(0) scale(1) rotateX(0deg);
   }
 
-  .modal-backdrop.is-open .modal-card {
-    transform: translateY(0) scale(1);
-  }
-
-  /* Clean High-Contrast Close Button */
-  .modal-close {
+  /* Specular sheen */
+  .bcard-sheen {
     position: absolute;
-    top: 14px;
-    right: 14px;
-    width: 32px;
-    height: 32px;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(
+      125deg,
+      rgba(255,255,255,0.5) 0%,
+      rgba(255,255,255,0.12) 22%,
+      transparent 50%,
+      rgba(255,255,255,0.06) 78%,
+      rgba(255,255,255,0.2) 100%
+    );
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  /* Close button */
+  .bcard-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    border: 1.5px solid rgba(255, 255, 255, 0.85);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.5) 100%);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), inset 0 1px 2px #ffffff;
+    border: 1.5px solid rgba(255,255,255,0.9);
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25), inset 0 1px 2px #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -234,210 +242,318 @@
     transition: all 0.2s cubic-bezier(0.1, 0.9, 0.2, 1);
     z-index: 25;
   }
-  .modal-close:hover { 
-    background: #ffffff; 
-    color: #000000; 
-    transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35), inset 0 1px 3px #ffffff;
+  .bcard-close:hover {
+    background: #ffffff;
+    transform: scale(1.12) rotate(90deg);
+    box-shadow: 0 5px 16px rgba(0,0,0,0.3), inset 0 1px 2px #fff;
   }
 
-  /* Hero row */
-  .modal-hero {
+  /* ── LEFT: Photo Column ── */
+  .bcard-photo-col {
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-    margin-top: 4px;
-    margin-bottom: 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 190px;
+    min-width: 190px;
+    padding: 18px 14px;
+    box-sizing: border-box;
     position: relative;
-    z-index: 2;
+    z-index: 5;
   }
-  .modal-photo-wrap {
-    width: 100%;
-    aspect-ratio: 1125 / 563;
-    border-radius: 20px;
+
+  /* Photo frame */
+  .photo-frame {
+    width: 130px;
+    height: 170px;
+    border-radius: 16px;
     overflow: hidden;
-    flex-shrink: 0;
-    border: 2px solid rgba(255, 255, 255, 0.85);
-    border-top: 2.5px solid #ffffff;
-    box-shadow: 
-      0 12px 28px rgba(0, 0, 0, 0.2), 
-      inset 0 2px 6px rgba(255, 255, 255, 0.8),
-      inset 0 -3px 8px rgba(0, 0, 0, 0.3);
     position: relative;
-    z-index: 2;
+    border: 2px solid rgba(255,255,255,0.9);
+    border-top: 2.5px solid #fff;
+    box-shadow:
+      0 8px 24px rgba(0,0,0,0.3),
+      inset 0 1px 3px rgba(255,255,255,0.9),
+      0 0 16px rgba(255,255,255,0.15);
+    background: #1e293b;
+    flex-shrink: 0;
   }
-  .modal-photo {
+  .photo-blur-bg {
+    position: absolute;
+    inset: -12px;
+    width: calc(100% + 24px);
+    height: calc(100% + 24px);
+    object-fit: cover;
+    object-position: center 30%;
+    filter: blur(14px) brightness(0.8) saturate(1.4);
+    transform: scale(1.1);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .photo-inner {
+    position: relative;
+    z-index: 3;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    box-sizing: border-box;
   }
-  .modal-hero-text {
+  .photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 10px;
+    display: block;
+  }
+  .photo-glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.06) 40%, transparent 60%, rgba(255,255,255,0.12) 100%);
+    pointer-events: none;
+    z-index: 4;
+  }
+
+  /* Socials under photo */
+  .bcard-socials {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .soc-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.08) 100%);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-top: 1.5px solid rgba(255,255,255,0.85);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1), inset 0 1px 2px rgba(255,255,255,0.5);
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  .soc-icon svg {
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  }
+  .soc-icon:hover {
+    background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.5) 100%);
+    color: #0f172a;
+    text-shadow: none;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15), inset 0 1px 2px #fff, 0 0 8px rgba(255,255,255,0.4);
+  }
+
+  /* ── Vertical Glass Divider ── */
+  .bcard-divider {
+    width: 1px;
+    align-self: stretch;
+    margin: 20px 0;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(255,255,255,0.7) 20%,
+      rgba(255,255,255,0.5) 50%,
+      rgba(255,255,255,0.7) 80%,
+      transparent 100%
+    );
+    box-shadow: 0 0 6px rgba(255,255,255,0.3);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* ── RIGHT: Info Column ── */
+  .bcard-info-col {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    justify-content: center;
+    gap: 8px;
+    padding: 18px 20px 18px 16px;
+    box-sizing: border-box;
+    min-width: 0;
     position: relative;
-    z-index: 2;
+    z-index: 5;
   }
-  .modal-name {
+
+  /* Identity */
+  .bcard-identity {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+  .bcard-name {
     font-size: 18px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    font-weight: 750;
+    letter-spacing: -0.025em;
+    color: #fff;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
     line-height: 1.2;
     margin: 0;
   }
-  .modal-handle {
-    font-size: 11.5px;
-    color: rgba(255, 255, 255, 0.85);
-    letter-spacing: 0.02em;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    margin: 0;
-  }
-  .modal-cv-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-top: 4px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #bef264; /* Vibrant aero lime */
-    text-shadow: 0 1px 3px rgba(0,0,0,0.6);
-    text-decoration: none;
-    transition: transform 0.2s, opacity 0.2s;
-    width: fit-content;
-  }
-  .modal-cv-btn:hover { 
-    opacity: 0.85; 
-    transform: translateX(3px);
-  }
-
-  .modal-divider {
-    border: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-    margin: 0 0 14px 0;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Bio */
-  .modal-bio {
-    font-size: 12.5px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-    margin: 0 0 14px 0;
-    position: relative;
-    z-index: 2;
-  }
-
-  /* Personal Info Badges */
-  .modal-personal-info {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 2;
-  }
-  .info-badge {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.95);
-    background: rgba(255, 255, 255, 0.16);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 12px;
-    padding: 4px 9px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(6px);
-    line-height: 1.4;
-  }
-  .info-badge-full {
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .info-badge strong {
-    color: #bef264; /* Aero lime accent */
-    font-weight: 600;
-  }
-  .info-subtext {
-    color: rgba(255, 255, 255, 0.85);
+  .bcard-handle {
     font-size: 10.5px;
-    display: block;
-    margin-top: 2px;
-    line-height: 1.35;
+    color: rgba(255,255,255,0.8);
+    letter-spacing: 0.04em;
+  }
+  .bcard-title {
+    font-size: 11px;
+    color: rgba(255,255,255,0.93);
+    margin: 2px 0 0;
+    line-height: 1.25;
+    font-weight: 500;
   }
 
-  /* Contact Info */
-  .modal-contact-info {
+  /* Thin separator */
+  .info-sep {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.15) 100%);
+  }
+
+  /* Contact rows */
+  .bcard-contact {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 16px;
-    position: relative;
-    z-index: 2;
+    gap: 4px;
   }
-  .contact-row {
+  .ct-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    font-size: 12.5px;
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    gap: 7px;
+    font-size: 10.5px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
     text-decoration: none;
-    transition: color 0.2s;
-    word-break: break-all;
+    transition: color 0.2s, transform 0.15s;
   }
-  .contact-row svg {
+  .ct-row svg {
     opacity: 0.85;
     flex-shrink: 0;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
   }
-  .contact-row:hover {
+  .ct-row:hover {
     color: #bef264;
-    text-decoration: underline;
+    transform: translateX(2px);
   }
 
-  /* Social Pills */
-  .modal-socials {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    position: relative;
-    z-index: 2;
-  }
-  .modal-social-pill {
+  /* Detail pills */
+  .bcard-details {
     display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .dtl {
+    font-size: 9.5px;
+    color: rgba(255,255,255,0.96);
+    background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 100%);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-top: 1.2px solid rgba(255,255,255,0.7);
+    border-radius: 8px;
+    padding: 2.5px 7px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 1px rgba(255,255,255,0.4);
+    line-height: 1.35;
+  }
+  .dtl strong {
+    color: #bef264;
+    font-weight: 700;
+    margin-right: 3px;
+  }
+
+  /* CV Button */
+  .bcard-cv-btn {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 99px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.15) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-top: 1.5px solid rgba(255, 255, 255, 0.85);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08), inset 0 1px 3px rgba(255, 255, 255, 0.6);
-    text-decoration: none;
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-    font-size: 11px;
-    font-weight: 600;
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  }
-  .modal-social-pill:hover {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.5) 100%);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), inset 0 1px 3px #ffffff;
+    gap: 5px;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: #0f172a;
-    text-shadow: none;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #d9f99d 0%, #bef264 100%);
+    border: 1px solid #fff;
+    box-shadow: 0 3px 10px rgba(190,242,100,0.35), inset 0 1px 2px #fff;
+    border-radius: 99px;
+    padding: 4px 12px;
+    text-decoration: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    width: fit-content;
+    align-self: flex-start;
   }
-  .modal-social-pill svg { opacity: 0.7; flex-shrink: 0; }
+  .bcard-cv-btn:hover {
+    background: #fff;
+    color: #000;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(190,242,100,0.5), inset 0 1px 2px #fff;
+  }
+
+  /* ── Responsive: Mobile stacks vertically ── */
+  @media (max-width: 540px) {
+    .bcard {
+      flex-direction: column;
+      max-width: 340px;
+      aspect-ratio: auto;
+      max-height: none;
+    }
+    .bcard-photo-col {
+      width: 100%;
+      min-width: 0;
+      flex-direction: row;
+      padding: 14px 16px;
+      gap: 10px;
+    }
+    .photo-frame {
+      width: 60px;
+      height: 78px;
+      border-radius: 12px;
+    }
+    .bcard-socials {
+      flex-direction: column;
+      gap: 4px;
+    }
+    .soc-icon {
+      width: 26px;
+      height: 26px;
+    }
+    .soc-icon svg {
+      width: 10px;
+      height: 10px;
+    }
+    .bcard-divider {
+      width: auto;
+      height: 1px;
+      align-self: auto;
+      margin: 0 16px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.7) 20%,
+        rgba(255,255,255,0.5) 50%,
+        rgba(255,255,255,0.7) 80%,
+        transparent 100%
+      );
+    }
+    .bcard-info-col {
+      padding: 10px 16px 14px;
+    }
+  }
 </style>
 
 <script is:inline>
-  // ── About Me Modal ──
   function openAboutModal() {
     const modal = document.getElementById('about-modal');
     if (!modal) return;
@@ -447,8 +563,7 @@
   }
 
   function closeAboutModal(e) {
-    // Close only when clicking backdrop or close button (not the card itself)
-    if (e && e.target && e.target.closest && e.target.closest('.modal-card')) return;
+    if (e && e.target && e.target.closest && e.target.closest('.bcard')) return;
     const modal = document.getElementById('about-modal');
     if (!modal) return;
     modal.classList.remove('is-open');
@@ -456,21 +571,17 @@
     document.body.style.overflow = '';
   }
 
-  // Close on Escape key
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeAboutModal();
   });
 
-  // ── Cursor Light Follower (Static Card Position) ──
   (function initCursorLight() {
     document.addEventListener('DOMContentLoaded', function() {
       const backdrop = document.getElementById('about-modal');
       const cursorLight = document.getElementById('cursor-light');
       if (!backdrop) return;
-
       backdrop.addEventListener('mousemove', function(e) {
         if (!backdrop.classList.contains('is-open')) return;
-
         if (cursorLight) {
           cursorLight.style.left = e.clientX + 'px';
           cursorLight.style.top = e.clientY + 'px';
@@ -479,7 +590,6 @@
     });
   })();
 
-  // Expose to window for onclick handlers
   window.openAboutModal = openAboutModal;
   window.closeAboutModal = closeAboutModal;
 </script>
