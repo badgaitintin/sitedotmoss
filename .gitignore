@@ -34,3 +34,7 @@ tests/spotify.test.ts
 tests/blog.integration.test.ts
 tests/blog.unit.test.ts
 tmp-ref-repo/
+hf_space_pivot
+public/pivotingual-train (1).ipynb
+scripts/extract_nb.py
+scripts/extracted_nb.txt

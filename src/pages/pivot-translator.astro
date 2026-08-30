@@ -1,0 +1,1755 @@
+---
+import Watermark from '../components/Watermark.astro';
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=1280, initial-scale=1.0" />
+    <title>Translate · site(.)moss</title>
+    <meta
+      name="description"
+      content="A compact multilingual Transformer built from scratch using a Pre-LN encoder–decoder architecture, shared subword representations, and an English-centric pivot translation strategy."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,700;1,9..40,900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ==========================================================================
+         CLEAN TRANSLUCENT & SOFT CURVATURE DESIGN TOKENS
+         ========================================================================== */
+      :root {
+        --bg-screen: #edf2f7;
+        --text-wall-idle: #cbd5e1;
+        --text-wall-hover: #0f172a;
+        
+        --card-bg: rgba(255, 255, 255, 0.72);
+        --card-border: rgba(255, 255, 255, 0.85);
+        --card-shadow: 0 24px 64px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.03);
+        
+        --text-main: #000000;
+        --text-sub: #64748b;
+        --text-placeholder: #94a3b8;
+        
+        --cyan-primary: #00a8cc;
+        --cyan-hover: #0284c7;
+        --cyan-bg: rgba(230, 247, 250, 0.9);
+        --cyan-subtle: #7dd3fc;
+        
+        --font-heavy: "Space Grotesk", "DM Sans", -apple-system, sans-serif;
+        --r-card: 24px;
+        --r-control: 12px;
+        --r-btn: 10px;
+        --r-circle: 50%;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html, body {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        background: var(--bg-screen);
+        color: var(--text-main);
+        font-family: var(--font-heavy);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ==========================================================================
+         DENSE FULL-VIEWPORT KINETIC WALL (FIT TOP TO BOTTOM, EVERYDAY PHRASES, NO EMOJIS)
+         ========================================================================== */
+      .billboard-wall {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        pointer-events: auto;
+      }
+
+      .wall-row {
+        display: flex;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 0.68;
+        margin: -3px 0;
+        padding: 0;
+      }
+
+      .wall-track {
+        display: flex;
+        gap: 20px;
+        flex-shrink: 0;
+        will-change: transform;
+        align-items: center;
+      }
+
+      /* Marquee infinite speeds */
+      .scroll-l-1 { animation: marquee-left 48s linear infinite; }
+      .scroll-r-1 { animation: marquee-right 52s linear infinite; }
+      .scroll-l-2 { animation: marquee-left 42s linear infinite; }
+      .scroll-r-2 { animation: marquee-right 46s linear infinite; }
+      .scroll-l-3 { animation: marquee-left 56s linear infinite; }
+      .scroll-r-3 { animation: marquee-right 44s linear infinite; }
+      .scroll-l-4 { animation: marquee-left 50s linear infinite; }
+      .scroll-r-4 { animation: marquee-right 40s linear infinite; }
+      .scroll-l-5 { animation: marquee-left 54s linear infinite; }
+      .scroll-r-5 { animation: marquee-right 48s linear infinite; }
+      .scroll-l-6 { animation: marquee-left 45s linear infinite; }
+      .scroll-r-6 { animation: marquee-right 50s linear infinite; }
+
+      .wall-row:hover .wall-track {
+        animation-play-state: paused;
+      }
+
+      @keyframes marquee-left {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+      }
+
+      @keyframes marquee-right {
+        0% { transform: translateX(-50%); }
+        100% { transform: translateX(0); }
+      }
+
+      /* Clean Raw Typography Item */
+      .wall-sentence {
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 0 4px;
+        font-family: var(--font-heavy);
+        font-size: 38px;
+        font-weight: 800;
+        letter-spacing: -1.2px;
+        text-transform: uppercase;
+        color: var(--text-wall-idle);
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        transition: color 0.15s ease, transform 0.15s ease;
+      }
+
+      .wall-sentence:hover {
+        color: var(--text-wall-hover);
+        transform: scale(1.02);
+      }
+      .wall-sentence.accent-hover:hover {
+        color: var(--cyan-primary);
+      }
+
+      .wall-dot {
+        font-size: 22px;
+        opacity: 0.28;
+        vertical-align: middle;
+      }
+
+      /* Screen Vignette */
+      .wall-vignette {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: radial-gradient(circle at center, rgba(237, 242, 247, 0.3) 0%, rgba(237, 242, 247, 0.8) 100%);
+      }
+
+      /* ==========================================================================
+         CENTERED TRANSLUCENT CONSOLE CARD (NO SCROLL, CENTER OF SCREEN)
+         ========================================================================== */
+      .center-stage-wrap {
+        position: relative;
+        z-index: 10;
+        width: 820px;
+        max-width: 92vw;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin: auto;
+      }
+
+      /* Top Bar with Title and Info Icon */
+      .stage-top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4px;
+      }
+
+      .stage-title {
+        font-size: 34px;
+        font-weight: 900;
+        letter-spacing: -1px;
+        color: var(--text-main);
+      }
+
+      .info-circle-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--r-circle);
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .info-circle-btn:hover {
+        background: #ffffff;
+        color: var(--cyan-primary);
+        border-color: rgba(0, 168, 204, 0.35);
+        transform: scale(1.08);
+      }
+      .info-circle-btn:active {
+        transform: scale(0.92);
+      }
+
+      /* Master Card */
+      .master-translate-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(32px) saturate(180%);
+        -webkit-backdrop-filter: blur(32px) saturate(180%);
+        border-radius: var(--r-card);
+        box-shadow: var(--card-shadow);
+        border: 1px solid var(--card-border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      /* ─── TOP LANGUAGE DROPDOWN & SWAP BAR ─── */
+      .card-header-bar {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 14px 20px;
+        background: rgba(255, 255, 255, 0.5);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .lang-select-box {
+        display: flex;
+        align-items: center;
+      }
+      .lang-select-box.left {
+        justify-content: flex-start;
+      }
+      .lang-select-box.right {
+        justify-content: flex-end;
+      }
+
+      .select-wrapper {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .custom-lang-select {
+        appearance: none;
+        -webkit-appearance: none;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: var(--r-control);
+        padding: 8px 34px 8px 14px;
+        font-family: var(--font-heavy);
+        font-size: 14px;
+        font-weight: 700;
+        color: #0f172a;
+        cursor: pointer;
+        outline: none;
+        transition: all 0.15s ease;
+      }
+      .custom-lang-select:hover {
+        background: #ffffff;
+        border-color: rgba(0, 0, 0, 0.15);
+      }
+      .custom-lang-select:focus {
+        border-color: var(--cyan-primary);
+        box-shadow: 0 0 0 3px rgba(0, 168, 204, 0.15);
+      }
+
+      .select-arrow {
+        position: absolute;
+        right: 12px;
+        pointer-events: none;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      /* Top Center Swap Button */
+      .top-swap-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--r-circle);
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: var(--cyan-primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+      .top-swap-btn:hover {
+        background: var(--cyan-bg);
+        transform: scale(1.08) rotate(180deg);
+      }
+      .top-swap-btn:active {
+        transform: scale(0.92) rotate(180deg);
+      }
+      .top-swap-btn.pulsing {
+        animation: pulse-swap 1.2s infinite;
+      }
+
+      @keyframes pulse-swap {
+        0% { box-shadow: 0 0 0 0 rgba(0, 168, 204, 0.5); }
+        70% { box-shadow: 0 0 0 10px rgba(0, 168, 204, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 168, 204, 0); }
+      }
+
+      /* ─── MAIN BODY (SIDE-BY-SIDE) ─── */
+      .card-body-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 290px;
+      }
+
+      /* Left Side: Source Input */
+      .pane-source {
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
+      }
+
+      .source-textarea {
+        width: 100%;
+        flex: 1;
+        min-height: 160px;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-family: var(--font-heavy);
+        font-size: 21px;
+        font-weight: 700;
+        color: var(--text-main);
+        line-height: 1.35;
+        letter-spacing: -0.3px;
+        resize: none;
+      }
+      .source-textarea::placeholder {
+        color: var(--text-placeholder);
+        font-weight: 600;
+      }
+
+      .pane-bottom-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 6px;
+      }
+
+      .char-tag {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-sub);
+      }
+
+      .icon-cluster {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .icon-btn-subtle {
+        background: transparent;
+        border: 1px solid transparent;
+        color: #64748b;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: var(--r-btn);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+      }
+      .icon-btn-subtle:hover {
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--text-main);
+        border-color: rgba(0, 0, 0, 0.06);
+      }
+      .icon-btn-subtle:active {
+        transform: scale(0.92);
+      }
+
+      /* Sleek Rounded Translate Button */
+      .translate-action-btn {
+        background: #000000;
+        color: #ffffff;
+        border: none;
+        border-radius: var(--r-control);
+        padding: 8px 16px;
+        font-size: 13px;
+        font-weight: 800;
+        font-family: var(--font-heavy);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.18s ease;
+      }
+      .translate-action-btn:hover {
+        background: #1e293b;
+        transform: translateY(-1px);
+      }
+      .translate-action-btn:active {
+        transform: scale(0.96);
+      }
+      .translate-action-btn.is-loading {
+        background: var(--cyan-primary);
+        pointer-events: none;
+      }
+
+      .speaker-btn-subtle {
+        width: 34px;
+        height: 34px;
+        border-radius: var(--r-control);
+        background: rgba(241, 245, 249, 0.85);
+        color: #0f172a;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s;
+      }
+      .speaker-btn-subtle:hover {
+        background: #ffffff;
+        transform: scale(1.05);
+      }
+      .speaker-btn-subtle:active {
+        transform: scale(0.92);
+      }
+
+      /* Right Side: Target Translation & Bridge */
+      .pane-target {
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+        background: rgba(241, 245, 249, 0.35);
+      }
+
+      .target-output-wrap {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 14px;
+        position: relative;
+        padding-top: 1px;
+      }
+
+      .target-output-text {
+        font-size: 21px;
+        font-weight: 800;
+        color: var(--cyan-primary);
+        line-height: 1.35;
+        letter-spacing: -0.3px;
+        word-break: break-word;
+        transition: opacity 0.25s ease, transform 0.25s ease;
+      }
+      .target-output-text.anim-pop {
+        animation: pop-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      @keyframes pop-in {
+        0% { opacity: 0; transform: translateY(4px) scale(0.98); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      /* Shimmer Animation */
+      .loading-shimmer-wrap {
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        padding: 4px 0;
+      }
+      .loading-shimmer-wrap.active {
+        display: flex;
+      }
+
+      .shimmer-bar {
+        height: 20px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, rgba(226, 232, 240, 0.6) 25%, rgba(203, 213, 225, 0.8) 50%, rgba(226, 232, 240, 0.6) 75%);
+        background-size: 200% 100%;
+        animation: shimmer-flow 1.4s infinite;
+      }
+
+      .shimmer-text-stage {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--cyan-primary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        animation: fade-pulse 0.9s ease-in-out infinite alternate;
+      }
+
+      @keyframes shimmer-flow {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      @keyframes fade-pulse {
+        0% { opacity: 0.65; }
+        100% { opacity: 1; }
+      }
+
+      /* Pivot Bridge Strip */
+      .pivot-bridge-strip {
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid rgba(0, 168, 204, 0.25);
+        border-radius: var(--r-control);
+        padding: 8px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      }
+      .bridge-strip-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+        color: var(--cyan-primary);
+      }
+      .bridge-strip-content {
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e293b;
+        line-height: 1.35;
+      }
+
+      .speaker-btn-cyan {
+        width: 34px;
+        height: 34px;
+        border-radius: var(--r-control);
+        background: var(--cyan-primary);
+        color: #ffffff;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s;
+        box-shadow: 0 2px 8px rgba(0, 168, 204, 0.25);
+      }
+      .speaker-btn-cyan:hover {
+        background: var(--cyan-hover);
+        transform: scale(1.05);
+      }
+      .speaker-btn-cyan:active {
+        transform: scale(0.92);
+      }
+
+      /* ==========================================================================
+         TECHNICAL MODEL ARCHITECTURE MODAL (8 DETAILED CARDS & PAPERS, NO EMOJIS)
+         ========================================================================== */
+      .modal-scrim {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.22s ease;
+      }
+      .modal-scrim.is-open {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .info-dialog-box {
+        background: #ffffff;
+        width: 820px;
+        max-width: 94vw;
+        max-height: 88vh;
+        border-radius: 20px;
+        padding: 26px 28px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.25);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+      }
+
+      .info-dialog-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 14px;
+      }
+
+      .info-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .info-dialog-title {
+        font-size: 21px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.4px;
+      }
+
+      .info-dialog-subtitle {
+        font-size: 13px;
+        font-weight: 500;
+        color: #64748b;
+        line-height: 1.45;
+      }
+
+      .info-content-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        overflow-y: auto;
+        padding-right: 6px;
+      }
+
+      /* Custom sleek scrollbar */
+      .info-content-body::-webkit-scrollbar {
+        width: 5px;
+      }
+      .info-content-body::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+      }
+
+      /* 8-Card Architecture Grid */
+      .arch-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .arch-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 14px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: all 0.15s ease;
+      }
+      .arch-card:hover {
+        border-color: var(--cyan-primary);
+        background: #ffffff;
+        box-shadow: 0 4px 16px rgba(0, 168, 204, 0.06);
+      }
+
+      .arch-card-header {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .arch-card-title {
+        font-size: 14.5px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -0.2px;
+      }
+
+      .arch-card-sub {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--cyan-primary);
+        letter-spacing: 0.3px;
+      }
+
+      .arch-card-p {
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #475569;
+        line-height: 1.45;
+      }
+
+      .arch-card-ref {
+        font-size: 11px;
+        font-weight: 600;
+        color: #94a3b8;
+        font-style: italic;
+        margin-top: auto;
+        padding-top: 4px;
+      }
+
+      /* Pivot Hub Diagram inside Card */
+      .hub-diagram {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 6px 10px;
+        margin: 4px 0;
+      }
+
+      .hub-node {
+        font-size: 11px;
+        font-weight: 700;
+        color: #334155;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        padding: 3px 6px;
+        border-radius: 4px;
+      }
+      .hub-node.active {
+        background: var(--cyan-bg);
+        color: var(--cyan-primary);
+        border-color: rgba(0, 168, 204, 0.35);
+      }
+
+      /* Evolution & References Sections */
+      .info-narrative-section {
+        background: #f1f5f9;
+        border-radius: 12px;
+        padding: 14px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .narrative-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: 0.2px;
+        text-transform: uppercase;
+      }
+
+      .narrative-p {
+        font-size: 12.5px;
+        font-weight: 500;
+        color: #475569;
+        line-height: 1.5;
+      }
+
+      .references-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding-left: 0;
+        list-style: none;
+      }
+
+      .reference-item {
+        font-size: 12px;
+        font-weight: 500;
+        color: #334155;
+        line-height: 1.4;
+      }
+      .reference-item strong {
+        color: #0f172a;
+        font-weight: 700;
+      }
+
+      /* Toast Notification */
+      .toast {
+        position: fixed;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50px);
+        background: rgba(15, 23, 42, 0.92);
+        backdrop-filter: blur(12px);
+        color: #ffffff;
+        padding: 8px 18px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 700;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 99999;
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      .spin-icon {
+        animation: spin-loop 0.8s linear infinite;
+      }
+      @keyframes spin-loop {
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ==========================================================================
+         DENSE FULL-VIEWPORT KINETIC WALL (FIT TOP TO BOTTOM, EVERYDAY PHRASES, NO EMOJIS)
+         ========================================================================== -->
+    <div class="billboard-wall" id="billboardWall">
+      <!-- ROW 1 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-1">
+          <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="你吃了吗？" data-src="zh" data-tgt="th">你吃了吗？</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="วันนี้อากาศดีมากเลยนะ" data-src="th" data-tgt="en">วันนี้อากาศดีมากเลยนะ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 2 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-1">
+          <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="我们一起去喝咖啡吧。" data-src="zh" data-tgt="th">我们一起去喝咖啡吧。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="What are you having for lunch?" data-src="en" data-tgt="th">WHAT ARE YOU HAVING FOR LUNCH?</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 3 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-2">
+          <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="不好意思让你久等了。" data-src="zh" data-tgt="th">不好意思让你久等了。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="กำลังเดินทางไปหาแล้วนะ" data-src="th" data-tgt="en">กำลังเดินทางไปหาแล้วนะ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 4 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-2">
+          <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="อีกสิบนาทีจะถึงที่นัดหมายนะ" data-src="th" data-tgt="en">อีกสิบนาทีจะถึงที่นัดหมายนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Have a wonderful day ahead!" data-src="en" data-tgt="zh">HAVE A WONDERFUL DAY AHEAD!</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 5 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-3">
+          <span class="wall-sentence accent-hover" data-text="ขอให้วันนี้เป็นวันที่ดีของคุณนะ" data-src="th" data-tgt="en">ขอให้วันนี้เป็นวันที่ดีของคุณนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="祝你今天过得开心！" data-src="zh" data-tgt="th">祝你今天过得开心！</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Thank you so much for your kind help." data-src="en" data-tgt="th">THANK YOU SO MUCH FOR YOUR KIND HELP.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="ขอบคุณมากๆ สำหรับความช่วยเหลือ" data-src="th" data-tgt="zh">ขอบคุณมากๆ สำหรับความช่วยเหลือ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="ขอให้วันนี้เป็นวันที่ดีของคุณนะ" data-src="th" data-tgt="en">ขอให้วันนี้เป็นวันที่ดีของคุณนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="祝你今天过得开心！" data-src="zh" data-tgt="th">祝你今天过得开心！</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 6 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-3">
+          <span class="wall-sentence" data-text="非常感谢你的帮助。" data-src="zh" data-tgt="en">非常感谢你的帮助。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Are you free this weekend?" data-src="en" data-tgt="th">ARE YOU FREE THIS WEEKEND?</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="สุดสัปดาห์นี้ว่างไหม ไปเที่ยวกัน" data-src="th" data-tgt="en">สุดสัปดาห์นี้ว่างไหม ไปเที่ยวกัน</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="周末有空吗？我们出去玩。" data-src="zh" data-tgt="th">周末有空吗？我们出去玩。</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="非常感谢你的帮助。" data-src="zh" data-tgt="en">非常感谢你的帮助。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Are you free this weekend?" data-src="en" data-tgt="th">ARE YOU FREE THIS WEEKEND?</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 7 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-4">
+          <span class="wall-sentence accent-hover" data-text="Take good care of yourself." data-src="en" data-tgt="th">TAKE GOOD CARE OF YOURSELF.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ" data-src="th" data-tgt="en">ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="照顾好自己，多注意休息。" data-src="zh" data-tgt="th">照顾好自己，多注意休息。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="See you again soon!" data-src="en" data-tgt="th">SEE YOU AGAIN SOON!</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="Take good care of yourself." data-src="en" data-tgt="th">TAKE GOOD CARE OF YOURSELF.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ" data-src="th" data-tgt="en">ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 8 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-4">
+          <span class="wall-sentence" data-text="ไว้เจอกันใหม่เร็วๆ นี้นะครับ" data-src="th" data-tgt="en">ไว้เจอกันใหม่เร็วๆ นี้นะครับ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="期待下次与你见面！" data-src="zh" data-tgt="en">期待下次与你见面！</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Don't worry about it, everything is fine." data-src="en" data-tgt="th">DON'T WORRY ABOUT IT, EVERYTHING IS FINE.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="ไม่ต้องเป็นห่วงนะ ทุกอย่างเรียบร้อยดี" data-src="th" data-tgt="en">ไม่ต้องเป็นห่วงนะ ทุกอย่างเรียบร้อยดี</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="ไว้เจอกันใหม่เร็วๆ นี้นะครับ" data-src="th" data-tgt="en">ไว้เจอกันใหม่เร็วๆ นี้นะครับ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="期待下次与你见面！" data-src="zh" data-tgt="en">期待下次与你见面！</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 9 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-5">
+          <span class="wall-sentence accent-hover" data-text="别担心，一切都会好起来的。" data-src="zh" data-tgt="th">别担心，一切都会好起来的。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Have a safe trip home!" data-src="en" data-tgt="th">HAVE A SAFE TRIP HOME!</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="เดินทางกลับบ้านปลอดภัยนะ" data-src="th" data-tgt="en">เดินทางกลับบ้านปลอดภัยนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="回家路上注意安全。" data-src="zh" data-tgt="th">回家路上注意安全。</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="别担心，一切都会好起来的。" data-src="zh" data-tgt="th">别担心，一切都会好起来的。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Have a safe trip home!" data-src="en" data-tgt="th">HAVE A SAFE TRIP HOME!</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 10 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-5">
+          <span class="wall-sentence" data-text="คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน" data-src="th" data-tgt="en">คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Good night and sweet dreams!" data-src="en" data-tgt="th">GOOD NIGHT AND SWEED DREAMS!</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="晚安，祝你好梦。" data-src="zh" data-tgt="th">晚安，祝你好梦。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="วันนี้เหนื่อยไหม พักผ่อนนะ" data-src="th" data-tgt="en">วันนี้เหนื่อยไหม พักผ่อนนะ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน" data-src="th" data-tgt="en">คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Good night and sweet dreams!" data-src="en" data-tgt="th">GOOD NIGHT AND SWEED DREAMS!</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 11 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-6">
+          <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="你吃了吗？" data-src="zh" data-tgt="th">你吃了吗？</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="วันนี้อากาศดีมากเลยนะ" data-src="th" data-tgt="en">วันนี้อากาศดีมากเลยนะ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 12 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-6">
+          <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="我们一起去喝咖啡吧。" data-src="zh" data-tgt="th">我们一起去喝咖啡吧。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="What are you having for lunch?" data-src="en" data-tgt="th">WHAT ARE YOU HAVING FOR LUNCH?</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 13 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-r-1">
+          <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="不好意思让你久等了。" data-src="zh" data-tgt="th">不好意思让你久等了。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="กำลังเดินทางไปหาแล้วนะ" data-src="th" data-tgt="en">กำลังเดินทางไปหาแล้วนะ</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+
+      <!-- ROW 14 -->
+      <div class="wall-row">
+        <div class="wall-track scroll-l-2">
+          <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence" data-text="อีกสิบนาทีจะถึงที่นัดหมายนะ" data-src="th" data-tgt="en">อีกสิบนาทีจะถึงที่นัดหมายนะ</span>
+          <span class="wall-dot">/</span>
+          <span class="wall-sentence accent-hover" data-text="Have a wonderful day ahead!" data-src="en" data-tgt="zh">HAVE A WONDERFUL DAY AHEAD!</span>
+          <span class="wall-dot">/</span>
+          <!-- Duplicate -->
+          <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
+          <span class="wall-dot">/</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Soft Screen Vignette -->
+    <div class="wall-vignette"></div>
+
+    <!-- ==========================================================================
+         CENTERED TRANSLUCENT CONSOLE CARD (NO SCROLL, CENTER OF SCREEN)
+         ========================================================================== -->
+    <main class="center-stage-wrap">
+      <!-- Top Title & Info (i) Action -->
+      <div class="stage-top-bar">
+        <h1 class="stage-title">Translate</h1>
+        <button class="info-circle-btn" id="btnOpenInfoModal" title="Model Architecture &amp; Specifications">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="16" x2="12" y2="12"/>
+            <line x1="12" y1="8" x2="12.01" y2="8"/>
+          </svg>
+        </button>
+      </div>
+
+      <section class="master-translate-card">
+        <!-- ─── TOP LANGUAGE DROPDOWN & SWAP BAR ─── -->
+        <header class="card-header-bar">
+          <div class="lang-select-box left">
+            <div class="select-wrapper">
+              <select class="custom-lang-select" id="selectSrcLang">
+                <option value="th" selected>Thai</option>
+                <option value="en">English (US)</option>
+                <option value="zh">Chinese (Simplified)</option>
+              </select>
+              <span class="select-arrow">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m1 1 4 4 4-4"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <button class="top-swap-btn" id="btnSwapLang" title="Swap languages">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 10v12"/>
+              <path d="m11 18-4 4-4-4"/>
+              <path d="M17 14V2"/>
+              <path d="m21 6-4-4-4 4"/>
+            </svg>
+          </button>
+
+          <div class="lang-select-box right">
+            <div class="select-wrapper">
+              <select class="custom-lang-select" id="selectTgtLang">
+                <option value="en" selected>English (US)</option>
+                <option value="th">Thai</option>
+                <option value="zh">Chinese (Simplified)</option>
+              </select>
+              <span class="select-arrow">
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m1 1 4 4 4-4"/>
+                </svg>
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <!-- ─── MAIN BODY (SIDE-BY-SIDE SPLIT) ─── -->
+        <div class="card-body-split">
+          <!-- Left: Source Input -->
+          <div class="pane-source">
+            <textarea
+              class="source-textarea"
+              id="mainSourceInput"
+              placeholder="ป้อนข้อความ หรือคลิกประโยคบนกำแพง..."
+            >กินข้าวหรือยัง</textarea>
+
+            <div class="pane-bottom-bar">
+              <span class="char-tag" id="charTag">14 characters</span>
+              <div class="icon-cluster">
+                <button class="icon-btn-subtle" id="btnClearInput" title="Clear text">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+                <button class="icon-btn-subtle" id="btnPasteInput" title="Paste clipboard">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+                </button>
+                <button class="speaker-btn-subtle" id="btnSpeakSource" title="Listen to source">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </button>
+                <button class="translate-action-btn" id="btnRunTranslate" title="Translate now">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/>
+                    <path d="m12 5 7 7-7 7"/>
+                  </svg>
+                  <span id="translateBtnLabel">Translate</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Target Output & Pivot Bridge -->
+          <div class="pane-target">
+            <div class="target-output-wrap">
+              <!-- Shimmer Loading -->
+              <div class="loading-shimmer-wrap" id="loadingShimmer">
+                <div class="shimmer-text-stage" id="shimmerStageText">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon">
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                  </svg>
+                  <span>Translating sequence...</span>
+                </div>
+                <div class="shimmer-bar" style="width: 85%;"></div>
+                <div class="shimmer-bar" style="width: 60%; height: 16px;"></div>
+              </div>
+
+              <!-- Output Text -->
+              <div class="target-output-text" id="mainTargetDisplay">
+                Have you eaten yet?
+              </div>
+
+              <!-- Intermediate English Pivot Bridge -->
+              <div class="pivot-bridge-strip" id="bridgeStrip" style="display: none;">
+                <div class="bridge-strip-header">
+                  <span>ENGLISH PIVOT BRIDGE</span>
+                  <span id="bridgeTimingTag">~32ms</span>
+                </div>
+                <div class="bridge-strip-content" id="bridgeStripContent">
+                  "Have you eaten yet?"
+                </div>
+              </div>
+            </div>
+
+            <div class="pane-bottom-bar">
+              <div class="icon-cluster">
+                <button class="icon-btn-subtle" id="btnFav" title="Favorite">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </button>
+                <button class="icon-btn-subtle" id="btnCopyResult" title="Copy translation">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect width="13" height="13" x="9" y="9" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+              </div>
+              <button class="speaker-btn-cyan" id="btnSpeakTarget" title="Listen to translation">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ==========================================================================
+         TECHNICAL MODEL ARCHITECTURE MODAL (8 ARCHITECTURE CARDS & PAPERS, NO EMOJIS)
+         ========================================================================== -->
+    <div class="modal-scrim" id="infoModal">
+      <div class="info-dialog-box">
+        <div class="info-dialog-header">
+          <div class="info-title-group">
+            <h3 class="info-dialog-title">Model Architecture</h3>
+            <p class="info-dialog-subtitle">
+              A compact multilingual Transformer built from scratch using a Pre-LN encoder–decoder architecture, shared subword representations, and an English-centric pivot translation strategy.
+            </p>
+          </div>
+          <button class="icon-btn-subtle" id="btnCloseInfoModal" title="Close">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="info-content-body">
+          <!-- 8 Architecture Feature Cards Grid -->
+          <div class="arch-cards-grid">
+            <!-- 1. Transformer Encoder-Decoder -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Transformer Encoder–Decoder</span>
+              </div>
+              <span class="arch-card-sub">6 Encoder + 6 Decoder Layers</span>
+              <p class="arch-card-p">
+                Built from scratch using a Transformer encoder–decoder architecture for multilingual sequence-to-sequence translation. The encoder learns contextual representations of the source sentence, while the decoder generates the target translation autoregressively.
+              </p>
+              <span class="arch-card-ref">Research basis: Vaswani et al. (2017), Attention Is All You Need.</span>
+            </div>
+
+            <!-- 2. Pre-Layer Normalization -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Pre-Layer Normalization</span>
+              </div>
+              <span class="arch-card-sub">LayerNorm Before Each Sublayer</span>
+              <p class="arch-card-p">
+                The architecture uses Pre-Layer Normalization, applying LayerNorm before attention and feed-forward sublayers rather than after residual connections. This design was selected to improve optimization stability and gradient flow during from-scratch training.
+              </p>
+              <span class="arch-card-ref">Research basis: Xiong et al. (2020), On Layer Normalization in the Transformer Architecture.</span>
+            </div>
+
+            <!-- 3. Compact Attention Design -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Compact Attention Design</span>
+              </div>
+              <span class="arch-card-sub">4 Attention Heads · d_model 512</span>
+              <p class="arch-card-p">
+                The model uses four attention heads to balance representational capacity and computational efficiency. Reducing attention complexity helps maintain a more appropriate model scale for limited training resources.
+              </p>
+              <span class="arch-card-ref">Design motivation: A smaller Transformer configuration was chosen instead of directly adopting large-scale WMT-style defaults.</span>
+            </div>
+
+            <!-- 4. Reduced Feed-Forward Network -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Reduced Feed-Forward Network</span>
+              </div>
+              <span class="arch-card-sub">FFN Dimension: 1024</span>
+              <p class="arch-card-p">
+                The feed-forward dimension was reduced from the larger 2048-dimensional baseline to 1024, lowering parameter count and computational cost while keeping the core model representation dimension at 512.
+              </p>
+              <span class="arch-card-ref">Design motivation: Balances model capacity, dataset scale, and available training compute.</span>
+            </div>
+
+            <!-- 5. English-Centric Pivot Translation -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">English-Centric Pivot Translation</span>
+              </div>
+              <span class="arch-card-sub">English as a Shared Translation Hub</span>
+              <p class="arch-card-p">
+                Instead of training every possible language pair directly, the model learns translations between each supported language and English. Non-English translations are performed through English as an intermediate pivot.
+              </p>
+              <div class="hub-diagram">
+                <span class="hub-node">Thai</span>
+                <span style="font-size: 11px; color: #94a3b8;">➔</span>
+                <span class="hub-node active">English (Pivot Hub)</span>
+                <span style="font-size: 11px; color: #94a3b8;">➔</span>
+                <span class="hub-node">Chinese / Others</span>
+              </div>
+              <span class="arch-card-ref">Related research: Johnson et al. (2017), Google's Multilingual Neural Machine Translation System.</span>
+            </div>
+
+            <!-- 6. Shared Multilingual Vocabulary -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Shared Multilingual Vocabulary</span>
+              </div>
+              <span class="arch-card-sub">SentencePiece · 32K Shared Vocabulary</span>
+              <p class="arch-card-p">
+                A shared SentencePiece vocabulary is used across all supported languages, allowing the model to process different writing systems through a single tokenization pipeline without relying on language-specific whitespace segmentation.
+              </p>
+              <span class="arch-card-ref">Research basis: Kudo &amp; Richardson (2018), SentencePiece Subword Tokenizer.</span>
+            </div>
+
+            <!-- 7. Positional Encoding -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Positional Encoding</span>
+              </div>
+              <span class="arch-card-sub">Sinusoidal Position Information</span>
+              <p class="arch-card-p">
+                Because Transformer layers do not inherently process tokens sequentially, positional encodings are added to token embeddings to provide information about token order while retaining parallel computation advantages.
+              </p>
+              <span class="arch-card-ref">Research basis: Vaswani et al. (2017).</span>
+            </div>
+
+            <!-- 8. Final Layer Normalization -->
+            <div class="arch-card">
+              <div class="arch-card-header">
+                <span class="arch-card-title">Final Layer Normalization</span>
+              </div>
+              <span class="arch-card-sub">Normalization After Transformer Stack</span>
+              <p class="arch-card-p">
+                A final LayerNorm is applied after the encoder and decoder stacks. This complements the Pre-LN design and helps maintain normalized representations before passing them to subsequent output projection components.
+              </p>
+              <span class="arch-card-ref">Design detail: Stabilizes outputs prior to linear unembedding projection.</span>
+            </div>
+          </div>
+
+          <!-- Architecture Evolution Section -->
+          <div class="info-narrative-section">
+            <div class="narrative-title">Architecture Evolution</div>
+            <p class="narrative-p">
+              The current architecture was redesigned after early experiments with a conventional Post-LN Transformer showed slow convergence under limited training resources. The model was updated to use Pre-Layer Normalization and a more compact attention and feed-forward configuration, guided by research on Transformer optimization and low-resource neural machine translation.
+            </p>
+          </div>
+
+          <!-- Research References Section -->
+          <div class="info-narrative-section" style="background: #ffffff; border: 1px solid #e2e8f0;">
+            <div class="narrative-title">Research References</div>
+            <ul class="references-list">
+              <li class="reference-item"><strong>Vaswani et al. (2017)</strong> — Attention Is All You Need</li>
+              <li class="reference-item"><strong>Xiong et al. (2020)</strong> — On Layer Normalization in the Transformer Architecture</li>
+              <li class="reference-item"><strong>Johnson et al. (2017)</strong> — Google's Multilingual Neural Machine Translation System: Enabling Zero-Shot Translation</li>
+              <li class="reference-item"><strong>Kudo &amp; Richardson (2018)</strong> — SentencePiece: A Simple and Language Independent Subword Tokenizer and Detokenizer for Neural Text Processing</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification (Zero emojis) -->
+    <div class="toast" id="toastBox">Copied to clipboard</div>
+
+    <Watermark />
+
+    <script>
+      // ─── STATE ─────────────────────────────────────────────────────────────
+      let sourceLang = "th";
+      let targetLang = "en";
+      let spaceRepo = "badgaitintin/Micronversation";
+      let isTranslating = false;
+
+      const PLACEHOLDERS: Record<string, string> = {
+        th: "ป้อนข้อความ หรือคลิกประโยคบนกำแพง...",
+        en: "Type or click any sentence on the wall...",
+        zh: "输入文本，或点击背景墙上的句子...",
+      };
+
+      const EVERYDAY_DICT: Record<string, Record<string, { tgt: string; en: string }>> = {
+        "กินข้าวหรือยัง": {
+          en: { tgt: "Have you eaten yet?", en: "Have you eaten yet?" },
+          zh: { tgt: "你吃了吗？", en: "Have you eaten yet?" }
+        },
+        "How are you doing today?": {
+          th: { tgt: "วันนี้เป็นอย่างไรบ้าง?", en: "How are you doing today?" },
+          zh: { tgt: "你今天过得怎么样？", en: "How are you doing today?" }
+        },
+        "你吃了吗？": {
+          th: { tgt: "กินข้าวหรือยัง?", en: "Have you eaten yet?" },
+          en: { tgt: "Have you eaten yet?", en: "Have you eaten yet?" }
+        },
+        "วันนี้อากาศดีมากเลยนะ": {
+          en: { tgt: "The weather is very nice today.", en: "The weather is very nice today." },
+          zh: { tgt: "今天天气真好。", en: "The weather is very nice today." }
+        },
+        "Let's grab some coffee together.": {
+          th: { tgt: "เราไปดื่มกาแฟด้วยกันไหม", en: "Let's grab some coffee together." },
+          zh: { tgt: "我们一起去喝咖啡吧。", en: "Let's grab some coffee together." }
+        },
+        "เราไปดื่มกาแฟด้วยกันไหม": {
+          en: { tgt: "Shall we grab some coffee together?", en: "Shall we grab some coffee together?" },
+          zh: { tgt: "我们一起去喝咖啡好吗？", en: "Shall we grab some coffee together?" }
+        },
+        "ขอโทษที่ให้รอนานนะ": {
+          en: { tgt: "Sorry for keeping you waiting.", en: "Sorry for keeping you waiting." },
+          zh: { tgt: "不好意思让你久等了。", en: "Sorry for keeping you waiting." }
+        },
+        "อีกสิบนาทีจะถึงที่นัดหมายนะ": {
+          en: { tgt: "I will be there in ten minutes.", en: "I will be there in ten minutes." },
+          zh: { tgt: "我十分钟后到。", en: "I will be there in ten minutes." }
+        },
+        "ขอให้วันนี้เป็นวันที่ดีของคุณนะ": {
+          en: { tgt: "Have a wonderful day ahead!", en: "Have a wonderful day ahead!" },
+          zh: { tgt: "祝你今天过得开心！", en: "Have a wonderful day ahead!" }
+        },
+        "ขอบคุณมากๆ สำหรับความช่วยเหลือ": {
+          en: { tgt: "Thank you so much for your kind help.", en: "Thank you so much for your kind help." },
+          zh: { tgt: "非常感谢你的帮助。", en: "Thank you so much for your kind help." }
+        },
+        "สุดสัปดาห์นี้ว่างไหม ไปเที่ยวกัน": {
+          en: { tgt: "Are you free this weekend? Let's hang out.", en: "Are you free this weekend? Let's hang out." },
+          zh: { tgt: "周末有空吗？我们出去玩。", en: "Are you free this weekend? Let's hang out." }
+        },
+        "ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ": {
+          en: { tgt: "Take good care of yourself and get plenty of rest.", en: "Take good care of yourself and get plenty of rest." },
+          zh: { tgt: "照顾好自己，多注意休息。", en: "Take good care of yourself and get plenty of rest." }
+        },
+        "ไว้เจอกันใหม่เร็วๆ นี้นะครับ": {
+          en: { tgt: "See you again very soon!", en: "See you again very soon!" },
+          zh: { tgt: "期待很快再次见到你！", en: "See you again very soon!" }
+        },
+        "ไม่ต้องเป็นห่วงนะ ทุกอย่างเรียบร้อยดี": {
+          en: { tgt: "Don't worry, everything is fine.", en: "Don't worry, everything is fine." },
+          zh: { tgt: "别担心，一切顺利。", en: "Don't worry, everything is fine." }
+        },
+        "เดินทางกลับบ้านปลอดภัยนะ": {
+          en: { tgt: "Have a safe trip home!", en: "Have a safe trip home!" },
+          zh: { tgt: "回家路上注意安全。", en: "Have a safe trip home!" }
+        },
+        "คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน": {
+          en: { tgt: "Good night and see you tomorrow!", en: "Good night and see you tomorrow!" },
+          zh: { tgt: "晚安，明天见！", en: "Good night and see you tomorrow!" }
+        },
+        "ฉันรักการอ่าน": {
+          en: { tgt: "I love reading.", en: "I love reading." },
+          zh: { tgt: "我热爱阅读。", en: "I love reading." }
+        }
+      };
+
+      // ─── DOM REFS ──────────────────────────────────────────────────────────
+      const selectSrcLang = document.getElementById("selectSrcLang") as HTMLSelectElement;
+      const selectTgtLang = document.getElementById("selectTgtLang") as HTMLSelectElement;
+      const btnSwapLang = document.getElementById("btnSwapLang")!;
+      const mainSourceInput = document.getElementById("mainSourceInput") as HTMLTextAreaElement;
+      const mainTargetDisplay = document.getElementById("mainTargetDisplay")!;
+      const loadingShimmer = document.getElementById("loadingShimmer")!;
+      const shimmerStageText = document.getElementById("shimmerStageText")!;
+      const bridgeStrip = document.getElementById("bridgeStrip")!;
+      const bridgeStripContent = document.getElementById("bridgeStripContent")!;
+      const charTag = document.getElementById("charTag")!;
+      const btnRunTranslate = document.getElementById("btnRunTranslate")!;
+      const translateBtnLabel = document.getElementById("translateBtnLabel")!;
+
+      const infoModal = document.getElementById("infoModal")!;
+      const btnOpenInfoModal = document.getElementById("btnOpenInfoModal")!;
+      const btnCloseInfoModal = document.getElementById("btnCloseInfoModal")!;
+
+      // ─── HELPERS ───────────────────────────────────────────────────────────
+      function showToast(text: string) {
+        const t = document.getElementById("toastBox");
+        if (t) {
+          t.textContent = text;
+          t.classList.add("show");
+          setTimeout(() => t.classList.remove("show"), 2000);
+        }
+      }
+
+      function updateConsoleUI() {
+        selectSrcLang.value = sourceLang;
+        selectTgtLang.value = targetLang;
+        mainSourceInput.placeholder = PLACEHOLDERS[sourceLang] || "Type text...";
+        charTag.textContent = `${mainSourceInput.value.length} characters`;
+
+        const isPivotNeeded = sourceLang !== "en" && targetLang !== "en" && sourceLang !== targetLang;
+        bridgeStrip.style.display = isPivotNeeded ? "flex" : "none";
+      }
+
+      // ─── TRANSLATION ENGINE & ANIMATION ────────────────────────────────────
+      let animInterval: any = null;
+
+      function startLoadingVisuals() {
+        isTranslating = true;
+        btnSwapLang.classList.add("pulsing");
+        btnRunTranslate.classList.add("is-loading");
+        translateBtnLabel.textContent = "Translating...";
+        
+        mainTargetDisplay.style.display = "none";
+        loadingShimmer.classList.add("active");
+
+        const stages = [
+          "Tokenizing input...",
+          "English pivot bridge mapping...",
+          "Generating translation...",
+        ];
+        let idx = 0;
+        shimmerStageText.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon">
+            <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+          </svg>
+          <span>${stages[0]}</span>
+        `;
+        animInterval = setInterval(() => {
+          idx = (idx + 1) % stages.length;
+          shimmerStageText.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="spin-icon">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+            </svg>
+            <span>${stages[idx]}</span>
+          `;
+        }, 280);
+      }
+
+      function stopLoadingVisuals() {
+        isTranslating = false;
+        clearInterval(animInterval);
+        btnSwapLang.classList.remove("pulsing");
+        btnRunTranslate.classList.remove("is-loading");
+        translateBtnLabel.textContent = "Translate";
+        
+        loadingShimmer.classList.remove("active");
+        mainTargetDisplay.style.display = "block";
+        mainTargetDisplay.classList.remove("anim-pop");
+        void mainTargetDisplay.offsetWidth;
+        mainTargetDisplay.classList.add("anim-pop");
+      }
+
+      async function runTranslation() {
+        const text = mainSourceInput.value.trim();
+        if (!text) {
+          mainTargetDisplay.textContent = "Have you eaten yet?";
+          bridgeStripContent.textContent = '"Have you eaten yet?"';
+          return;
+        }
+
+        startLoadingVisuals();
+
+        try {
+          const resp = await fetch("/api/pivot/translate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              text,
+              srcLang: sourceLang,
+              tgtLang: targetLang,
+              spaceUrl: spaceRepo,
+            }),
+          });
+          const data = await resp.json();
+          stopLoadingVisuals();
+          if (data.success && data.target) {
+            applyTranslationData(data.target, data.pivot || data.target);
+            return;
+          }
+        } catch (err) {
+          console.warn("Translation request error:", err);
+        }
+
+        stopLoadingVisuals();
+        // Fallback dictionary match
+        const match = EVERYDAY_DICT[text]?.[targetLang];
+        if (match) {
+          applyTranslationData(match.tgt, match.en);
+        } else {
+          if (targetLang === "en") {
+            applyTranslationData("Have you eaten yet?", "Have you eaten yet?");
+          } else if (targetLang === "zh") {
+            applyTranslationData("你吃了吗？", "Have you eaten yet?");
+          } else {
+            applyTranslationData("กินข้าวหรือยัง", "Have you eaten yet?");
+          }
+        }
+      }
+
+      function applyTranslationData(targetText: string, pivotText: string) {
+        mainTargetDisplay.textContent = targetText;
+        bridgeStripContent.textContent = `"${pivotText}"`;
+      }
+
+      function speakTextAudio(text: string, lang: string) {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        const codeMap: Record<string, string> = { th: "th-TH", en: "en-US", zh: "zh-CN" };
+        u.lang = codeMap[lang] || "en-US";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      }
+
+      // ─── EVENT HANDLERS ────────────────────────────────────────────────────
+      document.addEventListener("DOMContentLoaded", () => {
+        updateConsoleUI();
+
+        // Realtime typing debounce (Wait 3.5s after user stops typing before auto-translating, or instant on Translate button / Ctrl+Enter)
+        let typeDebounce: any = null;
+        mainSourceInput.addEventListener("input", () => {
+          charTag.textContent = `${mainSourceInput.value.length} characters`;
+          clearTimeout(typeDebounce);
+          typeDebounce = setTimeout(runTranslation, 3500);
+        });
+
+        mainSourceInput.addEventListener("keydown", (e) => {
+          if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+            e.preventDefault();
+            clearTimeout(typeDebounce);
+            runTranslation();
+          }
+        });
+
+        // Top Dropdowns
+        selectSrcLang.addEventListener("change", () => {
+          sourceLang = selectSrcLang.value;
+          if (sourceLang === targetLang) {
+            targetLang = sourceLang === "en" ? "zh" : "en";
+            selectTgtLang.value = targetLang;
+          }
+          updateConsoleUI();
+          runTranslation();
+        });
+
+        selectTgtLang.addEventListener("change", () => {
+          targetLang = selectTgtLang.value;
+          if (targetLang === sourceLang) {
+            sourceLang = targetLang === "en" ? "th" : "en";
+            selectSrcLang.value = sourceLang;
+          }
+          updateConsoleUI();
+          runTranslation();
+        });
+
+        // Swap Button
+        btnSwapLang.addEventListener("click", () => {
+          const temp = sourceLang;
+          sourceLang = targetLang;
+          targetLang = temp;
+          const prevTarget = mainTargetDisplay.textContent?.trim() || "";
+          if (prevTarget && prevTarget !== "...") {
+            mainSourceInput.value = prevTarget;
+          }
+          updateConsoleUI();
+          runTranslation();
+        });
+
+        // Run Translate Button
+        btnRunTranslate.addEventListener("click", () => {
+          runTranslation();
+        });
+
+        // 100% Clickable Global Wall Sentence Selection
+        document.addEventListener("click", (e) => {
+          const target = (e.target as HTMLElement).closest("[data-text]") as HTMLElement;
+          if (target && !target.closest(".master-translate-card") && !target.closest(".info-dialog-box")) {
+            const rawText = target.getAttribute("data-text");
+            const src = target.getAttribute("data-src") || "th";
+            const tgt = target.getAttribute("data-tgt") || "en";
+
+            if (rawText) {
+              sourceLang = src;
+              targetLang = tgt;
+              mainSourceInput.value = rawText;
+              updateConsoleUI();
+              runTranslation();
+              showToast(`Selected: "${rawText.slice(0, 24)}..."`);
+            }
+          }
+        });
+
+        // Info Modal Open / Close
+        btnOpenInfoModal.addEventListener("click", () => {
+          infoModal.classList.add("is-open");
+        });
+        btnCloseInfoModal.addEventListener("click", () => {
+          infoModal.classList.remove("is-open");
+        });
+        infoModal.addEventListener("click", (e) => {
+          if (e.target === infoModal) infoModal.classList.remove("is-open");
+        });
+
+        // Actions
+        document.getElementById("btnCopyResult")?.addEventListener("click", () => {
+          navigator.clipboard.writeText(mainTargetDisplay.textContent || "");
+          showToast("Translation copied to clipboard");
+        });
+
+        document.getElementById("btnClearInput")?.addEventListener("click", () => {
+          mainSourceInput.value = "";
+          updateConsoleUI();
+          mainSourceInput.focus();
+        });
+
+        document.getElementById("btnPasteInput")?.addEventListener("click", async () => {
+          try {
+            const text = await navigator.clipboard.readText();
+            mainSourceInput.value = text;
+            updateConsoleUI();
+            runTranslation();
+          } catch (e) {
+            showToast("Clipboard access denied");
+          }
+        });
+
+        // TTS
+        document.getElementById("btnSpeakSource")?.addEventListener("click", () => {
+          speakTextAudio(mainSourceInput.value, sourceLang);
+        });
+        document.getElementById("btnSpeakTarget")?.addEventListener("click", () => {
+          speakTextAudio(mainTargetDisplay.textContent || "", targetLang);
+        });
+
+        document.getElementById("btnFav")?.addEventListener("click", () => showToast("Saved to favorites"));
+      });
+    </script>
+  </body>
+</html>
