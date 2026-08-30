@@ -586,7 +586,7 @@ import Watermark from '../components/Watermark.astro';
 			<div class="bh-page">
 				<!-- MAIN CONTENT CARD (Split Columns) -->
 				<div class="bh-main-card">
-					<!-- Floating Square Orange Back Button -->
+					<!-- Floating Back Button -->
 					<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
 						<svg
 							width="14"
@@ -605,7 +605,7 @@ import Watermark from '../components/Watermark.astro';
 					<!-- LEFT SIDEBAR -->
 					<aside class="wbc-sidebar">
 
-						<!-- HEADER (Title, Summary) -->
+						<!-- HEADER (Title, Subtitle) -->
 						<header class="bh-header">
 							<h1 class="bh-title">
 								<span class="title-nextwbc">Tinnaphop</span>
@@ -655,9 +655,9 @@ import Watermark from '../components/Watermark.astro';
 							</div>
 						</div>
 
-						<!-- Download Buttons -->
+						<!-- Download Buttons (Updated Path: 300826) -->
 						<div class="wbc-guide" style="margin-top: auto; padding-top: 16px; gap: 8px;">
-							<a href="/cvutil/180826/Tinnaphop_Sonsang_CV_ML_AI.pdf" download="Tinnaphop_Sonsang_CV_ML_AI.pdf" target="_blank" class="download-cv-btn" title="Download CV PDF">
+							<a href="/cvutil/300826/Tinnaphop_Sonsang_CV_MLAI_.pdf" download="Tinnaphop_Sonsang_CV_MLAI_.pdf" target="_blank" class="download-cv-btn" title="Download CV PDF">
 								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
 								Download CV (PDF)
 							</a>
@@ -680,7 +680,7 @@ import Watermark from '../components/Watermark.astro';
 									Profile Summary
 								</div>
 								<div style="display: flex; gap: 8px; flex-wrap: wrap;">
-									<a href="/cvutil/180826/Tinnaphop_Sonsang_CV_ML_AI.pdf" download="Tinnaphop_Sonsang_CV_ML_AI.pdf" target="_blank" class="inline-download-btn" title="Download CV PDF">
+									<a href="/cvutil/300826/Tinnaphop_Sonsang_CV_MLAI_.pdf" download="Tinnaphop_Sonsang_CV_MLAI_.pdf" target="_blank" class="inline-download-btn" title="Download CV PDF">
 										<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
 										Download CV
 									</a>
@@ -828,6 +828,8 @@ import Watermark from '../components/Watermark.astro';
 									Work Experience
 								</div>
 							</div>
+
+							<!-- 1. ThaiDotRun (merged into ASICS) -->
 							<div class="entry-item">
 								<div class="entry-dot"></div>
 								<div class="entry-header">
@@ -851,6 +853,21 @@ import Watermark from '../components/Watermark.astro';
 									<li>Successfully deployed an ensemble classification framework that achieved strong performance on major brands (Adidas, Nike, ASICS), while establishing automated quality control and data re-collection workflows to improve recognition for long-tail brands.</li>
 								</ul>
 							</div>
+
+							<!-- 2. Lief Capital Asset Management -->
+							<div class="entry-item">
+								<div class="entry-dot"></div>
+								<div class="entry-header">
+									<span class="entry-title">Data Scientist</span>
+									<span class="entry-date">Short Term: May 2026</span>
+								</div>
+								<div class="entry-subtitle">Lief Capital Asset Management · Bangkok</div>
+								<ul class="entry-description">
+									<li>Analyzed and refactored an existing financial data and machine learning codebase on Azure ML, restructuring monolithic workflows across data gathering, preprocessing, feature engineering, model training, and evaluation to improve maintainability and scalable experimentation.</li>
+									<li>Optimized the end-to-end data processing and EODHD ingestion pipeline, reducing runtime from over 1 hour to under 30 minutes by adopting Polars and scaling parallel network workers.</li>
+									<li>Worked on an XGBoost-based stock ranking pipeline, including sector-relative feature engineering, NDCG performance evaluation, hyperparameter tuning with Optuna, and quarterly backtesting.</li>
+								</ul>
+							</div>
 						</section>
 
 						<!-- PROJECTS & THESIS CARD -->
@@ -869,11 +886,10 @@ import Watermark from '../components/Watermark.astro';
 									<span class="entry-date">July 2026 – Present</span>
 								</div>
 								<ul class="entry-description">
-									<li>Developed complex-valued Convolutional Neural Networks (CNNs) and U-Nets from scratch to investigate magnitude-phase representations, representation learning, and their impact on deep learning performance.</li>
-									<li>Systematically evaluated 8 hypotheses explaining complex-model underperformance through model evaluation, ablation studies, random-seed analysis, and training-dynamics analysis, identifying optimization stability as a primary factor with ~8× higher variation than real-valued models.</li>
-									<li>Built a 2-source audio source separation benchmark using SI-SDR (Scale-Invariant Signal-to-Distortion Ratio), demonstrating an approximately 33 dB performance degradation when phase information was removed.</li>
-									<li>Investigated complex-valued activation functions, parameterization, loss functions, Jacobian conditioning, backpropagation, gradient dynamics, and optimization to characterize how complex-valued representations are learned.</li>
-									<li>Conducted a 60-run factorial experiment with 15 random seeds per configuration and ANOVA-based statistical analysis, establishing significant interactions between neural network architecture and training objectives.</li>
+									<li>Investigated whether complex-valued neural networks can outperform real-valued models by identifying where in the learning pipeline complex representations help or hurt performance.</li>
+									<li>Built complex-valued CNNs, U-Nets, and a 2-source audio separation benchmark from scratch, confirming that phase information carries meaningful signal (~33 dB drop when removed).</li>
+									<li>Ran a 60-run factorial experiment (15 seeds per configuration) with statistical analysis, finding that performance depends on the interaction between activation function and loss function, not on either factor alone.</li>
+									<li>Traced the interaction through forward geometry, gradient propagation, and parameter updates, showing that the optimizer mediates how architectural choices translate into learning dynamics and final performance.</li>
 								</ul>
 							</div>
 

@@ -143,41 +143,58 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			/* ===========================
-			   100% PERFECT CIRCULAR BUBBLE (THINK DIFFERENT)
+			   REALISTIC SOAP BUBBLE (THIN-FILM IRIDESCENCE)
 			=========================== */
 			.aero-component-bubble {
 				position: relative;
 				border-radius: 50% !important;
 				background:
-					/* Primary specular light spot - Top Left */
+					/* Primary specular — wider, softer, more natural */
 					radial-gradient(
-						circle at 35% 26%,
-						rgba(255, 255, 255, 0.8) 0%,
-						rgba(224, 242, 254, 0.42) 28%,
-						rgba(56, 189, 248, 0.18) 55%,
-						rgba(14, 165, 233, 0.08) 80%,
+						ellipse 60% 45% at 32% 28%,
+						rgba(255, 255, 255, 0.88) 0%,
+						rgba(255, 255, 255, 0.42) 18%,
+						rgba(224, 242, 254, 0.22) 42%,
+						rgba(56, 189, 248, 0.06) 68%,
 						transparent 100%
 					),
-					/* Thin-film color tone */
+					/* Thin-film iridescence — subtle rainbow shift */
 					linear-gradient(
-						135deg,
-						rgba(255, 255, 255, 0.55) 0%,
-						rgba(255, 255, 255, 0.22) 40%,
-						rgba(255, 255, 255, 0.15) 60%,
-						rgba(255, 255, 255, 0.4) 100%
+						165deg,
+						rgba(255, 210, 240, 0.10) 0%,
+						rgba(190, 225, 255, 0.14) 22%,
+						rgba(210, 255, 230, 0.10) 44%,
+						rgba(235, 215, 255, 0.12) 66%,
+						rgba(255, 235, 210, 0.08) 88%,
+						transparent 100%
+					),
+					/* Base glass tone */
+					linear-gradient(
+						145deg,
+						rgba(255, 255, 255, 0.42) 0%,
+						rgba(255, 255, 255, 0.12) 38%,
+						rgba(240, 248, 255, 0.08) 62%,
+						rgba(255, 255, 255, 0.28) 100%
 					);
-				backdrop-filter: blur(24px) saturate(170%);
-				-webkit-backdrop-filter: blur(24px) saturate(170%);
-				border: 1.5px solid rgba(255, 255, 255, 0.95);
+				backdrop-filter: blur(16px) saturate(150%);
+				-webkit-backdrop-filter: blur(16px) saturate(150%);
+				border: 1px solid rgba(255, 255, 255, 0.65);
 				box-shadow:
-					0 -0.0625em 0 0.0625em hsl(var(--hue), 90%, 92%) inset,
-					0 0 0 0.0625em hsl(var(--hue), 90%, 75%) inset,
-					0 0 0.35em 0.35em hsla(var(--hue), 90%, 70%, 0.45) inset,
-					inset -8px -10px 28px rgba(2, 132, 199, 0.35),
-					0 18px 50px rgba(14, 165, 233, 0.3),
-					0 4px 16px rgba(0, 0, 0, 0.08);
+					/* Inner rim light (top) */
+					inset 0 1.5px 3px rgba(255, 255, 255, 0.92),
+					/* Inner depth shadow (bottom) */
+					inset 0 -8px 24px rgba(2, 132, 199, 0.15),
+					/* Inner color bleed */
+					inset 0 0 14px rgba(56, 189, 248, 0.10),
+					/* Outer glow — soft aquatic */
+					0 12px 40px rgba(14, 165, 233, 0.20),
+					/* Contact shadow */
+					0 2px 8px rgba(0, 0, 0, 0.05);
 				overflow: hidden;
-				transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+				transition:
+					transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+					box-shadow 0.35s ease,
+					border-color 0.3s ease;
 				display: flex;
 				flex-direction: column;
 				align-items: center;
@@ -187,16 +204,35 @@ import Watermark from "../components/Watermark.astro";
 				flex-shrink: 0;
 			}
 
+			.aero-component-bubble:hover {
+				transform: scale(1.035) translateY(-2px);
+				border-color: rgba(255, 255, 255, 0.85);
+				box-shadow:
+					inset 0 1.5px 4px rgba(255, 255, 255, 1),
+					inset 0 -8px 28px rgba(2, 132, 199, 0.20),
+					inset 0 0 16px rgba(56, 189, 248, 0.14),
+					0 16px 48px rgba(14, 165, 233, 0.30),
+					0 0 20px rgba(56, 189, 248, 0.12),
+					0 2px 8px rgba(0, 0, 0, 0.05);
+			}
+
 			.aero-component-bubble::before {
 				content: "";
 				position: absolute;
 				top: 50%;
 				left: 50%;
-				width: 88%;
-				height: 88%;
+				width: 82%;
+				height: 82%;
 				border-radius: 50%;
-				background-image: radial-gradient(25% 10% at 50% 5%, #ffffff 48%, rgba(255, 255, 255, 0) 50%);
-				transform: translate(-50%, -50%) rotate(-45deg);
+				/* Wider, softer crescent glare — like real soap bubble */
+				background-image: radial-gradient(
+					ellipse 55% 25% at 38% 12%,
+					rgba(255, 255, 255, 0.90) 0%,
+					rgba(255, 255, 255, 0.45) 35%,
+					rgba(255, 255, 255, 0.08) 60%,
+					transparent 70%
+				);
+				transform: translate(-50%, -50%) rotate(-40deg);
 				pointer-events: none;
 				z-index: 2;
 			}
@@ -204,47 +240,51 @@ import Watermark from "../components/Watermark.astro";
 			.aero-component-bubble::after {
 				content: "";
 				position: absolute;
-				bottom: 6%;
-				right: 12%;
-				width: 30%;
-				height: 20%;
+				bottom: 7%;
+				right: 10%;
+				width: 35%;
+				height: 22%;
 				border-radius: 50%;
 				background: radial-gradient(
 					circle,
-					rgba(186, 230, 253, 0.75) 0%,
-					rgba(125, 211, 252, 0.25) 70%,
+					rgba(186, 230, 253, 0.50) 0%,
+					rgba(125, 211, 252, 0.15) 60%,
 					transparent 100%
 				);
-				filter: blur(3.5px);
+				filter: blur(6px);
 				pointer-events: none;
 				z-index: 2;
 			}
 
-			/* Staggered Floating Animations for Bubble Cluster */
-			.aero-float-1 { animation: bh-component-float-1 6.5s ease-in-out 0s infinite alternate; }
-			.aero-float-2 { animation: bh-component-float-2 7.2s ease-in-out 0.9s infinite alternate; }
-			.aero-float-3 { animation: bh-component-float-3 6.8s ease-in-out 1.8s infinite alternate; }
-			.aero-float-4 { animation: bh-component-float-4 7.6s ease-in-out 2.5s infinite alternate; }
+			/* Staggered Multi-Axis Float (Natural Buoyancy) */
+			.aero-float-1 { animation: bh-component-float-1 7s ease-in-out 0s infinite alternate; }
+			.aero-float-2 { animation: bh-component-float-2 8s ease-in-out 1.1s infinite alternate; }
+			.aero-float-3 { animation: bh-component-float-3 7.5s ease-in-out 2s infinite alternate; }
+			.aero-float-4 { animation: bh-component-float-4 8.5s ease-in-out 2.8s infinite alternate; }
 
 			@keyframes bh-component-float-1 {
-				0% { transform: translateY(0) scale(1); }
-				50% { transform: translateY(-7px) scale(1.01); }
-				100% { transform: translateY(0) scale(1); }
+				0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+				33%  { transform: translate(3px, -8px) rotate(0.6deg) scale(1.01); }
+				66%  { transform: translate(-2px, -4px) rotate(-0.4deg) scale(1.005); }
+				100% { transform: translate(1px, 0) rotate(0.2deg) scale(1); }
 			}
 			@keyframes bh-component-float-2 {
-				0% { transform: translateY(0) scale(1); }
-				50% { transform: translateY(-8px) scale(1.01); }
-				100% { transform: translateY(0) scale(1); }
+				0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+				33%  { transform: translate(-3px, -9px) rotate(-0.7deg) scale(1.012); }
+				66%  { transform: translate(2px, -3px) rotate(0.5deg) scale(1.004); }
+				100% { transform: translate(-1px, 0) rotate(-0.2deg) scale(1); }
 			}
 			@keyframes bh-component-float-3 {
-				0% { transform: translateY(0) scale(1); }
-				50% { transform: translateY(-6px) scale(1.01); }
-				100% { transform: translateY(0) scale(1); }
+				0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+				33%  { transform: translate(2px, -6px) rotate(0.5deg) scale(1.008); }
+				66%  { transform: translate(-3px, -8px) rotate(-0.6deg) scale(1.014); }
+				100% { transform: translate(1px, -1px) rotate(0.3deg) scale(1); }
 			}
 			@keyframes bh-component-float-4 {
-				0% { transform: translateY(0) scale(1); }
-				50% { transform: translateY(-9px) scale(1.01); }
-				100% { transform: translateY(0) scale(1); }
+				0%   { transform: translate(0, 0) rotate(0deg) scale(1); }
+				33%  { transform: translate(-2px, -10px) rotate(-0.5deg) scale(1.015); }
+				66%  { transform: translate(3px, -5px) rotate(0.7deg) scale(1.006); }
+				100% { transform: translate(-1px, 0) rotate(-0.3deg) scale(1); }
 			}
 
 			.hidden {
@@ -449,10 +489,10 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			.bh-title {
-				font-size: 1.6rem;
-				font-weight: 900;
+				font-size: 1.55rem;
+				font-weight: 700;
 				line-height: 1.1;
-				letter-spacing: -0.5px;
+				letter-spacing: -0.3px;
 				margin: 0;
 				display: flex;
 				flex-direction: row;
@@ -472,13 +512,14 @@ import Watermark from "../components/Watermark.astro";
 
 			.bh-subtitle {
 				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				font-size: 0.65rem;
+				font-size: 0.72rem;
 				color: var(--bh-muted);
-				font-weight: 400;
+				font-weight: 350;
 				margin: 0;
-				line-height: 1.2;
+				line-height: 1.3;
 				max-width: 140px;
 				text-align: center;
+				letter-spacing: 0.15px;
 			}
 
 			/* ===========================
@@ -528,10 +569,10 @@ import Watermark from "../components/Watermark.astro";
 				z-index: 6;
 			}
 			.wbc-guide-title {
-				font-size: 0.75rem;
-				font-weight: 700;
+				font-size: 0.72rem;
+				font-weight: 650;
 				text-transform: uppercase;
-				letter-spacing: 1px;
+				letter-spacing: 1.5px;
 				color: var(--bh-text);
 				margin: 0;
 				border-bottom: none;
@@ -567,9 +608,10 @@ import Watermark from "../components/Watermark.astro";
 				flex-shrink: 0;
 			}
 			.wbc-step-text {
-				font-size: 0.62rem;
+				font-size: 0.66rem;
 				color: var(--bh-muted);
-				line-height: 1.2;
+				line-height: 1.3;
+				font-weight: 400;
 			}
 			.wbc-guide-note {
 				font-size: 0.6rem;
@@ -875,10 +917,10 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			.wbc-chart-title {
-				font-size: 0.64rem;
-				font-weight: 700;
+				font-size: 0.68rem;
+				font-weight: 650;
 				text-transform: uppercase;
-				letter-spacing: 1px;
+				letter-spacing: 1.2px;
 				color: var(--bh-text);
 				margin: 0 0 6px 0;
 			}
@@ -908,8 +950,8 @@ import Watermark from "../components/Watermark.astro";
 
 			.wbc-bar-label {
 				width: 58px;
-				font-size: 0.58rem;
-				font-weight: 600;
+				font-size: 0.62rem;
+				font-weight: 500;
 				color: var(--bh-text);
 				text-align: left;
 				white-space: nowrap;
@@ -933,11 +975,12 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			.wbc-bar-val {
-				width: 12px;
+				width: 14px;
 				text-align: right;
-				font-size: 0.58rem;
-				font-weight: 700;
-				font-family: monospace;
+				font-size: 0.6rem;
+				font-weight: 600;
+				font-family: "Google Sans Flex", "Google Sans", sans-serif;
+				font-variant-numeric: tabular-nums;
 			}
 
 			.wbc-reset-orb {
@@ -1114,8 +1157,8 @@ import Watermark from "../components/Watermark.astro";
 			.wbc-crop-info {
 				position: absolute;
 				bottom: -4px;
-				font-size: 0.58rem;
-				font-weight: 700;
+				font-size: 0.6rem;
+				font-weight: 650;
 				padding: 2px 7px;
 				border-radius: 99px;
 				display: flex;
@@ -1354,12 +1397,12 @@ import Watermark from "../components/Watermark.astro";
 						#22c55e 100%
 					);
 				background-blend-mode: overlay;
-				border: 1.8px solid rgba(255, 255, 255, 0.95);
+				border: 1.5px solid rgba(255, 255, 255, 0.90);
 				box-shadow:
-					inset -4px -5px 12px rgba(168, 85, 247, 0.5),
-					inset 4px 5px 10px rgba(255, 255, 255, 0.98),
-					0 0 16px rgba(168, 85, 247, 0.5),
-					0 0 28px rgba(56, 189, 248, 0.4);
+					inset -3px -4px 10px rgba(168, 85, 247, 0.35),
+					inset 3px 4px 8px rgba(255, 255, 255, 0.95),
+					0 0 12px rgba(168, 85, 247, 0.35),
+					0 0 22px rgba(56, 189, 248, 0.25);
 				animation: rgb-hue-rotate 5s infinite linear;
 				transition:
 					transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.25),
@@ -1430,70 +1473,24 @@ import Watermark from "../components/Watermark.astro";
 			}
 
 			/* ===========================
-			   ULTRA-REALISTIC AERO GLASS BUBBLE
+			   THREE.JS 3D IRIDESCENT BUBBLE CANVAS
 			=========================== */
-			.aero-bubble-stage {
+			.aero-bubble-canvas {
+				position: fixed;
+				inset: 0;
+				width: 100vw;
+				height: 100vh;
+				pointer-events: none;
+				z-index: -1;
+				transition: opacity 0.4s ease;
+			}
+
+			.aero-pop-container {
 				position: fixed;
 				inset: 0;
 				pointer-events: none;
+				z-index: 10;
 				overflow: hidden;
-				transition: opacity 0.4s ease;
-			}
-			.aero-stage-back {
-				z-index: -1; /* 80% bubbles float behind main UI */
-			}
-			.aero-stage-front {
-				z-index: 5; /* 20% bubbles float in front of main UI */
-			}
-
-			.aero-glass-bubble {
-				position: absolute;
-				top: 0;
-				left: 0;
-				border-radius: 50%;
-				box-sizing: border-box;
-				box-shadow:
-					0 -0.0625em 0 0.0625em hsl(var(--hue), 90%, 92%) inset,
-					0 0 0 0.0625em hsl(var(--hue), 90%, 75%) inset,
-					0 0 0.28em 0.28em hsla(var(--hue), 90%, 70%, 0.65) inset,
-					0 10px 28px rgba(14, 165, 233, 0.35);
-				background: radial-gradient(
-					circle at 35% 26%,
-					rgba(255, 255, 255, 0.4) 0%,
-					rgba(224, 242, 254, 0.15) 30%,
-					rgba(56, 189, 248, 0.1) 70%,
-					transparent 100%
-				);
-				backdrop-filter: blur(2.5px) saturate(160%);
-				-webkit-backdrop-filter: blur(2.5px) saturate(160%);
-				pointer-events: auto;
-				cursor: pointer;
-				will-change: transform, opacity;
-			}
-
-			.aero-glass-bubble::after {
-				content: "";
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				width: 87.5%;
-				height: 87.5%;
-				border-radius: 50%;
-				background-image: radial-gradient(
-					25% 10% at 50% 5%,
-					hsl(0, 0%, 100%) 48%,
-					hsla(0, 0%, 100%, 0) 50%
-				);
-				transform: translate(-50%, -50%) rotate(-45deg);
-				pointer-events: none;
-			}
-
-			.aero-glass-bubble.is-popping {
-				transform: scale(1.35) !important;
-				opacity: 0 !important;
-				transition:
-					transform 0.18s cubic-bezier(0.12, 0, 0.39, 0),
-					opacity 0.18s ease-out !important;
 			}
 
 			/* ── 7-Drop Radial Pop Burst Particle ── */
@@ -1576,16 +1573,16 @@ import Watermark from "../components/Watermark.astro";
 				pointer-events: none;
 				z-index: 3;
 				box-shadow:
-					0 -0.0625em 0 0.0625em hsl(var(--hue), 90%, 92%) inset,
-					0 0 0 0.0625em hsl(var(--hue), 90%, 75%) inset,
-					0 0 0.25em 0.25em hsla(var(--hue), 90%, 70%, 0.7) inset,
-					0 4px 12px rgba(14, 165, 233, 0.3);
+					inset 0 0.5px 1px rgba(255, 255, 255, 0.85),
+					inset 0 -2px 6px rgba(2, 132, 199, 0.10),
+					0 3px 10px rgba(14, 165, 233, 0.20);
 				background: radial-gradient(
-					circle at 35% 25%,
-					rgba(255, 255, 255, 0.4) 0%,
-					rgba(56, 189, 248, 0.15) 60%,
+					ellipse 50% 38% at 34% 26%,
+					rgba(255, 255, 255, 0.45) 0%,
+					rgba(56, 189, 248, 0.10) 55%,
 					transparent 100%
 				);
+				border: 0.6px solid rgba(255, 255, 255, 0.50);
 				backdrop-filter: blur(2px);
 				-webkit-backdrop-filter: blur(2px);
 			}
@@ -1673,9 +1670,9 @@ import Watermark from "../components/Watermark.astro";
 				height: 100%;
 				animation: bubble-rise-before 1.5s linear infinite;
 				box-shadow:
-					0 -0.0625em 0 0.0625em hsl(var(--hue), 90%, 90%) inset,
-					0 0 0 0.0625em hsl(var(--hue), 90%, 70%) inset,
-					0 0 0.25em 0.25em hsla(var(--hue), 90%, 70%, 0.7) inset;
+					inset 0 1px 1px rgba(255, 255, 255, 0.85),
+					inset 0 -2px 6px rgba(2, 132, 199, 0.12),
+					inset 0 0 5px rgba(56, 189, 248, 0.10);
 				transform: translate(0, 4.5em) scale(0);
 			}
 
@@ -1927,25 +1924,10 @@ import Watermark from "../components/Watermark.astro";
 		<!-- Tropical Swimming Fish Aquarium Stage (Random Spawn fish1-fish4) -->
 		<div class="wbc-fish-aquarium-stage" id="fishAquariumStage" aria-hidden="true"></div>
 
-		<!-- Aero Floating Glass Bubbles Stage (80% Back, 20% Front) -->
-		<div class="aero-bubble-stage aero-stage-back" id="bubbleStageBack">
-		</div>
-		<div class="aero-bubble-stage aero-stage-front" id="bubbleStageFront">
-		</div>
-
 		<div class="page-wrap">
 			<div class="bh-page">
 				<!-- MAIN CONTENT CARD (Split Columns) -->
 				<div class="bh-main-card">
-					<!-- Top-Right RGB Bubble Toggle Button -->
-					<button
-						id="rgbBubbleToggleBtn"
-						class="rgb-bubble-toggle-btn"
-						title="Toggle Glass Bubbles"
-					>
-						<div class="rgb-bubble-inner"></div>
-						<div class="ghost-bubble-outline"></div>
-					</button>
 
 					<div class="wbc-bubble-stage">
 						<!-- Standalone Back Button Mini Glass Bubble (42px) -->
@@ -2167,13 +2149,7 @@ import Watermark from "../components/Watermark.astro";
 							</button>
 						</div>
 
-						<!-- DECORATIVE MICRO GLASS BUBBLES (Subtle Aesthetic Accent) -->
-						<div class="wbc-deco-bubble wbc-deco-1" aria-hidden="true"></div>
-						<div class="wbc-deco-bubble wbc-deco-2" aria-hidden="true"></div>
-						<div class="wbc-deco-bubble wbc-deco-3" aria-hidden="true"></div>
-						<div class="wbc-deco-bubble wbc-deco-4" aria-hidden="true"></div>
-						<div class="wbc-deco-bubble wbc-deco-5" aria-hidden="true"></div>
-						<div class="wbc-deco-bubble wbc-deco-6" aria-hidden="true"></div>
+
 
 						<!-- TIGHTLY CLUSTERED SATELLITE MOVING CELL CROP BUBBLES FIELD -->
 						<div class="wbc-crops-cluster-field" id="wbcCropsGrid">
@@ -2205,7 +2181,6 @@ import Watermark from "../components/Watermark.astro";
 		<script>
 			import { GradioSpaceClient } from "../lib/nextwbc/gradio-client";
 			import { NextWbcUI } from "../lib/nextwbc/nextwbc-ui";
-			import { AeroBubbleEngine } from "../lib/nextwbc/bubble-engine";
 			import { FishSpawner } from "../lib/nextwbc/fish-spawner";
 
 			// ── Initialize the Gradio API client & UI controller ──
@@ -2213,28 +2188,8 @@ import Watermark from "../components/Watermark.astro";
 			const ui = new NextWbcUI(client);
 			ui.init();
 
-			// ── Initialize the Aero Bubble Physics Engine & Fish Spawner ──
+			// ── Initialize the Fish Spawner ──
 			function initUnderwaterWorld() {
-				// 1. Aero Bubbles
-				const stageBack = document.getElementById("bubbleStageBack");
-				const stageFront = document.getElementById("bubbleStageFront");
-				if (stageBack && stageFront) {
-					const engine = new AeroBubbleEngine(stageBack, stageFront, {
-						coralReefLayer: document.getElementById("coralReefLayer"),
-						toggleBtn: document.getElementById("rgbBubbleToggleBtn"),
-						config: {
-							totalBubbles: 10,
-							minSize: 18,
-							maxSize: 46,
-							backRatio: 0.75,
-							mouseRepulsionDist: 140,
-							mouseRepulsionForce: 2.2,
-						},
-					});
-					engine.start();
-				}
-
-				// 2. Random Fish Spawner (fish1 - fish4)
 				const fishContainer = document.getElementById("fishAquariumStage");
 				if (fishContainer) {
 					const spawner = new FishSpawner(fishContainer, { maxFish: 4 });
