@@ -32,61 +32,10 @@ if (activeTheme === 'auto') {
   <img src="/manifesto/transpbg/manifesto_right-Photoroom.png" alt="" />
 </div>
 
-<!-- SVG Displacement Warp Filters for Real Localized Spot Bulge & Pinch Distortion -->
-<svg class="gaga-svg-filters" aria-hidden="true">
-  <defs>
-    <!-- Corner Sprite Localized Bulge Filter (68x68 space) -->
-    <filter id="gaga-corner-bulge-filter" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence
-        id="gagaTurbulenceCorner"
-        type="fractalNoise"
-        baseFrequency="0.055 0.055"
-        numOctaves="2"
-        seed="3"
-        result="rawNoise"
-      />
-      <feDiffuseLighting in="rawNoise" surfaceScale="2" diffuseConstant="1.2" result="litNoise">
-        <fePointLight id="gagaLightCorner" x="34" y="32" z="16" />
-      </feDiffuseLighting>
-      <feDisplacementMap
-        id="gagaDisplaceCorner"
-        in="SourceGraphic"
-        in2="litNoise"
-        scale="0"
-        xChannelSelector="R"
-        yChannelSelector="G"
-      />
-    </filter>
-
-    <!-- Modal Hero Avatar Localized Bulge Filter (200% area for intense jumpscare distortion) -->
-    <filter id="gaga-hero-bulge-filter" x="-50%" y="-50%" width="200%" height="200%">
-      <feTurbulence
-        id="gagaTurbulenceHero"
-        type="fractalNoise"
-        baseFrequency="0.04 0.04"
-        numOctaves="2"
-        seed="7"
-        result="rawHeroNoise"
-      />
-      <feDiffuseLighting in="rawHeroNoise" surfaceScale="3.0" diffuseConstant="1.4" result="litHeroNoise">
-        <fePointLight id="gagaLightHero" x="90" y="80" z="35" />
-      </feDiffuseLighting>
-      <feDisplacementMap
-        id="gagaDisplaceHero"
-        in="SourceGraphic"
-        in2="litHeroNoise"
-        scale="0"
-        xChannelSelector="R"
-        yChannelSelector="G"
-      />
-    </filter>
-  </defs>
-</svg>
-
 <!-- Full-Screen Temporary Color Invert Flash Overlay (On enter & exit) -->
 <div id="gaga-screen-flash" class="gaga-screen-flash-invert" aria-hidden="true"></div>
 
-<!-- Borderless Dark Smoky Watermark Sprite in Corner with Calm Float & Slow Creeping Bulge Distortion -->
+<!-- Borderless Dark Smoky Watermark Sprite in Corner with Smooth GPU Floating -->
 <div
   id="site-watermark"
   class={`watermark-container ${position} theme-${activeTheme}`}
@@ -97,7 +46,7 @@ if (activeTheme === 'auto') {
   tabindex="0"
 >
   <div class="gaga-avatar-anchor" id="gagaAvatarAnchor">
-    <!-- Diffuse Smoky Black Shadow (No hard borders) -->
+    <!-- Diffuse Smoky Black Shadow (Smooth multi-stop gradient without heavy CPU blur) -->
     <div class="gaga-smoky-shadow" aria-hidden="true"></div>
 
     <div class="gaga-sprite-wrap" id="gagaSpriteWrap">
@@ -121,7 +70,7 @@ if (activeTheme === 'auto') {
   <div class="gaga-vintage-grain-overlay" aria-hidden="true"></div>
 
   <div class="gaga-dialogue-stage" id="gagaHeroStage">
-    <!-- LEFT: Big Lady Gaga Head with Calm Float & Slow Creeping Bulge Warp -->
+    <!-- LEFT: Lady Gaga Head with Calm Float -->
     <div class="gaga-left-avatar-wrap" id="gagaHeroAvatarWrap">
       <div class="gaga-left-diffuse-aura" aria-hidden="true"></div>
       <img
@@ -133,9 +82,9 @@ if (activeTheme === 'auto') {
       />
     </div>
 
-    <!-- RIGHT: Spoken Text in Old Style Italic (Only Current Sentence, No History) -->
+    <!-- RIGHT: Spoken Text in Old Style Italic (Current Sentence Only) -->
     <div class="gaga-right-speech-wrap" id="gagaSpeechBox">
-      <!-- Diffuse Dark Smoke Cloud (No borders) -->
+      <!-- Diffuse Dark Smoke Cloud -->
       <div class="gaga-speech-smoke" aria-hidden="true"></div>
 
       <!-- Current Sentence Only -->
@@ -161,10 +110,9 @@ if (activeTheme === 'auto') {
 
 <style>
   /* ==========================================================================
-     HIDDEN PRELOAD & SVG FILTER CONTAINER
+     HIDDEN PRELOAD CONTAINER
      ========================================================================== */
-  .gaga-preload,
-  .gaga-svg-filters {
+  .gaga-preload {
     position: absolute;
     width: 0;
     height: 0;
@@ -186,26 +134,24 @@ if (activeTheme === 'auto') {
     mix-blend-mode: difference;
     opacity: 0;
     visibility: hidden;
+    transform: translateZ(0);
   }
 
   .gaga-screen-flash-invert.is-flashing {
     visibility: visible;
-    animation: gaga-invert-strobe 0.28s steps(2, start) forwards;
+    animation: gaga-invert-strobe 0.22s steps(2, start) forwards;
   }
 
   @keyframes gaga-invert-strobe {
     0% { opacity: 0; }
-    10% { opacity: 1; }
-    22% { opacity: 0.15; }
-    38% { opacity: 0.95; }
-    55% { opacity: 0.1; }
-    72% { opacity: 1; }
-    88% { opacity: 0.3; }
+    15% { opacity: 0.95; }
+    40% { opacity: 0.1; }
+    70% { opacity: 0.85; }
     100% { opacity: 0; }
   }
 
   /* ==========================================================================
-     BORDERLESS CORNER WATERMARK (CALM FLOAT & SLOW CREEPING BULGE)
+     BORDERLESS CORNER WATERMARK (HARDWARE-ACCELERATED 60+ FPS)
      ========================================================================== */
   .watermark-container {
     position: fixed;
@@ -219,7 +165,8 @@ if (activeTheme === 'auto') {
     padding: 0;
     margin: 0;
     outline: none;
-    transition: opacity 0.3s ease;
+    transform: translateZ(0);
+    contain: layout style;
   }
 
   .watermark-container.bottom-right {
@@ -237,28 +184,30 @@ if (activeTheme === 'auto') {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
+    transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s ease;
     will-change: transform, opacity;
+    transform: translateZ(0);
   }
 
-  /* Diffuse Smoky Dark Bloom behind the sprite */
+  /* Smooth Multi-stop Dark Smoky Aura (Zero CPU blur recalculation) */
   .gaga-smoky-shadow {
     position: absolute;
-    inset: -18px;
+    inset: -14px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.96) 0%, rgba(25, 5, 20, 0.65) 45%, transparent 75%);
-    filter: blur(16px);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.95) 0%, rgba(25, 5, 20, 0.7) 40%, rgba(0, 0, 0, 0.35) 65%, transparent 80%);
     pointer-events: none;
-    opacity: 0.88;
+    opacity: 0.9;
+    transform: translateZ(0);
+    will-change: transform, opacity;
     animation: gaga-calm-smoke-pulse 5s ease-in-out infinite alternate;
   }
 
   /* Smooth sinking plunge when clicked */
   .gaga-avatar-anchor.is-sinking {
-    transform: translateY(140px) scale(0.7) !important;
+    transform: translateY(80px) scale(0.6) translateZ(0) !important;
     opacity: 0 !important;
     pointer-events: none;
-    transition: transform 0.4s cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 0.3s ease-in !important;
+    transition: transform 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 0.25s ease-in !important;
   }
 
   /* Calm gentle floating up/down */
@@ -269,40 +218,42 @@ if (activeTheme === 'auto') {
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: gaga-gentle-float 6s ease-in-out infinite alternate;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation: gaga-gentle-float 5s ease-in-out infinite alternate;
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: transparent;
     border: none;
     box-shadow: none;
+    transform: translateZ(0);
+    will-change: transform;
   }
 
   .watermark-container:hover .gaga-sprite-wrap {
-    transform: scale(1.18) translateY(-4px);
+    transform: scale(1.15) translateY(-3px) translateZ(0);
   }
 
   .gaga-sprite-img {
     width: 68px;
     height: 68px;
     object-fit: contain;
-    /* Applied Localized SVG Bulge filter + drop-shadow */
-    filter: url(#gaga-corner-bulge-filter) drop-shadow(0 6px 18px rgba(0, 0, 0, 0.98)) drop-shadow(0 0 16px rgba(0, 0, 0, 0.85));
+    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
     display: block;
     user-select: none;
     -webkit-user-drag: none;
     position: relative;
     z-index: 2;
+    transform: translateZ(0);
   }
 
-  /* Calm gentle floating (small vertical displacement only) */
+  /* Calm gentle floating (small vertical displacement only, GPU accelerated) */
   @keyframes gaga-gentle-float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(2px); }
+    0% { transform: translateY(0) translateZ(0); }
+    50% { transform: translateY(-4px) translateZ(0); }
+    100% { transform: translateY(2px) translateZ(0); }
   }
 
   @keyframes gaga-calm-smoke-pulse {
-    0% { transform: scale(0.9); opacity: 0.75; }
-    100% { transform: scale(1.1); opacity: 0.95; }
+    0% { transform: scale(0.92) translateZ(0); opacity: 0.8; }
+    100% { transform: scale(1.08) translateZ(0); opacity: 0.95; }
   }
 
   /* ==========================================================================
@@ -317,7 +268,8 @@ if (activeTheme === 'auto') {
     justify-content: center;
     pointer-events: auto;
     opacity: 1;
-    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
+    transform: translateZ(0);
   }
 
   .gaga-dialogue-overlay.is-hidden {
@@ -330,9 +282,9 @@ if (activeTheme === 'auto') {
   .gaga-transparent-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(6px) brightness(0.65);
-    -webkit-backdrop-filter: blur(6px) brightness(0.65);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px) brightness(0.7);
+    -webkit-backdrop-filter: blur(6px) brightness(0.7);
     cursor: pointer;
   }
 
@@ -359,18 +311,19 @@ if (activeTheme === 'auto') {
     width: 92vw;
     box-sizing: border-box;
     pointer-events: auto;
+    transform: translateZ(0);
   }
 
-  /* Horror jumpscare screen tremor */
+  /* Horror jumpscare tremor (lightweight GPU transform) */
   .gaga-stage-shaking {
-    animation: gaga-horror-tremor 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    animation: gaga-horror-tremor 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
   }
 
   @keyframes gaga-horror-tremor {
-    10%, 90% { transform: translate3d(-4px, -3px, 0) scale(1.02); }
-    20%, 80% { transform: translate3d(5px, 4px, 0) scale(0.98); }
-    30%, 50%, 70% { transform: translate3d(-6px, 3px, 0) scale(1.03); }
-    40%, 60% { transform: translate3d(6px, -4px, 0) scale(0.97); }
+    10%, 90% { transform: translate3d(-3px, -2px, 0) scale(1.01); }
+    20%, 80% { transform: translate3d(4px, 3px, 0) scale(0.99); }
+    30%, 50%, 70% { transform: translate3d(-4px, 2px, 0) scale(1.02); }
+    40%, 60% { transform: translate3d(4px, -3px, 0) scale(0.98); }
   }
 
   /* ── LEFT: Hero Avatar ── */
@@ -388,16 +341,18 @@ if (activeTheme === 'auto') {
     align-items: center;
     justify-content: center;
     z-index: 3;
-    will-change: transform, opacity, filter;
+    will-change: transform, opacity;
+    transform: translateZ(0);
   }
 
   /* Dark diffuse smoky aura behind hero head */
   .gaga-left-diffuse-aura {
     position: absolute;
-    inset: -50px;
+    inset: -35px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(55, 8, 35, 0.8) 45%, rgba(0, 0, 0, 0.95) 70%, transparent 100%);
-    filter: blur(36px);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.98) 0%, rgba(55, 8, 35, 0.75) 45%, rgba(0, 0, 0, 0.6) 70%, transparent 100%);
+    transform: translateZ(0);
+    will-change: transform, opacity;
     animation: gaga-calm-smoke-pulse 4.5s ease-in-out infinite alternate;
   }
 
@@ -407,23 +362,23 @@ if (activeTheme === 'auto') {
     object-fit: contain;
     position: relative;
     z-index: 2;
-    /* Applied Localized SVG Bulge filter + drop-shadow */
-    filter: url(#gaga-hero-bulge-filter) drop-shadow(0 25px 60px rgba(0, 0, 0, 1)) drop-shadow(0 0 35px rgba(0, 0, 0, 0.95));
-    animation: gaga-gentle-hero-float 5s ease-in-out infinite alternate;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(0, 0, 0, 0.85));
+    animation: gaga-gentle-hero-float 4.5s ease-in-out infinite alternate;
     user-select: none;
     -webkit-user-drag: none;
+    transform: translateZ(0);
   }
 
   /* Gentle calm hero hovering */
   @keyframes gaga-gentle-hero-float {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-7px); }
-    100% { transform: translateY(4px); }
+    0% { transform: translateY(0) translateZ(0); }
+    50% { transform: translateY(-6px) translateZ(0); }
+    100% { transform: translateY(3px) translateZ(0); }
   }
 
   /* ── RIGHT: Borderless Diffuse Spoken Text ── */
   .gaga-dialogue-overlay:not(.is-hidden) .gaga-right-speech-wrap {
-    animation: gaga-speech-pop 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s both;
+    animation: gaga-speech-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
   }
 
   .gaga-right-speech-wrap {
@@ -442,27 +397,28 @@ if (activeTheme === 'auto') {
     outline: none;
     box-shadow: none;
     cursor: pointer;
+    transform: translateZ(0);
   }
 
   /* Soft Diffuse Smoky Glow behind right text */
   .gaga-speech-smoke {
     position: absolute;
-    inset: -24px;
+    inset: -20px;
     border-radius: 40px;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.95) 0%, rgba(15, 6, 20, 0.78) 55%, transparent 88%);
-    filter: blur(28px);
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.92) 0%, rgba(15, 6, 20, 0.7) 55%, transparent 85%);
     pointer-events: none;
     z-index: 1;
+    transform: translateZ(0);
   }
 
   @keyframes gaga-speech-pop {
     0% {
       opacity: 0;
-      transform: translateX(-15px) scale(0.96);
+      transform: translateX(-12px) scale(0.96) translateZ(0);
     }
     100% {
       opacity: 1;
-      transform: translateX(0) scale(1);
+      transform: translateX(0) scale(1) translateZ(0);
     }
   }
 
@@ -484,8 +440,8 @@ if (activeTheme === 'auto') {
     letter-spacing: 0.5px;
     display: inline;
     text-shadow: 
-      0 4px 20px rgba(0, 0, 0, 1),
-      0 0 35px rgba(0, 0, 0, 0.98);
+      0 4px 16px rgba(0, 0, 0, 1),
+      0 0 25px rgba(0, 0, 0, 0.95);
   }
 
   .gaga-spoken-sentence.is-quote {
@@ -540,7 +496,7 @@ if (activeTheme === 'auto') {
     height: 6px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.25);
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
   }
 
   .step-dot.is-active {
@@ -572,13 +528,13 @@ if (activeTheme === 'auto') {
     }
 
     .gaga-left-avatar-wrap {
-      width: 155px;
-      height: 155px;
+      width: 150px;
+      height: 150px;
     }
 
     .gaga-left-hero-img {
-      width: 150px;
-      height: 150px;
+      width: 145px;
+      height: 145px;
     }
 
     .gaga-right-speech-wrap {
@@ -608,12 +564,7 @@ if (activeTheme === 'auto') {
 
 <script>
   /**
-   * Calm Floating Lady Gaga Manifesto Controller with Slow, Creeping Horror Bulge Distortion
-   * Implements:
-   * 1. Slow, Creeping Localized Spot Bulge/Pinch distortion (โป่งพองหรือยุบตัวช้าๆ แบบขนลุก)
-   * 2. Calm, steady vertical floating (no flashing)
-   * 3. Full-screen color-invert strobe flash on entry & exit
-   * 4. Avatar Left, Text Right, Old Style Italic, only current sentence
+   * Fast, High-Performance Lady Gaga Manifesto Controller (60-120 FPS)
    */
   class GagaManifestoController {
     private spriteImg: HTMLImageElement | null = null;
@@ -625,15 +576,6 @@ if (activeTheme === 'auto') {
     private speechBox: HTMLElement | null = null;
     private screenFlashEl: HTMLElement | null = null;
 
-    // SVG Localized Bulge Displacement Elements
-    private displaceCornerEl: SVGElement | null = null;
-    private turbCornerEl: SVGElement | null = null;
-    private lightCornerEl: SVGElement | null = null;
-
-    private displaceHeroEl: SVGElement | null = null;
-    private turbHeroEl: SVGElement | null = null;
-    private lightHeroEl: SVGElement | null = null;
-
     private activeSentenceEl: HTMLElement | null = null;
     private cursorEl: HTMLElement | null = null;
     private stepDots: NodeListOf<HTMLElement> | null = null;
@@ -641,26 +583,6 @@ if (activeTheme === 'auto') {
     private isShowcasing = false;
     private blinkTimer: number | null = null;
     private glanceTimer: number | null = null;
-    private warpTimer: number | null = null;
-
-    // Candidate Localized Spot Coordinates (เฉพาะจุด เช่น แก้มซ้าย, แก้มขวา, หน้าผาก, คาง/ปาก, ขอบคริสตัล)
-    private readonly CORNER_SPOTS = [
-      { x: 25, y: 30, z: 14 }, // Left cheek / eye
-      { x: 43, y: 30, z: 14 }, // Right cheek / eye
-      { x: 34, y: 18, z: 14 }, // Forehead
-      { x: 34, y: 46, z: 14 }, // Mouth / Chin
-      { x: 18, y: 36, z: 14 }, // Left crystal facet
-      { x: 50, y: 36, z: 14 }, // Right crystal facet
-    ];
-
-    private readonly HERO_SPOTS = [
-      { x: 68, y: 78, z: 28 },  // Left cheek / eye
-      { x: 112, y: 78, z: 28 }, // Right cheek / eye
-      { x: 90, y: 48, z: 28 },  // Forehead
-      { x: 90, y: 122, z: 28 }, // Chin / Mouth
-      { x: 45, y: 92, z: 28 },  // Left crystal facet
-      { x: 135, y: 92, z: 28 }, // Right crystal facet
-    ];
 
     // Sentence-by-sentence dialogue sequence
     private readonly MANIFESTO_SENTENCES = [
@@ -668,38 +590,37 @@ if (activeTheme === 'auto') {
         text: 'This is The Manifesto of Mother Monster.',
         isQuote: false,
         isAuthor: false,
-        duration: 3200,
+        duration: 3000,
       },
       {
         text: '“Computers are only as creative as the humans who program them.”',
         isQuote: true,
         isAuthor: false,
-        duration: 3500,
+        duration: 3200,
       },
       {
         text: '— John Maeda',
         isQuote: false,
         isAuthor: true,
-        duration: 2000,
+        duration: 1800,
       },
       {
         text: 'No synthetic illusions — only living algorithms sculpted in mathematical light.',
         isQuote: false,
         isAuthor: false,
-        duration: 3800,
+        duration: 3500,
       },
       {
         text: 'Every pixel is mathematically rendered, fiercely human-directed.',
         isQuote: false,
         isAuthor: false,
-        duration: 3600,
+        duration: 3200,
       },
     ];
 
     private currentSentenceIdx = 0;
     private typingInterval: number | null = null;
     private nextSentenceTimeout: number | null = null;
-    private isMoving = false;
 
     private readonly SPRITES = {
       open: '/manifesto/transpbg/manifesto_open-Photoroom.png',
@@ -717,14 +638,6 @@ if (activeTheme === 'auto') {
       this.backdrop = document.getElementById('gagaModalBackdrop');
       this.speechBox = document.getElementById('gagaSpeechBox');
       this.screenFlashEl = document.getElementById('gaga-screen-flash');
-
-      this.displaceCornerEl = document.getElementById('gagaDisplaceCorner') as unknown as SVGElement;
-      this.turbCornerEl = document.getElementById('gagaTurbulenceCorner') as unknown as SVGElement;
-      this.lightCornerEl = document.getElementById('gagaLightCorner') as unknown as SVGElement;
-
-      this.displaceHeroEl = document.getElementById('gagaDisplaceHero') as unknown as SVGElement;
-      this.turbHeroEl = document.getElementById('gagaTurbulenceHero') as unknown as SVGElement;
-      this.lightHeroEl = document.getElementById('gagaLightHero') as unknown as SVGElement;
 
       this.activeSentenceEl = document.getElementById('gagaActiveSentenceText');
       this.cursorEl = document.getElementById('gagaCursor');
@@ -786,135 +699,51 @@ if (activeTheme === 'auto') {
       this.screenFlashEl.classList.add('is-flashing');
       setTimeout(() => {
         if (this.screenFlashEl) this.screenFlashEl.classList.remove('is-flashing');
-      }, 300);
-    }
-
-    // ── Slow, Creeping Localized Spot Bulge & Pinch Distortion (Stationary Only) ──
-
-    private triggerLocalizedSpotWarp(isHero: boolean): void {
-      if (this.isMoving) return;
-      const displaceEl = isHero ? this.displaceHeroEl : this.displaceCornerEl;
-      const turbEl = isHero ? this.turbHeroEl : this.turbCornerEl;
-      const lightEl = isHero ? this.lightHeroEl : this.lightCornerEl;
-      if (!displaceEl || !turbEl || !lightEl) return;
-
-      // 1. Pick a single localized candidate spot (เฉพาะจุด)
-      const spots = isHero ? this.HERO_SPOTS : this.CORNER_SPOTS;
-      const chosenSpot = spots[Math.floor(Math.random() * spots.length)];
-
-      // Apply coordinates only to that localized spotlight
-      lightEl.setAttribute('x', String(chosenSpot.x));
-      lightEl.setAttribute('y', String(chosenSpot.y));
-      lightEl.setAttribute('z', String(chosenSpot.z));
-
-      // Randomize seed
-      turbEl.setAttribute('seed', String(Math.floor(Math.random() * 80) + 1));
-
-      // 2. Decide if this spot swells outward (+) or caves inward (-)
-      const isBulgeOut = Math.random() < 0.65;
-      const maxScale = (Math.random() * 12 + (isHero ? 24 : 16)) * (isBulgeOut ? 1 : -0.88);
-      
-      // SLOW, CREEPING, UNCANNY SWELLING DURATION (2.2s - 3.4s)
-      const duration = Math.random() * 1200 + 2200;
-      const startTime = performance.now();
-
-      const animate = (currentTime: number) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Slow, creeping bell-curve easing (lingers slightly at peak for eerie horror tension)
-        const ease = Math.pow(Math.sin(progress * Math.PI), 1.25);
-        const currentScale = ease * maxScale;
-        displaceEl.setAttribute('scale', currentScale.toFixed(1));
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          displaceEl.setAttribute('scale', '0');
-        }
-      };
-      requestAnimationFrame(animate);
-    }
-
-    // ── Violent Horror Distortion Spike (For Jumpscares & Shockwaves) ──
-
-    private triggerHorrorDistortionSpike(isHero: boolean, intensity: number = 95, customDuration?: number): void {
-      const displaceEl = isHero ? this.displaceHeroEl : this.displaceCornerEl;
-      const turbEl = isHero ? this.turbHeroEl : this.turbCornerEl;
-      const lightEl = isHero ? this.lightHeroEl : this.lightCornerEl;
-      if (!displaceEl || !turbEl || !lightEl) return;
-
-      lightEl.setAttribute('x', '90');
-      lightEl.setAttribute('y', '85');
-      lightEl.setAttribute('z', '35');
-      turbEl.setAttribute('seed', String(Math.floor(Math.random() * 200) + 1));
-      turbEl.setAttribute('baseFrequency', '0.07 0.07');
-
-      const duration = customDuration || 2200;
-      const startTime = performance.now();
-
-      const animate = (currentTime: number) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        
-        // Violent decaying oscillation shockwave
-        const wave = Math.sin(progress * Math.PI * 3.5) * (1 - progress);
-        const currentScale = wave * intensity;
-        displaceEl.setAttribute('scale', currentScale.toFixed(1));
-
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          displaceEl.setAttribute('scale', '0');
-          turbEl.setAttribute('baseFrequency', '0.04 0.04');
-        }
-      };
-      requestAnimationFrame(animate);
+      }, 250);
     }
 
     // ── Eye Animations (Blinking & Glancing) ──────────────────
 
     private setSprite(state: 'open' | 'close' | 'left' | 'right'): void {
       const src = this.SPRITES[state];
-      if (this.spriteImg) this.spriteImg.src = src;
-      if (this.heroImg) this.heroImg.src = src;
+      if (this.spriteImg && this.spriteImg.src !== src) this.spriteImg.src = src;
+      if (this.heroImg && this.heroImg.src !== src) this.heroImg.src = src;
     }
 
     private startRoutines(): void {
       this.scheduleBlink();
       this.scheduleGlance();
-      this.scheduleRandomLocalizedBulge();
     }
 
     private scheduleBlink(): void {
-      const delay = Math.random() * 3200 + 2600; // 2.6s - 5.8s
+      const delay = Math.random() * 3000 + 2500; // 2.5s - 5.5s
       this.blinkTimer = window.setTimeout(() => {
         if (!this.isShowcasing) {
           this.setSprite('close');
           setTimeout(() => {
             if (!this.isShowcasing) {
               this.setSprite('open');
-              if (Math.random() < 0.22) {
+              if (Math.random() < 0.2) {
                 setTimeout(() => {
                   this.setSprite('close');
-                  setTimeout(() => this.setSprite('open'), 130);
-                }, 180);
+                  setTimeout(() => this.setSprite('open'), 110);
+                }, 150);
               }
             }
-          }, 140);
+          }, 120);
         }
         this.scheduleBlink();
       }, delay);
     }
 
     private scheduleGlance(): void {
-      const delay = Math.random() * 4500 + 3800; // 3.8s - 8.3s
+      const delay = Math.random() * 4000 + 3500; // 3.5s - 7.5s
       this.glanceTimer = window.setTimeout(() => {
         if (!this.isShowcasing) {
           const dir = Math.random() < 0.5 ? 'left' : 'right';
           this.setSprite(dir);
 
-          const holdTime = Math.random() * 1100 + 800; // 0.8s - 1.9s
+          const holdTime = Math.random() * 900 + 700; // 0.7s - 1.6s
           setTimeout(() => {
             if (!this.isShowcasing) {
               this.setSprite('open');
@@ -925,31 +754,16 @@ if (activeTheme === 'auto') {
       }, delay);
     }
 
-    // ── Random Localized Spot Bulge Cycle (Slow Horror Rhythm) ──
-
-    private scheduleRandomLocalizedBulge(): void {
-      const delay = Math.random() * 3500 + 3500; // 3.5s - 7.0s
-      this.warpTimer = window.setTimeout(() => {
-        this.triggerLocalizedSpotWarp(this.isShowcasing);
-        this.scheduleRandomLocalizedBulge();
-      }, delay);
-    }
-
     // ── Interactive Manifesto Speech Stream ──────────────────
 
     private triggerManifestoSequence(): void {
       if (this.isShowcasing || !this.anchor || !this.modal) return;
       this.isShowcasing = true;
-      this.isMoving = true;
 
-      // Ensure zero distortion while moving into place
-      if (this.displaceHeroEl) this.displaceHeroEl.setAttribute('scale', '0');
-      if (this.displaceCornerEl) this.displaceCornerEl.setAttribute('scale', '0');
-
-      // 1. Trigger Full-Screen Color Invert Strobe Flash on entry!
+      // 1. Trigger Full-Screen Color Invert Strobe Flash on entry
       this.triggerScreenFlash();
 
-      // 2. Corner sprite plunges down into dark void
+      // 2. Corner sprite plunges down smoothly
       this.anchor.classList.add('is-sinking');
       this.setSprite('open');
 
@@ -965,18 +779,7 @@ if (activeTheme === 'auto') {
           stage.classList.add('gaga-stage-shaking');
         }
 
-        // Rapid uncanny eye glitch flicker during the jumpscare impact
-        const eyeGlitch = setInterval(() => {
-          if (!this.isShowcasing) { clearInterval(eyeGlitch); return; }
-          const states: ('open' | 'close' | 'left' | 'right')[] = ['open', 'close', 'left', 'right'];
-          this.setSprite(states[Math.floor(Math.random() * states.length)]);
-        }, 55);
-        setTimeout(() => {
-          clearInterval(eyeGlitch);
-          if (this.isShowcasing) this.setSprite('open');
-        }, 420);
-
-        // Calculate offset to DEAD CENTER of the screen
+        // Fluid and impactful cinematic zoom into center
         const rect = this.heroAvatarWrap.getBoundingClientRect();
         const stageCenterX = window.innerWidth / 2;
         const stageCenterY = window.innerHeight / 2;
@@ -986,59 +789,36 @@ if (activeTheme === 'auto') {
         const centerDeltaX = stageCenterX - elemCenterX;
         const centerDeltaY = stageCenterY - elemCenterY;
 
-        // JUMPSCARE & ULTRA-SLOW CREEPING GLIDE ANIMATION (4.8s) - ZERO DISTORTION WHILE MOVING
-        const entryAnim = this.heroAvatarWrap.animate([
+        this.heroAvatarWrap.animate([
           {
-            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(4.4) rotate(${(Math.random() - 0.5) * 10}deg)`,
-            opacity: 1,
-            filter: 'contrast(1.4) brightness(1.25) drop-shadow(0 0 100px rgba(244, 63, 94, 0.7))',
-            offset: 0,
+            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(2.2)`,
+            opacity: 0.4,
+            filter: 'drop-shadow(0 0 50px rgba(244, 63, 94, 0.8))',
           },
           {
-            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(3.8) rotate(0deg)`,
+            transform: 'translate3d(0, 0, 0) scale(1)',
             opacity: 1,
-            filter: 'contrast(1.25) brightness(1.15) drop-shadow(0 0 80px rgba(0, 0, 0, 0.98))',
-            offset: 0.2,
-          },
-          {
-            transform: `translate3d(${(centerDeltaX * 0.45).toFixed(1)}px, ${(centerDeltaY * 0.35).toFixed(1)}px, 0) scale(2.0) rotate(${(Math.random() - 0.5) * 4}deg)`,
-            opacity: 1,
-            filter: 'contrast(1.1) brightness(1.05) drop-shadow(0 0 50px rgba(0, 0, 0, 0.95))',
-            offset: 0.62,
-          },
-          {
-            transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
-            opacity: 1,
-            filter: 'contrast(1) brightness(1) drop-shadow(0 25px 60px rgba(0, 0, 0, 1))',
-            offset: 1,
+            filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95))',
           }
         ], {
-          duration: 4800, // ULTRA-SLOW, CREEPING, MENACING HORROR ARRIVAL (4.8s)
-          easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+          duration: 750,
+          easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
           fill: 'forwards',
         });
 
-        // Once she finishes moving and is completely STILL -> allow distortion
-        entryAnim.onfinish = () => {
-          this.isMoving = false;
-          if (this.isShowcasing) {
-            this.triggerLocalizedSpotWarp(true);
-          }
-        };
-
-        // Begin dialogue stream after she glides into position
+        // Begin dialogue stream
         this.currentSentenceIdx = 0;
         setTimeout(() => {
           if (this.isShowcasing) {
             this.speakSentence(0);
           }
-        }, 2800);
-      }, 350);
+        }, 500);
+      }, 200);
     }
 
     private speakSentence(idx: number): void {
       if (idx >= this.MANIFESTO_SENTENCES.length) {
-        setTimeout(() => this.dismissShowcase(), 1200);
+        setTimeout(() => this.dismissShowcase(), 1000);
         return;
       }
 
@@ -1070,19 +850,19 @@ if (activeTheme === 'auto') {
       let charIdx = 0;
       if (this.typingInterval) clearInterval(this.typingInterval);
 
-      const speed = sentenceObj.isAuthor ? 30 : 22;
+      const speed = sentenceObj.isAuthor ? 25 : 18;
 
       this.typingInterval = window.setInterval(() => {
         if (!this.activeSentenceEl) return;
         charIdx++;
         this.activeSentenceEl.innerText = text.slice(0, charIdx);
 
-        // Occasional uncanny eye blink while speaking
-        if (Math.random() < 0.04) {
+        // Occasional eye blink while speaking
+        if (Math.random() < 0.03) {
           this.setSprite('close');
           setTimeout(() => {
             if (this.isShowcasing) this.setSprite('right');
-          }, 110);
+          }, 100);
         }
 
         if (charIdx >= text.length) {
@@ -1110,63 +890,30 @@ if (activeTheme === 'auto') {
 
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
 
-      // Trigger slow localized spot warp on sentence advance while sitting still
-      if (!this.isMoving) {
-        this.triggerLocalizedSpotWarp(true);
-      }
-
-      // Proceed to next sentence (replaces current text cleanly, no history)
+      // Proceed to next sentence
       this.speakSentence(this.currentSentenceIdx + 1);
     }
 
     private dismissShowcase(): void {
       if (!this.isShowcasing || !this.modal || !this.anchor) return;
-      this.isMoving = true;
       if (this.typingInterval) clearInterval(this.typingInterval);
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
-
-      // Ensure zero distortion while sliding out
-      if (this.displaceHeroEl) this.displaceHeroEl.setAttribute('scale', '0');
-      if (this.displaceCornerEl) this.displaceCornerEl.setAttribute('scale', '0');
 
       // Trigger Full-Screen Color Invert Strobe Flash on exit
       this.triggerScreenFlash();
 
-      // Horror screen tremor on exit
-      const stage = document.getElementById('gagaHeroStage');
-      if (stage) {
-        stage.classList.add('gaga-stage-shaking');
-        setTimeout(() => stage.classList.remove('gaga-stage-shaking'), 450);
-      }
-
-      // ULTRA-SLOW CREEPING EXIT (3.4s) - ZERO DISTORTION WHILE MOVING
       if (this.heroAvatarWrap) {
-        const exitAngle = Math.random() * Math.PI * 2;
-        const exitDist = Math.max(window.innerWidth, window.innerHeight) * 0.9;
-        const exitX = Math.cos(exitAngle) * exitDist;
-        const exitY = Math.sin(exitAngle) * exitDist;
-        const exitRot = (Math.random() - 0.5) * 45;
-
         this.heroAvatarWrap.animate([
           {
-            transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
+            transform: 'translate3d(0, 0, 0) scale(1)',
             opacity: 1,
-            filter: 'blur(0px) contrast(1)',
           },
           {
-            transform: `translate3d(${(exitX * 0.25).toFixed(1)}px, ${(exitY * 0.25).toFixed(1)}px, 0) scale(1.7) rotate(${(exitRot * 0.3).toFixed(1)}deg)`,
-            opacity: 0.85,
-            filter: 'blur(3px) contrast(1.5) hue-rotate(35deg)',
-            offset: 0.3,
-          },
-          {
-            transform: `translate3d(${exitX.toFixed(1)}px, ${exitY.toFixed(1)}px, 0) scale(0.1) rotate(${exitRot.toFixed(1)}deg)`,
+            transform: 'translate3d(0, 40px, 0) scale(0.7)',
             opacity: 0,
-            filter: 'blur(30px) contrast(2.2) hue-rotate(180deg)',
-            offset: 1,
           }
         ], {
-          duration: 3400, // VERY SLOW, CREEPING DEPARTURE (3.4s)
+          duration: 320,
           easing: 'cubic-bezier(0.2, 0.05, 0.2, 1)',
           fill: 'forwards',
         });
@@ -1179,14 +926,12 @@ if (activeTheme === 'auto') {
         this.anchor.style.transform = 'translate3d(0, 0, 0)';
         this.setSprite('open');
         this.isShowcasing = false;
-        this.isMoving = false;
-      }, 3100);
+      }, 300);
     }
 
     destroy(): void {
       if (this.blinkTimer) clearTimeout(this.blinkTimer);
       if (this.glanceTimer) clearTimeout(this.glanceTimer);
-      if (this.warpTimer) clearTimeout(this.warpTimer);
       if (this.typingInterval) clearInterval(this.typingInterval);
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
     }
