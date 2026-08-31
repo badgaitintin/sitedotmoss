@@ -19,9 +19,9 @@ if (activeTheme === 'auto') {
 }
 ---
 
-<!-- Import Antique Old Style Italic Fonts (Cormorant Garamond + Playfair Display) -->
+<!-- Import Tangerine Calligraphy & Serif Fonts from Google Fonts -->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&family=Playfair+Display:ital,wght@1,600;1,700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&display=swap');
 </style>
 
 <!-- Hidden image preloads for instant, zero-flicker sprite switching -->
@@ -58,8 +58,8 @@ if (activeTheme === 'auto') {
       />
     </filter>
 
-    <!-- Modal Hero Avatar Localized Bulge Filter (180x180 space) -->
-    <filter id="gaga-hero-bulge-filter" x="-20%" y="-20%" width="140%" height="140%">
+    <!-- Modal Hero Avatar Localized Bulge Filter (200% area for intense jumpscare distortion) -->
+    <filter id="gaga-hero-bulge-filter" x="-50%" y="-50%" width="200%" height="200%">
       <feTurbulence
         id="gagaTurbulenceHero"
         type="fractalNoise"
@@ -68,8 +68,8 @@ if (activeTheme === 'auto') {
         seed="7"
         result="rawHeroNoise"
       />
-      <feDiffuseLighting in="rawHeroNoise" surfaceScale="2.5" diffuseConstant="1.2" result="litHeroNoise">
-        <fePointLight id="gagaLightHero" x="90" y="80" z="30" />
+      <feDiffuseLighting in="rawHeroNoise" surfaceScale="3.0" diffuseConstant="1.4" result="litHeroNoise">
+        <fePointLight id="gagaLightHero" x="90" y="80" z="35" />
       </feDiffuseLighting>
       <feDisplacementMap
         id="gagaDisplaceHero"
@@ -151,6 +151,7 @@ if (activeTheme === 'auto') {
           <span class="step-dot" data-step="1"></span>
           <span class="step-dot" data-step="2"></span>
           <span class="step-dot" data-step="3"></span>
+          <span class="step-dot" data-step="4"></span>
         </div>
         <span class="gaga-tap-hint">click to advance</span>
       </div>
@@ -354,10 +355,22 @@ if (activeTheme === 'auto') {
     align-items: center;
     justify-content: center;
     gap: 36px;
-    max-width: 880px;
+    max-width: 920px;
     width: 92vw;
     box-sizing: border-box;
     pointer-events: auto;
+  }
+
+  /* Horror jumpscare screen tremor */
+  .gaga-stage-shaking {
+    animation: gaga-horror-tremor 0.42s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  @keyframes gaga-horror-tremor {
+    10%, 90% { transform: translate3d(-4px, -3px, 0) scale(1.02); }
+    20%, 80% { transform: translate3d(5px, 4px, 0) scale(0.98); }
+    30%, 50%, 70% { transform: translate3d(-6px, 3px, 0) scale(1.03); }
+    40%, 60% { transform: translate3d(6px, -4px, 0) scale(0.97); }
   }
 
   /* ── LEFT: Hero Avatar ── */
@@ -368,8 +381,8 @@ if (activeTheme === 'auto') {
 
   .gaga-left-avatar-wrap {
     position: relative;
-    width: 185px;
-    height: 185px;
+    width: 220px;
+    height: 220px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
@@ -381,21 +394,21 @@ if (activeTheme === 'auto') {
   /* Dark diffuse smoky aura behind hero head */
   .gaga-left-diffuse-aura {
     position: absolute;
-    inset: -38px;
+    inset: -50px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(45, 8, 30, 0.75) 45%, rgba(0, 0, 0, 0.9) 70%, transparent 100%);
-    filter: blur(32px);
+    background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(55, 8, 35, 0.8) 45%, rgba(0, 0, 0, 0.95) 70%, transparent 100%);
+    filter: blur(36px);
     animation: gaga-calm-smoke-pulse 4.5s ease-in-out infinite alternate;
   }
 
   .gaga-left-hero-img {
-    width: 180px;
-    height: 180px;
+    width: 215px;
+    height: 215px;
     object-fit: contain;
     position: relative;
     z-index: 2;
     /* Applied Localized SVG Bulge filter + drop-shadow */
-    filter: url(#gaga-hero-bulge-filter) drop-shadow(0 20px 50px rgba(0, 0, 0, 1)) drop-shadow(0 0 30px rgba(0, 0, 0, 0.95));
+    filter: url(#gaga-hero-bulge-filter) drop-shadow(0 25px 60px rgba(0, 0, 0, 1)) drop-shadow(0 0 35px rgba(0, 0, 0, 0.95));
     animation: gaga-gentle-hero-float 5s ease-in-out infinite alternate;
     user-select: none;
     -webkit-user-drag: none;
@@ -404,13 +417,13 @@ if (activeTheme === 'auto') {
   /* Gentle calm hero hovering */
   @keyframes gaga-gentle-hero-float {
     0% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
-    100% { transform: translateY(3px); }
+    50% { transform: translateY(-7px); }
+    100% { transform: translateY(4px); }
   }
 
   /* ── RIGHT: Borderless Diffuse Spoken Text ── */
   .gaga-dialogue-overlay:not(.is-hidden) .gaga-right-speech-wrap {
-    animation: gaga-speech-pop 1.5s cubic-bezier(0.16, 1, 0.3, 1) 1.1s both;
+    animation: gaga-speech-pop 1.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s both;
   }
 
   .gaga-right-speech-wrap {
@@ -459,16 +472,16 @@ if (activeTheme === 'auto') {
     display: inline-block;
   }
 
-  /* OLD STYLE ITALIC SERIF TYPOGRAPHY */
+  /* TANGERINE CALLIGRAPHY & POETIC TYPOGRAPHY */
   .gaga-spoken-sentence {
     margin: 0;
-    font-family: 'Cormorant Garamond', 'Playfair Display', Garamond, Georgia, serif;
-    font-style: italic;
-    font-size: 1.95rem;
-    font-weight: 600;
-    line-height: 1.38;
+    font-family: 'Tangerine', 'Cormorant Garamond', cursive, Georgia, serif;
+    font-style: normal;
+    font-size: 3.1rem;
+    font-weight: 700;
+    line-height: 1.22;
     color: #ffffff;
-    letter-spacing: 0.4px;
+    letter-spacing: 0.5px;
     display: inline;
     text-shadow: 
       0 4px 20px rgba(0, 0, 0, 1),
@@ -477,25 +490,25 @@ if (activeTheme === 'auto') {
 
   .gaga-spoken-sentence.is-quote {
     color: #ffffff;
-    font-size: 2.05rem;
+    font-size: 3.4rem;
     font-weight: 700;
   }
 
   .gaga-spoken-sentence.is-author {
-    font-size: 1.35rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: #f43f5e;
     letter-spacing: 2px;
     display: block;
-    margin-top: 8px;
+    margin-top: 4px;
   }
 
   .gaga-typewriter-cursor {
     display: inline-block;
     font-family: monospace;
-    font-size: 1.7rem;
+    font-size: 2.2rem;
     color: #f43f5e;
-    margin-left: 4px;
+    margin-left: 6px;
     vertical-align: middle;
     animation: gaga-cursor-blink 0.7s infinite;
   }
@@ -541,10 +554,10 @@ if (activeTheme === 'auto') {
   }
 
   .gaga-tap-hint {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.4);
+    font-family: 'Tangerine', cursive, serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.45);
     letter-spacing: 0.5px;
   }
 
@@ -559,13 +572,13 @@ if (activeTheme === 'auto') {
     }
 
     .gaga-left-avatar-wrap {
-      width: 145px;
-      height: 145px;
+      width: 155px;
+      height: 155px;
     }
 
     .gaga-left-hero-img {
-      width: 140px;
-      height: 140px;
+      width: 150px;
+      height: 150px;
     }
 
     .gaga-right-speech-wrap {
@@ -575,15 +588,15 @@ if (activeTheme === 'auto') {
     }
 
     .gaga-spoken-sentence {
-      font-size: 1.45rem;
+      font-size: 2.35rem;
     }
 
     .gaga-spoken-sentence.is-quote {
-      font-size: 1.55rem;
+      font-size: 2.55rem;
     }
 
     .gaga-spoken-sentence.is-author {
-      font-size: 1.1rem;
+      font-size: 1.65rem;
     }
 
     .gaga-speech-footer {
@@ -652,10 +665,16 @@ if (activeTheme === 'auto') {
     // Sentence-by-sentence dialogue sequence
     private readonly MANIFESTO_SENTENCES = [
       {
+        text: 'This is The Manifesto of Mother Monster.',
+        isQuote: false,
+        isAuthor: false,
+        duration: 3200,
+      },
+      {
         text: '“Computers are only as creative as the humans who program them.”',
         isQuote: true,
         isAuthor: false,
-        duration: 3200,
+        duration: 3500,
       },
       {
         text: '— John Maeda',
@@ -664,22 +683,23 @@ if (activeTheme === 'auto') {
         duration: 2000,
       },
       {
-        text: 'AI empowers algorithms & computational graphics • zero synthetic art.',
+        text: 'No synthetic illusions — only living algorithms sculpted in mathematical light.',
+        isQuote: false,
+        isAuthor: false,
+        duration: 3800,
+      },
+      {
+        text: 'Every pixel is mathematically rendered, fiercely human-directed.',
         isQuote: false,
         isAuthor: false,
         duration: 3600,
-      },
-      {
-        text: 'Every pixel is mathematically rendered, human-directed.',
-        isQuote: false,
-        isAuthor: false,
-        duration: 3400,
       },
     ];
 
     private currentSentenceIdx = 0;
     private typingInterval: number | null = null;
     private nextSentenceTimeout: number | null = null;
+    private isMoving = false;
 
     private readonly SPRITES = {
       open: '/manifesto/transpbg/manifesto_open-Photoroom.png',
@@ -769,9 +789,10 @@ if (activeTheme === 'auto') {
       }, 300);
     }
 
-    // ── Slow, Creeping Localized Spot Bulge & Pinch Distortion ──
+    // ── Slow, Creeping Localized Spot Bulge & Pinch Distortion (Stationary Only) ──
 
     private triggerLocalizedSpotWarp(isHero: boolean): void {
+      if (this.isMoving) return;
       const displaceEl = isHero ? this.displaceHeroEl : this.displaceCornerEl;
       const turbEl = isHero ? this.turbHeroEl : this.turbCornerEl;
       const lightEl = isHero ? this.lightHeroEl : this.lightCornerEl;
@@ -810,6 +831,42 @@ if (activeTheme === 'auto') {
           requestAnimationFrame(animate);
         } else {
           displaceEl.setAttribute('scale', '0');
+        }
+      };
+      requestAnimationFrame(animate);
+    }
+
+    // ── Violent Horror Distortion Spike (For Jumpscares & Shockwaves) ──
+
+    private triggerHorrorDistortionSpike(isHero: boolean, intensity: number = 95, customDuration?: number): void {
+      const displaceEl = isHero ? this.displaceHeroEl : this.displaceCornerEl;
+      const turbEl = isHero ? this.turbHeroEl : this.turbCornerEl;
+      const lightEl = isHero ? this.lightHeroEl : this.lightCornerEl;
+      if (!displaceEl || !turbEl || !lightEl) return;
+
+      lightEl.setAttribute('x', '90');
+      lightEl.setAttribute('y', '85');
+      lightEl.setAttribute('z', '35');
+      turbEl.setAttribute('seed', String(Math.floor(Math.random() * 200) + 1));
+      turbEl.setAttribute('baseFrequency', '0.07 0.07');
+
+      const duration = customDuration || 2200;
+      const startTime = performance.now();
+
+      const animate = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Violent decaying oscillation shockwave
+        const wave = Math.sin(progress * Math.PI * 3.5) * (1 - progress);
+        const currentScale = wave * intensity;
+        displaceEl.setAttribute('scale', currentScale.toFixed(1));
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          displaceEl.setAttribute('scale', '0');
+          turbEl.setAttribute('baseFrequency', '0.04 0.04');
         }
       };
       requestAnimationFrame(animate);
@@ -883,6 +940,11 @@ if (activeTheme === 'auto') {
     private triggerManifestoSequence(): void {
       if (this.isShowcasing || !this.anchor || !this.modal) return;
       this.isShowcasing = true;
+      this.isMoving = true;
+
+      // Ensure zero distortion while moving into place
+      if (this.displaceHeroEl) this.displaceHeroEl.setAttribute('scale', '0');
+      if (this.displaceCornerEl) this.displaceCornerEl.setAttribute('scale', '0');
 
       // 1. Trigger Full-Screen Color Invert Strobe Flash on entry!
       this.triggerScreenFlash();
@@ -892,47 +954,85 @@ if (activeTheme === 'auto') {
       this.setSprite('open');
 
       setTimeout(() => {
-        if (!this.modal) return;
+        if (!this.modal || !this.heroAvatarWrap) return;
         this.modal.classList.remove('is-hidden');
 
-        // 3. Spawn from a completely RANDOM offscreen vector / angle!
-        const angle = Math.random() * Math.PI * 2;
-        const viewportHypot = Math.hypot(window.innerWidth, window.innerHeight);
-        const spawnDist = Math.max(viewportHypot * 0.75, 700);
-        const startX = Math.cos(angle) * spawnDist;
-        const startY = Math.sin(angle) * spawnDist;
-        const startRot = (Math.random() - 0.5) * 44; // -22deg to +22deg
-        const startScale = Math.random() * 0.15 + 0.18; // 0.18 - 0.33
-
-        if (this.heroAvatarWrap) {
-          this.heroAvatarWrap.animate([
-            {
-              transform: `translate3d(${startX.toFixed(1)}px, ${startY.toFixed(1)}px, 0) scale(${startScale.toFixed(2)}) rotate(${startRot.toFixed(1)}deg)`,
-              opacity: 0,
-              filter: 'blur(16px)',
-            },
-            {
-              transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
-              opacity: 1,
-              filter: 'blur(0px)',
-            }
-          ], {
-            duration: 2600, // VERY SLOW, CREEPING, OMINOUS ARRIVAL (2.6s)
-            easing: 'cubic-bezier(0.12, 0.95, 0.22, 1)',
-            fill: 'forwards',
-          });
+        // Stage jumpscare tremor
+        const stage = document.getElementById('gagaHeroStage');
+        if (stage) {
+          stage.classList.remove('gaga-stage-shaking');
+          void stage.offsetWidth;
+          stage.classList.add('gaga-stage-shaking');
         }
 
-        // Initial slow localized bulge warp as she settles into view
-        setTimeout(() => this.triggerLocalizedSpotWarp(true), 1500);
+        // Rapid uncanny eye glitch flicker during the jumpscare impact
+        const eyeGlitch = setInterval(() => {
+          if (!this.isShowcasing) { clearInterval(eyeGlitch); return; }
+          const states: ('open' | 'close' | 'left' | 'right')[] = ['open', 'close', 'left', 'right'];
+          this.setSprite(states[Math.floor(Math.random() * states.length)]);
+        }, 55);
+        setTimeout(() => {
+          clearInterval(eyeGlitch);
+          if (this.isShowcasing) this.setSprite('open');
+        }, 420);
 
-        // 4. Begin sentence typing stream once she floats closer into view
+        // Calculate offset to DEAD CENTER of the screen
+        const rect = this.heroAvatarWrap.getBoundingClientRect();
+        const stageCenterX = window.innerWidth / 2;
+        const stageCenterY = window.innerHeight / 2;
+        const elemCenterX = rect.left + rect.width / 2;
+        const elemCenterY = rect.top + rect.height / 2;
+
+        const centerDeltaX = stageCenterX - elemCenterX;
+        const centerDeltaY = stageCenterY - elemCenterY;
+
+        // JUMPSCARE & ULTRA-SLOW CREEPING GLIDE ANIMATION (4.8s) - ZERO DISTORTION WHILE MOVING
+        const entryAnim = this.heroAvatarWrap.animate([
+          {
+            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(4.4) rotate(${(Math.random() - 0.5) * 10}deg)`,
+            opacity: 1,
+            filter: 'contrast(1.4) brightness(1.25) drop-shadow(0 0 100px rgba(244, 63, 94, 0.7))',
+            offset: 0,
+          },
+          {
+            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(3.8) rotate(0deg)`,
+            opacity: 1,
+            filter: 'contrast(1.25) brightness(1.15) drop-shadow(0 0 80px rgba(0, 0, 0, 0.98))',
+            offset: 0.2,
+          },
+          {
+            transform: `translate3d(${(centerDeltaX * 0.45).toFixed(1)}px, ${(centerDeltaY * 0.35).toFixed(1)}px, 0) scale(2.0) rotate(${(Math.random() - 0.5) * 4}deg)`,
+            opacity: 1,
+            filter: 'contrast(1.1) brightness(1.05) drop-shadow(0 0 50px rgba(0, 0, 0, 0.95))',
+            offset: 0.62,
+          },
+          {
+            transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
+            opacity: 1,
+            filter: 'contrast(1) brightness(1) drop-shadow(0 25px 60px rgba(0, 0, 0, 1))',
+            offset: 1,
+          }
+        ], {
+          duration: 4800, // ULTRA-SLOW, CREEPING, MENACING HORROR ARRIVAL (4.8s)
+          easing: 'cubic-bezier(0.1, 0.9, 0.2, 1)',
+          fill: 'forwards',
+        });
+
+        // Once she finishes moving and is completely STILL -> allow distortion
+        entryAnim.onfinish = () => {
+          this.isMoving = false;
+          if (this.isShowcasing) {
+            this.triggerLocalizedSpotWarp(true);
+          }
+        };
+
+        // Begin dialogue stream after she glides into position
         this.currentSentenceIdx = 0;
         setTimeout(() => {
           if (this.isShowcasing) {
             this.speakSentence(0);
           }
-        }, 1300);
+        }, 2800);
       }, 350);
     }
 
@@ -1010,8 +1110,10 @@ if (activeTheme === 'auto') {
 
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
 
-      // Trigger slow localized spot warp on sentence advance
-      this.triggerLocalizedSpotWarp(true);
+      // Trigger slow localized spot warp on sentence advance while sitting still
+      if (!this.isMoving) {
+        this.triggerLocalizedSpotWarp(true);
+      }
 
       // Proceed to next sentence (replaces current text cleanly, no history)
       this.speakSentence(this.currentSentenceIdx + 1);
@@ -1019,32 +1121,53 @@ if (activeTheme === 'auto') {
 
     private dismissShowcase(): void {
       if (!this.isShowcasing || !this.modal || !this.anchor) return;
+      this.isMoving = true;
       if (this.typingInterval) clearInterval(this.typingInterval);
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
 
-      // Trigger Full-Screen Color Invert Strobe Flash on exit!
+      // Ensure zero distortion while sliding out
+      if (this.displaceHeroEl) this.displaceHeroEl.setAttribute('scale', '0');
+      if (this.displaceCornerEl) this.displaceCornerEl.setAttribute('scale', '0');
+
+      // Trigger Full-Screen Color Invert Strobe Flash on exit
       this.triggerScreenFlash();
 
-      // Slow fading exit float (drift away into darkness)
+      // Horror screen tremor on exit
+      const stage = document.getElementById('gagaHeroStage');
+      if (stage) {
+        stage.classList.add('gaga-stage-shaking');
+        setTimeout(() => stage.classList.remove('gaga-stage-shaking'), 450);
+      }
+
+      // ULTRA-SLOW CREEPING EXIT (3.4s) - ZERO DISTORTION WHILE MOVING
       if (this.heroAvatarWrap) {
         const exitAngle = Math.random() * Math.PI * 2;
-        const exitDist = Math.max(window.innerWidth, window.innerHeight) * 0.7;
+        const exitDist = Math.max(window.innerWidth, window.innerHeight) * 0.9;
         const exitX = Math.cos(exitAngle) * exitDist;
         const exitY = Math.sin(exitAngle) * exitDist;
+        const exitRot = (Math.random() - 0.5) * 45;
+
         this.heroAvatarWrap.animate([
           {
             transform: 'translate3d(0, 0, 0) scale(1) rotate(0deg)',
             opacity: 1,
-            filter: 'blur(0px)',
+            filter: 'blur(0px) contrast(1)',
           },
           {
-            transform: `translate3d(${exitX.toFixed(1)}px, ${exitY.toFixed(1)}px, 0) scale(0.25) rotate(${((Math.random() - 0.5) * 30).toFixed(1)}deg)`,
+            transform: `translate3d(${(exitX * 0.25).toFixed(1)}px, ${(exitY * 0.25).toFixed(1)}px, 0) scale(1.7) rotate(${(exitRot * 0.3).toFixed(1)}deg)`,
+            opacity: 0.85,
+            filter: 'blur(3px) contrast(1.5) hue-rotate(35deg)',
+            offset: 0.3,
+          },
+          {
+            transform: `translate3d(${exitX.toFixed(1)}px, ${exitY.toFixed(1)}px, 0) scale(0.1) rotate(${exitRot.toFixed(1)}deg)`,
             opacity: 0,
-            filter: 'blur(16px)',
+            filter: 'blur(30px) contrast(2.2) hue-rotate(180deg)',
+            offset: 1,
           }
         ], {
-          duration: 750,
-          easing: 'cubic-bezier(0.4, 0, 1, 1)',
+          duration: 3400, // VERY SLOW, CREEPING DEPARTURE (3.4s)
+          easing: 'cubic-bezier(0.2, 0.05, 0.2, 1)',
           fill: 'forwards',
         });
       }
@@ -1056,7 +1179,8 @@ if (activeTheme === 'auto') {
         this.anchor.style.transform = 'translate3d(0, 0, 0)';
         this.setSprite('open');
         this.isShowcasing = false;
-      }, 350);
+        this.isMoving = false;
+      }, 3100);
     }
 
     destroy(): void {
