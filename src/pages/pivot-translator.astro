@@ -15,7 +15,7 @@ import Watermark from '../components/Watermark.astro';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,700;1,9..40,900&family=Space+Grotesk:wght@500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,700;1,9..40,900&family=Kanit:wght@800;900&family=Space+Grotesk:wght@700;800&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -40,7 +40,7 @@ import Watermark from '../components/Watermark.astro';
         --cyan-bg: rgba(230, 247, 250, 0.9);
         --cyan-subtle: #7dd3fc;
         
-        --font-heavy: "Space Grotesk", "DM Sans", -apple-system, sans-serif;
+        --font-heavy: "Space Grotesk", "Kanit", "Leelawadee UI", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         --r-card: 24px;
         --r-control: 12px;
         --r-btn: 10px;
@@ -89,16 +89,18 @@ import Watermark from '../components/Watermark.astro';
       .wall-row {
         display: flex;
         width: 100%;
-        overflow: hidden;
+        flex: 1 1 0;
+        min-height: 0;
+        overflow: visible;
         white-space: nowrap;
-        line-height: 0.68;
-        margin: -3px 0;
+        align-items: center;
+        margin: 0;
         padding: 0;
       }
 
       .wall-track {
         display: flex;
-        gap: 20px;
+        gap: 36px;
         flex-shrink: 0;
         will-change: transform;
         align-items: center;
@@ -139,15 +141,15 @@ import Watermark from '../components/Watermark.astro';
         outline: none;
         padding: 0 4px;
         font-family: var(--font-heavy);
-        font-size: 38px;
-        font-weight: 800;
+        font-size: clamp(34px, 6.2vh, 68px);
+        font-weight: 900;
         letter-spacing: -1.2px;
+        line-height: 0.88;
         text-transform: uppercase;
         color: var(--text-wall-idle);
         cursor: pointer;
         display: inline-flex;
         align-items: center;
-        gap: 12px;
         transition: color 0.15s ease, transform 0.15s ease;
       }
 
@@ -160,18 +162,150 @@ import Watermark from '../components/Watermark.astro';
       }
 
       .wall-dot {
-        font-size: 22px;
-        opacity: 0.28;
-        vertical-align: middle;
+        display: none !important;
       }
 
-      /* Screen Vignette */
+      /* ==========================================================================
+         RANDOMIZED KINETIC TYPOGRAPHY EFFECTS (TRANSPARENT & OLD TV / CRT)
+         ========================================================================== */
+      /* 1. Hollow / Transparent Outline */
+      .wall-sentence.fx-hollow {
+        color: transparent !important;
+        -webkit-text-stroke: 1.5px var(--text-wall-idle);
+      }
+      .wall-sentence.fx-hollow:hover {
+        -webkit-text-stroke: 1.8px var(--text-wall-hover);
+      }
+      .wall-sentence.fx-hollow.accent-hover:hover {
+        -webkit-text-stroke: 1.8px var(--cyan-primary);
+      }
+
+      /* 2. Ghost / Translucent */
+      .wall-sentence.fx-ghost {
+        opacity: 0.35;
+      }
+      .wall-sentence.fx-ghost:hover {
+        opacity: 1;
+      }
+
+      /* 3. Old TV Horizontal Scanlines (CRT Raster) */
+      .wall-sentence.fx-tv-scanline {
+        background: repeating-linear-gradient(
+          0deg,
+          var(--text-wall-idle) 0px,
+          var(--text-wall-idle) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+      .wall-sentence.fx-tv-scanline:hover {
+        background: repeating-linear-gradient(
+          0deg,
+          var(--text-wall-hover) 0px,
+          var(--text-wall-hover) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .wall-sentence.fx-tv-scanline.accent-hover:hover {
+        background: repeating-linear-gradient(
+          0deg,
+          var(--cyan-primary) 0px,
+          var(--cyan-primary) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* 4. Old TV Vertical LED Slits / CRT Phosphor Grille */
+      .wall-sentence.fx-tv-vertical {
+        background: repeating-linear-gradient(
+          90deg,
+          var(--text-wall-idle) 0px,
+          var(--text-wall-idle) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+      }
+      .wall-sentence.fx-tv-vertical:hover {
+        background: repeating-linear-gradient(
+          90deg,
+          var(--text-wall-hover) 0px,
+          var(--text-wall-hover) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .wall-sentence.fx-tv-vertical.accent-hover:hover {
+        background: repeating-linear-gradient(
+          90deg,
+          var(--cyan-primary) 0px,
+          var(--cyan-primary) 2.5px,
+          transparent 2.5px,
+          transparent 5.5px
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* 5. Old TV CRT Chromatic Aberration / RGB Split */
+      .wall-sentence.fx-tv-rgb {
+        color: var(--text-wall-idle);
+        text-shadow: 
+          2px 0 0 rgba(239, 68, 68, 0.4),
+          -2px 0 0 rgba(6, 182, 212, 0.4);
+      }
+      .wall-sentence.fx-tv-rgb:hover {
+        color: var(--text-wall-hover);
+        text-shadow: 
+          3px 0 0 rgba(239, 68, 68, 0.7),
+          -3px 0 0 rgba(6, 182, 212, 0.7);
+      }
+      .wall-sentence.fx-tv-rgb.accent-hover:hover {
+        color: var(--cyan-primary);
+        text-shadow: 
+          3px 0 0 rgba(239, 68, 68, 0.65),
+          -3px 0 0 rgba(6, 182, 212, 0.75);
+      }
+
+      /* 6. Old TV Glitch & Static Jitter */
+      .wall-sentence.fx-tv-glitch {
+        animation: tv-jitter 6s infinite;
+        text-shadow: 
+          2px 0 0 rgba(239, 68, 68, 0.35),
+          -2px 0 0 rgba(6, 182, 212, 0.35);
+      }
+      @keyframes tv-jitter {
+        0%, 93%, 100% { transform: translate(0, 0); }
+        94% { transform: translate(-2px, 1px); }
+        95% { transform: translate(2px, -1px); }
+        96% { transform: translate(0, 0); }
+        98% { transform: translate(-1.5px, 0); }
+        99% { transform: translate(0, 0); }
+      }
+
+      /* Screen Vignette with subtle CRT scanline grid */
       .wall-vignette {
         position: fixed;
         inset: 0;
         z-index: 2;
         pointer-events: none;
-        background: radial-gradient(circle at center, rgba(237, 242, 247, 0.3) 0%, rgba(237, 242, 247, 0.8) 100%);
+        background: 
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.015) 50%),
+          radial-gradient(circle at center, rgba(237, 242, 247, 0.25) 0%, rgba(237, 242, 247, 0.82) 100%);
+        background-size: 100% 4px, 100% 100%;
       }
 
       /* ==========================================================================
@@ -838,18 +972,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-1">
           <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="你吃了吗？" data-src="zh" data-tgt="th">你吃了吗？</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="วันนี้อากาศดีมากเลยนะ" data-src="th" data-tgt="en">วันนี้อากาศดีมากเลยนะ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -857,18 +985,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-1">
           <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="我们一起去喝咖啡吧。" data-src="zh" data-tgt="th">我们一起去喝咖啡吧。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="What are you having for lunch?" data-src="en" data-tgt="th">WHAT ARE YOU HAVING FOR LUNCH?</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -876,18 +998,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-2">
           <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="不好意思让你久等了。" data-src="zh" data-tgt="th">不好意思让你久等了。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="กำลังเดินทางไปหาแล้วนะ" data-src="th" data-tgt="en">กำลังเดินทางไปหาแล้วนะ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -895,18 +1011,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-2">
           <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="อีกสิบนาทีจะถึงที่นัดหมายนะ" data-src="th" data-tgt="en">อีกสิบนาทีจะถึงที่นัดหมายนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Have a wonderful day ahead!" data-src="en" data-tgt="zh">HAVE A WONDERFUL DAY AHEAD!</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -914,18 +1024,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-3">
           <span class="wall-sentence accent-hover" data-text="ขอให้วันนี้เป็นวันที่ดีของคุณนะ" data-src="th" data-tgt="en">ขอให้วันนี้เป็นวันที่ดีของคุณนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="祝你今天过得开心！" data-src="zh" data-tgt="th">祝你今天过得开心！</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Thank you so much for your kind help." data-src="en" data-tgt="th">THANK YOU SO MUCH FOR YOUR KIND HELP.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="ขอบคุณมากๆ สำหรับความช่วยเหลือ" data-src="th" data-tgt="zh">ขอบคุณมากๆ สำหรับความช่วยเหลือ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="ขอให้วันนี้เป็นวันที่ดีของคุณนะ" data-src="th" data-tgt="en">ขอให้วันนี้เป็นวันที่ดีของคุณนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="祝你今天过得开心！" data-src="zh" data-tgt="th">祝你今天过得开心！</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -933,18 +1037,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-3">
           <span class="wall-sentence" data-text="非常感谢你的帮助。" data-src="zh" data-tgt="en">非常感谢你的帮助。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Are you free this weekend?" data-src="en" data-tgt="th">ARE YOU FREE THIS WEEKEND?</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="สุดสัปดาห์นี้ว่างไหม ไปเที่ยวกัน" data-src="th" data-tgt="en">สุดสัปดาห์นี้ว่างไหม ไปเที่ยวกัน</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="周末有空吗？我们出去玩。" data-src="zh" data-tgt="th">周末有空吗？我们出去玩。</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="非常感谢你的帮助。" data-src="zh" data-tgt="en">非常感谢你的帮助。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Are you free this weekend?" data-src="en" data-tgt="th">ARE YOU FREE THIS WEEKEND?</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -952,18 +1050,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-4">
           <span class="wall-sentence accent-hover" data-text="Take good care of yourself." data-src="en" data-tgt="th">TAKE GOOD CARE OF YOURSELF.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ" data-src="th" data-tgt="en">ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="照顾好自己，多注意休息。" data-src="zh" data-tgt="th">照顾好自己，多注意休息。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="See you again soon!" data-src="en" data-tgt="th">SEE YOU AGAIN SOON!</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="Take good care of yourself." data-src="en" data-tgt="th">TAKE GOOD CARE OF YOURSELF.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ" data-src="th" data-tgt="en">ดูแลตัวเองดีๆ นะ พักผ่อนเยอะๆ</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -971,18 +1063,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-4">
           <span class="wall-sentence" data-text="ไว้เจอกันใหม่เร็วๆ นี้นะครับ" data-src="th" data-tgt="en">ไว้เจอกันใหม่เร็วๆ นี้นะครับ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="期待下次与你见面！" data-src="zh" data-tgt="en">期待下次与你见面！</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Don't worry about it, everything is fine." data-src="en" data-tgt="th">DON'T WORRY ABOUT IT, EVERYTHING IS FINE.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="ไม่ต้องเป็นห่วงนะ ทุกอย่างเรียบร้อยดี" data-src="th" data-tgt="en">ไม่ต้องเป็นห่วงนะ ทุกอย่างเรียบร้อยดี</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="ไว้เจอกันใหม่เร็วๆ นี้นะครับ" data-src="th" data-tgt="en">ไว้เจอกันใหม่เร็วๆ นี้นะครับ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="期待下次与你见面！" data-src="zh" data-tgt="en">期待下次与你见面！</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -990,18 +1076,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-5">
           <span class="wall-sentence accent-hover" data-text="别担心，一切都会好起来的。" data-src="zh" data-tgt="th">别担心，一切都会好起来的。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Have a safe trip home!" data-src="en" data-tgt="th">HAVE A SAFE TRIP HOME!</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="เดินทางกลับบ้านปลอดภัยนะ" data-src="th" data-tgt="en">เดินทางกลับบ้านปลอดภัยนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="回家路上注意安全。" data-src="zh" data-tgt="th">回家路上注意安全。</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="别担心，一切都会好起来的。" data-src="zh" data-tgt="th">别担心，一切都会好起来的。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Have a safe trip home!" data-src="en" data-tgt="th">HAVE A SAFE TRIP HOME!</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -1009,18 +1089,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-5">
           <span class="wall-sentence" data-text="คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน" data-src="th" data-tgt="en">คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Good night and sweet dreams!" data-src="en" data-tgt="th">GOOD NIGHT AND SWEED DREAMS!</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="晚安，祝你好梦。" data-src="zh" data-tgt="th">晚安，祝你好梦。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="วันนี้เหนื่อยไหม พักผ่อนนะ" data-src="th" data-tgt="en">วันนี้เหนื่อยไหม พักผ่อนนะ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน" data-src="th" data-tgt="en">คืนนี้ฝันดีนะ พรุ่งนี้เจอกัน</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Good night and sweet dreams!" data-src="en" data-tgt="th">GOOD NIGHT AND SWEED DREAMS!</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -1028,18 +1102,12 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-6">
           <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="你吃了吗？" data-src="zh" data-tgt="th">你吃了吗？</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="วันนี้อากาศดีมากเลยนะ" data-src="th" data-tgt="en">วันนี้อากาศดีมากเลยนะ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="กินข้าวหรือยัง" data-src="th" data-tgt="en">กินข้าวหรือยัง</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="How are you doing today?" data-src="en" data-tgt="th">HOW ARE YOU DOING TODAY?</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -1047,16 +1115,11 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-6">
           <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="เราไปดื่มกาแฟด้วยกันไหม" data-src="th" data-tgt="en">เราไปดื่มกาแฟด้วยกันไหม</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="我们一起去喝咖啡吧。" data-src="zh" data-tgt="th">我们一起去喝咖啡吧。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="What are you having for lunch?" data-src="en" data-tgt="th">WHAT ARE YOU HAVING FOR LUNCH?</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="Let's grab some coffee together." data-src="en" data-tgt="th">LET'S GRAB SOME COFFEE TOGETHER.</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -1064,16 +1127,11 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-r-1">
           <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="Sorry for keeping you waiting." data-src="en" data-tgt="th">SORRY FOR KEEPING YOU WAITING.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="不好意思让你久等了。" data-src="zh" data-tgt="th">不好意思让你久等了。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="กำลังเดินทางไปหาแล้วนะ" data-src="th" data-tgt="en">กำลังเดินทางไปหาแล้วนะ</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence accent-hover" data-text="ขอโทษที่ให้รอนานนะ" data-src="th" data-tgt="en">ขอโทษที่ให้รอนานนะ</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
 
@@ -1081,16 +1139,11 @@ import Watermark from '../components/Watermark.astro';
       <div class="wall-row">
         <div class="wall-track scroll-l-2">
           <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="我十分钟后到。" data-src="zh" data-tgt="en">我十分钟后到。</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence" data-text="อีกสิบนาทีจะถึงที่นัดหมายนะ" data-src="th" data-tgt="en">อีกสิบนาทีจะถึงที่นัดหมายนะ</span>
-          <span class="wall-dot">/</span>
           <span class="wall-sentence accent-hover" data-text="Have a wonderful day ahead!" data-src="en" data-tgt="zh">HAVE A WONDERFUL DAY AHEAD!</span>
-          <span class="wall-dot">/</span>
           <!-- Duplicate -->
           <span class="wall-sentence" data-text="I will be there in ten minutes." data-src="en" data-tgt="th">I WILL BE THERE IN TEN MINUTES.</span>
-          <span class="wall-dot">/</span>
         </div>
       </div>
     </div>
@@ -1628,8 +1681,29 @@ import Watermark from '../components/Watermark.astro';
         window.speechSynthesis.speak(u);
       }
 
+      function applyRandomKineticEffects() {
+        const sentences = document.querySelectorAll(".billboard-wall .wall-sentence");
+        const effectPool = [
+          "fx-hollow",       // Hollow transparent outline
+          "fx-hollow",       // Hollow transparent outline
+          "fx-ghost",        // Translucent 35% opacity
+          "fx-tv-scanline",  // Old CRT TV horizontal scanlines
+          "fx-tv-vertical",  // Old TV / LED vertical phosphor slits
+          "fx-tv-rgb",       // Old CRT TV chromatic aberration (RGB split)
+          "fx-tv-glitch",    // Old TV signal static glitch
+          "",                // Solid normal
+          "",                // Solid normal
+        ];
+
+        sentences.forEach((el) => {
+          const chosen = effectPool[Math.floor(Math.random() * effectPool.length)];
+          if (chosen) el.classList.add(chosen);
+        });
+      }
+
       // ─── EVENT HANDLERS ────────────────────────────────────────────────────
       document.addEventListener("DOMContentLoaded", () => {
+        applyRandomKineticEffects();
         updateConsoleUI();
 
         // Realtime typing debounce (Wait 3.5s after user stops typing before auto-translating, or instant on Translate button / Ctrl+Enter)
