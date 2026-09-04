@@ -19,9 +19,9 @@ if (activeTheme === 'auto') {
 }
 ---
 
-<!-- Import Tangerine Calligraphy & Serif Fonts from Google Fonts -->
+<!-- Import Haute Gothic Blackletter & High-Fashion Monochromatic Serif Fonts -->
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&family=Cormorant+Garamond:ital,wght@1,500;1,600;1,700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Grenze+Gotisch:wght@300;400;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600;1,700&display=swap');
 </style>
 
 <!-- Hidden image preloads for instant, zero-flicker sprite switching -->
@@ -32,73 +32,162 @@ if (activeTheme === 'auto') {
   <img src="/manifesto/transpbg/manifesto_right-Photoroom.png" alt="" />
 </div>
 
-<!-- Full-Screen Temporary Color Invert Flash Overlay (On enter & exit) -->
+<!-- Full-Screen Monochromatic Invert Strobe Flash Overlay (On enter & exit) -->
 <div id="gaga-screen-flash" class="gaga-screen-flash-invert" aria-hidden="true"></div>
 
-<!-- Borderless Dark Smoky Watermark Sprite with Subtle Volumetric Rainbow Rays -->
+<!-- ==========================================================================
+     SVG TURBULENCE DISPLACEMENT FILTERS (LOCALIZED RANDOM GLITCH & IDLE WARP)
+     ========================================================================== -->
+<svg class="gaga-svg-filter-def" aria-hidden="true">
+  <defs>
+    <!-- 1. Ambient Breathing Liquid Warp -->
+    <filter id="gaga-idle-filter" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence
+        id="gagaIdleTurbulence"
+        type="fractalNoise"
+        baseFrequency="0.012 0.016"
+        numOctaves="2"
+        result="noise"
+        seed="1"
+      />
+      <feDisplacementMap
+        id="gagaIdleDisp"
+        in="SourceGraphic"
+        in2="noise"
+        scale="10"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+
+    <!-- 2. Violent Localized Tear & Glitch Filter -->
+    <filter id="gaga-tear-filter" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence
+        id="gagaTearTurbulence"
+        type="fractalNoise"
+        baseFrequency="0.04 0.18"
+        numOctaves="3"
+        result="tearNoise"
+        seed="5"
+      />
+      <feDisplacementMap
+        id="gagaTearDisp"
+        in="SourceGraphic"
+        in2="tearNoise"
+        scale="45"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      />
+    </filter>
+  </defs>
+</svg>
+
+<!-- ==========================================================================
+     CORNER WATERMARK: PURE BORDERLESS DIFFUSE BLACK SMOKE & LOCALIZED DISTORTION
+     ========================================================================== -->
 <div
   id="site-watermark"
   class={`watermark-container ${position} theme-${activeTheme}`}
   data-position={position}
   data-theme={activeTheme}
-  title="Click to speak"
+  title="✠ Mother Monster Manifesto ✠"
   role="button"
   tabindex="0"
 >
   <div class="gaga-avatar-anchor" id="gagaAvatarAnchor">
-    <!-- Deep Dark Velvet Smoky Base (Dominant) -->
-    <div class="gaga-smoky-shadow" aria-hidden="true"></div>
-
-    <!-- Soft Volumetric Rainbow Rays (Subtle, Embedded in Darkness) -->
-    <div class="gaga-corner-rainbow-rays" aria-hidden="true"></div>
+    <!-- Deepest Diffuse Pure Black Smoke Haze (No borders, feathered decay) -->
+    <div class="gaga-corner-smoke" aria-hidden="true"></div>
 
     <div class="gaga-sprite-wrap" id="gagaSpriteWrap">
+      <!-- Base Corner Image -->
       <img
         id="gagaSpriteImg"
-        class="gaga-sprite-img"
+        class="gaga-sprite-img base-sprite"
         src="/manifesto/transpbg/manifesto_open-Photoroom.png"
-        alt="Lady Gaga"
+        alt="Mother Monster"
+        draggable="false"
+      />
+      <!-- Localized Glitch Tear Overlay for Corner -->
+      <img
+        id="gagaCornerTear"
+        class="gaga-sprite-img corner-tear-slice"
+        src="/manifesto/transpbg/manifesto_open-Photoroom.png"
+        alt=""
+        aria-hidden="true"
         draggable="false"
       />
     </div>
   </div>
 </div>
 
-<!-- Floating Dialogue Modal: Avatar Left, Text Right, Borderless, Dark Diffuse Smoke & Soft Rainbow Rays -->
+<!-- ==========================================================================
+     HAUNTING GOTHIC MODAL: PURE BLACK DIFFUSE SMOKE & LOCALIZED RANDOM DISTORTION
+     ========================================================================== -->
 <div id="gaga-manifesto-modal" class={`gaga-dialogue-overlay theme-${activeTheme} is-hidden`} aria-hidden="true">
-  <!-- Soft transparent backdrop, keeps website visible -->
-  <div class="gaga-transparent-backdrop" id="gagaModalBackdrop"></div>
-  
-  <!-- Subtle Vintage Film Grain Layer -->
-  <div class="gaga-vintage-grain-overlay" aria-hidden="true"></div>
+  <!-- Pitch Black Void Backdrop -->
+  <div class="gaga-dark-backdrop" id="gagaModalBackdrop"></div>
+
+  <!-- Soft Ghostly Cold Volumetric Spotlights (Pure Monochrome) -->
+  <div class="gaga-ghost-spotlights" aria-hidden="true">
+    <div class="spotlight-beam beam-left"></div>
+    <div class="spotlight-beam beam-right"></div>
+  </div>
+
+  <!-- Subtle Film Grain / Ethereal Shadow Dust -->
+  <div class="gaga-gothic-grain" aria-hidden="true"></div>
 
   <div class="gaga-dialogue-stage" id="gagaHeroStage">
-    <!-- LEFT: Lady Gaga Head with Deep Dark Smoky Haze & Volumetric Rainbow Rays -->
+    <!-- ── LEFT: Mother Monster with Localized Random Spot Distortion ── -->
     <div class="gaga-left-avatar-wrap" id="gagaHeroAvatarWrap">
-      <!-- 1. Deep Gothic Dark Velvet Smoke Base (Extremely diffuse, 90% dark) -->
-      <div class="gaga-left-dark-smoke" aria-hidden="true"></div>
+      <!-- Pure Black Diffuse Smoke Cloud (100% Borderless, Seamless Decay) -->
+      <div class="gaga-left-smoke-cloud" aria-hidden="true"></div>
 
-      <!-- 2. Soft Volumetric Rainbow Light Rays (Stationary, subtle, embedded in dark smoke) -->
-      <div class="gaga-left-rainbow-rays" aria-hidden="true"></div>
+      <!-- Multi-Layered Distortion Stage -->
+      <div class="gaga-distort-container" id="gagaDistortContainer">
+        <!-- 1. Base Face Layer (Smooth Breathing Liquid Warp) -->
+        <img
+          id="gagaHeroImg"
+          class="gaga-left-hero-img gaga-hero-base"
+          src="/manifesto/transpbg/manifesto_open-Photoroom.png"
+          alt="Mother Monster"
+          draggable="false"
+        />
 
-      <img
-        id="gagaHeroImg"
-        class="gaga-left-hero-img"
-        src="/manifesto/transpbg/manifesto_open-Photoroom.png"
-        alt="Lady Gaga"
-        draggable="false"
-      />
+        <!-- 2. Localized Random Glitch Slice (Eyes, Mouth, Slices) -->
+        <img
+          id="gagaHeroSlice1"
+          class="gaga-left-hero-img gaga-hero-slice slice-1"
+          src="/manifesto/transpbg/manifesto_open-Photoroom.png"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
+
+        <!-- 3. Secondary Ghost Dislocation Slice -->
+        <img
+          id="gagaHeroSlice2"
+          class="gaga-left-hero-img gaga-hero-slice slice-2"
+          src="/manifesto/transpbg/manifesto_open-Photoroom.png"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        />
+      </div>
     </div>
 
-    <!-- RIGHT: Spoken Text with Deep Dark Smoky Haze & Soft Rainbow Rays -->
+    <!-- ── RIGHT: Borderless Pure Diffuse Spoken Script ── -->
     <div class="gaga-right-speech-wrap" id="gagaSpeechBox">
-      <!-- Deep dark diffuse smoke cloud -->
-      <div class="gaga-speech-dark-smoke" aria-hidden="true"></div>
+      <!-- Broad Diffuse Black Smoke Cloud (No box, no borders, no red) -->
+      <div class="gaga-speech-smoke-cloud" aria-hidden="true"></div>
 
-      <!-- Soft diffuse rainbow ray glow behind text -->
-      <div class="gaga-speech-rainbow-rays" aria-hidden="true"></div>
+      <!-- Sacred Subtitle: Pure Monochrome -->
+      <div class="gaga-manifesto-header">
+        <span class="gaga-header-rune">✠</span>
+        <span class="gaga-header-title">THE MANIFESTO OF MOTHER MONSTER</span>
+        <span class="gaga-header-rune">✠</span>
+      </div>
 
-      <!-- Current Sentence Only -->
+      <!-- Current Spoken Sentence (Haute Gothic Blackletter / Operatic Serif) -->
       <div class="gaga-active-sentence-box">
         <p class="gaga-spoken-sentence" id="gagaActiveSentenceText"></p>
         <span class="gaga-typewriter-cursor" id="gagaCursor">|</span>
@@ -113,7 +202,7 @@ if (activeTheme === 'auto') {
           <span class="step-dot" data-step="3"></span>
           <span class="step-dot" data-step="4"></span>
         </div>
-        <span class="gaga-tap-hint">click to advance</span>
+        <span class="gaga-tap-hint">click anywhere to proceed</span>
       </div>
     </div>
   </div>
@@ -121,21 +210,19 @@ if (activeTheme === 'auto') {
 
 <style>
   /* ==========================================================================
-     DEFAULT DYNAMIC CHROMATIC RAINBOW CSS VARIABLES
+     HIDDEN SVG FILTER CONTAINER
      ========================================================================== */
-  :root {
-    --gaga-c1: hsla(330, 95%, 62%, 0.7);
-    --gaga-c2: hsla(190, 95%, 58%, 0.6);
-    --gaga-c3: hsla(270, 90%, 60%, 0.5);
-    --gaga-c4: hsla(45, 95%, 58%, 0.4);
-    --gaga-accent: #f43f5e;
-    --gaga-glow: rgba(244, 63, 94, 0.35);
-    --gaga-ray-angle: 20deg;
+  .gaga-svg-filter-def {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
   }
 
-  /* ==========================================================================
-     HIDDEN PRELOAD CONTAINER
-     ========================================================================== */
+  /* Hidden Image Preloader */
   .gaga-preload {
     position: absolute;
     width: 0;
@@ -147,7 +234,7 @@ if (activeTheme === 'auto') {
   }
 
   /* ==========================================================================
-     FULLSCREEN COLOR INVERT FLASH STROBE (ON ENTER & EXIT ONLY)
+     MONOCHROMATIC FULLSCREEN INVERT FLASH (ON ENTER & EXIT)
      ========================================================================== */
   .gaga-screen-flash-invert {
     position: fixed;
@@ -163,10 +250,10 @@ if (activeTheme === 'auto') {
 
   .gaga-screen-flash-invert.is-flashing {
     visibility: visible;
-    animation: gaga-invert-strobe 0.22s steps(2, start) forwards;
+    animation: gaga-invert-flash 0.22s steps(2, start) forwards;
   }
 
-  @keyframes gaga-invert-strobe {
+  @keyframes gaga-invert-flash {
     0% { opacity: 0; }
     15% { opacity: 0.95; }
     40% { opacity: 0.1; }
@@ -175,11 +262,11 @@ if (activeTheme === 'auto') {
   }
 
   /* ==========================================================================
-     BORDERLESS CORNER WATERMARK (DEEP DARK SMOKE & SUBTLE VOLUMETRIC RAYS)
+     CORNER WATERMARK: PURE BORDERLESS DIFFUSE BLACK SMOKE
      ========================================================================== */
   .watermark-container {
     position: fixed;
-    bottom: 20px;
+    bottom: 24px;
     z-index: 99999;
     user-select: none;
     -webkit-user-select: none;
@@ -188,18 +275,19 @@ if (activeTheme === 'auto') {
     background: transparent;
     padding: 0;
     margin: 0;
+    border: none;
     outline: none;
     transform: translateZ(0);
     contain: layout style;
   }
 
   .watermark-container.bottom-right {
-    right: 24px;
+    right: 26px;
     left: auto;
   }
 
   .watermark-container.bottom-left {
-    left: 24px;
+    left: 26px;
     right: auto;
   }
 
@@ -213,86 +301,55 @@ if (activeTheme === 'auto') {
     transform: translateZ(0);
   }
 
-  /* 1. Deep Dark Velvet Smoke Base (Seamless Feathered Decay) */
-  .gaga-smoky-shadow {
+  /* Pure Deep Black Smoke Cloud (Zero red, ultra-feathered decay, 0 borders) */
+  .gaga-corner-smoke {
     position: absolute;
-    inset: -28px;
+    inset: -45px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 0.98) 0%, rgba(18, 5, 22, 0.92) 35%, rgba(0, 0, 0, 0.6) 60%, rgba(0, 0, 0, 0.15) 82%, transparent 100%);
-    filter: blur(14px);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.94) 38%, rgba(0, 0, 0, 0.6) 65%, rgba(0, 0, 0, 0.12) 85%, transparent 100%);
+    filter: blur(18px);
     pointer-events: none;
-    opacity: 0.96;
+    opacity: 0.98;
     transform: translateZ(0);
-    will-change: transform, opacity;
-    animation: gaga-calm-smoke-pulse 5s ease-in-out infinite alternate;
+    animation: gaga-smoke-breathe 5s ease-in-out infinite alternate;
   }
 
-  /* 2. Soft Volumetric Rainbow Light Rays (Stationary, Subtle) */
-  .gaga-corner-rainbow-rays {
-    position: absolute;
-    inset: -22px;
-    border-radius: 50%;
-    background: repeating-conic-gradient(
-      from var(--gaga-ray-angle, 15deg) at 50% 50%,
-      var(--gaga-c1, rgba(255, 0, 128, 0.6)) 0deg 8deg,
-      transparent 8deg 24deg,
-      var(--gaga-c2, rgba(0, 240, 255, 0.5)) 24deg 32deg,
-      transparent 32deg 48deg,
-      var(--gaga-c3, rgba(168, 85, 247, 0.45)) 48deg 56deg,
-      transparent 56deg 72deg,
-      var(--gaga-c4, rgba(234, 179, 8, 0.35)) 72deg 80deg,
-      transparent 80deg 96deg
-    );
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.5) 45%, transparent 75%);
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 15%, rgba(0, 0, 0, 0.5) 45%, transparent 75%);
-    filter: blur(12px);
-    mix-blend-mode: screen;
-    pointer-events: none;
-    opacity: 0.45;
-    transform: translateZ(0);
-    will-change: opacity;
-    transition: background 0.8s ease, opacity 0.8s ease;
+  .watermark-container:hover .gaga-corner-smoke {
+    filter: blur(24px);
+    transform: scale(1.2) translateZ(0);
   }
 
-  .watermark-container:hover .gaga-corner-rainbow-rays {
-    opacity: 0.7;
-    filter: blur(10px);
-  }
-
-  /* Smooth sinking plunge when clicked */
+  /* Sinking plunge when clicked */
   .gaga-avatar-anchor.is-sinking {
-    transform: translateY(80px) scale(0.6) translateZ(0) !important;
+    transform: translateY(90px) scale(0.55) translateZ(0) !important;
     opacity: 0 !important;
     pointer-events: none;
     transition: transform 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53), opacity 0.25s ease-in !important;
   }
 
-  /* Calm gentle floating up/down */
   .gaga-sprite-wrap {
     position: relative;
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
-    animation: gaga-gentle-float 5s ease-in-out infinite alternate;
+    animation: gaga-ghost-hover 4.5s ease-in-out infinite alternate;
     transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     background: transparent;
     border: none;
-    box-shadow: none;
     transform: translateZ(0);
     will-change: transform;
   }
 
   .watermark-container:hover .gaga-sprite-wrap {
-    transform: scale(1.15) translateY(-3px) translateZ(0);
+    transform: scale(1.18) translateY(-4px) translateZ(0);
   }
 
   .gaga-sprite-img {
-    width: 68px;
-    height: 68px;
+    width: 72px;
+    height: 72px;
     object-fit: contain;
-    filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
     display: block;
     user-select: none;
     -webkit-user-drag: none;
@@ -301,20 +358,32 @@ if (activeTheme === 'auto') {
     transform: translateZ(0);
   }
 
-  /* Calm gentle floating */
-  @keyframes gaga-gentle-float {
-    0% { transform: translateY(0) translateZ(0); }
-    50% { transform: translateY(-4px) translateZ(0); }
-    100% { transform: translateY(2px) translateZ(0); }
+  .gaga-sprite-img.base-sprite {
+    filter: url(#gaga-idle-filter) drop-shadow(0 10px 25px rgba(0, 0, 0, 1)) drop-shadow(0 0 16px rgba(0, 0, 0, 0.95));
   }
 
-  @keyframes gaga-calm-smoke-pulse {
-    0% { transform: scale(0.94) translateZ(0); opacity: 0.88; }
-    100% { transform: scale(1.06) translateZ(0); opacity: 1; }
+  .gaga-sprite-img.corner-tear-slice {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    filter: url(#gaga-tear-filter) contrast(140%) brightness(120%);
+    transition: opacity 0.06s ease;
+  }
+
+  @keyframes gaga-ghost-hover {
+    0% { transform: translateY(0) translateZ(0); }
+    50% { transform: translateY(-7px) translateZ(0); }
+    100% { transform: translateY(5px) translateZ(0); }
+  }
+
+  @keyframes gaga-smoke-breathe {
+    0% { transform: scale(0.93) translateZ(0); opacity: 0.9; }
+    100% { transform: scale(1.08) translateZ(0); opacity: 1; }
   }
 
   /* ==========================================================================
-     AVATAR LEFT, TEXT RIGHT — BORDERLESS DIFFUSE DIALOGUE
+     HAUNTING GOTHIC MODAL: PURE BLACK DIFFUSE SMOKE & LOCALIZED DISTORTION
      ========================================================================== */
   .gaga-dialogue-overlay {
     position: fixed;
@@ -325,7 +394,7 @@ if (activeTheme === 'auto') {
     justify-content: center;
     pointer-events: auto;
     opacity: 1;
-    transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s ease;
     transform: translateZ(0);
   }
 
@@ -335,146 +404,210 @@ if (activeTheme === 'auto') {
     pointer-events: none;
   }
 
-  /* Transparent backdrop with soft dimming — page stays visible */
-  .gaga-transparent-backdrop {
+  /* Pitch Black Void Backdrop (No red anywhere) */
+  .gaga-dark-backdrop {
     position: absolute;
     inset: 0;
-    background: rgba(0, 0, 0, 0.58);
-    backdrop-filter: blur(6px) brightness(0.68);
-    -webkit-backdrop-filter: blur(6px) brightness(0.68);
+    background: #000000;
+    opacity: 0.96;
     cursor: pointer;
   }
 
-  /* Vintage film grain layer */
-  .gaga-vintage-grain-overlay {
+  /* Cold Monochromatic Volumetric Spotlights Cutting Through the Dark */
+  .gaga-ghost-spotlights {
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
     pointer-events: none;
-    opacity: 0.6;
     z-index: 1;
+    overflow: hidden;
   }
 
-  /* SIDE-BY-SIDE STAGE */
+  .spotlight-beam {
+    position: absolute;
+    top: -20%;
+    width: 240px;
+    height: 130%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.22;
+    filter: blur(36px);
+  }
+
+  .spotlight-beam.beam-left {
+    left: 12%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(200, 200, 200, 0.05) 40%, transparent 70%);
+    transform: rotate(24deg);
+    animation: gaga-spot-sway-left 8s ease-in-out infinite alternate;
+  }
+
+  .spotlight-beam.beam-right {
+    right: 12%;
+    background: linear-gradient(225deg, rgba(255, 255, 255, 0.25) 0%, rgba(200, 200, 200, 0.05) 40%, transparent 70%);
+    transform: rotate(-24deg);
+    animation: gaga-spot-sway-right 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes gaga-spot-sway-left {
+    0% { transform: rotate(20deg); opacity: 0.16; }
+    100% { transform: rotate(28deg); opacity: 0.28; }
+  }
+
+  @keyframes gaga-spot-sway-right {
+    0% { transform: rotate(-28deg); opacity: 0.16; }
+    100% { transform: rotate(-20deg); opacity: 0.28; }
+  }
+
+  /* Dark Vignette Film Grain */
+  .gaga-gothic-grain {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.75) 100%);
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 2;
+  }
+
+  /* ==========================================================================
+     PHANTOM CLONES (MULTIPLE MOTHER MONSTERS APPEARING RANDOMLY IN THE DARK)
+     ========================================================================== */
+  .gaga-phantom-stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  /* ── MAIN DIALOGUE STAGE ── */
   .gaga-dialogue-stage {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 36px;
-    max-width: 940px;
+    gap: 32px;
+    max-width: 800px;
     width: 92vw;
     box-sizing: border-box;
     pointer-events: auto;
     transform: translateZ(0);
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity;
   }
 
-  /* Horror jumpscare tremor */
-  .gaga-stage-shaking {
-    animation: gaga-horror-tremor 0.35s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  .gaga-dialogue-stage.is-reversed {
+    flex-direction: row-reverse;
   }
 
-  @keyframes gaga-horror-tremor {
-    10%, 90% { transform: translate3d(-3px, -2px, 0) scale(1.01); }
-    20%, 80% { transform: translate3d(4px, 3px, 0) scale(0.99); }
-    30%, 50%, 70% { transform: translate3d(-4px, 2px, 0) scale(1.02); }
+  /* Supernatural Tremor on Arrival */
+  .gaga-stage-tremor {
+    animation: gaga-supernatural-tremor 0.38s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+  }
+
+  @keyframes gaga-supernatural-tremor {
+    10%, 90% { transform: translate3d(-4px, -2px, 0) scale(1.015); }
+    20%, 80% { transform: translate3d(5px, 3px, 0) scale(0.985); }
+    30%, 50%, 70% { transform: translate3d(-5px, 2px, 0) scale(1.02); }
     40%, 60% { transform: translate3d(4px, -3px, 0) scale(0.98); }
   }
 
-  /* ── LEFT: Hero Avatar ── */
-  .gaga-dialogue-overlay.is-hidden .gaga-left-avatar-wrap {
-    opacity: 0;
-    pointer-events: none;
-  }
-
+  /* ── LEFT: Mother Monster Localized Distortion Stage ── */
   .gaga-left-avatar-wrap {
     position: relative;
-    width: 230px;
-    height: 230px;
+    width: 160px;
+    height: 160px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 3;
     will-change: transform, opacity;
-    transform: translateZ(0);
+    transform: scale(var(--gaga-scale, 0.88)) translateZ(0);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
   }
 
-  /* Broad Gothic Deep Dark Smoke (Dominant, Velvet Soft) */
-  .gaga-left-dark-smoke {
+  /* Pure Black Diffuse Smoke Cloud (100% Borderless, Feathered Edge) */
+  .gaga-left-smoke-cloud {
     position: absolute;
-    inset: -80px;
+    inset: -75px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(0, 0, 0, 1) 0%, rgba(18, 4, 20, 0.95) 30%, rgba(0, 0, 0, 0.75) 55%, rgba(0, 0, 0, 0.25) 78%, transparent 100%);
-    filter: blur(32px);
+    background: radial-gradient(circle at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.95) 35%, rgba(0, 0, 0, 0.68) 58%, rgba(0, 0, 0, 0.18) 80%, transparent 100%);
+    filter: blur(34px);
     transform: translateZ(0);
-    will-change: transform, opacity;
     pointer-events: none;
     opacity: 0.98;
-    animation: gaga-calm-smoke-pulse 5s ease-in-out infinite alternate;
+    animation: gaga-smoke-breathe 6s ease-in-out infinite alternate;
   }
 
-  /* Stationary Volumetric Rainbow Rays peeking through Darkness */
-  .gaga-left-rainbow-rays {
-    position: absolute;
-    inset: -65px;
-    border-radius: 50%;
-    background: repeating-conic-gradient(
-      from var(--gaga-ray-angle, 25deg) at 50% 50%,
-      var(--gaga-c1, rgba(255, 0, 128, 0.7)) 0deg 10deg,
-      transparent 10deg 28deg,
-      var(--gaga-c2, rgba(0, 240, 255, 0.6)) 28deg 38deg,
-      transparent 38deg 56deg,
-      var(--gaga-c3, rgba(168, 85, 247, 0.5)) 56deg 66deg,
-      transparent 66deg 84deg,
-      var(--gaga-c4, rgba(234, 179, 8, 0.4)) 84deg 94deg,
-      transparent 94deg 112deg
-    );
-    -webkit-mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 15%, rgba(0, 0, 0, 0.6) 45%, transparent 80%);
-    mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 1) 15%, rgba(0, 0, 0, 0.6) 45%, transparent 80%);
-    filter: blur(20px);
-    mix-blend-mode: screen;
-    pointer-events: none;
-    opacity: 0.48;
-    transform: translateZ(0);
-    will-change: opacity;
-    transition: background 0.8s ease, opacity 0.8s ease;
+  /* Multi-Layered Distortion Container */
+  .gaga-distort-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: gaga-supernatural-float 5s ease-in-out infinite alternate;
   }
 
   .gaga-left-hero-img {
-    width: 215px;
-    height: 215px;
+    width: 150px;
+    height: 150px;
     object-fit: contain;
-    position: relative;
-    z-index: 2;
-    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 25px rgba(0, 0, 0, 0.85));
-    animation: gaga-gentle-hero-float 4.5s ease-in-out infinite alternate;
     user-select: none;
     -webkit-user-drag: none;
     transform: translateZ(0);
   }
 
-  /* Gentle calm hero hovering */
-  @keyframes gaga-gentle-hero-float {
+  /* 1. Base Layer: Idle Liquid Breathing Warp */
+  .gaga-left-hero-img.gaga-hero-base {
+    position: relative;
+    z-index: 2;
+    filter: 
+      url(#gaga-idle-filter)
+      drop-shadow(0 25px 50px rgba(0, 0, 0, 1))
+      drop-shadow(0 0 35px rgba(0, 0, 0, 0.95));
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+
+  /* 2. Localized Random Glitch / Tear Slices */
+  .gaga-left-hero-img.gaga-hero-slice {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    opacity: 0;
+    filter: url(#gaga-tear-filter) brightness(130%) contrast(150%);
+    mix-blend-mode: screen;
+    transition: opacity 0.05s ease, transform 0.05s ease;
+  }
+
+  .gaga-left-hero-img.gaga-hero-slice.slice-2 {
+    z-index: 4;
+    filter: url(#gaga-tear-filter) invert(85%) contrast(160%);
+    mix-blend-mode: difference;
+  }
+
+  /* Pure Vertical Floating (Up and Down Only, No Left-Right Movement) */
+  @keyframes gaga-supernatural-float {
     0% { transform: translateY(0) translateZ(0); }
-    50% { transform: translateY(-6px) translateZ(0); }
-    100% { transform: translateY(3px) translateZ(0); }
+    50% { transform: translateY(-12px) translateZ(0); }
+    100% { transform: translateY(8px) translateZ(0); }
   }
 
   /* ── RIGHT: Borderless Diffuse Spoken Text ── */
   .gaga-dialogue-overlay:not(.is-hidden) .gaga-right-speech-wrap {
-    animation: gaga-speech-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
+    animation: gaga-speech-pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
   }
 
   .gaga-right-speech-wrap {
     position: relative;
     flex: 1;
-    max-width: 620px;
-    min-height: 160px;
+    max-width: 580px;
+    min-height: 155px;
     box-sizing: border-box;
-    padding: 26px 30px;
+    padding: 22px 28px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -487,55 +620,49 @@ if (activeTheme === 'auto') {
     transform: translateZ(0);
   }
 
-  /* Deep Dark Velvet Smoke Cloud behind right text (Dominant) */
-  .gaga-speech-dark-smoke {
+  /* Broad Diffuse Black Smoke Cloud behind text (No box, no borders, no red) */
+  .gaga-speech-smoke-cloud {
     position: absolute;
-    inset: -45px;
-    border-radius: 50px;
-    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(12, 4, 18, 0.95) 40%, rgba(0, 0, 0, 0.7) 65%, rgba(0, 0, 0, 0.2) 85%, transparent 100%);
-    filter: blur(28px);
+    inset: -60px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.94) 42%, rgba(0, 0, 0, 0.65) 68%, rgba(0, 0, 0, 0.15) 88%, transparent 100%);
+    filter: blur(34px);
     pointer-events: none;
-    z-index: 1;
+    z-index: -1;
     transform: translateZ(0);
     opacity: 0.98;
-  }
-
-  /* Soft Diffuse Rainbow Rays behind right text (Stationary) */
-  .gaga-speech-rainbow-rays {
-    position: absolute;
-    inset: -35px;
-    border-radius: 50px;
-    background: radial-gradient(ellipse at 35% 50%, var(--gaga-c1, rgba(255, 0, 128, 0.4)) 0%, var(--gaga-c2, rgba(0, 240, 255, 0.3)) 30%, var(--gaga-c3, rgba(168, 85, 247, 0.25)) 55%, transparent 85%),
-      repeating-conic-gradient(
-        from var(--gaga-ray-angle, 40deg) at 40% 50%,
-        var(--gaga-c1, rgba(255, 0, 128, 0.4)) 0deg 8deg,
-        transparent 8deg 30deg,
-        var(--gaga-c2, rgba(0, 240, 255, 0.35)) 30deg 38deg,
-        transparent 38deg 60deg,
-        var(--gaga-c3, rgba(168, 85, 247, 0.3)) 60deg 68deg,
-        transparent 68deg 90deg
-      );
-    -webkit-mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.4) 60%, transparent 85%);
-    mask-image: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.9) 20%, rgba(0, 0, 0, 0.4) 60%, transparent 85%);
-    filter: blur(22px);
-    mix-blend-mode: screen;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0.42;
-    transform: translateZ(0);
-    will-change: opacity;
-    transition: background 0.8s ease, opacity 0.8s ease;
   }
 
   @keyframes gaga-speech-pop {
     0% {
       opacity: 0;
-      transform: translateX(-12px) scale(0.96) translateZ(0);
+      transform: translateY(14px) scale(0.97) translateZ(0);
     }
     100% {
       opacity: 1;
-      transform: translateX(0) scale(1) translateZ(0);
+      transform: translateY(0) scale(1) translateZ(0);
     }
+  }
+
+  /* Header: Pure Monochromatic Title (Mayhem Ball words completely removed) */
+  .gaga-manifesto-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    color: rgba(255, 255, 255, 0.45);
+    font-family: 'Cinzel Decorative', Georgia, serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    user-select: none;
+    text-shadow: 0 0 15px rgba(0, 0, 0, 1);
+  }
+
+  .gaga-header-rune {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.65);
   }
 
   .gaga-active-sentence-box {
@@ -544,49 +671,54 @@ if (activeTheme === 'auto') {
     display: inline-block;
   }
 
-  /* TANGERINE CALLIGRAPHY & POETIC TYPOGRAPHY */
+  /* HAUTE GOTHIC BLACKLETTER TYPOGRAPHY (PURE MONOCHROMATIC BONE WHITE & BLACK) */
   .gaga-spoken-sentence {
     margin: 0;
-    font-family: 'Tangerine', 'Cormorant Garamond', cursive, Georgia, serif;
-    font-style: normal;
-    font-size: 3.1rem;
+    font-family: 'Grenze Gotisch', Georgia, serif;
+    font-size: 2.45rem;
     font-weight: 700;
-    line-height: 1.22;
+    line-height: 1.25;
     color: #ffffff;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.7px;
     display: inline;
     text-shadow: 
-      0 4px 16px rgba(0, 0, 0, 1),
-      0 0 25px rgba(0, 0, 0, 0.95),
-      0 0 35px var(--gaga-glow);
-    transition: text-shadow 0.6s ease;
+      0 0 20px rgba(0, 0, 0, 1),
+      0 0 40px rgba(0, 0, 0, 0.95),
+      0 4px 18px rgba(0, 0, 0, 1);
   }
 
   .gaga-spoken-sentence.is-quote {
+    font-family: 'Grenze Gotisch', 'Cormorant Garamond', serif;
+    font-size: 2.7rem;
+    font-weight: 800;
+    letter-spacing: 0.9px;
     color: #ffffff;
-    font-size: 3.4rem;
-    font-weight: 700;
+    text-shadow: 
+      0 0 25px rgba(255, 255, 255, 0.25),
+      0 0 45px rgba(0, 0, 1),
+      0 4px 20px rgba(0, 0, 0, 1);
   }
 
   .gaga-spoken-sentence.is-author {
-    font-size: 2.2rem;
+    font-family: 'Cinzel Decorative', Georgia, serif;
+    font-size: 1.55rem;
     font-weight: 700;
-    color: var(--gaga-accent, #f43f5e);
-    letter-spacing: 2px;
+    color: #dfdfdf;
+    letter-spacing: 3.2px;
     display: block;
-    margin-top: 4px;
-    transition: color 0.6s ease;
+    margin-top: 8px;
+    text-shadow: 0 0 16px rgba(0, 0, 0, 1), 0 4px 12px rgba(0, 0, 0, 0.9);
   }
 
   .gaga-typewriter-cursor {
     display: inline-block;
     font-family: monospace;
-    font-size: 2.2rem;
-    color: var(--gaga-accent, #f43f5e);
-    margin-left: 6px;
+    font-size: 1.85rem;
+    color: #ffffff;
+    margin-left: 5px;
     vertical-align: middle;
-    animation: gaga-cursor-blink 0.7s infinite;
-    transition: color 0.6s ease;
+    animation: gaga-cursor-blink 0.65s infinite;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
   }
 
   @keyframes gaga-cursor-blink {
@@ -594,21 +726,21 @@ if (activeTheme === 'auto') {
     50% { opacity: 0; }
   }
 
-  /* Footer Stepper */
+  /* Footer Stepper & Hint: Pure Monochrome */
   .gaga-speech-footer {
     position: relative;
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 18px;
-    padding-top: 10px;
+    margin-top: 24px;
+    padding-top: 12px;
   }
 
   .gaga-sentence-stepper {
     display: flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
 
   .step-dot {
@@ -616,85 +748,116 @@ if (activeTheme === 'auto') {
     height: 6px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.25);
-    transition: all 0.25s ease;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .step-dot.is-active {
-    background: var(--gaga-accent, #f43f5e);
-    box-shadow: 0 0 10px var(--gaga-accent, #f43f5e);
-    transform: scale(1.4);
+    background: #ffffff;
+    box-shadow: 0 0 10px #ffffff, 0 0 20px rgba(255, 255, 255, 0.85);
+    transform: scale(1.5);
   }
 
   .step-dot.is-done {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.65);
   }
 
   .gaga-tap-hint {
-    font-family: 'Tangerine', cursive, serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.45);
-    letter-spacing: 0.5px;
+    font-family: 'Grenze Gotisch', Georgia, serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 1px;
+    animation: gaga-hint-pulse 3.5s ease-in-out infinite;
+  }
+
+  @keyframes gaga-hint-pulse {
+    0%, 100% { opacity: 0.35; }
+    50% { opacity: 0.75; text-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
   }
 
   /* ==========================================================================
      RESPONSIVE BREAKPOINTS (Mobile Stacking)
      ========================================================================== */
-  @media (max-width: 720px) {
+  @media (max-width: 768px) {
     .gaga-dialogue-stage {
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
       text-align: center;
     }
 
-    .gaga-left-avatar-wrap {
+    .spotlight-beam.beam-left {
+      left: 0%;
       width: 150px;
-      height: 150px;
     }
 
+    .spotlight-beam.beam-right {
+      right: 0%;
+      width: 150px;
+    }
+
+    .gaga-left-avatar-wrap {
+      width: 125px;
+      height: 125px;
+    }
+
+    .gaga-distort-container,
     .gaga-left-hero-img {
-      width: 145px;
-      height: 145px;
+      width: 118px;
+      height: 118px;
     }
 
     .gaga-right-speech-wrap {
       text-align: center;
-      padding: 16px;
-      min-height: 110px;
+      padding: 14px;
+      min-height: 120px;
     }
 
     .gaga-spoken-sentence {
-      font-size: 2.35rem;
+      font-size: 1.85rem;
     }
 
     .gaga-spoken-sentence.is-quote {
-      font-size: 2.55rem;
+      font-size: 2.05rem;
     }
 
     .gaga-spoken-sentence.is-author {
-      font-size: 1.65rem;
+      font-size: 1.35rem;
     }
 
     .gaga-speech-footer {
       justify-content: center;
+      flex-direction: column;
       gap: 12px;
+    }
+
+    .gaga-manifesto-header {
+      justify-content: center;
     }
   }
 </style>
 
 <script>
   /**
-   * Fast, High-Performance Lady Gaga Manifesto Controller with Dark Diffuse Volumetric Rainbow Rays
+   * Mother Monster Manifesto Controller with RANDOM LOCALIZED SPOT DISTORTION
+   * Pure monochromatic black smoke, zero red, zero sound, eerie psychological horror glitch.
    */
   class GagaManifestoController {
     private spriteImg: HTMLImageElement | null = null;
+    private cornerTearEl: HTMLImageElement | null = null;
     private heroImg: HTMLImageElement | null = null;
+    private heroSlice1: HTMLImageElement | null = null;
+    private heroSlice2: HTMLImageElement | null = null;
     private heroAvatarWrap: HTMLElement | null = null;
     private anchor: HTMLElement | null = null;
     private modal: HTMLElement | null = null;
     private backdrop: HTMLElement | null = null;
     private speechBox: HTMLElement | null = null;
     private screenFlashEl: HTMLElement | null = null;
+
+    private idleTurbulence: SVGFETurbulenceElement | null = null;
+    private idleDisp: SVGFEDisplacementMapElement | null = null;
+    private tearTurbulence: SVGFETurbulenceElement | null = null;
+    private tearDisp: SVGFEDisplacementMapElement | null = null;
 
     private activeSentenceEl: HTMLElement | null = null;
     private cursorEl: HTMLElement | null = null;
@@ -703,43 +866,74 @@ if (activeTheme === 'auto') {
     private isShowcasing = false;
     private blinkTimer: number | null = null;
     private glanceTimer: number | null = null;
+    private randomTwitchTimer: number | null = null;
 
-    // Sentence-by-sentence dialogue sequence
+    // Random Position Per Sentence State
+    private currentShiftX = 0;
+    private currentShiftY = 0;
+    private isCurrentReversed = false;
+    private sentenceTransitionTimeout: number | null = null;
+
+    // Distortion Loop
+    private idleAnimId: number | null = null;
+    private idlePhase = 0;
+
+    // Localized Clip-Path Zones for Random Spot Distortion
+    private readonly SPOT_ZONES = [
+      // Zone 0: Eyes only
+      { name: 'eyes', clip: 'inset(26% 0% 48% 0%)', maxScale: 55 },
+      // Zone 1: Mouth & Jaw melting
+      { name: 'mouth', clip: 'inset(54% 0% 12% 0%)', maxScale: 50 },
+      // Zone 2: Right half face drag
+      { name: 'right-half', clip: 'inset(0% 0% 0% 48%)', maxScale: 45 },
+      // Zone 3: Left half face drag
+      { name: 'left-half', clip: 'inset(0% 48% 0% 0%)', maxScale: 45 },
+      // Zone 4: Thin horizontal slit tear across eyes
+      { name: 'slit-eyes', clip: 'inset(34% 0% 56% 0%)', maxScale: 65 },
+      // Zone 5: Thin horizontal slit tear across mouth
+      { name: 'slit-mouth', clip: 'inset(60% 0% 28% 0%)', maxScale: 60 },
+      // Zone 6: Diagonal slash
+      { name: 'diagonal', clip: 'polygon(0 15%, 100% 35%, 100% 65%, 0 45%)', maxScale: 50 },
+      // Zone 7: Temple & forehead warp
+      { name: 'forehead', clip: 'inset(8% 0% 65% 0%)', maxScale: 55 },
+    ];
+
+    // Sacred Gothic Manifesto Dialogue Sequence (Atmospheric, deliberate pacing)
     private readonly MANIFESTO_SENTENCES = [
       {
         text: 'This is The Manifesto of Mother Monster.',
         isQuote: false,
         isAuthor: false,
-        duration: 3000,
+        duration: 4400,
       },
       {
         text: '“Computers are only as creative as the humans who program them.”',
         isQuote: true,
         isAuthor: false,
-        duration: 3200,
+        duration: 5000,
       },
       {
         text: '— John Maeda',
         isQuote: false,
         isAuthor: true,
-        duration: 1800,
+        duration: 2800,
       },
       {
-        text: 'No synthetic illusions — only living algorithms sculpted in mathematical light.',
+        text: 'No synthetic illusions — only living algorithms sculpted in dark mathematical light.',
         isQuote: false,
         isAuthor: false,
-        duration: 3500,
+        duration: 5400,
       },
       {
-        text: 'Every pixel is mathematically rendered, fiercely human-directed.',
+        text: 'Every pixel is mathematically rendered, fiercely human-directed. Born in code.',
         isQuote: false,
         isAuthor: false,
-        duration: 3200,
+        duration: 5200,
       },
     ];
 
     private currentSentenceIdx = 0;
-    private typingInterval: number | null = null;
+    private typingTimeout: number | null = null;
     private nextSentenceTimeout: number | null = null;
 
     private readonly SPRITES = {
@@ -751,7 +945,11 @@ if (activeTheme === 'auto') {
 
     init(): void {
       this.spriteImg = document.getElementById('gagaSpriteImg') as HTMLImageElement;
+      this.cornerTearEl = document.getElementById('gagaCornerTear') as HTMLImageElement;
       this.heroImg = document.getElementById('gagaHeroImg') as HTMLImageElement;
+      this.heroSlice1 = document.getElementById('gagaHeroSlice1') as HTMLImageElement;
+      this.heroSlice2 = document.getElementById('gagaHeroSlice2') as HTMLImageElement;
+
       this.heroAvatarWrap = document.getElementById('gagaHeroAvatarWrap');
       this.anchor = document.getElementById('gagaAvatarAnchor');
       this.modal = document.getElementById('gaga-manifesto-modal');
@@ -759,69 +957,146 @@ if (activeTheme === 'auto') {
       this.speechBox = document.getElementById('gagaSpeechBox');
       this.screenFlashEl = document.getElementById('gaga-screen-flash');
 
+      this.idleTurbulence = document.getElementById('gagaIdleTurbulence') as unknown as SVGFETurbulenceElement;
+      this.idleDisp = document.getElementById('gagaIdleDisp') as unknown as SVGFEDisplacementMapElement;
+      this.tearTurbulence = document.getElementById('gagaTearTurbulence') as unknown as SVGFETurbulenceElement;
+      this.tearDisp = document.getElementById('gagaTearDisp') as unknown as SVGFEDisplacementMapElement;
+
       this.activeSentenceEl = document.getElementById('gagaActiveSentenceText');
       this.cursorEl = document.getElementById('gagaCursor');
       this.stepDots = document.querySelectorAll('.step-dot');
 
       if (!this.spriteImg || !this.anchor || !this.modal) return;
 
-      this.applyRandomRainbowGradients();
+      this.startIdleLoop();
       this.bindEvents();
       this.startRoutines();
+      this.startRandomTwitchRoutine();
     }
 
-    // ── Generate & Apply Harmonious Randomized Rainbow Volumetric Ray Parameters ──
+    // ── Continuous Subtle Breathing Warp Loop ──────────────────
 
-    private generateRainbowColors(): { c1: string; c2: string; c3: string; c4: string; accent: string; glow: string; rayAngle: string } {
-      const baseHue = Math.floor(Math.random() * 360);
-      const h1 = baseHue;
-      const h2 = (baseHue + 55 + Math.floor(Math.random() * 25)) % 360;
-      const h3 = (baseHue + 135 + Math.floor(Math.random() * 35)) % 360;
-      const h4 = (baseHue + 225 + Math.floor(Math.random() * 45)) % 360;
-      const rayAngle = `${Math.floor(Math.random() * 90)}deg`;
+    private startIdleLoop(): void {
+      if (this.idleAnimId) return;
 
-      return {
-        c1: `hsla(${h1}, 95%, 62%, 0.7)`,
-        c2: `hsla(${h2}, 95%, 58%, 0.6)`,
-        c3: `hsla(${h3}, 90%, 60%, 0.5)`,
-        c4: `hsla(${h4}, 95%, 58%, 0.4)`,
-        accent: `hsl(${h1}, 95%, 62%)`,
-        glow: `hsla(${h1}, 95%, 62%, 0.35)`,
-        rayAngle,
+      const loop = () => {
+        this.idlePhase += 0.02;
+
+        if (this.idleTurbulence && this.idleDisp) {
+          const freqX = 0.012 + Math.sin(this.idlePhase * 0.7) * 0.003;
+          const freqY = 0.016 + Math.cos(this.idlePhase * 0.9) * 0.004;
+          const scale = 10 + Math.sin(this.idlePhase * 1.2) * 3;
+
+          this.idleTurbulence.setAttribute('baseFrequency', `${freqX.toFixed(4)} ${freqY.toFixed(4)}`);
+          this.idleDisp.setAttribute('scale', scale.toFixed(1));
+        }
+
+        this.idleAnimId = requestAnimationFrame(loop);
       };
+
+      this.idleAnimId = requestAnimationFrame(loop);
     }
 
-    private applyRandomRainbowGradients(): void {
-      const colors = this.generateRainbowColors();
-      const root = document.documentElement;
-      
-      root.style.setProperty('--gaga-c1', colors.c1);
-      root.style.setProperty('--gaga-c2', colors.c2);
-      root.style.setProperty('--gaga-c3', colors.c3);
-      root.style.setProperty('--gaga-c4', colors.c4);
-      root.style.setProperty('--gaga-accent', colors.accent);
-      root.style.setProperty('--gaga-glow', colors.glow);
-      root.style.setProperty('--gaga-ray-angle', colors.rayAngle);
+    // ── RANDOM LOCALIZED SPOT DISTORTION ENGINE ──────────────────
 
-      if (this.anchor) {
-        this.anchor.style.setProperty('--gaga-c1', colors.c1);
-        this.anchor.style.setProperty('--gaga-c2', colors.c2);
-        this.anchor.style.setProperty('--gaga-c3', colors.c3);
-        this.anchor.style.setProperty('--gaga-c4', colors.c4);
-        this.anchor.style.setProperty('--gaga-ray-angle', colors.rayAngle);
+    /**
+     * Triggers a sudden, eerie localized distortion on a specific random part of the face
+     */
+    private triggerRandomSpotTwitch(forceDouble = false): void {
+      // Pick 1 or 2 random zones
+      const zoneIdx1 = Math.floor(Math.random() * this.SPOT_ZONES.length);
+      const zone1 = this.SPOT_ZONES[zoneIdx1];
+
+      // Random displacement parameters
+      const shiftX1 = (Math.random() - 0.5) * 28;
+      const shiftY1 = (Math.random() - 0.5) * 14;
+      const skewX1 = (Math.random() - 0.5) * 24;
+      const scaleY1 = 1 + (Math.random() - 0.5) * 0.45;
+
+      // Update tear filter with random seed
+      if (this.tearTurbulence && this.tearDisp) {
+        this.tearTurbulence.setAttribute('seed', String(Math.floor(Math.random() * 999)));
+        this.tearDisp.setAttribute('scale', String(Math.floor(Math.random() * 30 + 35)));
       }
+
+      // Apply to Slice 1
+      if (this.heroSlice1) {
+        this.heroSlice1.style.clipPath = zone1.clip;
+        this.heroSlice1.style.transform = `translate3d(${shiftX1.toFixed(1)}px, ${shiftY1.toFixed(1)}px, 0) skewX(${skewX1.toFixed(1)}deg) scaleY(${scaleY1.toFixed(2)})`;
+        this.heroSlice1.style.opacity = '1';
+      }
+
+      // Also trigger on corner tear if not in modal
+      if (!this.isShowcasing && this.cornerTearEl) {
+        this.cornerTearEl.style.clipPath = zone1.clip;
+        this.cornerTearEl.style.transform = `translate3d(${shiftX1.toFixed(1)}px, ${shiftY1.toFixed(1)}px, 0) skewX(${skewX1.toFixed(1)}deg)`;
+        this.cornerTearEl.style.opacity = '1';
+      }
+
+      // Base layer gets a micro-shudder
+      if (this.heroImg) {
+        const baseJerkX = (Math.random() - 0.5) * 6;
+        this.heroImg.style.transform = `translate3d(${baseJerkX.toFixed(1)}px, 0, 0)`;
+      }
+
+      // Optional secondary disjoint tear
+      if (forceDouble || Math.random() < 0.35) {
+        const zoneIdx2 = (zoneIdx1 + Math.floor(Math.random() * (this.SPOT_ZONES.length - 1)) + 1) % this.SPOT_ZONES.length;
+        const zone2 = this.SPOT_ZONES[zoneIdx2];
+        const shiftX2 = (Math.random() - 0.5) * 32;
+        const skewX2 = (Math.random() - 0.5) * 28;
+
+        if (this.heroSlice2) {
+          this.heroSlice2.style.clipPath = zone2.clip;
+          this.heroSlice2.style.transform = `translate3d(${shiftX2.toFixed(1)}px, 0, 0) skewX(${skewX2.toFixed(1)}deg)`;
+          this.heroSlice2.style.opacity = '0.9';
+        }
+      }
+
+      // Reset after a brief, shocking duration (80ms - 190ms)
+      const duration = Math.random() * 110 + 80;
+      setTimeout(() => {
+        if (this.heroSlice1) {
+          this.heroSlice1.style.opacity = '0';
+          this.heroSlice1.style.transform = 'none';
+        }
+        if (this.heroSlice2) {
+          this.heroSlice2.style.opacity = '0';
+          this.heroSlice2.style.transform = 'none';
+        }
+        if (this.cornerTearEl) {
+          this.cornerTearEl.style.opacity = '0';
+          this.cornerTearEl.style.transform = 'none';
+        }
+        if (this.heroImg) {
+          this.heroImg.style.transform = 'none';
+        }
+      }, duration);
+    }
+
+    private startRandomTwitchRoutine(): void {
+      // Unpredictable twitch intervals (every 0.9s - 2.8s)
+      const scheduleNext = () => {
+        const delay = Math.random() * 1900 + 900;
+        this.randomTwitchTimer = window.setTimeout(() => {
+          this.triggerRandomSpotTwitch();
+          scheduleNext();
+        }, delay);
+      };
+
+      scheduleNext();
     }
 
     private bindEvents(): void {
       const watermark = document.getElementById('site-watermark');
       if (watermark) {
         watermark.addEventListener('mouseenter', () => {
-          this.applyRandomRainbowGradients();
+          this.triggerRandomSpotTwitch(true);
         });
 
         watermark.addEventListener('click', (e) => {
           e.stopPropagation();
-          this.applyRandomRainbowGradients();
+          this.triggerRandomSpotTwitch(true);
           this.triggerManifestoSequence();
         });
       }
@@ -830,7 +1105,6 @@ if (activeTheme === 'auto') {
         this.backdrop.addEventListener('click', () => this.dismissShowcase());
       }
 
-      // Click on dialogue area advances to next sentence
       if (this.speechBox) {
         this.speechBox.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -838,7 +1112,6 @@ if (activeTheme === 'auto') {
         });
       }
 
-      // Spacebar, Enter, or Escape key
       window.addEventListener('keydown', (e) => {
         if (this.isShowcasing) {
           if (e.code === 'Space' || e.code === 'Enter') {
@@ -858,24 +1131,23 @@ if (activeTheme === 'auto') {
       }
     }
 
-    // ── Full-Screen Color Invert Flash Strobe (On enter & exit) ──
-
     private triggerScreenFlash(): void {
       if (!this.screenFlashEl) return;
       this.screenFlashEl.classList.remove('is-flashing');
-      void this.screenFlashEl.offsetWidth; // Force reflow
+      void this.screenFlashEl.offsetWidth;
       this.screenFlashEl.classList.add('is-flashing');
       setTimeout(() => {
         if (this.screenFlashEl) this.screenFlashEl.classList.remove('is-flashing');
       }, 250);
     }
 
-    // ── Eye Animations (Blinking & Glancing) ──────────────────
-
     private setSprite(state: 'open' | 'close' | 'left' | 'right'): void {
       const src = this.SPRITES[state];
       if (this.spriteImg && this.spriteImg.src !== src) this.spriteImg.src = src;
+      if (this.cornerTearEl && this.cornerTearEl.src !== src) this.cornerTearEl.src = src;
       if (this.heroImg && this.heroImg.src !== src) this.heroImg.src = src;
+      if (this.heroSlice1 && this.heroSlice1.src !== src) this.heroSlice1.src = src;
+      if (this.heroSlice2 && this.heroSlice2.src !== src) this.heroSlice2.src = src;
     }
 
     private startRoutines(): void {
@@ -884,18 +1156,19 @@ if (activeTheme === 'auto') {
     }
 
     private scheduleBlink(): void {
-      const delay = Math.random() * 3000 + 2500; // 2.5s - 5.5s
+      const delay = Math.random() * 3200 + 2600;
       this.blinkTimer = window.setTimeout(() => {
         if (!this.isShowcasing) {
           this.setSprite('close');
+          this.triggerRandomSpotTwitch();
           setTimeout(() => {
             if (!this.isShowcasing) {
               this.setSprite('open');
-              if (Math.random() < 0.2) {
+              if (Math.random() < 0.25) {
                 setTimeout(() => {
                   this.setSprite('close');
-                  setTimeout(() => this.setSprite('open'), 110);
-                }, 150);
+                  setTimeout(() => this.setSprite('open'), 100);
+                }, 140);
               }
             }
           }, 120);
@@ -905,13 +1178,14 @@ if (activeTheme === 'auto') {
     }
 
     private scheduleGlance(): void {
-      const delay = Math.random() * 4000 + 3500; // 3.5s - 7.5s
+      const delay = Math.random() * 4200 + 3800;
       this.glanceTimer = window.setTimeout(() => {
         if (!this.isShowcasing) {
           const dir = Math.random() < 0.5 ? 'left' : 'right';
           this.setSprite(dir);
+          this.triggerRandomSpotTwitch();
 
-          const holdTime = Math.random() * 900 + 700; // 0.7s - 1.6s
+          const holdTime = Math.random() * 950 + 750;
           setTimeout(() => {
             if (!this.isShowcasing) {
               this.setSprite('open');
@@ -922,19 +1196,14 @@ if (activeTheme === 'auto') {
       }, delay);
     }
 
-    // ── Interactive Manifesto Speech Stream ──────────────────
-
     private triggerManifestoSequence(): void {
       if (this.isShowcasing || !this.anchor || !this.modal) return;
       this.isShowcasing = true;
 
-      // 1. Shift into fresh randomized rainbow ray colors on entry
-      this.applyRandomRainbowGradients();
-
-      // 2. Trigger Full-Screen Color Invert Strobe Flash on entry
+      // 1. Monochromatic Screen Invert Flash
       this.triggerScreenFlash();
 
-      // 3. Corner sprite plunges down smoothly
+      // 2. Corner sprite plunges smoothly into darkness
       this.anchor.classList.add('is-sinking');
       this.setSprite('open');
 
@@ -942,62 +1211,68 @@ if (activeTheme === 'auto') {
         if (!this.modal || !this.heroAvatarWrap) return;
         this.modal.classList.remove('is-hidden');
 
-        // Stage jumpscare tremor
+        // Stage tremor
         const stage = document.getElementById('gagaHeroStage');
         if (stage) {
-          stage.classList.remove('gaga-stage-shaking');
+          stage.classList.remove('gaga-stage-tremor');
           void stage.offsetWidth;
-          stage.classList.add('gaga-stage-shaking');
+          stage.classList.add('gaga-stage-tremor');
         }
 
-        // Fluid and impactful cinematic zoom into center
-        const rect = this.heroAvatarWrap.getBoundingClientRect();
-        const stageCenterX = window.innerWidth / 2;
-        const stageCenterY = window.innerHeight / 2;
-        const elemCenterX = rect.left + rect.width / 2;
-        const elemCenterY = rect.top + rect.height / 2;
+        // Violent double twitch on arrival
+        this.triggerRandomSpotTwitch(true);
 
-        const centerDeltaX = stageCenterX - elemCenterX;
-        const centerDeltaY = stageCenterY - elemCenterY;
+        // Variable size scale for initial presence (smaller, eerie)
+        this.heroAvatarWrap.style.setProperty('--gaga-scale', '0.86');
 
+        // Slow, menacing vertical rise up from deep in the black void (1600ms)
         this.heroAvatarWrap.animate([
           {
-            transform: `translate3d(${centerDeltaX.toFixed(1)}px, ${centerDeltaY.toFixed(1)}px, 0) scale(2.2)`,
-            opacity: 0.4,
-            filter: 'drop-shadow(0 0 50px var(--gaga-glow, rgba(244, 63, 94, 0.8)))',
+            transform: 'translate3d(0, 50px, 0) scale(0.55)',
+            opacity: 0,
+            filter: 'blur(10px) drop-shadow(0 0 45px rgba(0, 0, 0, 1))',
           },
           {
-            transform: 'translate3d(0, 0, 0) scale(1)',
+            transform: 'translate3d(0, -6px, 0) scale(0.92)',
+            opacity: 0.9,
+            filter: 'blur(2px) drop-shadow(0 15px 35px rgba(0, 0, 0, 1))',
+            offset: 0.75,
+          },
+          {
+            transform: 'translate3d(0, 0, 0) scale(0.86)',
             opacity: 1,
-            filter: 'drop-shadow(0 20px 40px rgba(0, 0, 0, 0.95))',
+            filter: 'blur(0px) drop-shadow(0 20px 40px rgba(0, 0, 0, 1))',
           }
         ], {
-          duration: 750,
+          duration: 1600,
           easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
-          fill: 'forwards',
+          fill: 'none',
         });
 
-        // Begin dialogue stream
+        // Begin dialogue stream with first sentence
         this.currentSentenceIdx = 0;
         setTimeout(() => {
           if (this.isShowcasing) {
             this.speakSentence(0);
           }
-        }, 500);
+        }, 1200);
       }, 200);
     }
 
     private speakSentence(idx: number): void {
       if (idx >= this.MANIFESTO_SENTENCES.length) {
-        setTimeout(() => this.dismissShowcase(), 1000);
+        setTimeout(() => this.dismissShowcase(), 1200);
         return;
       }
 
-      // Smoothly mutate subtle rainbow ray parameters with each sentence spoken
-      this.applyRandomRainbowGradients();
-
       this.currentSentenceIdx = idx;
       const sentenceObj = this.MANIFESTO_SENTENCES[idx];
+      const stage = document.getElementById('gagaHeroStage');
+
+      // Diverse, unequal sizing per sentence (artistic phantom depth, smaller overall)
+      const SENTENCE_SCALES = [0.86, 0.72, 0.64, 0.96, 0.76];
+      const randomJitter = (Math.random() * 0.1 - 0.05);
+      const chosenScale = Math.max(0.56, Math.min(1.05, SENTENCE_SCALES[idx % SENTENCE_SCALES.length] + randomJitter)).toFixed(2);
 
       // Update progress dots
       this.stepDots?.forEach((dot, dIdx) => {
@@ -1006,7 +1281,7 @@ if (activeTheme === 'auto') {
         else if (dIdx === idx) dot.classList.add('is-active');
       });
 
-      // Clear previous sentence completely (No history)
+      // Clear previous sentence completely
       if (this.activeSentenceEl) {
         this.activeSentenceEl.innerText = '';
         this.activeSentenceEl.className = 'gaga-spoken-sentence';
@@ -1014,83 +1289,211 @@ if (activeTheme === 'auto') {
         if (sentenceObj.isAuthor) this.activeSentenceEl.classList.add('is-author');
       }
 
-      // Lady Gaga turns to glance right while speaking
-      if (idx === 0) {
-        this.setSprite('right');
+      const executeSpokenStream = () => {
+        // Look towards text based on layout
+        this.setSprite(this.isCurrentReversed ? 'left' : 'right');
+
+        // Atmospheric Typewriter streaming with dramatic punctuation pauses
+        const text = sentenceObj.text;
+        let charIdx = 0;
+        if (this.typingTimeout) clearTimeout(this.typingTimeout);
+
+        const baseDelay = sentenceObj.isAuthor ? 36 : 46;
+
+        const typeNextChar = () => {
+          if (!this.activeSentenceEl) return;
+          charIdx++;
+          this.activeSentenceEl.innerText = text.slice(0, charIdx);
+
+          // Occasional supernatural localized twitch while speaking
+          if (Math.random() < 0.04) {
+            this.setSprite('close');
+            this.triggerRandomSpotTwitch();
+            setTimeout(() => {
+              if (this.isShowcasing) this.setSprite(this.isCurrentReversed ? 'left' : 'right');
+            }, 110);
+          }
+
+          if (charIdx < text.length) {
+            const currentChar = text[charIdx - 1];
+            let extraPause = 0;
+
+            // Dramatic pauses on punctuation
+            if (currentChar === '—') extraPause = 360;
+            else if (currentChar === ',' || currentChar === ';') extraPause = 240;
+            else if (currentChar === '.' || currentChar === '”') extraPause = 300;
+
+            this.typingTimeout = window.setTimeout(typeNextChar, baseDelay + extraPause);
+          } else {
+            this.typingTimeout = null;
+
+            // Finished typing sentence: schedule next sentence auto-advance
+            this.nextSentenceTimeout = window.setTimeout(() => {
+              this.advanceSentence();
+            }, sentenceObj.duration);
+          }
+        };
+
+        this.typingTimeout = window.setTimeout(typeNextChar, 180);
+      };
+
+      if (idx > 0 && stage) {
+        // Fade out previous Mother Monster into the black smoke (sink vertically down)
+        stage.style.opacity = '0';
+        stage.style.transform = `translate3d(${this.currentShiftX}px, ${this.currentShiftY + 30}px, 0)`;
+
+        if (this.sentenceTransitionTimeout) clearTimeout(this.sentenceTransitionTimeout);
+        this.sentenceTransitionTimeout = window.setTimeout(() => {
+          if (!this.isShowcasing) return;
+
+          // Compute WIDE QUADRANT POSITION across the entire viewport
+          const isMobile = window.innerWidth <= 768;
+          let nextShiftX = 0;
+          let nextShiftY = 0;
+          let isReversed = false;
+
+          if (!isMobile) {
+            const W = window.innerWidth;
+            const H = window.innerHeight;
+
+            // Safe maximum travel bounds: keep stage well within viewport with comfortable margin
+            const maxShiftX = Math.max(80, Math.floor((W - 780) / 2 - 40));
+            const maxShiftY = Math.max(50, Math.floor((H - 240) / 2 - 40));
+
+            // Organic jitter (±25px)
+            const jX = Math.floor((Math.random() - 0.5) * 50);
+            const jY = Math.floor((Math.random() - 0.5) * 35);
+
+            // Broadly distributed quadrants across the screen:
+            // Sentence 1: Top-Left quadrant (high from the left shadows)
+            // Sentence 2: Bottom-Right quadrant (low in the right shadows)
+            // Sentence 3: Top-Right quadrant (high from the right shadows)
+            // Sentence 4: Bottom-Left quadrant (low in the left shadows)
+            switch (idx % 5) {
+              case 1:
+                nextShiftX = Math.floor(-0.76 * maxShiftX) + jX;
+                nextShiftY = Math.floor(-0.72 * maxShiftY) + jY;
+                isReversed = false;
+                break;
+              case 2:
+                nextShiftX = Math.floor(0.76 * maxShiftX) + jX;
+                nextShiftY = Math.floor(0.70 * maxShiftY) + jY;
+                isReversed = true;
+                break;
+              case 3:
+                nextShiftX = Math.floor(0.72 * maxShiftX) + jX;
+                nextShiftY = Math.floor(-0.70 * maxShiftY) + jY;
+                isReversed = true;
+                break;
+              case 4:
+                nextShiftX = Math.floor(-0.72 * maxShiftX) + jX;
+                nextShiftY = Math.floor(0.72 * maxShiftY) + jY;
+                isReversed = false;
+                break;
+              default:
+                nextShiftX = 0;
+                nextShiftY = -15 + jY * 0.3;
+                isReversed = false;
+                break;
+            }
+          } else {
+            // Mobile layout: vertical shifts across top, mid, and bottom
+            const H = window.innerHeight;
+            const maxShiftY = Math.max(30, Math.floor((H - 340) / 2 - 30));
+            const jY = Math.floor((Math.random() - 0.5) * 20);
+
+            nextShiftX = 0;
+            isReversed = false;
+            switch (idx % 5) {
+              case 1:
+                nextShiftY = Math.floor(-0.75 * maxShiftY) + jY;
+                break;
+              case 2:
+                nextShiftY = Math.floor(0.75 * maxShiftY) + jY;
+                break;
+              case 3:
+                nextShiftY = Math.floor(-0.50 * maxShiftY) + jY;
+                break;
+              case 4:
+                nextShiftY = Math.floor(0.50 * maxShiftY) + jY;
+                break;
+              default:
+                nextShiftY = 0;
+                break;
+            }
+          }
+
+          this.currentShiftX = nextShiftX;
+          this.currentShiftY = nextShiftY;
+          this.isCurrentReversed = isReversed;
+
+          stage.classList.toggle('is-reversed', this.isCurrentReversed);
+
+          // Update variable scale for this sentence's Mother Monster
+          if (this.heroAvatarWrap) {
+            this.heroAvatarWrap.style.setProperty('--gaga-scale', chosenScale);
+          }
+
+          // Teleport instantaneously while invisible: set position slightly lower for vertical rise
+          stage.style.transition = 'none';
+          stage.style.transform = `translate3d(${this.currentShiftX}px, ${this.currentShiftY + 35}px, 0)`;
+          void stage.offsetWidth; // force reflow
+
+          // Restore smooth vertical rise transition (strictly vertical translateY, no left/right slide)
+          stage.style.transition = 'opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+          stage.style.transform = `translate3d(${this.currentShiftX}px, ${this.currentShiftY}px, 0)`;
+          stage.style.opacity = '1';
+
+          // Violent localized spot twitch on arrival at new position
+          this.triggerRandomSpotTwitch(true);
+
+          executeSpokenStream();
+        }, 360);
+      } else {
+        // Initial sentence 0 (Center Altar)
+        this.currentShiftX = 0;
+        this.currentShiftY = -15;
+        this.isCurrentReversed = false;
+        if (stage) {
+          stage.classList.remove('is-reversed');
+          stage.style.transform = 'translate3d(0, -15px, 0)';
+          stage.style.opacity = '1';
+        }
+        if (this.heroAvatarWrap) {
+          this.heroAvatarWrap.style.setProperty('--gaga-scale', chosenScale);
+        }
+        executeSpokenStream();
       }
-
-      // Typewriter letter-by-letter streaming
-      const text = sentenceObj.text;
-      let charIdx = 0;
-      if (this.typingInterval) clearInterval(this.typingInterval);
-
-      const speed = sentenceObj.isAuthor ? 25 : 18;
-
-      this.typingInterval = window.setInterval(() => {
-        if (!this.activeSentenceEl) return;
-        charIdx++;
-        this.activeSentenceEl.innerText = text.slice(0, charIdx);
-
-        // Occasional eye blink while speaking
-        if (Math.random() < 0.03) {
-          this.setSprite('close');
-          setTimeout(() => {
-            if (this.isShowcasing) this.setSprite('right');
-          }, 100);
-        }
-
-        if (charIdx >= text.length) {
-          if (this.typingInterval) clearInterval(this.typingInterval);
-          this.typingInterval = null;
-
-          // Finished typing sentence: schedule next sentence auto-advance
-          this.nextSentenceTimeout = window.setTimeout(() => {
-            this.advanceSentence();
-          }, sentenceObj.duration);
-        }
-      }, speed);
     }
 
     private advanceSentence(): void {
       if (!this.isShowcasing) return;
-      if (this.typingInterval) {
-        // If still typing, complete instantly
-        clearInterval(this.typingInterval);
-        this.typingInterval = null;
+      if (this.typingTimeout) {
+        // If user clicks while still typing, instantly reveal full sentence
+        clearTimeout(this.typingTimeout);
+        this.typingTimeout = null;
         const sentenceObj = this.MANIFESTO_SENTENCES[this.currentSentenceIdx];
         if (this.activeSentenceEl) this.activeSentenceEl.innerText = sentenceObj.text;
         return;
       }
 
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
-
-      // Proceed to next sentence
       this.speakSentence(this.currentSentenceIdx + 1);
     }
 
     private dismissShowcase(): void {
       if (!this.isShowcasing || !this.modal || !this.anchor) return;
-      if (this.typingInterval) clearInterval(this.typingInterval);
+      if (this.typingTimeout) clearTimeout(this.typingTimeout);
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
+      if (this.sentenceTransitionTimeout) clearTimeout(this.sentenceTransitionTimeout);
 
-      // Trigger Full-Screen Color Invert Strobe Flash on exit
       this.triggerScreenFlash();
+      this.triggerRandomSpotTwitch(true);
 
-      if (this.heroAvatarWrap) {
-        this.heroAvatarWrap.animate([
-          {
-            transform: 'translate3d(0, 0, 0) scale(1)',
-            opacity: 1,
-          },
-          {
-            transform: 'translate3d(0, 40px, 0) scale(0.7)',
-            opacity: 0,
-          }
-        ], {
-          duration: 320,
-          easing: 'cubic-bezier(0.2, 0.05, 0.2, 1)',
-          fill: 'forwards',
-        });
+      const stage = document.getElementById('gagaHeroStage');
+      if (stage) {
+        stage.style.opacity = '0';
+        stage.style.transform = `translate3d(${this.currentShiftX}px, ${this.currentShiftY + 45}px, 0)`;
       }
 
       setTimeout(() => {
@@ -1100,14 +1503,27 @@ if (activeTheme === 'auto') {
         this.anchor.style.transform = 'translate3d(0, 0, 0)';
         this.setSprite('open');
         this.isShowcasing = false;
-      }, 300);
+        if (stage) {
+          stage.style.transform = 'none';
+          stage.classList.remove('is-reversed');
+        }
+        if (this.heroAvatarWrap) {
+          this.heroAvatarWrap.style.removeProperty('--gaga-scale');
+        }
+      }, 350);
     }
 
     destroy(): void {
       if (this.blinkTimer) clearTimeout(this.blinkTimer);
       if (this.glanceTimer) clearTimeout(this.glanceTimer);
-      if (this.typingInterval) clearInterval(this.typingInterval);
+      if (this.randomTwitchTimer) clearTimeout(this.randomTwitchTimer);
+      if (this.typingTimeout) clearTimeout(this.typingTimeout);
       if (this.nextSentenceTimeout) clearTimeout(this.nextSentenceTimeout);
+      if (this.sentenceTransitionTimeout) clearTimeout(this.sentenceTransitionTimeout);
+      if (this.idleAnimId) {
+        cancelAnimationFrame(this.idleAnimId);
+        this.idleAnimId = null;
+      }
     }
   }
 
