@@ -1,1474 +1,1533 @@
 ---
-// lift-simulator.astro — 2-DOF UPDN Lift Simulation (Architectural CAD Workbench)
-// Layout: Rigid 3-Column CAD Workstation (Controls Left | 3D Center | Readout Right)
-// Zero Border Radius, Monochromatic Architectural Drafting Art Direction
 import "@fontsource/google-sans-flex";
 import Watermark from "../components/Watermark.astro";
 ---
 
-<html lang="th">
+<!doctype html>
+<html lang="en">
 <head>
 	<meta charset="utf-8" />
 	<link rel="icon" href="/favicon.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="2-DOF UPDN Lift Simulation — Architectural CAD Workbench & Kinematics Blueprint" />
-	<title>2-DOF UPDN Lift Simulation — site(.)moss</title>
+	<title>Maize Tassel Counting — site(.)moss</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+	<link rel="preload" as="image" href="/optimized/anim_bg_1.webp" />
+	<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/ort.min.js" is:inline></script>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" is:inline></script>
-	<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" is:inline></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous" />
-	<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" is:inline defer></script>
-
-	<style is:global>
-		/* ========================================================
-		   STRICT ARCHITECTURAL CAD WORKBENCH (NO ROUNDED CORNERS)
-		======================================================== */
+	<style is:inline>
+		/* ==========================================================================
+		   HOMEPAGE DESIGN SYSTEM (MATCHING index.astro)
+		   ========================================================================== */
 		:root {
-			--cad-bg: #09090c;
-			--cad-panel: #101015;
-			--cad-surface: #15151c;
-			--cad-border: #272732;
-			--cad-border-light: #424252;
-			--cad-text: #f4f4f6;
-			--cad-sub: #a1a1aa;
-			--cad-dim: #71717a;
-			--cad-grid: rgba(255, 255, 255, 0.04);
+			--bg:               #F0EBE4;
+			--fg:               #1A1410;
+			--tile-bg:          #FFFFFF;
+			--tile-border:      rgba(0, 0, 0, 0.08);
+			--tile-hover:       #F7F4F0;
+			--tile-shadow:      0 2px 8px rgba(0,0,0,0.06);
+			--tile-shadow-hover:0 8px 24px rgba(0,0,0,0.12);
+			--tile-text:        #1A1410;
+			--tile-label-color: rgba(26, 20, 16, 0.55);
+
+			--accent-primary:   #949B7B;
+			--accent-blue:      #0071e3;
+			--accent-green:     #10b981;
+
 			--font: 'DM Sans', 'Google Sans Flex', system-ui, sans-serif;
-			--mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+			--unit: clamp(56px, 7.4vh, 66px);
+			--gap: 6px;
 		}
 
 		*, *::before, *::after {
 			box-sizing: border-box;
 			margin: 0;
 			padding: 0;
-			border-radius: 0px !important; /* STRICTLY NO ROUNDED CORNERS */
 			-webkit-tap-highlight-color: transparent;
 		}
 
 		html, body {
-			width: 100vw;
-			height: 100vh;
-			overflow: hidden;
-			background: var(--cad-bg);
-			color: var(--cad-text);
+			width: 100%;
+			min-height: 100vh;
+			background: transparent;
+			color: var(--fg);
 			font-family: var(--font);
-			font-size: 13px;
+			font-size: 15px;
 			-webkit-font-smoothing: antialiased;
-		}
-
-		/* ================================
-		   RIGID WORKSTATION GRID LAYOUT
-		================================ */
-		.cad-workstation {
-			display: grid;
-			grid-template-rows: 44px 1fr 34px;
-			grid-template-columns: 320px 1fr 340px;
-			grid-template-areas: 
-				"topbar topbar topbar"
-				"leftdock center3d rightdock"
-				"bottombar bottombar bottombar";
-			width: 100vw;
-			height: 100vh;
-			overflow: hidden;
-			background: var(--cad-bg);
-		}
-
-		/* ================================
-		   TOP BAR
-		================================ */
-		.cad-topbar {
-			grid-area: topbar;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			background: var(--cad-panel);
-			border-bottom: 1px solid var(--cad-border);
-			padding: 0 16px;
-			user-select: none;
-			z-index: 20;
-		}
-
-		.topbar-left {
-			display: flex;
-			align-items: center;
-			gap: 16px;
-		}
-
-		.cad-nav-link {
-			color: var(--cad-sub);
-			text-decoration: none;
-			font-size: 0.76rem;
-			font-family: var(--mono);
-			display: flex;
-			align-items: center;
-			gap: 6px;
-			transition: color 0.15s;
-		}
-		.cad-nav-link:hover { color: #ffffff; }
-
-		.cad-main-title {
-			font-size: 0.85rem;
-			font-weight: 700;
-			text-transform: uppercase;
-			letter-spacing: 0.05em;
-			font-family: var(--mono);
-			border-left: 1px solid var(--cad-border);
-			padding-left: 14px;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-		}
-
-		.cad-tag {
-			background: #1c1c24;
-			border: 1px solid var(--cad-border);
-			color: #ffffff;
-			font-size: 0.65rem;
-			padding: 2px 6px;
-			font-family: var(--mono);
-			font-weight: 600;
-		}
-
-		.topbar-right {
-			display: flex;
-			align-items: center;
-			gap: 10px;
-		}
-
-		.cad-btn-spec {
-			background: var(--cad-surface);
-			border: 1px solid var(--cad-border);
-			color: var(--cad-text);
-			padding: 4px 10px;
-			font-size: 0.72rem;
-			font-family: var(--mono);
-			cursor: pointer;
-			display: flex;
-			align-items: center;
-			gap: 6px;
-			transition: all 0.15s;
-		}
-		.cad-btn-spec:hover {
-			background: #242430;
-			border-color: var(--cad-border-light);
-		}
-
-		/* ================================
-		   LEFT CONTROL DOCK
-		================================ */
-		.cad-leftdock {
-			grid-area: leftdock;
-			background: var(--cad-panel);
-			border-right: 1px solid var(--cad-border);
-			display: flex;
-			flex-direction: column;
-			gap: 14px;
-			padding: 16px;
-			overflow-y: auto;
-			user-select: none;
-			scrollbar-width: thin;
-			scrollbar-color: var(--cad-border) transparent;
-		}
-
-		.dock-header {
-			font-size: 0.68rem;
-			text-transform: uppercase;
-			letter-spacing: 0.08em;
-			font-family: var(--mono);
-			font-weight: 700;
-			color: var(--cad-dim);
-			border-bottom: 1px solid var(--cad-border);
-			padding-bottom: 5px;
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-		}
-
-		.control-group {
-			display: flex;
-			flex-direction: column;
-			gap: 12px;
-		}
-
-		.control-row {
-			display: grid;
-			grid-template-columns: 110px 1fr 58px;
-			align-items: center;
-			gap: 8px;
-		}
-
-		.control-label {
-			font-size: 0.74rem;
-			font-weight: 600;
-			color: var(--cad-text);
-		}
-		.control-label span {
-			display: block;
-			font-size: 0.62rem;
-			color: var(--cad-dim);
-			font-weight: 400;
-			font-family: var(--mono);
-		}
-
-		input[type="range"] {
-			width: 100%;
-			height: 3px;
-			background: #252530;
-			cursor: pointer;
-			-webkit-appearance: none;
-			appearance: none;
-			outline: none;
-		}
-		input[type="range"]::-webkit-slider-thumb {
-			-webkit-appearance: none;
-			width: 10px;
-			height: 16px;
-			background: #ffffff;
-			border: 1px solid #000000;
-			cursor: pointer;
-		}
-		input[type="range"] { accent-color: #ffffff; }
-
-		.cad-num-box {
-			background: #09090d;
-			border: 1px solid var(--cad-border);
-			color: #ffffff;
-			padding: 4px 6px;
-			font-size: 0.78rem;
-			text-align: right;
-			font-family: var(--mono);
-			width: 100%;
-			outline: none;
-		}
-		.cad-num-box:focus { border-color: var(--cad-border-light); }
-
-		.preset-grid {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 6px;
-		}
-
-		.cad-btn-preset {
-			background: var(--cad-surface);
-			border: 1px solid var(--cad-border);
-			color: var(--cad-text);
-			padding: 7px 8px;
-			font-size: 0.68rem;
-			font-family: var(--mono);
-			cursor: pointer;
-			transition: all 0.15s;
-			text-align: left;
-			display: flex;
-			align-items: center;
-			gap: 6px;
-		}
-		.cad-btn-preset:hover {
-			background: #22222c;
-			border-color: var(--cad-border-light);
-			color: #ffffff;
-		}
-
-		.view-toggles {
-			display: flex;
-			gap: 4px;
-		}
-
-		.cad-toggle-btn {
-			flex: 1;
-			background: var(--cad-surface);
-			border: 1px solid var(--cad-border);
-			color: var(--cad-dim);
-			padding: 6px;
-			font-size: 0.68rem;
-			font-family: var(--mono);
-			cursor: pointer;
-			text-align: center;
-			transition: all 0.15s;
-		}
-		.cad-toggle-btn.active {
-			background: #282834;
-			border-color: #ffffff;
-			color: #ffffff;
-		}
-
-		/* Stage Inspiration Card */
-		.inspiration-card {
-			background: var(--cad-surface);
-			border: 1px solid var(--cad-border);
-			display: flex;
-			flex-direction: column;
-			overflow: hidden;
-		}
-
-		.inspiration-img {
-			width: 100%;
-			height: 105px;
-			object-fit: cover;
-			display: block;
-			border-bottom: 1px solid var(--cad-border);
-			filter: grayscale(0.85) contrast(1.15);
-			transition: filter 0.2s ease;
-		}
-		.inspiration-card:hover .inspiration-img {
-			filter: grayscale(0.1) contrast(1.1);
-		}
-
-		.inspiration-body {
-			padding: 9px 10px;
-			display: flex;
-			flex-direction: column;
-			gap: 4px;
-		}
-
-		.inspiration-title {
-			font-size: 0.68rem;
-			font-family: var(--mono);
-			font-weight: 700;
-			text-transform: uppercase;
-			color: #ffffff;
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-		}
-
-		.inspiration-desc {
-			font-size: 0.62rem;
-			color: var(--cad-dim);
-			font-family: var(--mono);
-			line-height: 1.45;
-		}
-
-		/* ================================
-		   CENTER 3D WORKSPACE
-		================================ */
-		.cad-center3d {
-			grid-area: center3d;
+			-moz-osx-font-smoothing: grayscale;
+			overflow-x: hidden;
+			scrollbar-width: none;
 			position: relative;
-			width: 100%;
-			height: 100%;
-			background: var(--cad-bg);
-			overflow: hidden;
-			background-image: 
-				linear-gradient(to right, var(--cad-grid) 1px, transparent 1px),
-				linear-gradient(to bottom, var(--cad-grid) 1px, transparent 1px);
-			background-size: 40px 40px;
 		}
 
-		#webgl-canvas {
-			width: 100%;
-			height: 100%;
-			display: block;
+		/* Wallpaper Background (Crisp blue sky & fields matching homepage) */
+		body::before {
+			content: "";
+			position: fixed;
+			inset: -20px;
+			z-index: -1;
+			background-image: url('/optimized/anim_bg_1.webp');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: blur(6px);
+			-webkit-filter: blur(6px);
+			background-color: rgba(255, 255, 255, 0.1);
+			background-blend-mode: overlay;
 		}
 
-		.viewport-overlay-corner {
-			position: absolute;
-			font-family: var(--mono);
-			font-size: 0.65rem;
-			color: var(--cad-dim);
-			background: rgba(16, 16, 21, 0.85);
-			border: 1px solid var(--cad-border);
-			padding: 4px 8px;
-			pointer-events: none;
-			z-index: 10;
-		}
-		.viewport-top-left { top: 12px; left: 12px; }
-		.viewport-bottom-right { bottom: 12px; right: 12px; }
-
-		/* ================================
-		   RIGHT KINEMATICS DOCK
-		================================ */
-		.cad-rightdock {
-			grid-area: rightdock;
-			background: var(--cad-panel);
-			border-left: 1px solid var(--cad-border);
+		/* Page Root */
+		.page-root {
 			display: flex;
 			flex-direction: column;
-			gap: 12px;
-			padding: 16px;
-			overflow-y: auto;
-			user-select: none;
-			scrollbar-width: thin;
-			scrollbar-color: var(--cad-border) transparent;
-		}
-
-		.hud-grid {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: 6px;
-		}
-
-		.hud-stat-box {
-			background: var(--cad-surface);
-			border: 1px solid var(--cad-border);
-			padding: 6px 8px;
-			text-align: center;
-		}
-
-		.stat-title {
-			font-size: 0.6rem;
-			text-transform: uppercase;
-			letter-spacing: 0.05em;
-			color: var(--cad-dim);
-			font-family: var(--mono);
-		}
-
-		.stat-value {
-			font-size: 0.88rem;
-			font-weight: 700;
-			font-family: var(--mono);
-			color: #ffffff;
-			margin-top: 2px;
-		}
-
-		.cad-table {
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 24px 0;
+			gap: 16px;
 			width: 100%;
-			border-collapse: collapse;
-			font-family: var(--mono);
-			font-size: 0.68rem;
-			border: 1px solid var(--cad-border);
 		}
 
-		.cad-table th {
-			background: #16161e;
-			color: var(--cad-sub);
-			padding: 5px 6px;
+		/* Site Header */
+		.site-header {
+			width: 100%;
+			max-width: 100vw;
+			padding: 0 32px;
 			text-align: center;
-			font-weight: 600;
-			border: 1px solid var(--cad-border);
+			animation: fadeDown 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) both;
 		}
 
-		.cad-table td {
-			background: #0b0b0f;
-			padding: 5px 6px;
-			text-align: center;
-			color: var(--cad-dim);
-			border: 1px solid var(--cad-border);
+		.header-inner {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
 		}
-		.cad-table .val-active { color: #ffffff; font-weight: 700; }
 
-		.matrix-block {
-			background: #08080b;
-			border: 1px solid var(--cad-border);
-			padding: 8px;
-			font-family: var(--mono);
-			font-size: 0.64rem;
-			color: #d4d4d8;
-			line-height: 1.45;
-			white-space: pre;
+		.header-back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			color: var(--tile-label-color);
+			font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			text-decoration: none;
+			transition: color 0.2s ease, transform 0.2s ease;
+		}
+		.header-back-link:hover {
+			color: var(--fg);
+			transform: translateX(-2px);
+		}
+
+		.header-sep {
+			color: rgba(0, 0, 0, 0.2);
+			font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+			font-weight: 200;
+		}
+
+		.site-logo {
+			font-size: clamp(1.6rem, 3.6vw, 2.6rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			color: var(--fg);
+			line-height: 1;
+		}
+
+		/* Dashboard Container (Fits Screen, Centered, No Overflow!) */
+		.dashboard-scroll {
+			width: 100%;
+			max-width: 100vw;
+			padding: 0 24px;
 			overflow-x: auto;
+			overflow-y: hidden;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+			display: flex;
+			justify-content: center;
+			box-sizing: border-box;
+		}
+		.dashboard-scroll::-webkit-scrollbar { display: none; }
+
+		@media (max-width: 940px) {
+			.dashboard-scroll {
+				justify-content: flex-start;
+			}
 		}
 
-		.label-mono {
-			font-size: 0.62rem;
-			color: var(--cad-dim);
-			font-family: var(--mono);
+		.dashboard-grid {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: clamp(14px, 2vw, 24px);
+			align-items: flex-start;
+			width: max-content;
+			padding: 4px 0;
+		}
+
+		/* Tile Group */
+		.tile-group {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex-shrink: 0;
+			animation: fadeUp 0.75s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+		.tile-group:nth-child(1) { animation-delay: 0.05s; }
+		.tile-group:nth-child(2) { animation-delay: 0.1s; }
+		.tile-group:nth-child(3) { animation-delay: 0.15s; }
+
+		.group-label {
+			font-size: 9px;
 			font-weight: 700;
+			letter-spacing: 0.12em;
 			text-transform: uppercase;
-			letter-spacing: 0.06em;
+			color: var(--tile-label-color);
+			padding-left: 2px;
 		}
 
-		/* ================================
-		   BOTTOM SPEC BAR
-		================================ */
-		.cad-bottombar {
-			grid-area: bottombar;
+		/* 5-Row Tile Grid */
+		.tile-grid {
+			display: grid;
+			grid-template-rows: repeat(5, var(--unit));
+			grid-auto-flow: column dense;
+			grid-auto-columns: var(--unit);
+			gap: var(--gap);
+		}
+
+		/* Base Tile */
+		.tile {
+			background: var(--tile-bg);
+			border: 1px solid var(--tile-border);
+			box-shadow: var(--tile-shadow);
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 8px 10px;
+			cursor: pointer;
+			text-decoration: none;
+			color: var(--tile-text);
+			transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1),
+						box-shadow 0.25s ease,
+						border-color 0.25s ease,
+						background 0.2s ease;
+			transform: translateZ(0);
+			backface-visibility: hidden;
+		}
+		.tile:hover {
+			will-change: transform;
+			transform: translateY(-2px) scale(1.012);
+			box-shadow: var(--tile-shadow-hover);
+			border-color: rgba(0,0,0,0.12);
+			background: var(--tile-hover);
+		}
+		.tile:active {
+			transform: scale(0.97);
+			transition-duration: 0.06s;
+		}
+
+		/* Glow overlay on hover */
+		.tile::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.3) 0%, transparent 65%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
+			z-index: 5;
+		}
+		.tile:hover::after { opacity: 1; }
+
+		/* Dimensions */
+		.t-2x2 { grid-column: span 2; grid-row: span 2; }
+		.t-3x1 { grid-column: span 3; grid-row: span 1; }
+		.t-3x2 { grid-column: span 3; grid-row: span 2; }
+		.t-4x3 { grid-column: span 4; grid-row: span 3; }
+		.t-5x5 { grid-column: span 5; grid-row: span 5; }
+
+		/* Labels */
+		.tile-label {
+			font-size: 7.5px;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--tile-label-color);
+			position: relative;
+			z-index: 2;
+			line-height: 1;
+			margin-top: auto;
+		}
+
+		/* ==========================================================================
+		   NESTED TILES GALLERY (ไทล์ซ้อนไทล์)
+		   ========================================================================== */
+		.tile-gallery-parent {
+			cursor: default;
+			padding: 8px 10px;
+		}
+		.tile-gallery-parent:hover {
+			transform: none;
+			box-shadow: var(--tile-shadow);
+			background: var(--tile-bg);
+		}
+		.gallery-inner {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			gap: 5px;
+			z-index: 2;
+			margin-bottom: 3px;
+		}
+		.gallery-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 0 1px;
+		}
+		.gallery-title {
+			font-size: 9.5px;
+			font-weight: 700;
+			letter-spacing: 0.05em;
+			color: var(--fg);
+		}
+		.gallery-hint {
+			font-size: 8px;
+			color: var(--tile-label-color);
+			font-weight: 600;
+		}
+		.nested-tiles-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			grid-template-rows: repeat(2, 1fr);
+			gap: 5px;
+			flex: 1;
+		}
+		.nested-sample-tile {
+			position: relative;
+			border-radius: 2px;
+			overflow: hidden;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: #1e293b;
+			cursor: pointer;
+			transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 4px;
+		}
+		.nested-sample-tile:hover {
+			transform: translateY(-2px) scale(1.02);
+			border-color: #0071e3;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+		}
+		.nested-sample-tile.active-sample {
+			border-color: #0071e3;
+			box-shadow: 0 0 0 1.5px #0071e3, 0 4px 12px rgba(0, 113, 227, 0.3);
+		}
+		.nested-img {
+			position: absolute;
+			inset: 0;
+			background-size: cover;
+			background-position: center;
+			transition: transform 0.4s ease;
+		}
+		.nested-sample-tile:hover .nested-img {
+			transform: scale(1.08);
+		}
+		.nested-overlay {
+			position: absolute;
+			inset: 0;
+			background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.15) 60%, transparent 100%);
+		}
+		.nested-gt {
+			position: relative;
+			z-index: 2;
+			align-self: flex-end;
+			background: rgba(0, 0, 0, 0.65);
+			backdrop-filter: blur(3px);
+			-webkit-backdrop-filter: blur(3px);
+			color: #34d399;
+			font-size: 7.5px;
+			font-weight: 700;
+			padding: 1px 4px;
+			border-radius: 2px;
+			line-height: 1.1;
+		}
+		.nested-name {
+			position: relative;
+			z-index: 2;
+			color: rgba(255, 255, 255, 0.95);
+			font-size: 8px;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			line-height: 1;
+			text-shadow: 0 1px 2px rgba(0,0,0,0.7);
+		}
+
+		/* ==========================================================================
+		   UPLOAD & CONTROLS TILES (2×2 BALANCED)
+		   ========================================================================== */
+		.tile-action-card {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 10px;
+		}
+		.action-card-inner {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			flex: 1;
+			text-align: center;
+			z-index: 2;
+		}
+		.action-icon-circle {
+			width: 32px;
+			height: 32px;
+			border-radius: 50%;
+			background: rgba(0, 113, 227, 0.08);
 			display: flex;
 			align-items: center;
+			justify-content: center;
+			color: #0071e3;
+			transition: transform 0.2s ease, background 0.2s ease;
+		}
+		.tile-action-card:hover .action-icon-circle {
+			transform: scale(1.08);
+			background: rgba(0, 113, 227, 0.15);
+		}
+		.action-card-text {
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
+		}
+		.action-card-title {
+			font-size: 10.5px;
+			font-weight: 700;
+			color: var(--fg);
+			line-height: 1.2;
+		}
+		.action-card-sub {
+			font-size: 8px;
+			color: var(--tile-label-color);
+			line-height: 1.2;
+		}
+
+		/* Controls Inside 2x2 */
+		.ctrl-box {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex: 1;
+			justify-content: center;
+			z-index: 2;
+		}
+		.ctrl-section {
+			display: flex;
+			flex-direction: column;
+			gap: 3px;
+		}
+		.ctrl-section-label {
+			font-size: 7.5px;
+			font-weight: 700;
+			color: var(--tile-label-color);
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		/* Segmented 4-button Control (1x1, 2x1, 1x2, 2x2) */
+		.segmented-ctrl {
+			display: flex;
+			background: rgba(0, 0, 0, 0.05);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			padding: 2px;
+			gap: 2px;
+			width: 100%;
+			border-radius: 4px;
+		}
+		.seg-btn {
+			flex: 1;
+			border: none;
+			background: transparent;
+			padding: 4px 0;
+			font-size: 9px;
+			font-family: inherit;
+			font-weight: 600;
+			color: var(--tile-label-color);
+			cursor: pointer;
+			border-radius: 3px;
+			transition: all .15s ease;
+			text-align: center;
+		}
+		.seg-btn:hover { color: var(--fg); }
+		.seg-btn.on {
+			background: #ffffff;
+			color: var(--fg);
+			font-weight: 700;
+			box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+		}
+
+		.toggle-line {
+			display: flex;
 			justify-content: space-between;
-			background: var(--cad-panel);
-			border-top: 1px solid var(--cad-border);
-			padding: 0 16px;
-			font-family: var(--mono);
-			font-size: 0.68rem;
-			color: var(--cad-dim);
-			user-select: none;
-			z-index: 20;
+			align-items: center;
+			width: 100%;
+			padding: 1px 0;
 		}
-		.spec-item { display: flex; gap: 6px; }
-		.spec-val { color: var(--cad-text); }
-
-		:global(.watermark-container) {
-			bottom: 38px !important;
-			z-index: 100 !important;
+		.toggle-name {
+			font-size: 9px;
+			font-weight: 700;
+			color: var(--fg);
+		}
+		.clean-toggle {
+			width: 26px;
+			height: 15px;
+			background: rgba(0, 0, 0, 0.15);
+			border-radius: 8px;
+			position: relative;
+			cursor: pointer;
+			transition: background-color .2s ease;
+		}
+		.clean-toggle.on { background: #10b981; }
+		.clean-toggle-knob {
+			width: 11px;
+			height: 11px;
+			background: #ffffff;
+			border-radius: 50%;
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+			transition: transform .2s cubic-bezier(0.16, 1, 0.3, 1);
+		}
+		.clean-toggle.on .clean-toggle-knob {
+			transform: translateX(11px);
 		}
 
-		/* ================================
-		   SPECS & THEORY MODAL
-		================================ */
-		.cad-modal {
-			position: fixed;
+		/* ==========================================================================
+		   VIEWPORT TILE (5×5)
+		   ========================================================================== */
+		.tile-viewport {
+			padding: 0;
+			background: #0f141c;
+			overflow: hidden;
+			position: relative;
+			cursor: default;
+			border-color: rgba(0, 0, 0, 0.15);
+		}
+		.tile-viewport:hover {
+			transform: none;
+			box-shadow: var(--tile-shadow);
+		}
+
+		.viewport-drop-facade {
+			position: absolute;
 			inset: 0;
-			background: rgba(0, 0, 0, 0.85);
-			backdrop-filter: blur(8px);
-			-webkit-backdrop-filter: blur(8px);
-			z-index: 50;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			color: #64748b;
+			text-align: center;
+			padding: 24px;
+			cursor: pointer;
+			background: #ffffff;
+			transition: background 0.2s ease;
+			z-index: 2;
+		}
+		.viewport-drop-facade:hover {
+			background: #fafaf9;
+		}
+		.viewport-drop-facade input {
+			position: absolute;
+			inset: 0;
+			opacity: 0;
+			cursor: pointer;
+		}
+		.vp-facade-title { font-weight: 700; font-size: 13px; color: var(--fg); }
+		.vp-facade-sub { font-size: 10px; color: #64748b; }
+		.vp-facade-hint { font-size: 9.5px; color: #94a3b8; margin-top: 4px; }
+
+		.viewport-preview {
+			position: absolute;
+			inset: 0;
 			display: none;
 			align-items: center;
 			justify-content: center;
-			padding: 24px;
+			background: #0a0d14;
+			overflow: hidden;
 		}
-		.cad-modal.active { display: flex; }
+		.viewport-preview.on { display: flex; }
 
-		.cad-modal-box {
-			background: #0e0e12;
-			border: 1px solid var(--cad-border-light);
-			width: 680px;
-			max-width: 95vw;
-			max-height: 85vh;
-			display: flex;
-			flex-direction: column;
-			box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+		.viewport-preview img {
+			max-width: 100%;
+			max-height: 100%;
+			object-fit: contain;
+			display: block;
+			user-select: none;
+			pointer-events: none;
 		}
 
-		.cad-modal-header {
+		.viewport-preview canvas {
+			position: absolute;
+			pointer-events: none;
+			display: none;
+			z-index: 3;
+		}
+		.viewport-preview canvas.on { display: block; }
+
+		.viewport-top-bar {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			background: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.25) 70%, transparent 100%);
+			padding: 8px 12px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 12px 18px;
-			background: #14141a;
-			border-bottom: 1px solid var(--cad-border);
-			font-family: var(--mono);
-			font-size: 0.85rem;
+			font-size: 10px;
+			color: #ffffff;
+			z-index: 4;
+		}
+		.vp-btn-reset {
+			background: rgba(255, 255, 255, 0.2);
+			border: 1px solid rgba(255, 255, 255, 0.35);
+			color: #ffffff;
+			padding: 2px 7px;
+			font-size: 9px;
 			font-weight: 700;
-			text-transform: uppercase;
+			border-radius: 3px;
+			cursor: pointer;
+			transition: background 0.15s ease;
+		}
+		.vp-btn-reset:hover {
+			background: rgba(255, 255, 255, 0.35);
 		}
 
-		.cad-modal-close {
-			background: transparent;
-			border: 1px solid var(--cad-border);
-			color: var(--cad-sub);
+		.viewport-bottom-bar {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 70%, transparent 100%);
+			padding: 8px 12px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 7.5px;
+			color: rgba(255, 255, 255, 0.85);
+			font-weight: 700;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			z-index: 4;
+			pointer-events: none;
+		}
+
+		.vp-loading-overlay {
+			position: absolute;
+			inset: 0;
+			background: rgba(15, 20, 28, 0.85);
+			backdrop-filter: blur(4px);
+			-webkit-backdrop-filter: blur(4px);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			color: #ffffff;
+			font-size: 11px;
+			font-weight: 600;
+			z-index: 10;
+		}
+		.spin-loader {
 			width: 24px;
 			height: 24px;
-			cursor: pointer;
+			border: 2.5px solid rgba(255, 255, 255, 0.2);
+			border-top-color: #38bdf8;
+			border-radius: 50%;
+			animation: spin 0.75s linear infinite;
+		}
+		@keyframes spin { to { transform: rotate(360deg); } }
+
+		/* ==========================================================================
+		   ESTIMATION RESULT TILE (3×2)
+		   ========================================================================== */
+		.result-box {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			gap: 3px;
+			padding: 4px 0;
+			z-index: 2;
+		}
+		.res-number {
+			font-size: 36px;
+			font-weight: 800;
+			color: var(--fg);
+			line-height: 1;
+			letter-spacing: -0.02em;
+		}
+		.res-caption {
+			font-size: 8.5px;
+			font-weight: 700;
+			color: var(--tile-label-color);
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+		.res-meta-row {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			margin-top: 4px;
+		}
+		.res-gt-tag {
+			font-size: 9px;
+			color: var(--tile-label-color);
+			font-weight: 600;
+		}
+		.gt-chip-in {
+			background: rgba(16, 185, 129, 0.15);
+			border: 1px solid rgba(16, 185, 129, 0.35);
+			color: #047857;
+			padding: 1px 5px;
+			border-radius: 2px;
+			font-size: 8.5px;
+			font-weight: 700;
+		}
+		.gt-chip-out {
+			background: rgba(245, 158, 11, 0.15);
+			border: 1px solid rgba(245, 158, 11, 0.35);
+			color: #b45309;
+			padding: 1px 5px;
+			border-radius: 2px;
+			font-size: 8.5px;
+			font-weight: 700;
+		}
+
+		/* Purpose Tile (3×2) */
+		.purpose-box {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 6px;
+			height: 100%;
+			z-index: 2;
+			padding: 2px 0;
+		}
+		.purpose-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.purpose-title {
+			font-size: 11px;
+			font-weight: 700;
+			color: var(--fg);
+			letter-spacing: 0.01em;
+		}
+		.purpose-badge {
+			font-size: 7.5px;
+			font-weight: 800;
+			padding: 2px 5px;
+			border-radius: 3px;
+			background: rgba(0, 113, 227, 0.08);
+			color: #0071e3;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+		}
+		.purpose-text {
+			font-size: 9px;
+			line-height: 1.45;
+			color: #475569;
+			margin: 0;
+		}
+
+		/* Portfolio Home Tile (3×1) */
+		.home-link-inner {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			height: 100%;
+			z-index: 2;
+		}
+		.home-link-icon {
+			width: 24px;
+			height: 24px;
+			border-radius: 50%;
+			background: rgba(0, 0, 0, 0.05);
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			color: var(--fg);
+			transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+			flex-shrink: 0;
 		}
-		.cad-modal-close:hover { background: #22222a; color: #ffffff; }
-
-		.cad-modal-content {
-			padding: 18px;
-			overflow-y: auto;
+		.tile-home-link:hover .home-link-icon {
+			transform: translateX(-2px);
+			background: #0071e3;
+			color: #ffffff;
+		}
+		.home-link-text {
 			display: flex;
 			flex-direction: column;
-			gap: 14px;
+			gap: 1px;
+		}
+		.home-link-title {
+			font-size: 10.5px;
+			font-weight: 700;
+			color: var(--fg);
+			line-height: 1.1;
+		}
+		.home-link-sub {
+			font-size: 8px;
+			color: var(--tile-label-color);
+			line-height: 1;
 		}
 
-		.modal-section {
-			background: #121217;
-			border: 1px solid var(--cad-border);
-			padding: 14px;
+		/* Animations */
+		@keyframes fadeDown {
+			from { opacity: 0; transform: translateY(-16px); }
+			to   { opacity: 1; transform: translateY(0); }
 		}
-		.modal-section h3 {
-			font-size: 0.78rem;
-			font-family: var(--mono);
-			text-transform: uppercase;
-			color: #ffffff;
-			margin-bottom: 6px;
-			border-bottom: 1px solid var(--cad-border);
-			padding-bottom: 4px;
-		}
-		.modal-section p, .modal-section li {
-			color: var(--cad-sub);
-			font-size: 0.78rem;
-			line-height: 1.6;
-		}
-		.modal-section ul { padding-left: 16px; margin-top: 4px; }
-
-		.math-card {
-			background: #08080a;
-			border: 1px solid var(--cad-border);
-			padding: 8px 12px;
-			margin: 8px 0;
-			text-align: center;
-		}
-
-		/* Responsive fallback */
-		@media (max-width: 960px) {
-			.cad-workstation {
-				grid-template-rows: 44px 1fr auto auto 34px;
-				grid-template-columns: 1fr;
-				grid-template-areas: 
-					"topbar"
-					"center3d"
-					"leftdock"
-					"rightdock"
-					"bottombar";
-				height: auto;
-				overflow-y: auto;
-			}
-			.cad-center3d { min-height: 50vh; }
+		@keyframes fadeUp {
+			from { opacity: 0; transform: translateY(14px); }
+			to   { opacity: 1; transform: translateY(0); }
 		}
 	</style>
 </head>
-
 <body>
-	<div class="cad-workstation">
-		<!-- TOP BAR -->
-		<header class="cad-topbar">
-			<div class="topbar-left">
-				<a href="/" class="cad-nav-link">
-					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-					site(.)moss
+
+	<!-- Dashboard Page Root -->
+	<div class="page-root">
+
+		<!-- Site Header -->
+		<header class="site-header">
+			<div class="header-inner">
+				<a href="/" class="header-back-link" title="Return to site(.)moss">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+					<span>site(.)moss</span>
 				</a>
-				<div class="cad-main-title">
-					2-DOF UPDN Lift Simulation
-					<span class="cad-tag">STAGE LEVEL BASE [0 &rarr; +400st]</span>
-				</div>
-			</div>
-			<div class="topbar-right">
-				<button class="cad-btn-spec" id="btnOpenModal">
-					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-					Kinematics Specs
-				</button>
+				<span class="header-sep">/</span>
+				<h1 class="site-logo">Maize Tassel</h1>
 			</div>
 		</header>
 
-		<!-- LEFT CONTROL DOCK -->
-		<aside class="cad-leftdock">
-			<div class="dock-header">
-				<span>Actuator Drive (Upward Only)</span>
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-			</div>
+		<!-- Dashboard Grid (Perfect Non-Overflowing Fit) -->
+		<div class="dashboard-scroll" id="dashScroll">
+			<main class="dashboard-grid">
 
-			<div class="control-group">
-				<div class="control-row">
-					<div class="control-label">
-						LEFTUP2
-						<span>0 &rarr; 400st (0.4st/clk)</span>
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 1: SAMPLES & CONTROLS                  -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">AERIAL SAMPLES &amp; CONTROLS</h2>
+					<div class="tile-grid">
+
+						<!-- Row 1-3: Nested Sample Gallery Tile (4×3) — ไทล์ซ้อนไทล์ -->
+						<div class="tile t-4x3 tile-gallery-parent" id="tile-sample-gallery">
+							<div class="gallery-inner">
+								<div class="gallery-header">
+									<span class="gallery-title">DRONE SAMPLES</span>
+									<span class="gallery-hint">Select to test</span>
+								</div>
+								
+								<div class="nested-tiles-grid" id="nestedSamplesGrid">
+									<!-- Sample 1 -->
+									<div class="nested-sample-tile active-sample" data-id="DJI_0238">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0238_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">295–330</span>
+										<span class="nested-name">DJI_0238</span>
+									</div>
+
+									<!-- Sample 2 -->
+									<div class="nested-sample-tile" data-id="DJI_0247">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0247_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">270–305</span>
+										<span class="nested-name">DJI_0247</span>
+									</div>
+
+									<!-- Sample 3 -->
+									<div class="nested-sample-tile" data-id="DJI_0263">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0263_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">250–285</span>
+										<span class="nested-name">DJI_0263</span>
+									</div>
+
+									<!-- Sample 4 -->
+									<div class="nested-sample-tile" data-id="DJI_0808">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0808_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">310–345</span>
+										<span class="nested-name">DJI_0808</span>
+									</div>
+
+									<!-- Sample 5 -->
+									<div class="nested-sample-tile" data-id="DJI_0815">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0815_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">320–360</span>
+										<span class="nested-name">DJI_0815</span>
+									</div>
+
+									<!-- Sample 6 -->
+									<div class="nested-sample-tile" data-id="DJI_0900">
+										<div class="nested-img" style="background-image: url('/maize_tassel/sample/thumbs/DJI_0900_thumb.jpg')"></div>
+										<div class="nested-overlay"></div>
+										<span class="nested-gt">210–245</span>
+										<span class="nested-name">DJI_0900</span>
+									</div>
+								</div>
+							</div>
+							<span class="tile-label">MTC-UAV DATASET</span>
+						</div>
+
+						<!-- Row 4-5 (Left): Upload Drone Image (2×2 Balanced) -->
+						<div class="tile t-2x2 tile-action-card" id="tile-upload-card" onclick="document.getElementById('fileInput').click()">
+							<div class="action-card-inner">
+								<div class="action-icon-circle">
+									<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+								</div>
+								<div class="action-card-text">
+									<span class="action-card-title">Upload Image</span>
+									<span class="action-card-sub">Drop or browse photo</span>
+								</div>
+							</div>
+							<span class="tile-label">LOCAL IMAGE</span>
+						</div>
+
+						<!-- Row 4-5 (Right): Controls (2×2 Balanced with 1x1, 2x1, 1x2, 2x2) -->
+						<div class="tile t-2x2" id="tile-controls">
+							<div class="ctrl-box">
+								<div class="ctrl-section">
+									<span class="ctrl-section-label">SLICING RESOLUTION</span>
+									<div class="segmented-ctrl" id="tileGroup">
+										<button class="seg-btn on" data-cols="1" data-rows="1">1×1</button>
+										<button class="seg-btn" data-cols="2" data-rows="1">2×1</button>
+										<button class="seg-btn" data-cols="1" data-rows="2">1×2</button>
+										<button class="seg-btn" data-cols="2" data-rows="2">2×2</button>
+									</div>
+								</div>
+								<div class="ctrl-section">
+									<div class="toggle-line" id="togGrid">
+										<span id="gridLabel" class="toggle-name">8×8 Heatmap</span>
+										<div class="clean-toggle"><div class="clean-toggle-knob"></div></div>
+									</div>
+								</div>
+							</div>
+							<span class="tile-label">DETECTION CONTROLS</span>
+						</div>
+
 					</div>
-					<input type="range" id="slLeft" min="0" max="400" step="4" value="0">
-					<input type="number" id="numLeft" class="cad-num-box" min="0" max="400" value="0">
-				</div>
+				</section>
 
-				<div class="control-row">
-					<div class="control-label">
-						RIGHTUP2
-						<span>0 &rarr; 400st (0.4st/clk)</span>
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 2: INSPECTION VIEWPORT                  -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">INSPECTION VIEWPORT</h2>
+					<div class="tile-grid">
+
+						<!-- Viewport Tile 5×5 -->
+						<div class="tile t-5x5 tile-viewport" id="tile-viewport">
+							
+							<!-- Empty Dropzone -->
+							<div class="viewport-drop-facade" id="dropZone">
+								<input type="file" accept="image/*" id="fileInput" />
+								<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0071e3" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+								<div class="vp-facade-title">Drop or browse drone photo</div>
+								<div class="vp-facade-sub">High-Resolution Imagery (JPG, PNG)</div>
+								<div class="vp-facade-hint">or click any sample tile on the left</div>
+							</div>
+
+							<!-- Active Preview & Density Grid -->
+							<div class="viewport-preview" id="previewWrap">
+								<div class="viewport-top-bar" id="previewBar">
+									<div style="display:flex;align-items:center;gap:6px;">
+										<span id="previewBarName" style="font-weight:700;">DJI_0238.jpg</span>
+										<span style="opacity:0.4;">•</span>
+										<span id="previewBarRes">High-Res Drone</span>
+									</div>
+									<button class="vp-btn-reset" id="btnReset">✕ Reset</button>
+								</div>
+								<img id="previewImg" alt="Maize Tassel Prediction" />
+								<canvas id="gridCanvas"></canvas>
+
+								<div class="viewport-bottom-bar">
+									<span>NEURAL DENSITY VIEWPORT</span>
+									<span id="vpGridStatus">Grid: 8×8</span>
+								</div>
+							</div>
+
+							<span class="tile-label tile-label-light" style="display:none;">NEURAL DENSITY VIEWPORT</span>
+						</div>
+
 					</div>
-					<input type="range" id="slRight" min="0" max="400" step="4" value="0">
-					<input type="number" id="numRight" class="cad-num-box" min="0" max="400" value="0">
-				</div>
+				</section>
 
-				<div class="control-row">
-					<div class="control-label">
-						Tilt Angle (&theta;)
-						<span>asin((yR-yL)/440)</span>
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 3: ESTIMATION & PURPOSE                -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">ESTIMATION &amp; PURPOSE</h2>
+					<div class="tile-grid">
+
+						<!-- Estimation Result 3×2 (Balanced Typographic Hierarchy) -->
+						<div class="tile t-3x2" id="tile-result">
+							<div class="result-box" id="resultArea">
+								<div class="res-number" id="resCount">--</div>
+								<div class="res-caption">Estimated Tassels</div>
+								<div class="res-meta-row" id="resMeta" style="display:none;">
+									<span class="res-gt-tag" id="resGtTag">GT: --</span>
+									<span id="resBadge"></span>
+								</div>
+							</div>
+							<span class="tile-label">ESTIMATION (Q50)</span>
+						</div>
+
+						<!-- Project Purpose 3×2 (Clean, Balanced & Modern) -->
+						<div class="tile t-3x2" id="tile-purpose">
+							<div class="purpose-box">
+								<div class="purpose-header">
+									<span class="purpose-title">Maize Tassel Counting</span>
+									<span class="purpose-badge">UAV AI</span>
+								</div>
+								<p class="purpose-text">Automated corn tassel counting from aerial drone photography to evaluate flowering timing and assess field crop density.</p>
+							</div>
+							<span class="tile-label">PROJECT OVERVIEW</span>
+						</div>
+
+						<!-- Return Link 3×1 (Balanced Navigation Card) -->
+						<a href="/" class="tile t-3x1 tile-home-link" id="tile-back-home" title="Return to site(.)moss">
+							<div class="home-link-inner">
+								<div class="home-link-icon">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+								</div>
+								<div class="home-link-text">
+									<span class="home-link-title">Return to site(.)moss</span>
+									<span class="home-link-sub">Portfolio Dashboard</span>
+								</div>
+							</div>
+							<span class="tile-label">NAVIGATION</span>
+						</a>
+
 					</div>
-					<input type="range" id="slTh" min="-30" max="30" step="0.5" value="0">
-					<input type="number" id="numTh" class="cad-num-box" value="0">
-				</div>
-			</div>
+				</section>
 
-			<div class="dock-header">
-				<span>Operating Presets</span>
-			</div>
-			<div class="preset-grid">
-				<button class="cad-btn-preset" id="pre1">
-					<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="2"/></svg>
-					1) STAGE (0st)
-				</button>
-				<button class="cad-btn-preset" id="pre2">
-					<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-					2) MID (+160st)
-				</button>
-				<button class="cad-btn-preset" id="pre3">
-					<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21V3M4 11l8-8 8 8"/></svg>
-					3) HIGH (+360st)
-				</button>
-				<button class="cad-btn-preset" id="pre4">
-					<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 21 18-12M3 21h18"/></svg>
-					4) RAMP (0/+240)
-				</button>
-			</div>
-
-			<div class="dock-header">
-				<span>CAD Viewport Modes</span>
-			</div>
-			<div class="view-toggles">
-				<button class="cad-toggle-btn active" id="togWire">Wireframe</button>
-				<button class="cad-toggle-btn active" id="togGrid">Draft Grid</button>
-				<button class="cad-toggle-btn active" id="togAxes">Center Axes</button>
-			</div>
-
-			<div class="dock-header">
-				<span>Stage Inspiration</span>
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-			</div>
-			<div class="inspiration-card">
-				<img src="/Joanne-Lift-1.jpg" alt="Joanne World Tour Stage Lift" class="inspiration-img" />
-				<div class="inspiration-body">
-					<div class="inspiration-title">
-						<span>Joanne World Tour (2017)</span>
-					</div>
-					<p class="inspiration-desc">
-						Kinematics and dual hydraulic column risers inspired by Lady Gaga's dynamic concert stage by Tait Towers. Features articulated LED screen pods capable of independent elevation & dramatic pitch ramps.
-					</p>
-				</div>
-			</div>
-		</aside>
-
-		<!-- CENTER 3D WORKSPACE -->
-		<main class="cad-center3d">
-			<div class="viewport-overlay-corner viewport-top-left">
-				ELEVATION VIEW // SCALE 1:12.5 [STUDS &rarr; 3D]
-			</div>
-			<div class="viewport-overlay-corner viewport-bottom-right">
-				ORBIT: LEFT-DRAG | PAN: RIGHT-DRAG | ZOOM: SCROLL
-			</div>
-			<canvas id="webgl-canvas"></canvas>
-		</main>
-
-		<!-- RIGHT KINEMATICS DOCK -->
-		<aside class="cad-rightdock">
-			<div class="dock-header">
-				<span>Kinematics Readout</span>
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-			</div>
-
-			<div class="hud-grid">
-				<div class="hud-stat-box">
-					<div class="stat-title">LEFTUP2 (Height)</div>
-					<div class="stat-value" id="hudLeftY">0.0 st</div>
-				</div>
-				<div class="hud-stat-box">
-					<div class="stat-title">RIGHTUP2 (Height)</div>
-					<div class="stat-value" id="hudRightY">0.0 st</div>
-				</div>
-				<div class="hud-stat-box">
-					<div class="stat-title">Pitch Angle (&theta;)</div>
-					<div class="stat-value" id="hudTilt">0.0&deg;</div>
-				</div>
-				<div class="hud-stat-box">
-					<div class="stat-title">Clicks (L / R)</div>
-					<div class="stat-value" id="hudClicks">0 / 0</div>
-				</div>
-			</div>
-
-			<div class="dock-header">
-				<span>Actuator State (Roblox Clicks)</span>
-			</div>
-			<table class="cad-table">
-				<thead>
-					<tr><th>Actuator</th><th>Travel Type</th><th>Clicks</th><th>Height</th></tr>
-				</thead>
-				<tbody>
-					<tr><td>LEFTUP2</td><td>Prismatic (+Y)</td><td class="val-active" id="dh-valL">0</td><td class="val-active" id="dh-htL">0.0 st</td></tr>
-					<tr><td>RIGHTUP2</td><td>Prismatic (+Y)</td><td class="val-active" id="dh-valR">0</td><td class="val-active" id="dh-htR">0.0 st</td></tr>
-				</tbody>
-			</table>
-
-			<div class="dock-header">
-				<span>DH Parameter Table (Standard DH)</span>
-				<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-			</div>
-			<table class="cad-table">
-				<thead>
-					<tr><th>Joint (i)</th><th>&theta;<sub>i</sub></th><th>d<sub>i</sub> (studs)</th><th>a<sub>i</sub></th><th>&alpha;<sub>i</sub></th></tr>
-				</thead>
-				<tbody>
-					<tr><td>1 (LEFTUP2)</td><td>0&deg;</td><td class="val-active" id="dh-d1">0.0</td><td>0</td><td>0&deg;</td></tr>
-					<tr><td>2 (RIGHTUP2)</td><td>0&deg;</td><td class="val-active" id="dh-d2">0.0</td><td>0</td><td>0&deg;</td></tr>
-					<tr><td>3 (Platform &theta;)</td><td class="val-active" id="dh-th3">0.0&deg;</td><td>0</td><td>0</td><td>0&deg;</td></tr>
-				</tbody>
-			</table>
-
-			<div class="label-mono">Transformation Matrix (T_WE)</div>
-			<div class="matrix-block" id="matrixOutput">Computing...</div>
-
-			<div class="label-mono">Center Elevation &amp; Delta</div>
-			<div class="matrix-block" id="posReadout">Computing...</div>
-		</aside>
-
-		<!-- BOTTOM SPEC BAR -->
-		<footer class="cad-bottombar">
-			<div class="spec-item">TARGET ENGINE: <span class="spec-val">ROBLOX STUDIO (LUAU)</span></div>
-			<div class="spec-item">INSPIRATION: <span class="spec-val">JOANNE WORLD TOUR (2017)</span></div>
-			<div class="spec-item">BASE: <span class="spec-val">STAGE FLUSH (0.0st)</span></div>
-			<div class="spec-item">RANGE: <span class="spec-val">[0, +400] STUDS</span></div>
-			<div class="spec-item">RATE: <span class="spec-val">0.4 ST/CLICK</span></div>
-		</footer>
-
-		<!-- MODAL (SPEC & THEORY) -->
-		<div class="cad-modal" id="theoryModal">
-			<div class="cad-modal-box">
-				<div class="cad-modal-header">
-					<span>2-DOF UPDN Lift Kinematics — Roblox Studio &amp; Stage Engineering</span>
-					<button class="cad-modal-close" id="btnCloseModal">
-						<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-					</button>
-				</div>
-				<div class="cad-modal-content">
-					<div class="modal-section">
-						<h3>[00] Roblox Studio Implementation &amp; Concert Inspiration</h3>
-						<p>ระบบลิฟต์เวทีคอนเสิร์ตนี้ถูกออกแบบและพัฒนาสำหรับ <strong>Roblox Studio</strong> (Lua/Luau Scripting) โดยได้รับแรงบันดาลใจจากกลไกเวทีคอนเสิร์ต <strong>Lady Gaga — Joanne World Tour (2017)</strong> ออกแบบวิศวกรรมโดย Tait Towers:</p>
-						<ul>
-							<li><strong>Roblox Workspace Architecture:</strong> โมเดลเสา <code>LEFTUP2</code> และ <code>RIGHTUP2</code> ประกอบด้วยส่วนเสา <code>LUp</code> ภายในโมเดล <code>DoorModel</code></li>
-							<li><strong>SurfaceGui Actuation:</strong> ควบคุมผ่านปุ่ม GUI บน <code>liftboard.SurfaceGui</code> โดย 1 คลิกสั่งลูปเคลื่อนที่ 100 สเต็ปย่อย <code>(0, +0.004, 0)</code> รวมเป็น <code>+0.4 studs/click</code> ตามแกน World +Y</li>
-							<li><strong>Click Counters:</strong> ติดตามจำนวนคลิกด้วย <code>NumberValue</code> (ตัวแปร <code>Value_L</code>, <code>Value_R</code>) แคลมป์ค่าในช่วง <code>[0, 1000]</code> คลิก (ระยะยก 0 ถึง +400 studs)</li>
-							<li><strong>Dynamic Pitch Choreography:</strong> เมื่อเสาสองข้างยกไม่เท่ากัน แพลตฟอร์มจอ LED จะเอียงทำมุม &theta; กลายเป็นสะพานทางลาดสโลปสำหรับการแสดงสด</li>
-						</ul>
-					</div>
-
-					<div class="modal-section">
-						<h3>[01] Denavit-Hartenberg (DH) Parameter Table</h3>
-						<p>ตารางพารามิเตอร์ Standard DH Convention สำหรับกลไก 2-DOF Dual Prismatic + Differential Pitch Platform:</p>
-						<table class="cad-table" style="margin: 8px 0;">
-							<thead>
-								<tr><th>Frame (i)</th><th>&theta;<sub>i</sub> (rad)</th><th>d<sub>i</sub> (studs)</th><th>a<sub>i</sub> (studs)</th><th>&alpha;<sub>i</sub> (deg)</th><th>คำอธิบาย Joint</th></tr>
-							</thead>
-							<tbody>
-								<tr><td>1</td><td>0</td><td>d<sub>1</sub> = 0.4 &times; Value<sub>L</sub></td><td>0</td><td>0&deg;</td><td>LEFTUP2 Prismatic Actuator (+Y)</td></tr>
-								<tr><td>2</td><td>0</td><td>d<sub>2</sub> = 0.4 &times; Value<sub>R</sub></td><td>0</td><td>0&deg;</td><td>RIGHTUP2 Prismatic Actuator (+Y)</td></tr>
-								<tr><td>E (Platform)</td><td>&theta; = asin((y<sub>R</sub> - y<sub>L</sub>)/440)</td><td>0</td><td>0</td><td>0&deg;</td><td>Platform Center Pitch Rotation (รอบแกน Z)</td></tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="modal-section">
-						<h3>[02] Differential Pitch &amp; Center Elevation</h3>
-						<p>มุมเอียงของแพลตฟอร์ม (&theta;) จากความต่างระดับของเสาซ้าย-ขวา (Span L = 440 studs):</p>
-						<div class="math-card" id="math-theta"></div>
-						<p>ระดับความสูงจุดศูนย์กลางแพลตฟอร์ม (Center Elevation y<sub>C</sub>):</p>
-						<div class="math-card" id="math-yc"></div>
-					</div>
-
-					<div class="modal-section">
-						<h3>[03] Transformation Matrix &amp; Roblox CFrame Conversion</h3>
-						<p>เมทริกซ์แปลงพิกัดในระบบ 3D World Frame:</p>
-						<div class="math-card" id="math-twe"></div>
-						<p>การแปลงเป็น Roblox CFrame สำหรับอัปเดตตำแหน่งและมุมหมุนของโมเดลแพลตฟอร์มใน Roblox Studio:</p>
-						<div class="math-card" id="math-cframe"></div>
-					</div>
-				</div>
-			</div>
+			</main>
 		</div>
+
 	</div>
 
-	<!-- SITE WATERMARK -->
+	<canvas id="ppCanvas" style="display:none" width="256" height="384"></canvas>
 	<Watermark position="bottom-right" />
 
-	<!-- ================================
-		 THREE.JS MONOCHROME SIMULATOR SCRIPT
-	================================ -->
 	<script is:inline>
-	(function() {
-		'use strict';
+	(function(){
+		var W=256, H=384;
+		var MEAN=[.485,.456,.406], STD=[.229,.224,.225];
 
-		const VERTICAL_PER_CLICK = 0.4;
-		const SPAN_STUDS = 440;
-		const SCALE_3D = 0.08;
-
-		var state = {
-			yL: 0.0,
-			yR: 0.0,
-			angleDeg: 0.0,
-			anchorCenterY: 0.0
+		// Samples metadata: Lightweight thumbnails on tiles, full 4.8MB loaded ONLY on test click!
+		var SAMPLES = {
+			'DJI_0238': { id: 'DJI_0238', name: 'DJI_0238.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0238_thumb.jpg', full: '/maize_tassel/sample/DJI_0238.JPG', gtMin: 295, gtMax: 330, gtText: '295 – 330' },
+			'DJI_0247': { id: 'DJI_0247', name: 'DJI_0247.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0247_thumb.jpg', full: '/maize_tassel/sample/DJI_0247.JPG', gtMin: 270, gtMax: 305, gtText: '270 – 305' },
+			'DJI_0263': { id: 'DJI_0263', name: 'DJI_0263.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0263_thumb.jpg', full: '/maize_tassel/sample/DJI_0263.JPG', gtMin: 250, gtMax: 285, gtText: '250 – 285' },
+			'DJI_0808': { id: 'DJI_0808', name: 'DJI_0808.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0808_thumb.jpg', full: '/maize_tassel/sample/DJI_0808.JPG', gtMin: 310, gtMax: 345, gtText: '310 – 345' },
+			'DJI_0815': { id: 'DJI_0815', name: 'DJI_0815.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0815_thumb.jpg', full: '/maize_tassel/sample/DJI_0815.JPG', gtMin: 320, gtMax: 360, gtText: '320 – 360' },
+			'DJI_0900': { id: 'DJI_0900', name: 'DJI_0900.jpg', thumb: '/maize_tassel/sample/thumbs/DJI_0900_thumb.jpg', full: '/maize_tassel/sample/DJI_0900.JPG', gtMin: 210, gtMax: 245, gtText: '210 – 245' }
 		};
 
-		// --- 3D SCENE SETUP ---
-		var canvas = document.getElementById('webgl-canvas');
-		var container = canvas.parentElement;
-		var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-		renderer.setSize(container.clientWidth, container.clientHeight);
-		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-		renderer.shadowMap.enabled = true;
-		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		var session=null, showGrid=false, cells=null;
+		var currentSrc=null, currentImg=null, currentSample=null;
+		var tileCols=1, tileRows=1;
+		var currentGridCols=8, currentGridRows=8;
 
-		var scene = new THREE.Scene();
-		scene.background = new THREE.Color(0x09090c);
-		scene.fog = new THREE.FogExp2(0x09090c, 0.012);
+		var viewportTile=document.getElementById('tile-viewport');
+		var dropZone=document.getElementById('dropZone');
+		var fileInput=document.getElementById('fileInput');
+		var previewWrap=document.getElementById('previewWrap');
+		var previewImg=document.getElementById('previewImg');
+		var previewBarName=document.getElementById('previewBarName');
+		var previewBarRes=document.getElementById('previewBarRes');
+		var vpGridStatus=document.getElementById('vpGridStatus');
+		var gridCanvas=document.getElementById('gridCanvas');
+		var ppCanvas=document.getElementById('ppCanvas');
+		var resCount=document.getElementById('resCount');
+		var resMeta=document.getElementById('resMeta');
+		var resGtTag=document.getElementById('resGtTag');
+		var resBadge=document.getElementById('resBadge');
+		var btnReset=document.getElementById('btnReset');
+		var togGrid=document.getElementById('togGrid');
+		var tileBtns=document.querySelectorAll('.seg-btn');
+		var gridLabel=document.getElementById('gridLabel');
+		var nestedTiles=document.querySelectorAll('.nested-sample-tile');
 
-		var camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.5, 500);
-		camera.position.set(0, 20, 68);
-
-		var controls = new THREE.OrbitControls(camera, canvas);
-		controls.enableDamping = true;
-		controls.dampingFactor = 0.06;
-		controls.maxPolarAngle = Math.PI / 2 + 0.01;
-		controls.target.set(0, 8, 0);
-
-		// Monochrome Sketch Lighting
-		scene.add(new THREE.AmbientLight(0xffffff, 0.85));
-
-		var dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-		dirLight.position.set(30, 60, 40);
-		dirLight.castShadow = true;
-		scene.add(dirLight);
-
-		var fillLight = new THREE.DirectionalLight(0xffffff, 0.35);
-		fillLight.position.set(-30, 20, -20);
-		scene.add(fillLight);
-
-		// ==============================
-		// MATERIALS & REALISTIC SHADERS
-		// ==============================
-		var stageDeckMat = new THREE.MeshStandardMaterial({
-			color: 0x111116,
-			roughness: 0.85,
-			metalness: 0.15
+		// Nested sample tile click handlers
+		nestedTiles.forEach(function(tile){
+			tile.addEventListener('click', function(){
+				var sid = tile.getAttribute('data-id');
+				var sample = SAMPLES[sid];
+				if (sample) selectSample(sample);
+			});
 		});
 
-		var metalTrimMat = new THREE.MeshStandardMaterial({
-			color: 0xd4d4d8,
-			roughness: 0.25,
-			metalness: 0.85
-		});
-
-		var steelTrussMat = new THREE.MeshStandardMaterial({
-			color: 0x1c1c24,
-			roughness: 0.6,
-			metalness: 0.4
-		});
-
-		var chromePistonMat = new THREE.MeshStandardMaterial({
-			color: 0xe4e4e7,
-			roughness: 0.12,
-			metalness: 0.96
-		});
-
-		var outerSleeveMat = new THREE.MeshStandardMaterial({
-			color: 0x0f0f14,
-			roughness: 0.7,
-			metalness: 0.3
-		});
-
-		var ledGlowStripMat = new THREE.MeshBasicMaterial({
-			color: 0x60a5fa
-		});
-
-		var wireLineMat = new THREE.LineBasicMaterial({ color: 0x555562, transparent: true, opacity: 0.65 });
-		var wireLineBrightMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
-
-		function createWireframeEdges(mesh, mat) {
-			var geo = new THREE.EdgesGeometry(mesh.geometry);
-			var line = new THREE.LineSegments(geo, mat || wireLineMat);
-			mesh.add(line);
-			return line;
-		}
-
-		// ==============================
-		// STAGE FLOOR & PIT (SURROUNDINGS)
-		// ==============================
-		var colSpan3D = SPAN_STUDS * SCALE_3D; // ~35.2 units
-		var floorY = 0;
-		var pitDepth = 14;
-		var pitWidth = colSpan3D + 12;
-		var pitLength = 16;
-
-		var stageGroup = new THREE.Group();
-
-		// Main arena stage deck surrounding the pit
-		var stageOuterL = new THREE.Mesh(new THREE.BoxGeometry((140 - pitWidth)/2, 2, 80), stageDeckMat);
-		stageOuterL.position.set(-(pitWidth + (140 - pitWidth)/2)/2, -1, 0);
-		stageOuterL.receiveShadow = true;
-		createWireframeEdges(stageOuterL);
-		stageGroup.add(stageOuterL);
-
-		var stageOuterR = new THREE.Mesh(new THREE.BoxGeometry((140 - pitWidth)/2, 2, 80), stageDeckMat);
-		stageOuterR.position.set((pitWidth + (140 - pitWidth)/2)/2, -1, 0);
-		stageOuterR.receiveShadow = true;
-		createWireframeEdges(stageOuterR);
-		stageGroup.add(stageOuterR);
-
-		var stageOuterF = new THREE.Mesh(new THREE.BoxGeometry(pitWidth, 2, (80 - pitLength)/2), stageDeckMat);
-		stageOuterF.position.set(0, -1, (pitLength + (80 - pitLength)/2)/2);
-		stageOuterF.receiveShadow = true;
-		createWireframeEdges(stageOuterF);
-		stageGroup.add(stageOuterF);
-
-		var stageOuterB = new THREE.Mesh(new THREE.BoxGeometry(pitWidth, 2, (80 - pitLength)/2), stageDeckMat);
-		stageOuterB.position.set(0, -1, -(pitLength + (80 - pitLength)/2)/2);
-		stageOuterB.receiveShadow = true;
-		createWireframeEdges(stageOuterB);
-		stageGroup.add(stageOuterB);
-
-		// Sub-stage pit floor
-		var pitFloor = new THREE.Mesh(new THREE.BoxGeometry(pitWidth, 1, pitLength), outerSleeveMat);
-		pitFloor.position.set(0, -pitDepth, 0);
-		pitFloor.receiveShadow = true;
-		stageGroup.add(pitFloor);
-
-		// Pit walls
-		var pitWallBack = new THREE.Mesh(new THREE.BoxGeometry(pitWidth, pitDepth, 0.4), outerSleeveMat);
-		pitWallBack.position.set(0, -pitDepth/2, -pitLength/2);
-		stageGroup.add(pitWallBack);
-
-		scene.add(stageGroup);
-
-		// Arena Lighting Truss Overhead
-		var arenaTruss = new THREE.Group();
-		for (var r = 0; r < 6; r++) {
-			for (var c = -7; c <= 7; c++) {
-				var panel = new THREE.Mesh(new THREE.BoxGeometry(6, 4, 0.25), outerSleeveMat);
-				panel.position.set(c * 6.8, 8 + r * 4.6, -32);
-				createWireframeEdges(panel, new THREE.LineBasicMaterial({ color: 0x272734, transparent: true, opacity: 0.4 }));
-				arenaTruss.add(panel);
-			}
-		}
-		scene.add(arenaTruss);
-
-		// Drafting Grid
-		var draftGrid = new THREE.GridHelper(90, 45, 0x444455, 0x181822);
-		draftGrid.position.y = 0.02;
-		scene.add(draftGrid);
-
-		// ==============================
-		// DYNAMIC CONCERT LED SCREEN TEXTURE
-		// ==============================
-		var ledCanvas = document.createElement('canvas');
-		ledCanvas.width = 1024;
-		ledCanvas.height = 256;
-		var ledCtx = ledCanvas.getContext('2d');
-		var ledTexture = new THREE.CanvasTexture(ledCanvas);
-
-		function updateLedScreen(time) {
-			var t = (typeof time === 'number') ? time : 0;
-			ledCtx.fillStyle = '#0a0a0f';
-			ledCtx.fillRect(0, 0, ledCanvas.width, ledCanvas.height);
-
-			// LED pixel panel modular borders
-			ledCtx.strokeStyle = '#181824';
-			ledCtx.lineWidth = 1;
-			var panelW = 64, panelH = 64;
-			for (var px = 0; px < ledCanvas.width; px += panelW) {
-				ledCtx.beginPath(); ledCtx.moveTo(px, 0); ledCtx.lineTo(px, ledCanvas.height); ledCtx.stroke();
-			}
-			for (var py = 0; py < ledCanvas.height; py += panelH) {
-				ledCtx.beginPath(); ledCtx.moveTo(0, py); ledCtx.lineTo(ledCanvas.width, py); ledCtx.stroke();
-			}
-
-			// Dynamic concert video waves (Lady Gaga Joanne aesthetic)
-			var grad = ledCtx.createLinearGradient(0, 0, ledCanvas.width, 0);
-			grad.addColorStop(0, '#111827');
-			grad.addColorStop(0.3, '#1e293b');
-			grad.addColorStop(0.5, '#38bdf8');
-			grad.addColorStop(0.7, '#f8fafc');
-			grad.addColorStop(0.85, '#38bdf8');
-			grad.addColorStop(1, '#0f172a');
-
-			ledCtx.fillStyle = grad;
-			ledCtx.beginPath();
-			var waveY = 128 + Math.sin(t * 0.002) * 30;
-			ledCtx.moveTo(0, ledCanvas.height);
-			ledCtx.lineTo(0, waveY);
-			for (var x = 0; x <= ledCanvas.width; x += 32) {
-				var y = waveY + Math.sin(x * 0.01 + t * 0.003) * 45 + Math.cos(x * 0.02 - t * 0.002) * 20;
-				ledCtx.lineTo(x, y);
-			}
-			ledCtx.lineTo(ledCanvas.width, ledCanvas.height);
-			ledCtx.closePath();
-			ledCtx.fill();
-
-			// Digital stage graphic scanlines
-			ledCtx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-			ledCtx.lineWidth = 2;
-			var scanLineY = (t * 0.08) % ledCanvas.height;
-			ledCtx.beginPath(); ledCtx.moveTo(0, scanLineY); ledCtx.lineTo(ledCanvas.width, scanLineY); ledCtx.stroke();
-
-			// High-tech Concert Typography
-			ledCtx.font = 'bold 16px monospace';
-			ledCtx.fillStyle = '#ffffff';
-			ledCtx.fillText('JOANNE WORLD TOUR // 2-DOF UPDN LIFT SYSTEM', 24, 38);
-			ledCtx.font = '12px monospace';
-			ledCtx.fillStyle = '#94a3b8';
-			ledCtx.fillText('TAIT STAGE AUTOMATION • DUAL HYDRAULIC RISERS • 440 STUDS SPAN', 24, 60);
-
-			ledTexture.needsUpdate = true;
-		}
-
-		// ==============================
-		// REALISTIC LIFT PLATFORM ASSEMBLY
-		// ==============================
-		var screenWidth  = colSpan3D + 6; // Platform length
-		var deckDepth    = 6.5;          // Walkable stage depth
-		var screenHeight = 8.5;          // Front video fascia height
-		var deckThick    = 0.45;
-
-		var screenPivot = new THREE.Group();
-
-		// 1. Walkway Deck Plate (Top surface where performers walk)
-		var deckMesh = new THREE.Mesh(new THREE.BoxGeometry(screenWidth, deckThick, deckDepth), stageDeckMat);
-		deckMesh.position.set(0, 0, 0);
-		deckMesh.castShadow = true;
-		deckMesh.receiveShadow = true;
-		createWireframeEdges(deckMesh, wireLineBrightMat);
-		screenPivot.add(deckMesh);
-
-		// Aluminum edge trim nosings
-		var trimF = new THREE.Mesh(new THREE.BoxGeometry(screenWidth + 0.1, 0.5, 0.15), metalTrimMat);
-		trimF.position.set(0, 0, deckDepth/2 + 0.05);
-		screenPivot.add(trimF);
-
-		var trimB = new THREE.Mesh(new THREE.BoxGeometry(screenWidth + 0.1, 0.5, 0.15), metalTrimMat);
-		trimB.position.set(0, 0, -deckDepth/2 - 0.05);
-		screenPivot.add(trimB);
-
-		// Glowing LED edge strip on front deck edge
-		var ledStrip = new THREE.Mesh(new THREE.BoxGeometry(screenWidth, 0.08, 0.08), ledGlowStripMat);
-		ledStrip.position.set(0, deckThick/2 + 0.04, deckDepth/2);
-		screenPivot.add(ledStrip);
-
-		// 2. Front Fascia LED Video Screen (Hang below front edge)
-		var screenMat = new THREE.MeshStandardMaterial({
-			map: ledTexture,
-			roughness: 0.35,
-			metalness: 0.1,
-			emissive: 0x222233,
-			emissiveMap: ledTexture,
-			emissiveIntensity: 0.6
-		});
-
-		var fasciaMesh = new THREE.Mesh(new THREE.BoxGeometry(screenWidth, screenHeight, 0.3), [
-			metalTrimMat, metalTrimMat, metalTrimMat, metalTrimMat, screenMat, outerSleeveMat
-		]);
-		fasciaMesh.position.set(0, -screenHeight/2, deckDepth/2);
-		fasciaMesh.castShadow = true;
-		createWireframeEdges(fasciaMesh, wireLineBrightMat);
-		screenPivot.add(fasciaMesh);
-
-		// 3. Under-Deck Scissor & Space Truss Framework (Tait Towers engineering)
-		var trussFramework = new THREE.Group();
-		var numBays = 8;
-		var bayWidth = screenWidth / numBays;
-
-		// Bottom chord beam
-		var bottomChord = new THREE.Mesh(new THREE.BoxGeometry(screenWidth, 0.3, 0.3), steelTrussMat);
-		bottomChord.position.set(0, -screenHeight + 0.15, -deckDepth/2 + 0.5);
-		trussFramework.add(bottomChord);
-
-		var bottomChordF = new THREE.Mesh(new THREE.BoxGeometry(screenWidth, 0.3, 0.3), steelTrussMat);
-		bottomChordF.position.set(0, -screenHeight + 0.15, deckDepth/2 - 0.2);
-		trussFramework.add(bottomChordF);
-
-		// Vertical Posts & Cross-Truss Webbing
-		for (var b = 0; b <= numBays; b++) {
-			var postX = -screenWidth/2 + b * bayWidth;
-
-			// Front-to-back bottom cross beam
-			var crossBeam = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.25, deckDepth - 0.7), steelTrussMat);
-			crossBeam.position.set(postX, -screenHeight + 0.15, 0);
-			trussFramework.add(crossBeam);
-
-			// Vertical structural post
-			var vertPost = new THREE.Mesh(new THREE.BoxGeometry(0.25, screenHeight, 0.25), steelTrussMat);
-			vertPost.position.set(postX, -screenHeight/2, -deckDepth/2 + 0.5);
-			trussFramework.add(vertPost);
-
-			// Diagonal X-bracing between bays
-			if (b < numBays) {
-				var diagLen = Math.sqrt(bayWidth * bayWidth + screenHeight * screenHeight);
-				var diagAngle = Math.atan2(screenHeight, bayWidth);
-
-				var diag1 = new THREE.Mesh(new THREE.BoxGeometry(diagLen, 0.18, 0.18), steelTrussMat);
-				diag1.position.set(postX + bayWidth/2, -screenHeight/2, -deckDepth/2 + 0.5);
-				diag1.rotation.z = -diagAngle;
-				trussFramework.add(diag1);
-
-				var diag2 = new THREE.Mesh(new THREE.BoxGeometry(diagLen, 0.18, 0.18), steelTrussMat);
-				diag2.position.set(postX + bayWidth/2, -screenHeight/2, -deckDepth/2 + 0.5);
-				diag2.rotation.z = diagAngle;
-				trussFramework.add(diag2);
-			}
-		}
-
-		screenPivot.add(trussFramework);
-
-		// 4. Center Coordinates & Axes Marker
-		var axesHelper = new THREE.AxesHelper(6);
-		axesHelper.position.set(0, 0, 0);
-		screenPivot.add(axesHelper);
-
-		scene.add(screenPivot);
-
-		// ==============================
-		// TELESCOPIC HYDRAULIC ACTUATOR COLUMNS
-		// ==============================
-		// LEFTUP2 Hydraulic Column Assembly
-		var leftColGroup = new THREE.Group();
-		leftColGroup.position.set(-colSpan3D/2, 0, 0);
-
-		// Heavy Base Footing Flange (mounted to sub-stage pit floor)
-		var leftBaseFlange = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.6, 3.6), steelTrussMat);
-		leftBaseFlange.position.set(0, -pitDepth + 0.3, 0);
-		createWireframeEdges(leftBaseFlange, wireLineBrightMat);
-		leftColGroup.add(leftBaseFlange);
-
-		// Outer Hydraulic Barrel Sleeve (Stationary)
-		var leftSleeveH = pitDepth;
-		var leftOuterSleeve = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.3, leftSleeveH, 16), outerSleeveMat);
-		leftOuterSleeve.position.set(0, -pitDepth/2, 0);
-		createWireframeEdges(leftOuterSleeve);
-		leftColGroup.add(leftOuterSleeve);
-
-		// Inner Telescoping Chrome Piston (Extends upward)
-		var leftPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 1, 16), chromePistonMat);
-		createWireframeEdges(leftPiston, wireLineBrightMat);
-		leftColGroup.add(leftPiston);
-
-		// Top Mounting Clevis Yoke (Pivots with platform angle)
-		var leftYoke = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, 1.8), steelTrussMat);
-		leftColGroup.add(leftYoke);
-
-		scene.add(leftColGroup);
-
-		// RIGHTUP2 Hydraulic Column Assembly
-		var rightColGroup = new THREE.Group();
-		rightColGroup.position.set(colSpan3D/2, 0, 0);
-
-		var rightBaseFlange = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.6, 3.6), steelTrussMat);
-		rightBaseFlange.position.set(0, -pitDepth + 0.3, 0);
-		createWireframeEdges(rightBaseFlange, wireLineBrightMat);
-		rightColGroup.add(rightBaseFlange);
-
-		var rightOuterSleeve = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.3, leftSleeveH, 16), outerSleeveMat);
-		rightOuterSleeve.position.set(0, -pitDepth/2, 0);
-		createWireframeEdges(rightOuterSleeve);
-		rightColGroup.add(rightOuterSleeve);
-
-		var rightPiston = new THREE.Mesh(new THREE.CylinderGeometry(0.85, 0.85, 1, 16), chromePistonMat);
-		createWireframeEdges(rightPiston, wireLineBrightMat);
-		rightColGroup.add(rightPiston);
-
-		var rightYoke = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.2, 1.8), steelTrussMat);
-		rightColGroup.add(rightYoke);
-
-		scene.add(rightColGroup);
-
-		// --- UI UPDATES ---
-		var slLeft   = document.getElementById('slLeft');
-		var numLeft  = document.getElementById('numLeft');
-		var slRight  = document.getElementById('slRight');
-		var numRight = document.getElementById('numRight');
-		var slTh     = document.getElementById('slTh');
-		var numTh    = document.getElementById('numTh');
-
-		var hudLeftY  = document.getElementById('hudLeftY');
-		var hudRightY = document.getElementById('hudRightY');
-		var hudTilt   = document.getElementById('hudTilt');
-		var hudClicks = document.getElementById('hudClicks');
-		var dhValL    = document.getElementById('dh-valL');
-		var dhHtL     = document.getElementById('dh-htL');
-		var dhValR    = document.getElementById('dh-valR');
-		var dhHtR     = document.getElementById('dh-htR');
-		var dhD1      = document.getElementById('dh-d1');
-		var dhD2      = document.getElementById('dh-d2');
-		var dhTh3     = document.getElementById('dh-th3');
-		var matrixOutput = document.getElementById('matrixOutput');
-		var posReadout   = document.getElementById('posReadout');
-
-		function clampUpward(v) { return Math.max(0, Math.min(400, v)); }
-
-		function computeFromColumns() {
-			state.yL = clampUpward(state.yL);
-			state.yR = clampUpward(state.yR);
-			state.anchorCenterY = (state.yL + state.yR) / 2;
-			var deltaY = state.yR - state.yL;
-			var ratio = Math.max(-1, Math.min(1, deltaY / SPAN_STUDS));
-			state.angleDeg = Math.asin(ratio) * (180 / Math.PI);
-			syncUI(false);
-		}
-
-		function computeFromAngle() {
-			var rad = state.angleDeg * (Math.PI / 180);
-			var delta = SPAN_STUDS * Math.sin(rad);
-			var center = (typeof state.anchorCenterY === 'number') ? state.anchorCenterY : (state.yL + state.yR) / 2;
-
-			if (center <= 1.0) {
-				// Stage Level Base: one column stays at 0st, other raises to create tilt ramp
-				if (delta >= 0) {
-					state.yL = 0;
-					state.yR = clampUpward(delta);
-				} else {
-					state.yR = 0;
-					state.yL = clampUpward(-delta);
-				}
-			} else {
-				// Raised Elevation: pivot symmetrically around center height
-				var half = delta / 2;
-				var newL = center - half;
-				var newR = center + half;
-				if (newL < 0) { newL = 0; }
-				if (newR < 0) { newR = 0; }
-				state.yL = clampUpward(newL);
-				state.yR = clampUpward(newR);
-			}
-			syncUI(true);
-		}
-
-		function syncUI(skipAngleInput) {
-			slLeft.value = state.yL.toFixed(1);
-			numLeft.value = state.yL.toFixed(1);
-			slRight.value = state.yR.toFixed(1);
-			numRight.value = state.yR.toFixed(1);
-
-			if (!skipAngleInput) {
-				slTh.value = state.angleDeg.toFixed(1);
-				numTh.value = state.angleDeg.toFixed(1);
-			} else {
-				numTh.value = state.angleDeg.toFixed(1);
-			}
-
-			var clkL = Math.round(state.yL / VERTICAL_PER_CLICK);
-			var clkR = Math.round(state.yR / VERTICAL_PER_CLICK);
-			var midY = (state.yL + state.yR) / 2;
-
-			hudLeftY.textContent  = state.yL.toFixed(1) + ' st';
-			hudRightY.textContent = state.yR.toFixed(1) + ' st';
-			hudTilt.textContent   = state.angleDeg.toFixed(1) + '°';
-			hudClicks.textContent = clkL + ' / ' + clkR;
-
-			// Actuator Table
-			if (dhValL) dhValL.textContent = clkL;
-			if (dhHtL)  dhHtL.textContent  = state.yL.toFixed(1) + ' st';
-			if (dhValR) dhValR.textContent = clkR;
-			if (dhHtR)  dhHtR.textContent  = state.yR.toFixed(1) + ' st';
-
-			// DH Parameter Table
-			if (dhD1)  dhD1.textContent  = state.yL.toFixed(1);
-			if (dhD2)  dhD2.textContent  = state.yR.toFixed(1);
-			if (dhTh3) dhTh3.textContent = state.angleDeg.toFixed(1) + '°';
-
-			var rad = state.angleDeg * Math.PI / 180;
-			var cosStr = Math.cos(rad).toFixed(4);
-			var sinStr = Math.sin(rad).toFixed(4);
-			var negSinStr = (-Math.sin(rad)).toFixed(4);
-
-			matrixOutput.textContent = 
-'[ ' + cosStr.padStart(8) + ' ' + negSinStr.padStart(8) + '   0.0000       0.000 ]\n' +
-'[ ' + sinStr.padStart(8) + ' ' + cosStr.padStart(8) + '   0.0000  ' + midY.toFixed(2).padStart(10) + ' ]\n' +
-'[   0.0000   0.0000   1.0000     410.000 ]\n' +
-'[   0.0000   0.0000   0.0000       1.000 ]';
-
-			posReadout.textContent =
-'Center Elevation (yC) : ' + midY.toFixed(2) + ' studs (>= 0)\n' +
-'Delta Travel (yR - yL): ' + (state.yR - state.yL).toFixed(2) + ' studs\n' +
-'Span (L)             : ' + SPAN_STUDS + ' studs (fixed base)\n' +
-'Pitch Angle (θ)      : ' + state.angleDeg.toFixed(2) + ' deg';
-
-			var yL_3D = state.yL * SCALE_3D;
-			var yR_3D = state.yR * SCALE_3D;
-			var midY_3D = (yL_3D + yR_3D) / 2;
-			var rotZ = Math.atan2(yR_3D - yL_3D, colSpan3D);
-
-			screenPivot.position.set(0, floorY + midY_3D, 0);
-			screenPivot.rotation.z = rotZ;
-
-			// LEFTUP2 Hydraulic Chrome Telescopic Piston
-			var totalLeftLen = Math.max(0.1, pitDepth + yL_3D);
-			leftPiston.scale.set(1, totalLeftLen, 1);
-			leftPiston.position.set(0, -pitDepth + totalLeftLen / 2, 0);
-			leftYoke.position.set(0, floorY + yL_3D, 0);
-			leftYoke.rotation.z = rotZ;
-
-			// RIGHTUP2 Hydraulic Chrome Telescopic Piston
-			var totalRightLen = Math.max(0.1, pitDepth + yR_3D);
-			rightPiston.scale.set(1, totalRightLen, 1);
-			rightPiston.position.set(0, -pitDepth + totalRightLen / 2, 0);
-			rightYoke.position.set(0, floorY + yR_3D, 0);
-			rightYoke.rotation.z = rotZ;
-		}
-
-		slLeft.addEventListener('input', function() { state.yL = parseFloat(slLeft.value); computeFromColumns(); });
-		numLeft.addEventListener('change', function() { state.yL = parseFloat(numLeft.value) || 0; computeFromColumns(); });
-		slRight.addEventListener('input', function() { state.yR = parseFloat(slRight.value); computeFromColumns(); });
-		numRight.addEventListener('change', function() { state.yR = parseFloat(numRight.value) || 0; computeFromColumns(); });
-
-		slTh.addEventListener('pointerdown', function() {
-			state.anchorCenterY = (state.yL + state.yR) / 2;
-		});
-		slTh.addEventListener('input', function() { state.angleDeg = parseFloat(slTh.value); computeFromAngle(); });
-		numTh.addEventListener('change', function() {
-			state.anchorCenterY = (state.yL + state.yR) / 2;
-			state.angleDeg = parseFloat(numTh.value) || 0;
-			computeFromAngle();
-		});
-
-		function applyPreset(yL, yR) {
-			state.yL = clampUpward(yL);
-			state.yR = clampUpward(yR);
-			computeFromColumns();
-		}
-
-		document.getElementById('pre1').addEventListener('click', function() { applyPreset(0, 0); });
-		document.getElementById('pre2').addEventListener('click', function() { applyPreset(160, 160); });
-		document.getElementById('pre3').addEventListener('click', function() { applyPreset(360, 360); });
-		document.getElementById('pre4').addEventListener('click', function() { applyPreset(0, 240); });
-
-		var togWire = document.getElementById('togWire');
-		var togGrid = document.getElementById('togGrid');
-		var togAxes = document.getElementById('togAxes');
-
-		togWire.addEventListener('click', function() {
-			togWire.classList.toggle('active');
-			var v = togWire.classList.contains('active');
-			scene.traverse(function(obj) { if (obj instanceof THREE.LineSegments) obj.visible = v; });
-		});
-
-		togGrid.addEventListener('click', function() {
-			togGrid.classList.toggle('active');
-			draftGrid.visible = togGrid.classList.contains('active');
-		});
-
-		togAxes.addEventListener('click', function() {
-			togAxes.classList.toggle('active');
-			axesHelper.visible = togAxes.classList.contains('active');
-		});
-
-		// Modal & KaTeX formula renderer
-		function renderModalMath() {
-			if (typeof katex === 'undefined') return;
-			var items = [
-				{ id: 'math-theta', tex: '\\theta = \\arcsin\\left(\\frac{y_R - y_L}{440}\\right)' },
-				{ id: 'math-yc', tex: 'y_C = \\frac{y_L + y_R}{2}' },
-				{ id: 'math-twe', tex: 'T_{WE} = \\begin{bmatrix} \\cos\\theta & -\\sin\\theta & 0 & 0 \\\\ \\sin\\theta & \\cos\\theta & 0 & y_C \\\\ 0 & 0 & 1 & 410 \\\\ 0 & 0 & 0 & 1 \\end{bmatrix}' },
-				{ id: 'math-cframe', tex: '\\text{CFrame}_{E} = \\text{CFrame.new}(0, y_C, 410) \\cdot \\text{CFrame.Angles}(0, 0, \\theta)' }
-			];
-			items.forEach(function(item) {
-				var el = document.getElementById(item.id);
-				if (el) {
-					try {
-						katex.render(item.tex, el, { displayMode: true, throwOnError: false });
-					} catch(e) {
-						el.textContent = item.tex;
-					}
-				}
+		function updateSampleUI(){
+			var activeId = currentSample ? currentSample.id : null;
+			nestedTiles.forEach(function(el){
+				el.classList.toggle('active-sample', el.getAttribute('data-id') === activeId);
 			});
 		}
 
-		var theoryModal = document.getElementById('theoryModal');
-		var btnOpenModal = document.getElementById('btnOpenModal');
-		var btnCloseModal = document.getElementById('btnCloseModal');
+		// When sample is selected, load the full high-res 4.8MB image and run inference
+		function selectSample(sample){
+			currentSample = sample;
+			updateSampleUI();
 
-		btnOpenModal.addEventListener('click', function() {
-			theoryModal.classList.add('active');
-			renderModalMath();
+			showViewportLoading('Loading ' + sample.name + '...');
+
+			var img = new Image();
+			img.onload = function(){
+				if (previewBarName) previewBarName.textContent = sample.name;
+				updatePreviewRes(img);
+				go(sample.full, img);
+			};
+			img.onerror = function(){
+				hideViewportLoading();
+				alert('Could not load high-res drone image. Please try again.');
+			};
+			img.src = sample.full;
+		}
+
+		function updatePreviewRes(img){
+			if (!previewBarRes || !img) return;
+			var sliceTag = (tileCols > 1 || tileRows > 1) ? ' · ' + tileCols + '×' + tileRows + ' Slices' : '';
+			previewBarRes.textContent = (img.naturalWidth || img.width) + '×' + (img.naturalHeight || img.height) + ' px' + sliceTag;
+		}
+
+		function showViewportLoading(msg){
+			var ov = document.getElementById('vpLoadingOverlay');
+			if (!ov) {
+				ov = document.createElement('div');
+				ov.className = 'vp-loading-overlay';
+				ov.id = 'vpLoadingOverlay';
+				viewportTile.appendChild(ov);
+			}
+			ov.innerHTML = '<div class="spin-loader"></div><div>' + (msg || 'Processing...') + '</div>';
+		}
+
+		function hideViewportLoading(){
+			var ov = document.getElementById('vpLoadingOverlay');
+			if (ov) ov.remove();
+		}
+
+		// Init ONNX Model
+		(async function(){
+			try {
+				ort.env.wasm.numThreads = 1;
+				ort.env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.21.0/dist/';
+
+				var MODEL_URL = '/maize_tassel/tassel_v4_5_top1_seed2024.onnx';
+				var DATA_URL = '/maize_tassel/tassel_v4_5_top1_seed2024.onnx.data';
+				var DATA_NAME = 'tassel_v4_5_top1_seed2024.onnx.data';
+
+				async function fetchWithProgress(url, label) {
+					var cache = null;
+					try {
+						if ('caches' in window) {
+							cache = await caches.open('maize-tassel-v1');
+							var cached = await cache.match(url);
+							if (cached) return await cached.arrayBuffer();
+						}
+					} catch(ce) {}
+
+					var res = await fetch(url);
+					if (!res.ok) throw new Error('HTTP ' + res.status + ' on ' + url);
+
+					var total = parseInt(res.headers.get('content-length') || '0', 10);
+					if (!total || !res.body) {
+						var b = await res.arrayBuffer();
+						if (cache) try { cache.put(url, new Response(b.slice(0))); } catch(e){}
+						return b;
+					}
+
+					var reader = res.body.getReader();
+					var chunks = [];
+					var loaded = 0;
+					while (true) {
+						var part = await reader.read();
+						if (part.done) break;
+						chunks.push(part.value);
+						loaded += part.value.length;
+					}
+
+					var all = new Uint8Array(loaded);
+					var off = 0;
+					for (var i = 0; i < chunks.length; i++) {
+						all.set(chunks[i], off);
+						off += chunks[i].length;
+					}
+
+					if (cache) {
+						try { cache.put(url, new Response(all.slice(0))); } catch(e){}
+					}
+					return all.buffer;
+				}
+
+				var modelBuf = await fetchWithProgress(MODEL_URL, 'Graph');
+				var dataBuf = await fetchWithProgress(DATA_URL, 'Weights');
+
+				session = await ort.InferenceSession.create(modelBuf, {
+					executionProviders: ['wasm'],
+					externalData: [
+						{
+							path: DATA_NAME,
+							data: dataBuf
+						}
+					]
+				});
+
+				// Auto-load first sample for an instant live demonstration
+				if (!currentSample && SAMPLES['DJI_0238']) {
+					selectSample(SAMPLES['DJI_0238']);
+				}
+			} catch(e) {
+				console.error(e);
+			}
+		})();
+
+		// Slicing buttons (1x1, 2x1, 1x2, 2x2)
+		tileBtns.forEach(function(btn){
+			btn.addEventListener('click', function(e){
+				e.stopPropagation();
+				var cols = parseInt(btn.getAttribute('data-cols'), 10) || 1;
+				var rows = parseInt(btn.getAttribute('data-rows'), 10) || 1;
+				if (cols === tileCols && rows === tileRows) return;
+				tileCols = cols;
+				tileRows = rows;
+				tileBtns.forEach(function(b){ b.classList.toggle('on', b === btn); });
+
+				var totalGridCols = 8 * tileCols;
+				var totalGridRows = 8 * tileRows;
+				if (gridLabel) {
+					gridLabel.textContent = totalGridCols + '×' + totalGridRows + ' Heatmap';
+				}
+				if (vpGridStatus) {
+					vpGridStatus.textContent = 'Grid: ' + totalGridCols + '×' + totalGridRows;
+				}
+				if (currentImg) {
+					updatePreviewRes(currentImg);
+				}
+				if (currentSrc && currentImg && session) {
+					go(currentSrc, currentImg);
+				}
+			});
 		});
 
-		btnCloseModal.addEventListener('click', function() { theoryModal.classList.remove('active'); });
-		theoryModal.addEventListener('click', function(e) { if (e.target === theoryModal) theoryModal.classList.remove('active'); });
+		// Drop zone & file input
+		fileInput.addEventListener('change', function(e){ if(e.target.files[0]) handle(e.target.files[0]); });
+		viewportTile.addEventListener('dragover', function(e){ e.preventDefault(); dropZone.style.background='#f1f5f9'; });
+		viewportTile.addEventListener('dragleave', function(e){ e.preventDefault(); dropZone.style.background=''; });
+		viewportTile.addEventListener('drop', function(e){ 
+			e.preventDefault(); 
+			dropZone.style.background=''; 
+			var f=e.dataTransfer.files[0]; 
+			if(f && f.type.startsWith('image/')) handle(f); 
+		});
 
-		function handleResize() {
-			var w = container.clientWidth;
-			var h = container.clientHeight;
-			camera.aspect = w / h;
-			camera.updateProjectionMatrix();
-			renderer.setSize(w, h);
+		// Overlay Toggle
+		togGrid.addEventListener('click', function(e){
+			e.stopPropagation();
+			showGrid = !showGrid;
+			togGrid.querySelector('.clean-toggle').classList.toggle('on', showGrid);
+			gridCanvas.classList.toggle('on', showGrid);
+			if (showGrid) {
+				requestAnimationFrame(function(){ drawGrid(cells); });
+			}
+		});
+
+		btnReset.addEventListener('click', function(e){
+			e.stopPropagation();
+			reset();
+		});
+
+		window.addEventListener('resize', function(){
+			if (showGrid) requestAnimationFrame(function(){ drawGrid(cells); });
+		});
+
+		previewImg.addEventListener('load', function(){
+			if (showGrid) requestAnimationFrame(function(){ drawGrid(cells); });
+		});
+
+		function handle(file){
+			currentSample = null;
+			updateSampleUI();
+			showViewportLoading('Reading image...');
+			var r = new FileReader();
+			r.onload = function(ev){
+				var img = new Image();
+				img.onload = function(){
+					if (previewBarName) previewBarName.textContent = file.name;
+					updatePreviewRes(img);
+					go(ev.target.result, img);
+				};
+				img.src = ev.target.result;
+			};
+			r.readAsDataURL(file);
 		}
 
-		window.addEventListener('resize', handleResize);
+		async function go(src, img){
+			currentSrc = src;
+			currentImg = img;
+			dropZone.style.display = 'none';
+			previewWrap.classList.add('on');
+			previewImg.src = src;
 
-		function animate() {
-			requestAnimationFrame(animate);
-			controls.update();
-			updateLedScreen(performance.now());
-			renderer.render(scene, camera);
+			showViewportLoading('Running Inference...');
+			await new Promise(function(r){ setTimeout(r, 40); });
+
+			try {
+				if(!session) throw new Error('Neural model is preparing. Please wait a moment.');
+
+				var cols = tileCols;
+				var rows = tileRows;
+				var totalTiles = cols * rows;
+				var totalGridCols = 8 * cols;
+				var totalGridRows = 8 * rows;
+				var combinedCells = new Float32Array(totalGridRows * totalGridCols);
+				var totalQ50 = 0;
+
+				var iw = img.naturalWidth || img.width || 256;
+				var ih = img.naturalHeight || img.height || 384;
+				var tw = iw / cols;
+				var th = ih / rows;
+
+				var tileIdx = 0;
+				for (var tr = 0; tr < rows; tr++) {
+					for (var tc = 0; tc < cols; tc++) {
+						tileIdx++;
+						if (totalTiles > 1) {
+							showViewportLoading('Processing tile ' + tileIdx + ' of ' + totalTiles + '...');
+							await new Promise(function(r){ setTimeout(r, 10); });
+						}
+
+						var sx = Math.round(tc * tw);
+						var sy = Math.round(tr * th);
+						var sw = Math.round((tc + 1) * tw) - sx;
+						var sh = Math.round((tr + 1) * th) - sy;
+
+						var tensor = preprocessTile(img, sx, sy, sw, sh);
+						var feeds = {}; feeds[session.inputNames[0]] = tensor;
+						var out = await session.run(feeds);
+						var data = out[session.outputNames[0]].data;
+
+						var c = 64;
+						for (var lr = 0; lr < 8; lr++) {
+							for (var lc = 0; lc < 8; lc++) {
+								var lIdx = lr * 8 + lc;
+								var q50Val = Math.max(0, data[c + lIdx]);
+								totalQ50 += q50Val;
+
+								var gr = tr * 8 + lr;
+								var gc = tc * 8 + lc;
+								combinedCells[gr * totalGridCols + gc] = q50Val;
+							}
+						}
+					}
+				}
+
+				cells = combinedCells;
+				currentGridCols = totalGridCols;
+				currentGridRows = totalGridRows;
+
+				render({ count: Math.round(totalQ50) });
+
+				if (showGrid) {
+					gridCanvas.classList.add('on');
+				}
+				requestAnimationFrame(function(){ drawGrid(cells); });
+			} catch(e) {
+				console.error(e);
+				resCount.textContent = 'Err';
+			}
+
+			hideViewportLoading();
 		}
 
-		computeFromColumns();
-		handleResize();
-		animate();
+		function preprocessTile(img, sx, sy, sw, sh){
+			var ctx = ppCanvas.getContext('2d');
+			ppCanvas.width = W;
+			ppCanvas.height = H;
+			ctx.drawImage(img, sx, sy, sw, sh, 0, 0, W, H);
+			var d = ctx.getImageData(0, 0, W, H).data;
+			var n = W * H, f = new Float32Array(3 * n);
+			for(var i = 0; i < n; i++){
+				f[i] = (d[i*4] / 255 - MEAN[0]) / STD[0];
+				f[n + i] = (d[i*4 + 1] / 255 - MEAN[1]) / STD[1];
+				f[2*n + i] = (d[i*4 + 2] / 255 - MEAN[2]) / STD[2];
+			}
+			return new ort.Tensor('float32', f, [1, 3, H, W]);
+		}
 
+		function render(r){
+			var modeText = (tileCols > 1 || tileRows > 1) ? '<span style="font-size:12px;font-weight:600;color:var(--tile-label-color);margin-left:4px;">(' + tileCols + '×' + tileRows + ')</span>' : '';
+			resCount.innerHTML = r.count + modeText;
+
+			if (currentSample) {
+				resMeta.style.display = 'flex';
+				resGtTag.textContent = 'GT: ' + currentSample.gtText;
+
+				var inRange = r.count >= currentSample.gtMin && r.count <= currentSample.gtMax;
+				if (inRange) {
+					resBadge.className = 'gt-chip-in';
+					resBadge.textContent = '✓ Within Range';
+				} else {
+					var diff = r.count > currentSample.gtMax ? '+' + (r.count - currentSample.gtMax) : (r.count - currentSample.gtMin);
+					resBadge.className = 'gt-chip-out';
+					resBadge.textContent = 'Δ ' + diff;
+				}
+			} else {
+				resMeta.style.display = 'none';
+			}
+		}
+
+		function drawGrid(cs){
+			if (!previewImg || !previewImg.complete || previewImg.naturalWidth === 0) return;
+
+			var rect = previewImg.getBoundingClientRect();
+			var pr = previewWrap.getBoundingClientRect();
+			var ox = rect.left - pr.left;
+			var oy = rect.top - pr.top;
+			var w = Math.round(rect.width);
+			var h = Math.round(rect.height);
+
+			if (w <= 0 || h <= 0) return;
+
+			gridCanvas.style.left = ox + 'px';
+			gridCanvas.style.top = oy + 'px';
+			gridCanvas.width = w;
+			gridCanvas.height = h;
+			gridCanvas.style.width = w + 'px';
+			gridCanvas.style.height = h + 'px';
+
+			var ctx = gridCanvas.getContext('2d');
+			ctx.clearRect(0, 0, w, h);
+
+			var GD_C = currentGridCols || 8;
+			var GD_R = currentGridRows || 8;
+			var cw = w / GD_C;
+			var ch = h / GD_R;
+			var mx = 0;
+			if (cs && cs.length) {
+				for (var i = 0; i < cs.length; i++) {
+					if (cs[i] > mx) mx = cs[i];
+				}
+			}
+
+			for (var r = 0; r < GD_R; r++) {
+				for (var c = 0; c < GD_C; c++) {
+					var x = c * cw;
+					var y = r * ch;
+					var idx = r * GD_C + c;
+					var v = (cs && cs[idx] != null) ? cs[idx] : 0;
+
+					if (mx > 0 && v > 0) {
+						var a = Math.min(0.48, (v / mx) * 0.42 + 0.06);
+						ctx.fillStyle = 'rgba(234, 179, 8, ' + a.toFixed(3) + ')';
+						ctx.fillRect(x, y, cw, ch);
+					}
+
+					ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+					ctx.lineWidth = 1.5;
+					ctx.strokeRect(x, y, cw, ch);
+
+					ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
+					ctx.lineWidth = 1;
+					ctx.strokeRect(x, y, cw, ch);
+
+					if (v >= 0.5 && cw >= 16) {
+						var txt = (v >= 10 ? Math.round(v) : v.toFixed(1)).toString();
+						var fsize = Math.max(7, Math.min(cw * 0.32, 12));
+						ctx.font = '700 ' + fsize + 'px system-ui, sans-serif';
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+
+						var tw = ctx.measureText(txt).width;
+						var bw = Math.max(tw + 6, fsize + 4);
+						var bh = fsize + 4;
+						var bx = x + cw / 2 - bw / 2;
+						var by = y + ch / 2 - bh / 2;
+
+						ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
+						if (ctx.roundRect) {
+							ctx.beginPath();
+							ctx.roundRect(bx, by, bw, bh, 2);
+							ctx.fill();
+						} else {
+							ctx.fillRect(bx, by, bw, bh);
+						}
+
+						ctx.fillStyle = '#ffffff';
+						ctx.fillText(txt, x + cw / 2, y + ch / 2);
+					}
+				}
+			}
+
+			// Slice dividers
+			if (tileCols > 1 || tileRows > 1) {
+				var sliceW = w / tileCols;
+				var sliceH = h / tileRows;
+				ctx.strokeStyle = '#ffffff';
+				ctx.lineWidth = 2.5;
+				for (var tr = 0; tr < tileRows; tr++) {
+					for (var tc = 0; tc < tileCols; tc++) {
+						ctx.strokeRect(tc * sliceW, tr * sliceH, sliceW, sliceH);
+					}
+				}
+			}
+		}
+
+		function reset(){
+			dropZone.style.display = '';
+			previewWrap.classList.remove('on');
+			gridCanvas.classList.remove('on');
+			previewImg.src = '';
+			cells = null;
+			fileInput.value = '';
+			currentSrc = null;
+			currentImg = null;
+			currentSample = null;
+			resCount.textContent = '--';
+			resMeta.style.display = 'none';
+			updateSampleUI();
+		}
+
+		// Mouse glow effect on tiles
+		document.querySelectorAll('.tile').forEach(function(tile){
+			var ticking = false;
+			tile.addEventListener('mousemove', function(e){
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(function(){
+					var r = tile.getBoundingClientRect();
+					var x = ((e.clientX - r.left) / r.width * 100).toFixed(1);
+					var y = ((e.clientY - r.top) / r.height * 100).toFixed(1);
+					tile.style.setProperty('--mx', x + '%');
+					tile.style.setProperty('--my', y + '%');
+					ticking = false;
+				});
+			});
+		});
 	})();
 	</script>
 </body>
