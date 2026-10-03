@@ -97,9 +97,10 @@ const ICONS = {
                 <span class="tile-label">CALENDAR</span>
               </div>
 
-              <!-- CV tile 1×1 -->
-              <a href="/cv" class="tile t-1x1 tile-accent-secondary" id="tile-cv-sm">
+              <!-- Resume tile 1×1 -->
+              <a href="/cv" class="tile t-1x1 tile-accent-secondary" id="tile-cv-sm" title="Resume — Tinnaphop Sonsang">
                 <div class="tile-icon-sm" set:html={ICONS.cv} />
+                <span class="tile-label">RESUME</span>
               </a>
 
               <!-- Quote 3×2 with image -->
@@ -563,7 +564,17 @@ const ICONS = {
   }
   .tile:hover .tile-icon-sm { opacity: 0.9; }
   .t-1x1 .tile-icon-sm {
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -64%);
+  }
+  .t-1x1 .tile-icon-sm svg {
+    width: 25px;
+    height: 25px;
+  }
+  .t-1x1 .tile-label {
+    text-align: center;
+    width: 100%;
+    margin-top: auto;
+    padding-bottom: 2px;
   }
 
   .tile-icon-center {

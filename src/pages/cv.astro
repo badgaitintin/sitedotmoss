@@ -1,1015 +1,1620 @@
 ---
-// cv.astro — Glassmorphism CV Redesign matching NextWBC
+// cv.astro — Professional Resume & Curriculum Vitae
+// Windows 8 Frosted Glass Dashboard, Full CV Content, Editorial Highlights (No Cluttered Tags), Unified Profile Tile & Smooth Wheel Scroll
 import '@fontsource/google-sans-flex';
 import Watermark from '../components/Watermark.astro';
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta name="description" content="Curriculum Vitae — Tinnaphop Sonsang" />
-		<title>CV — Tinnaphop Sonsang</title>
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Resume — Tinnaphop Sonsang</title>
+	<meta name="description" content="Curriculum Vitae & Resume — Tinnaphop Sonsang. Computer Engineering & Artificial Intelligence Graduate." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+	<link rel="preload" as="image" href="/optimized/anim_bg_1.webp" />
 
-		<style is:global>
-			/* ===========================
-			   BLACKHOLE TOKEN SYSTEM
-			=========================== */
-			:root {
-				--bh-void: #ffffff;
-				--bh-deep: #f9fafb;
-				--bh-surface: #f3f4f6;
-				--bh-card: transparent;
-				--bh-border: rgba(0, 0, 0, 0.08);
-				--bh-border-hi: rgba(0, 0, 0, 0.16);
-				--bh-text: #111827;
-				--bh-muted: #374151;
-				--bh-accent: #0f172a; /* Dark Slate Accent */
-				--bh-accent2: #4b5563;
-				--bh-accent3: #9ca3af;
-				--bh-danger: #374151;
-				--bh-glow: transparent;
-				--bh-glow-sm: transparent;
-			}
+	<style is:inline>
+		/* ==========================================================================
+		   WINDOWS 8 TRANSLUCENT GLASS DESIGN SYSTEM
+		   ========================================================================== */
+		:root {
+			--bg:                #F0EBE4;
+			--fg:                #1A1410;
+			--tile-bg:           rgba(255, 255, 255, 0.45);
+			--tile-hover:        rgba(255, 255, 255, 0.68);
+			--tile-border:       rgba(255, 255, 255, 0.6);
+			--tile-border-hover: rgba(255, 255, 255, 0.9);
+			--tile-shadow:       0 2px 10px rgba(0, 0, 0, 0.04);
+			--tile-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.09);
+			--tile-text:         #1A1410;
+			--tile-label-color:  rgba(26, 20, 16, 0.55);
 
-			/* ===========================
-			   BASE
-			=========================== */
-			html,
-			body {
-				width: 100%;
-				height: 100vh;
-				overflow: hidden;
-				background: transparent;
-				font-family: "Google Sans Flex", "Google Sans", "Helvetica Neue", sans-serif;
-				color: var(--bh-text);
-				line-height: 1.5;
-				margin: 0;
-				padding: 0;
-				position: relative;
-			}
+			--accent-primary:    #949B7B;
+			--accent-blue:       #0071e3;
+			--accent-green:      #10b981;
+			--accent-purple:     #8b5cf6;
 
-			body::before {
-				content: "";
-				position: fixed;
-				inset: -20px;
-				z-index: -1;
-				background-image: url('/optimized/anim_bg_1.webp');
-				background-size: cover;
-				background-position: center;
-				background-repeat: no-repeat;
-				filter: blur(6px);
-				-webkit-filter: blur(6px);
-				background-color: rgba(255, 255, 255, 0.05);
-				background-blend-mode: overlay;
-			}
+			--font: 'DM Sans', 'Google Sans Flex', system-ui, sans-serif;
+			--unit: clamp(64px, 8.2vh, 74px);
+			--gap: 6px;
+		}
 
-			a {
-				color: var(--bh-accent);
-				text-decoration: none;
-			}
-			a:hover {
-				text-decoration: underline;
-			}
+		*, *::before, *::after {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			-webkit-tap-highlight-color: transparent;
+		}
 
-			.page-wrap {
-				animation: bh-enter 0.5s cubic-bezier(0.1, 0.9, 0.2, 1) both;
-			}
-			@keyframes bh-enter {
-				from {
-					opacity: 0;
-					transform: translateY(20px);
-				}
-				to {
-					opacity: 1;
-					transform: translateY(0);
-				}
-			}
-			body.is-exiting .page-wrap {
-				animation: bh-exit 0.28s cubic-bezier(0.4, 0, 1, 1) both;
-				pointer-events: none;
-			}
-			@keyframes bh-exit {
-				from {
-					opacity: 1;
-					transform: translateY(0);
-				}
-				to {
-					opacity: 0;
-					transform: translateY(20px);
-				}
-			}
+		html, body {
+			width: 100%;
+			min-height: 100vh;
+			background: transparent;
+			color: var(--fg);
+			font-family: var(--font);
+			font-size: 14.5px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			overflow-x: hidden;
+			scrollbar-width: none;
+			position: relative;
+		}
 
-			/* ===========================
-			   LAYOUT CONTAINER
-			=========================== */
-			.bh-page {
-				position: relative;
-				z-index: 1;
-				max-width: 1040px;
-				margin: 0 auto;
-				height: 100vh;
-				padding: 32px 24px;
-				box-sizing: border-box;
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-			}
+		/* Wallpaper Background */
+		body::before {
+			content: "";
+			position: fixed;
+			inset: -20px;
+			z-index: -1;
+			background-image: url('/optimized/anim_bg_1.webp');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: blur(6px);
+			-webkit-filter: blur(6px);
+			background-color: rgba(255, 255, 255, 0.08);
+			background-blend-mode: overlay;
+		}
 
-			.bh-main-card {
-				position: relative;
-				display: flex;
-				gap: 40px;
-				height: calc(100vh - 80px);
-				align-items: stretch;
-				box-sizing: border-box;
-				overflow: hidden;
-			}
+		/* Page Root */
+		.page-root {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 24px 0 28px 0;
+			gap: 14px;
+			width: 100%;
+		}
 
-			/* ===========================
-			   DASHBOARD SPLIT LAYOUT
-			=========================== */
-			.wbc-sidebar {
-				width: 260px;
-				flex-shrink: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 24px;
-				border-right: 1px solid var(--bh-border);
-				padding-right: 28px;
-				padding-top: 56px; /* Space for the absolute back button */
-				overflow-y: auto;
-				scrollbar-width: none;
-			}
-			.wbc-sidebar::-webkit-scrollbar {
-				display: none;
-			}
-			.wbc-workspace {
-				flex: 1;
-				display: flex;
-				flex-direction: column;
-				min-width: 0;
-				height: 100%;
-				overflow-y: auto;
-				padding-right: 12px;
-				gap: 32px;
-			}
-			.wbc-workspace::-webkit-scrollbar {
-				width: 6px;
-			}
-			.wbc-workspace::-webkit-scrollbar-track {
-				background: transparent;
-			}
-			.wbc-workspace::-webkit-scrollbar-thumb {
-				background: rgba(0, 0, 0, 0.12);
-				border-radius: 99px;
-			}
-			.wbc-workspace::-webkit-scrollbar-thumb:hover {
-				background: rgba(0, 0, 0, 0.25);
-			}
+		/* Site Header (Breadcrumb Style) */
+		.site-header {
+			width: 100%;
+			max-width: 100vw;
+			padding: 0 clamp(24px, 4vw, 56px);
+			text-align: left;
+			animation: fadeDown 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
 
-			/* ===========================
-			   BACK BUTTON
-			=========================== */
-			.wbc-back-btn {
-				position: absolute;
-				top: 0;
-				left: 0;
-				z-index: 10;
-				width: 42px;
-				height: 42px;
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.05) 51%, rgba(255, 255, 255, 0.35) 100%);
-				color: var(--bh-text);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				border: 1px solid rgba(255, 255, 255, 0.55);
-				border-radius: 50%;
-				cursor: pointer;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-				transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
-			}
-			.wbc-back-btn:hover {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.35) 50%, rgba(255, 255, 255, 0.15) 51%, rgba(255, 255, 255, 0.5) 100%);
-				transform: scale(1.08);
-				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.14);
-			}
+		.header-inner {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+		}
 
-			/* ===========================
-			   HEADER & TITLE
-			=========================== */
-			.bh-header {
-				display: flex;
-				flex-direction: column;
-				gap: 6px;
-				margin-bottom: 8px;
-				width: 100%;
-				align-items: flex-start;
-				text-align: left;
-			}
+		.header-back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			color: var(--tile-label-color);
+			font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			text-decoration: none;
+			transition: color 0.2s ease, transform 0.2s ease;
+		}
+		.header-back-link:hover {
+			color: var(--fg);
+			transform: translateX(-2px);
+		}
 
-			.bh-title {
-				font-size: 1.8rem;
-				font-weight: 900;
-				line-height: 1.1;
-				letter-spacing: -0.5px;
-				margin: 0;
-				display: flex;
-				flex-direction: row;
-				align-items: center;
-				justify-content: flex-start;
-				gap: 6px;
-				flex-wrap: wrap;
-			}
+		.header-sep {
+			color: rgba(0, 0, 0, 0.2);
+			font-size: clamp(1.2rem, 2.3vw, 1.65rem);
+			font-weight: 200;
+		}
 
-			.title-nextwbc {
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				color: var(--bh-accent);
-			}
-			.title-classifier {
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				color: var(--bh-muted);
-			}
+		.site-logo {
+			font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			color: var(--fg);
+			line-height: 1;
+		}
 
-			.bh-subtitle {
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-				font-size: 0.82rem;
-				color: var(--bh-muted);
-				font-weight: 500;
-				margin: 0;
-				line-height: 1.4;
-				max-width: 100%;
-			}
+		.header-hint {
+			font-size: 10px;
+			color: var(--tile-label-color);
+			margin-left: 14px;
+			padding: 3px 8px;
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.35);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			font-weight: 500;
+		}
 
-			/* ===========================
-			   CONTACT & QUICK NAV
-			=========================== */
-			.wbc-guide {
-				display: flex;
-				flex-direction: column;
-				gap: 12px;
-				font-family: "Google Sans Flex", "Google Sans", sans-serif;
-			}
-			.wbc-guide-title {
-				font-size: 0.8rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1.2px;
-				color: var(--bh-text);
-				margin: 0;
-				border-bottom: 1px solid var(--bh-border);
-				padding-bottom: 6px;
-			}
-			
-			.sidebar-contact {
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-			}
-			.contact-item {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				padding: 4px 0;
-				font-size: 0.78rem;
-				color: var(--bh-text);
-				background: transparent;
-				border: none;
-				transition: color 0.2s;
-				word-break: break-all;
-			}
-			.contact-item:hover {
-				color: var(--bh-accent);
-				text-decoration: underline;
-			}
-			.contact-item svg {
-				opacity: 0.7;
-				flex-shrink: 0;
-				color: var(--bh-muted);
-			}
+		/* Dashboard Container (Windows 8 Horizontal Scroll & Drag) */
+		.dashboard-scroll {
+			width: 100%;
+			max-width: 100vw;
+			padding-left: clamp(24px, 4vw, 56px);
+			padding-right: clamp(24px, 4vw, 56px);
+			overflow-x: auto;
+			overflow-y: hidden;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+			cursor: grab;
+			user-select: none;
+			-webkit-overflow-scrolling: touch;
+			touch-action: pan-x;
+			display: block;
+		}
+		.dashboard-scroll::-webkit-scrollbar { display: none; }
+		.dashboard-scroll.is-dragging { cursor: grabbing; }
 
-			.privacy-notice {
-				display: flex;
-				align-items: flex-start;
-				gap: 8px;
-				padding: 10px 12px;
-				font-size: 0.75rem;
-				line-height: 1.45;
-				color: var(--bh-muted);
-				background: rgba(255, 255, 255, 0.45);
-				border: 1px dashed rgba(0, 0, 0, 0.15);
-				border-radius: 8px;
-				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
-			}
-			.privacy-notice svg {
-				flex-shrink: 0;
-				margin-top: 2px;
-				color: var(--bh-accent);
-			}
+		.dashboard-grid {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: clamp(16px, 2.4vw, 32px);
+			align-items: flex-start;
+			width: max-content;
+			padding: 4px 0;
+		}
 
-			.sidebar-nav-links {
-				display: flex;
-				flex-direction: column;
-				gap: 2px;
-			}
-			.sidebar-nav-link {
-				padding: 8px 12px;
-				font-size: 0.82rem;
-				color: var(--bh-muted);
-				transition: all 0.25s ease;
-				border-radius: 8px;
-				margin-bottom: 2px;
-				display: block;
-			}
-			.sidebar-nav-link:hover {
-				color: var(--bh-accent);
-				background: rgba(255, 255, 255, 0.35);
-				text-decoration: none;
-				box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
-			}
-			.sidebar-nav-link.active {
-				color: var(--bh-accent);
-				font-weight: 600;
-				background: rgba(255, 255, 255, 0.65);
-				box-shadow: 0 2px 8px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.6);
-				text-decoration: none;
-			}
+		/* Tile Group */
+		.tile-group {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex-shrink: 0;
+			animation: fadeUp 0.75s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+		.tile-group:nth-child(1) { animation-delay: 0.05s; }
+		.tile-group:nth-child(2) { animation-delay: 0.1s; }
+		.tile-group:nth-child(3) { animation-delay: 0.15s; }
+		.tile-group:nth-child(4) { animation-delay: 0.2s; }
+		.tile-group:nth-child(5) { animation-delay: 0.25s; }
+		.tile-group:nth-child(6) { animation-delay: 0.3s; }
 
-			/* Download CV Button Styling */
-			.download-cv-btn {
-				display: inline-flex;
-				align-items: center;
-				justify-content: center;
-				gap: 8px;
-				padding: 10px 16px;
-				font-size: 0.82rem;
-				font-weight: 700;
-				letter-spacing: 0.5px;
-				color: var(--bh-text);
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.45) 100%);
-				border: 1px solid rgba(255, 255, 255, 0.7);
-				border-radius: 99px;
-				cursor: pointer;
-				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
-				transition: all 0.25s ease;
-				text-decoration: none !important;
-				width: 100%;
-				box-sizing: border-box;
-			}
-			.download-cv-btn:hover {
-				background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.65) 100%);
-				transform: translateY(-2px);
-				box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12), inset 0 1px 0 #ffffff;
-				color: var(--bh-accent);
-			}
-			.download-cv-btn svg {
-				color: var(--bh-accent);
-				flex-shrink: 0;
-			}
+		.group-label {
+			font-size: 9.5px;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--tile-label-color);
+			padding-left: 2px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
 
-			.inline-download-btn {
-				display: inline-flex;
-				align-items: center;
-				gap: 6px;
-				padding: 6px 14px;
-				font-size: 0.78rem;
-				font-weight: 600;
-				color: var(--bh-text);
-				background: rgba(255, 255, 255, 0.5);
-				border: 1px solid rgba(255, 255, 255, 0.6);
-				border-radius: 20px;
-				box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-				transition: all 0.2s ease;
-				text-decoration: none !important;
-			}
-			.inline-download-btn:hover {
-				background: rgba(255, 255, 255, 0.85);
-				transform: translateY(-1px);
-				box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-			}
+		/* 5-Row Tile Grid */
+		.tile-grid {
+			display: grid;
+			grid-template-rows: repeat(5, var(--unit));
+			grid-auto-flow: column dense;
+			grid-auto-columns: var(--unit);
+			gap: var(--gap);
+		}
 
-			/* ===========================
-			   CARDS & CONTENT
-			=========================== */
-			.wbc-card {
-				background: transparent;
-				border: none;
-				border-radius: 0px;
-				padding: 0 0 32px 0;
-				border-bottom: 1px solid var(--bh-border);
-				display: flex;
-				flex-direction: column;
-				gap: 16px;
-			}
-			.wbc-card:last-child {
-				border-bottom: none;
-				padding-bottom: 0;
-			}
-			.wbc-card-title {
-				font-size: 0.9rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 1.5px;
-				color: var(--bh-accent);
-				margin: 0;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				gap: 8px;
-			}
-			.wbc-card-title-left {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.wbc-card-title svg {
-				color: var(--bh-muted);
-				opacity: 0.8;
-			}
+		/* ==========================================================================
+		   TRANSLUCENT GLASS TILE
+		   ========================================================================== */
+		.tile {
+			background: var(--tile-bg);
+			border: 1px solid var(--tile-border);
+			box-shadow: var(--tile-shadow);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 12px 14px;
+			text-decoration: none;
+			color: var(--tile-text);
+			transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1),
+						box-shadow 0.25s ease,
+						border-color 0.25s ease,
+						background 0.2s ease;
+			transform: translateZ(0);
+			backface-visibility: hidden;
+		}
+		.tile:hover {
+			will-change: transform;
+			transform: translateY(-2px) scale(1.012);
+			box-shadow: var(--tile-shadow-hover);
+			border-color: var(--tile-border-hover);
+			background: var(--tile-hover);
+		}
+		.tile:active {
+			transform: scale(0.98);
+			transition-duration: 0.06s;
+		}
 
-			.summary-text {
-				font-size: 0.88rem;
-				line-height: 1.7;
-				color: var(--bh-text);
-				margin: 0;
-			}
+		/* Glow overlay on hover */
+		.tile::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.4) 0%, transparent 65%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
+			z-index: 5;
+		}
+		.tile:hover::after { opacity: 1; }
 
-			/* Entries */
-			.entry-item {
-				border-left: 1px solid var(--bh-border);
-				padding: 0 0 20px 18px;
-				position: relative;
-			}
-			.entry-item:last-child {
-				border-left-color: transparent;
-				padding-bottom: 0;
-			}
-			.entry-dot {
-				position: absolute;
-				left: -4px;
-				top: 5px;
-				width: 7px;
-				height: 7px;
-				border-radius: 0px;
-				background: var(--bh-accent);
-			}
-			.entry-header {
-				display: flex;
-				justify-content: space-between;
-				align-items: flex-start;
-				gap: 12px;
-				margin-bottom: 4px;
-			}
-			.entry-title {
-				font-size: 0.88rem;
-				font-weight: bold;
-				color: var(--bh-accent);
-			}
-			.entry-date {
-				font-size: 0.72rem;
-				color: var(--bh-muted);
-				background: transparent;
-				border: none;
-				padding: 0;
-				white-space: nowrap;
-			}
-			.entry-subtitle {
-				font-size: 0.8rem;
-				color: var(--bh-muted);
-				font-weight: 500;
-				margin-bottom: 8px;
-			}
-			.entry-description {
-				font-size: 0.78rem;
-				color: var(--bh-muted);
-				line-height: 1.65;
-				margin: 8px 0 0 0;
-				padding-left: 14px;
-				list-style-type: square;
-			}
-			.entry-description li {
-				margin-bottom: 6px;
-			}
-			.entry-description li strong {
-				color: var(--bh-text);
-			}
+		/* Dimensions */
+		.t-3x5 { grid-column: span 3; grid-row: span 5; }
+		.t-4x5 { grid-column: span 4; grid-row: span 5; }
+		.t-5x5 { grid-column: span 5; grid-row: span 5; }
 
-			/* Skills */
-			.skills-grid {
-				display: grid;
-				grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-				gap: 20px;
-			}
-			.skill-group {
-				background: transparent;
-				border: none;
-				padding: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 8px;
-			}
-			.skill-group-title {
-				font-size: 0.75rem;
-				font-weight: 700;
-				text-transform: uppercase;
-				letter-spacing: 0.8px;
-				color: var(--bh-accent);
-				margin: 0;
-			}
-			.skill-pills {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 6px;
-			}
-			.skill-pill {
-				font-size: 0.72rem;
-				background: rgba(255, 255, 255, 0.3);
-				border: 1px solid rgba(255, 255, 255, 0.55);
-				border-radius: 99px;
-				padding: 4px 10px;
-				color: var(--bh-text);
-				box-shadow: 0 2px 4px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.5);
-				transition: all 0.2s;
-			}
-			.skill-pill:hover {
-				background: rgba(255, 255, 255, 0.65);
-				border-color: rgba(255, 255, 255, 0.8);
-				transform: translateY(-1px);
-				box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-			}
 
-			@media (max-width: 900px) {
-				html,
-				body {
-					height: auto !important;
-					min-height: 100vh;
-					overflow-x: hidden !important;
-					overflow-y: auto !important;
-				}
-				.bh-page {
-					height: auto;
-					padding: 16px 12px;
-				}
-				.bh-main-card {
-					flex-direction: column;
-					padding: 16px;
-					gap: 20px;
-					height: auto;
-					overflow: visible;
-				}
-				.wbc-sidebar {
-					width: 100% !important;
-					border-right: none !important;
-					padding-right: 0 !important;
-					padding-top: 48px;
-					padding-bottom: 20px;
-					border-bottom: 1px solid var(--bh-border);
-					overflow: visible;
-				}
-				.wbc-workspace {
-					overflow: visible;
-					height: auto;
-					padding-right: 0;
-				}
-				.entry-header {
-					flex-direction: column;
-					align-items: flex-start;
-					gap: 4px;
-				}
-			}
-		</style>
-	</head>
+		/* Expand Hint Button inside tiles */
+		.tile-expand-btn {
+			font-size: 8px;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: var(--accent-blue);
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			padding: 2px 6px;
+			background: rgba(0, 113, 227, 0.08);
+			border: 1px solid rgba(0, 113, 227, 0.15);
+			border-radius: 3px;
+			cursor: pointer;
+			transition: all 0.15s ease;
+			flex-shrink: 0;
+		}
+		.tile-expand-btn:hover {
+			background: rgba(0, 113, 227, 0.18);
+			border-color: rgba(0, 113, 227, 0.3);
+		}
 
-	<body>
-		<div class="page-wrap">
-			<div class="bh-page">
-				<!-- MAIN CONTENT CARD (Split Columns) -->
-				<div class="bh-main-card">
-					<!-- Floating Back Button -->
-					<a href="/" class="wbc-back-btn" id="backBtn" title="Back to Home">
-						<svg
-							width="14"
-							height="14"
-							viewBox="0 0 14 14"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						>
-							<path d="M9 12L4 7l5-5"></path>
-						</svg>
-					</a>
-					
-					<!-- LEFT SIDEBAR -->
-					<aside class="wbc-sidebar">
+		/* ==========================================================================
+		   INLINE TEXT HIGHLIGHTS — BOLD RED TEXT
+		   ========================================================================== */
+		.hl,
+		.hl-green,
+		.hl-purple {
+			color: #dc2626; /* Bold red text */
+			font-weight: 800;
+			background: rgba(220, 38, 38, 0.08);
+			padding: 1px 4px;
+			border-radius: 3px;
+		}
 
-						<!-- HEADER (Title, Subtitle) -->
-						<header class="bh-header">
-							<h1 class="bh-title">
-								<span class="title-nextwbc">Tinnaphop</span>
-								<span class="title-classifier">Sonsang</span>
-							</h1>
-							<p class="bh-subtitle">
-								Computer Engineering &amp; AI Graduate
-							</p>
-						</header>
+		/* ==========================================================================
+		   GROUP 1: UNIFIED PROFILE & CONTACT TILE (5 ROWS — ZERO OVERFLOW)
+		   ========================================================================== */
+		.profile-card-unified {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			justify-content: flex-start;
+			z-index: 2;
+			overflow: hidden;
+		}
 
-						<!-- Section Jump Links -->
-						<div class="wbc-guide">
-							<h3 class="wbc-guide-title">Navigation</h3>
-							<nav class="sidebar-nav-links">
-								<a href="#summary" class="sidebar-nav-link active">Profile Summary</a>
-								<a href="#education" class="sidebar-nav-link">Education</a>
-								<a href="#certifications" class="sidebar-nav-link">Certifications</a>
-								<a href="#skills" class="sidebar-nav-link">Key Skills</a>
-								<a href="#experience" class="sidebar-nav-link">Work Experience</a>
-								<a href="#projects" class="sidebar-nav-link">Projects &amp; Thesis</a>
-							</nav>
-						</div>
+		.profile-title-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.profile-name {
+			font-size: 18px;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+			line-height: 1.1;
+			color: var(--fg);
+		}
+		.profile-role {
+			font-size: 11px;
+			font-weight: 700;
+			color: var(--accent-blue);
+		}
+		.profile-school {
+			font-size: 8.5px;
+			color: var(--tile-label-color);
+			font-weight: 600;
+		}
 
-						<!-- Contact Details -->
-						<div class="wbc-guide">
-							<h3 class="wbc-guide-title">Contact</h3>
-							<div class="privacy-notice">
-								<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-									<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-								</svg>
-								<span>Personal contact details (phone, email, address) are omitted for privacy. Download the CV (PDF) to view full information.</span>
-							</div>
-							<div class="sidebar-contact">
-								<a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener" class="contact-item" title="LinkedIn">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-									LinkedIn: Tinnaphop Sonsang
-								</a>
-								<a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="contact-item" title="GitHub Primary">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-									github.com/badgaitintin
-								</a>
-								<a href="https://github.com/badgaitintinagain" target="_blank" rel="noopener" class="contact-item" title="GitHub Secondary">
-									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-									github.com/badgaitintinagain
-								</a>
-							</div>
-						</div>
+		.profile-summary-text {
+			font-size: 9px;
+			line-height: 1.45;
+			color: #334155;
+		}
 
-						<!-- Download Buttons (Updated Path: 300826) -->
-						<div class="wbc-guide" style="margin-top: auto; padding-top: 16px; gap: 8px;">
-							<a href="/cvutil/300826/TinnaphopSonsang_CV_AI_ML.pdf" download="TinnaphopSonsang_CV_AI_ML.pdf" target="_blank" class="download-cv-btn" title="Download CV PDF">
-								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-								Download CV (PDF)
-							</a>
-							<a href="/cvutil/180826/Transcript (1).pdf" download="Transcript (1).pdf" target="_blank" class="download-cv-btn" title="Download Transcript PDF">
-								<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-								Download Transcript (PDF)
-							</a>
-						</div>
+		.profile-honors-card {
+			padding: 6px 8px;
+			background: rgba(255, 255, 255, 0.65);
+			border: 1px solid rgba(0, 0, 0, 0.05);
+			border-radius: 5px;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.honors-title {
+			font-size: 9px;
+			font-weight: 700;
+			color: var(--fg);
+		}
+		.honors-sub {
+			font-size: 8.5px;
+			color: #475569;
+			line-height: 1.35;
+		}
 
-					</aside>
+		.profile-contact-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 4px;
+			margin-top: 1px;
+		}
+		.p-contact-item {
+			padding: 4px 6px;
+			background: rgba(255, 255, 255, 0.55);
+			border: 1px solid rgba(0, 0, 0, 0.05);
+			border-radius: 4px;
+			text-decoration: none;
+			color: var(--fg);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			transition: all 0.15s ease;
+		}
+		.p-contact-item:hover {
+			background: #ffffff;
+			border-color: rgba(0, 0, 0, 0.15);
+			transform: translateY(-1px);
+		}
+		.p-c-lbl {
+			font-size: 7px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: var(--tile-label-color);
+		}
+		.p-c-val {
+			font-size: 8px;
+			font-weight: 600;
+			color: var(--accent-blue);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
 
-					<!-- RIGHT WORKSPACE CONTENT -->
-					<main class="wbc-workspace">
-						
-						<!-- PROFILE SUMMARY CARD -->
-						<section class="wbc-card" id="summary">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-									Profile Summary
-								</div>
-								<div style="display: flex; gap: 8px; flex-wrap: wrap;">
-									<a href="/cvutil/300826/TinnaphopSonsang_CV_AI_ML.pdf" download="TinnaphopSonsang_CV_AI_ML.pdf" target="_blank" class="inline-download-btn" title="Download CV PDF">
-										<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-										Download CV
-									</a>
-									<a href="/cvutil/180826/Transcript (1).pdf" download="Transcript (1).pdf" target="_blank" class="inline-download-btn" title="Download Transcript PDF">
-										<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-										Transcript
-									</a>
-								</div>
-							</div>
-							<p class="summary-text">
-								Computer Engineering and AI graduate with hands-on experience in Machine Learning, Data Science, and Computer Vision. I have worked on AI and ML projects involving structured and image data, from data preparation and feature engineering to model development, evaluation, and deployment. My experience includes Python, SQL, statistical analysis, and cloud-based ML environments, with a strong interest in building practical solutions and continuously improving them through experimentation.
-							</p>
-						</section>
+		/* ==========================================================================
+		   GROUP 2: DOCUMENT PREVIEW TILES (RESUME & TRANSCRIPT)
+		   ========================================================================== */
+		.tile-doc-preview {
+			padding: 0;
+			overflow: hidden;
+			cursor: pointer;
+			display: flex;
+			flex-direction: column;
+		}
 
-						<!-- EDUCATION CARD -->
-						<section class="wbc-card" id="education">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/></svg>
-									Education
-								</div>
-							</div>
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Walailak University</span>
-									<span class="entry-date">June 2022 – 2026</span>
-								</div>
-								<div class="entry-subtitle">B.Eng. Computer Engineering and Artificial Intelligence · Nakhon Si Thammarat</div>
-								<ul class="entry-description">
-									<li><strong>GPAX: 3.65</strong> (First-class honors) | Graduation: 7 May 2026</li>
-								</ul>
-							</div>
-						</section>
+		.doc-preview-topbar {
+			padding: 8px 10px;
+			background: rgba(255, 255, 255, 0.7);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			z-index: 3;
+			flex-shrink: 0;
+		}
+		.doc-preview-name {
+			font-size: 10px;
+			font-weight: 700;
+			color: var(--fg);
+		}
+		.doc-preview-expand-hint {
+			font-size: 8px;
+			font-weight: 700;
+			color: var(--accent-blue);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
 
-						<!-- CERTIFICATIONS CARD -->
-						<section class="wbc-card" id="certifications">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
-									Certifications
-								</div>
-							</div>
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">EF SET English Certificate</span>
-									<span class="entry-date">Awarded 3 Aug 2026</span>
-								</div>
-								<div class="entry-subtitle">
-									<a href="https://cert.efset.org/en/gCMcLJ" target="_blank" rel="noopener">View certificate: cert.efset.org/en/gCMcLJ ↗</a>
-								</div>
-								<ul class="entry-description">
-									<li>Overall score: <strong>56/100 — B2 Upper Intermediate (CEFR)</strong>; Reading: <strong>C1 Advanced (64/100)</strong></li>
-								</ul>
-							</div>
-						</section>
+		.doc-preview-frame-wrap {
+			flex: 1;
+			position: relative;
+			background: #525659;
+			overflow: hidden;
+		}
+		.doc-preview-iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+			pointer-events: none;
+			transform: scale(1.02);
+		}
+		.doc-preview-click-overlay {
+			position: absolute;
+			inset: 0;
+			z-index: 2;
+			background: transparent;
+		}
 
-						<!-- KEY SKILLS CARD -->
-						<section class="wbc-card" id="skills">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-									Key Skills
-								</div>
-							</div>
-							<div class="skills-grid">
-								<div class="skill-group">
-									<h4 class="skill-group-title">AI &amp; Machine Learning</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">Python</span>
-										<span class="skill-pill">PyTorch</span>
-										<span class="skill-pill">Machine Learning</span>
-										<span class="skill-pill">Deep Learning</span>
-										<span class="skill-pill">Neural Networks</span>
-										<span class="skill-pill">Model Development</span>
-										<span class="skill-pill">Experimentation</span>
-										<span class="skill-pill">Model Evaluation &amp; Performance Testing</span>
-									</div>
-								</div>
-								<div class="skill-group">
-									<h4 class="skill-group-title">Computer Vision &amp; Image Processing</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">OpenCV</span>
-										<span class="skill-pill">YOLO</span>
-										<span class="skill-pill">RT-DETR</span>
-										<span class="skill-pill">Grounding DINO</span>
-										<span class="skill-pill">Object Detection</span>
-										<span class="skill-pill">Image Processing</span>
-										<span class="skill-pill">OCR</span>
-										<span class="skill-pill">Object Tracking</span>
-										<span class="skill-pill">Keypoint Detection</span>
-										<span class="skill-pill">Depth Estimation</span>
-										<span class="skill-pill">Data Augmentation</span>
-									</div>
-								</div>
-								<div class="skill-group">
-									<h4 class="skill-group-title">Data Processing &amp; Engineering</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">Pandas</span>
-										<span class="skill-pill">NumPy</span>
-										<span class="skill-pill">SQL</span>
-										<span class="skill-pill">Data Gathering</span>
-										<span class="skill-pill">Data Cleansing</span>
-										<span class="skill-pill">Data Preprocessing</span>
-										<span class="skill-pill">Feature Engineering</span>
-										<span class="skill-pill">Data Quality Control</span>
-										<span class="skill-pill">Dataset Deduplication</span>
-										<span class="skill-pill">Exploratory Data Analysis (EDA)</span>
-									</div>
-								</div>
-								<div class="skill-group">
-									<h4 class="skill-group-title">Software &amp; Deployment</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">RESTful APIs</span>
-										<span class="skill-pill">Git</span>
-										<span class="skill-pill">Docker</span>
-										<span class="skill-pill">Microsoft Azure</span>
-										<span class="skill-pill">Cloud GPU Infrastructure</span>
-										<span class="skill-pill">Full-Stack Integration</span>
-										<span class="skill-pill">Next.js</span>
-										<span class="skill-pill">React</span>
-										<span class="skill-pill">TypeScript</span>
-										<span class="skill-pill">Interactive Dashboards</span>
-									</div>
-								</div>
-								<div class="skill-group">
-									<h4 class="skill-group-title">Robotics, IoT &amp; Automation Foundations</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">Robotics Concepts</span>
-										<span class="skill-pill">Transformation Matrices</span>
-										<span class="skill-pill">Coordinate Transformations</span>
-										<span class="skill-pill">DH Parameters</span>
-										<span class="skill-pill">IoT Concepts</span>
-										<span class="skill-pill">Sensors &amp; Connected Devices</span>
-										<span class="skill-pill">Intelligent Automation</span>
-									</div>
-								</div>
-								<div class="skill-group">
-									<h4 class="skill-group-title">Analytical &amp; Problem-Solving Skills</h4>
-									<div class="skill-pills">
-										<span class="skill-pill">Analytical Thinking</span>
-										<span class="skill-pill">Problem Solving</span>
-										<span class="skill-pill">Prototyping</span>
-										<span class="skill-pill">Debugging</span>
-										<span class="skill-pill">Experimentation</span>
-										<span class="skill-pill">Technical Documentation</span>
-										<span class="skill-pill">Adaptability</span>
-										<span class="skill-pill">Cross-functional Collaboration</span>
-									</div>
-								</div>
-							</div>
-						</section>
+		.doc-preview-bottombar {
+			padding: 6px 10px;
+			background: rgba(255, 255, 255, 0.75);
+			border-top: 1px solid rgba(0, 0, 0, 0.06);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 8px;
+			font-weight: 600;
+			color: var(--tile-label-color);
+			z-index: 3;
+			flex-shrink: 0;
+		}
+		.doc-download-link {
+			color: var(--accent-blue);
+			text-decoration: none;
+			font-weight: 700;
+			padding: 1px 4px;
+			border-radius: 2px;
+		}
+		.doc-download-link:hover {
+			text-decoration: underline;
+		}
 
-						<!-- WORK EXPERIENCE CARD -->
-						<section class="wbc-card" id="experience">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
-									Work Experience
-								</div>
-							</div>
+		/* ==========================================================================
+		   EXPERIENCE & PROJECT TILES (CLEAN EDITORIAL BULLETS, NO TAGS/CHIPS)
+		   ========================================================================== */
+		.project-box {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			z-index: 2;
+			justify-content: flex-start;
+			overflow: hidden;
+		}
 
-							<!-- 1. ThaiDotRun (merged into ASICS) -->
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Intern Developer (Co-op/Internship)</span>
-									<span class="entry-date">Sept 2025 – Apr 2026</span>
-								</div>
-								<div class="entry-subtitle">ThaiDotRun (merged into ASICS) · Bangkok</div>
-								
-								<div class="entry-subtitle" style="font-weight: 700; font-size: 0.82rem; margin-top: 10px; color: var(--bh-text);">Automated Runner Highlight Extraction System</div>
-								<ul class="entry-description">
-									<li>Evaluated multiple object detection architectures (including YOLO and RT-DETR), selecting RT-DETR for its Detection Transformer architecture's superior global context modeling in crowded race scenes, paired with BoTSORT for robust subject tracking.</li>
-									<li>Implemented a custom spatial weighting algorithm prioritizing camera-center subjects and integrated OCR bib number recognition to dynamically replace track IDs for frame-accurate highlight extraction.</li>
-									<li>Achieved an average success rate of approximately 60% in automated highlight video generation, establishing a solid baseline for initial production deployment and future pipeline optimization.</li>
-								</ul>
-								
-								<div class="entry-subtitle" style="font-weight: 700; font-size: 0.82rem; margin-top: 14px; color: var(--bh-text);">Robustness Shoe Detection &amp; Classification Pipeline</div>
-								<ul class="entry-description">
-									<li>Designed and developed an end-to-end deep learning pipeline to detect and classify shoe brands from complex race images and video footage.</li>
-									<li>Applied unsupervised learning for dataset deduplication to eliminate redundant training frames, using Grounding DINO to localize runners and extract shoe crops for ensemble model training.</li>
-									<li>Integrated depth-mapping and keypoint detection to assess image quality and enhance overall prediction reliability.</li>
-									<li>Successfully deployed an ensemble classification framework that achieved strong performance on major brands (Adidas, Nike, ASICS), while establishing automated quality control and data re-collection workflows to improve recognition for long-tail brands.</li>
-								</ul>
-							</div>
+		.exp-header-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 8px;
+		}
+		.exp-title-block {
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
+		}
+		.exp-company {
+			font-size: 13px;
+			font-weight: 800;
+			color: var(--fg);
+			line-height: 1.2;
+			letter-spacing: -0.01em;
+		}
+		.exp-role {
+			font-size: 9.5px;
+			font-weight: 700;
+			color: var(--accent-blue);
+		}
+		.exp-date {
+			font-size: 8.5px;
+			font-weight: 700;
+			color: var(--tile-label-color);
+			letter-spacing: 0.04em;
+			white-space: nowrap;
+			padding: 2px 6px;
+			background: rgba(0, 0, 0, 0.04);
+			border-radius: 4px;
+		}
 
-							<!-- 2. Lief Capital Asset Management -->
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Data Scientist</span>
-									<span class="entry-date">Short Term: May 2026</span>
-								</div>
-								<div class="entry-subtitle">Lief Capital Asset Management · Bangkok</div>
-								<ul class="entry-description">
-									<li>Analyzed and refactored an existing financial data and machine learning codebase on Azure ML, restructuring monolithic workflows across data gathering, preprocessing, feature engineering, model training, and evaluation to improve maintainability and scalable experimentation.</li>
-									<li>Optimized the end-to-end data processing and EODHD ingestion pipeline, reducing runtime from over 1 hour to under 30 minutes by adopting Polars and scaling parallel network workers.</li>
-									<li>Worked on an XGBoost-based stock ranking pipeline, including sector-relative feature engineering, NDCG performance evaluation, hyperparameter tuning with Optuna, and quarterly backtesting.</li>
-								</ul>
-							</div>
-						</section>
+		.exp-desc-list {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 7px;
+			margin-top: 2px;
+			flex: 1;
+		}
+		.exp-desc-list li {
+			font-size: 9.5px;
+			line-height: 1.48;
+			color: #334155;
+			position: relative;
+			padding-left: 12px;
+		}
+		.exp-desc-list li::before {
+			content: "—";
+			position: absolute;
+			left: 0;
+			color: var(--accent-primary);
+			font-weight: 700;
+		}
 
-						<!-- PROJECTS & THESIS CARD -->
-						<section class="wbc-card" id="projects">
-							<div class="wbc-card-title">
-								<div class="wbc-card-title-left">
-									<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/></svg>
-									Projects &amp; Thesis
-								</div>
-							</div>
-							
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Pivotingual - Multilingual Pivot Neural Machine Translation</span>
-									<span class="entry-date">July 2026 – Present</span>
-								</div>
-								<ul class="entry-description">
-									<li>Built a multilingual Neural Machine Translation (NMT) system from scratch using PyTorch and a Pre-LN Transformer Encoder–Decoder architecture for sequence-to-sequence learning.</li>
-									<li>Implemented English-centric pivot translation, shared multilingual representations, SentencePiece tokenization, and target-language conditioning for bidirectional translation across multiple languages.</li>
-									<li>Applied research-driven Transformer architecture optimization, replacing Post-LN with Pre-Layer Normalization and reducing attention and FFN dimensions to improve training stability and computational efficiency.</li>
-									<li>Developed an end-to-end deep learning training pipeline with Mixed Precision (AMP), Multi-GPU training, validation monitoring, checkpointing, and resume-from-checkpoint support.</li>
-									<li>Achieved a preliminary validation Perplexity (PPL) of 42.76 in early experiments; model training and downstream translation evaluation are ongoing, with an interactive web demo deployed at <a href="/pivot-translator" style="text-decoration: underline; color: inherit;">sitedotmoss.vercel.app/pivot-translator</a>.</li>
-								</ul>
-							</div>
+		.tile-action-bar {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			margin-top: auto;
+			padding-top: 6px;
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+			flex-shrink: 0;
+		}
 
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Madonna Discography Analysis (Sonic Atlas — site(.)moss)</span>
-									<span class="entry-date">March 2026 – August 2026</span>
-								</div>
-								<ul class="entry-description">
-									<li>Built an end-to-end unsupervised machine learning and data analytics pipeline using Spotify audio-feature data, including exploratory data analysis (EDA), data preprocessing, deduplication, feature engineering, and correlation analysis.</li>
-									<li>Applied Yeo-Johnson power transformation for feature normalization and distribution correction, preventing outlier tracks from forming non-meaningful micro-clusters.</li>
-									<li>Benchmarked KMeans clustering and Gaussian Mixture Models (GMM) at K=4 using Silhouette Score and Davies-Bouldin Index, and compared GMM covariance structures using BIC/AIC model selection.</li>
-									<li>Designed a statistical validation framework using bootstrap resampling, 50-seed stability analysis, feature-subset sensitivity testing, and per-sample silhouette distributions to evaluate clustering robustness and reproducibility.</li>
-									<li>Applied UMAP dimensionality reduction with topology-sensitivity analysis and automatically generated interpretable cluster labels from per-cluster z-scores.</li>
-								</ul>
-							</div>
+		/* ==========================================================================
+		   GROUP 6: SKILLS & ACCREDITATIONS (CLEAN CATEGORIES, NO CHIPS)
+		   ========================================================================== */
+		.skills-matrix-box {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			z-index: 2;
+			justify-content: flex-start;
+			overflow: hidden;
+		}
 
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Sitedotmoss (site(.)moss)</span>
-									<span class="entry-date">December 2025 – Present</span>
-								</div>
-								<ul class="entry-description">
-									<li>Developed and deployed a full-stack web application using Astro (SSR), React 19, TypeScript, and Turso/LibSQL, featuring a responsive dashboard, blog CRUD system, and integrated AI/ML inference demos.</li>
-									<li>Designed a normalized SQLite relational database schema with 5 tables and composite indexes using Drizzle ORM, implementing 8 RESTful API endpoints for full CRUD operations.</li>
-									<li>Implemented authentication and session management using PBKDF2 password hashing and secure session handling.</li>
-									<li>Integrated real-time YOLOv12 object detection inference from the Capstone Project through Hugging Face Spaces and Gradio REST API, enabling AI model deployment within the web application.</li>
-									<li>Engineered modular React components with optimistic UI updates and built an interactive data visualization dashboard using Plotly.js, alongside custom CSS/canvas animations.</li>
-								</ul>
-							</div>
+		.skill-editorial-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.skill-editorial-label {
+			font-size: 8px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--tile-label-color);
+		}
+		.skill-editorial-body {
+			font-size: 9px;
+			line-height: 1.5;
+			color: #334155;
+		}
 
-							<div class="entry-item">
-								<div class="entry-dot"></div>
-								<div class="entry-header">
-									<span class="entry-title">Capstone Project (Thesis) — Detection of White Blood Cells in Raptors</span>
-									<span class="entry-date">August 2024 – August 2025</span>
-								</div>
-								<ul class="entry-description">
-									<li>Developed deep learning and computer vision object detection models for automated detection of six blood-cell classes in raptor blood smear images using 1,180 manually annotated images.</li>
-									<li>Benchmarked YOLO-11l, YOLO-12l, YOLO-26l, and RTDETR-l across five data augmentation strategies, evaluating model performance using mAP, precision, and recall. Achieved a best baseline performance of mAP@0.5 = 0.957 and mAP@0.5:0.95 = 0.746, with 93.4% recall, using YOLO-26l.</li>
-									<li>Evaluated Mosaic, MixUp, CLAHE, photometric, and geometric data augmentation techniques and applied Grad-CAM for Explainable AI (XAI) and model interpretability.</li>
-									<li>Built and deployed a full-stack AI inference application using Next.js, React, and PostgreSQL (Supabase) for batch image uploads and automated object detection results.</li>
-									<li>Manuscript, “YOLO-Based Detection in Wildlife Hematology: Enhancing White Blood Cell Recognition with Data Augmentation,” submitted to Computer Methods and Programs in Biomedicine (CMPB-D-26-04827).</li>
-								</ul>
-							</div>
-						</section>
+		.return-home-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 7px 10px;
+			background: rgba(255, 255, 255, 0.65);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+			font-size: 10px;
+			font-weight: 700;
+			color: var(--fg);
+			text-decoration: none;
+			transition: all 0.2s ease;
+			margin-top: auto;
+		}
+		.return-home-btn:hover {
+			background: #ffffff;
+			border-color: rgba(0, 0, 0, 0.2);
+			transform: translateY(-1px);
+			box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+		}
 
-					</main>
+		/* ==========================================================================
+		   MODAL 1: HIGH-RES PDF VIEWER MODAL
+		   ========================================================================== */
+		.pdf-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			z-index: 9999;
+			background: rgba(15, 23, 42, 0.6);
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: clamp(16px, 3vw, 40px);
+			animation: modalFadeIn 0.22s ease-out both;
+		}
 
-				</div>
+		.pdf-modal-dialog {
+			width: 100%;
+			max-width: 1100px;
+			height: 90vh;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(28px);
+			-webkit-backdrop-filter: blur(28px);
+			border: 1px solid rgba(255, 255, 255, 0.95);
+			border-radius: 6px;
+			box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			animation: modalPop 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+
+		.pdf-modal-header {
+			padding: 10px 16px;
+			background: rgba(255, 255, 255, 0.85);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+		}
+
+		.pdf-modal-title {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--fg);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.pdf-modal-controls {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+
+		.modal-seg-ctrl {
+			display: flex;
+			background: rgba(0, 0, 0, 0.06);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+			padding: 2px;
+			gap: 2px;
+		}
+		.modal-seg-btn {
+			border: none;
+			background: transparent;
+			padding: 4px 10px;
+			font-size: 10px;
+			font-family: inherit;
+			font-weight: 600;
+			color: var(--tile-label-color);
+			cursor: pointer;
+			border-radius: 3px;
+			transition: all 0.15s ease;
+		}
+		.modal-seg-btn:hover { color: var(--fg); }
+		.modal-seg-btn.on {
+			background: #ffffff;
+			color: var(--fg);
+			font-weight: 700;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+
+		.modal-action-btn {
+			padding: 4px 10px;
+			font-size: 10px;
+			font-weight: 700;
+			border-radius: 4px;
+			text-decoration: none;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: #ffffff;
+			color: var(--fg);
+			transition: all 0.15s ease;
+		}
+		.modal-action-btn:hover {
+			background: #f1f5f9;
+			border-color: rgba(0,0,0,0.2);
+		}
+		.modal-action-btn.primary {
+			background: #0071e3;
+			border-color: #0071e3;
+			color: #ffffff;
+		}
+		.modal-action-btn.primary:hover {
+			background: #0060c2;
+		}
+
+		.modal-close-btn {
+			width: 26px;
+			height: 26px;
+			border-radius: 4px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: rgba(0, 0, 0, 0.05);
+			color: var(--fg);
+			font-size: 14px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.15s ease;
+		}
+		.modal-close-btn:hover {
+			background: #ef4444;
+			border-color: #ef4444;
+			color: #ffffff;
+		}
+
+		.pdf-modal-body {
+			flex: 1;
+			width: 100%;
+			background: #2b2b2b;
+			position: relative;
+		}
+		.pdf-modal-iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		/* ==========================================================================
+		   MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+		   ========================================================================== */
+		.detail-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			z-index: 10000;
+			background: rgba(15, 23, 42, 0.65);
+			backdrop-filter: blur(16px);
+			-webkit-backdrop-filter: blur(16px);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: clamp(16px, 3vw, 40px);
+			animation: modalFadeIn 0.22s ease-out both;
+		}
+
+		.detail-modal-dialog {
+			width: 100%;
+			max-width: 820px;
+			max-height: 86vh;
+			background: rgba(255, 255, 255, 0.96);
+			backdrop-filter: blur(32px);
+			-webkit-backdrop-filter: blur(32px);
+			border: 1px solid rgba(255, 255, 255, 0.95);
+			border-radius: 8px;
+			box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			animation: modalPop 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+
+		.detail-modal-header {
+			padding: 16px 22px;
+			background: rgba(255, 255, 255, 0.9);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 16px;
+			flex-shrink: 0;
+		}
+
+		.detail-modal-badge {
+			font-size: 8.5px;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--accent-blue);
+			margin-bottom: 2px;
+		}
+		.detail-modal-title {
+			font-size: 18px;
+			font-weight: 800;
+			color: var(--fg);
+			letter-spacing: -0.02em;
+			line-height: 1.2;
+		}
+		.detail-modal-sub {
+			font-size: 11px;
+			color: #475569;
+			font-weight: 600;
+			margin-top: 3px;
+		}
+
+		.detail-modal-body {
+			flex: 1;
+			overflow-y: auto;
+			padding: 22px 24px;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
+
+		.detail-section-title {
+			font-size: 10px;
+			font-weight: 800;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: var(--tile-label-color);
+			margin-bottom: 8px;
+		}
+
+		.detail-overview-text {
+			font-size: 13.5px;
+			line-height: 1.65;
+			color: #1e293b;
+		}
+
+		.detail-bullets {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 11px;
+		}
+		.detail-bullets li {
+			font-size: 13px;
+			line-height: 1.62;
+			color: #1e293b;
+			position: relative;
+			padding-left: 18px;
+		}
+		.detail-bullets li::before {
+			content: "—";
+			position: absolute;
+			left: 0;
+			color: var(--accent-blue);
+			font-weight: 800;
+		}
+
+		.detail-tools-line {
+			font-size: 12px;
+			line-height: 1.6;
+			color: #475569;
+			padding: 10px 14px;
+			background: rgba(241, 245, 249, 0.7);
+			border: 1px solid rgba(0, 0, 0, 0.06);
+			border-radius: 6px;
+		}
+
+		.detail-modal-footer {
+			padding: 12px 22px;
+			background: rgba(255, 255, 255, 0.92);
+			border-top: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-shrink: 0;
+		}
+
+		@keyframes modalFadeIn {
+			from { opacity: 0; }
+			to   { opacity: 1; }
+		}
+		@keyframes modalPop {
+			from { opacity: 0; transform: scale(0.96) translateY(10px); }
+			to   { opacity: 1; transform: scale(1) translateY(0); }
+		}
+		@keyframes fadeDown {
+			from { opacity: 0; transform: translateY(-16px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+		@keyframes fadeUp {
+			from { opacity: 0; transform: translateY(14px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+	</style>
+</head>
+<body>
+
+	<!-- Dashboard Page Root -->
+	<div class="page-root">
+
+		<!-- Site Header (Maize Tassel Breadcrumb Style) -->
+		<header class="site-header">
+			<div class="header-inner">
+				<a href="/" class="header-back-link" title="Return to site(.)moss">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+					<span>site(.)moss</span>
+				</a>
+				<span class="header-sep">/</span>
+				<h1 class="site-logo">Resume</h1>
+				<span class="header-hint">
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+					Scroll mouse wheel or drag horizontally
+				</span>
 			</div>
+		</header>
+
+		<!-- Dashboard Grid (Horizontal Scrollable Windows 8 Style) -->
+		<div class="dashboard-scroll" id="dashScroll">
+			<main class="dashboard-grid">
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 1: PROFILE & CONTACT (4 cols × 5)     -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">PROFILE &amp; CONTACT</h2>
+					<div class="tile-grid">
+
+						<!-- Unified 5-Row Profile Tile (No Overflow, Clean Spacing) -->
+						<div class="tile t-4x5" id="tile-profile-unified">
+							<div class="profile-card-unified">
+								<div class="profile-title-block">
+									<h2 class="profile-name">Tinnaphop Sonsang</h2>
+									<span class="profile-role">Computer Engineering &amp; AI Graduate</span>
+									<span class="profile-school">Walailak University · School of Engineering and Technology</span>
+								</div>
+
+								<p class="profile-summary-text">
+									Focused on <strong class="hl">applied AI</strong>, with hands-on experience building <strong class="hl">computer vision</strong> and data-driven solutions. Experienced in taking projects from data preparation and experimentation to practical deployment across production environments.
+								</p>
+
+								<div class="profile-honors-card">
+									<span class="honors-title">Bachelor of Engineering (B.Eng.)</span>
+									<div class="honors-sub">
+										<span class="hl-green">First-class Honors</span> · <strong class="hl">GPAX: 3.65 / 4.00</strong>
+									</div>
+									<div class="honors-sub" style="font-size: 8px; color: var(--tile-label-color);">
+										Graduation Date: 7 May 2026
+									</div>
+								</div>
+
+								<div class="profile-contact-grid">
+									<a href="mailto:tinnaphop.moss@gmail.com" class="p-contact-item" title="Email">
+										<span class="p-c-lbl">Email</span>
+										<span class="p-c-val">tinnaphop.moss@gmail.com</span>
+									</a>
+									<a href="tel:+66649417400" class="p-contact-item" title="Phone">
+										<span class="p-c-lbl">Phone</span>
+										<span class="p-c-val">+66 64-94-1740</span>
+									</a>
+									<a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener" class="p-contact-item" title="LinkedIn">
+										<span class="p-c-lbl">LinkedIn</span>
+										<span class="p-c-val">Tinnaphop Sonsang</span>
+									</a>
+									<a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="p-contact-item" title="GitHub">
+										<span class="p-c-lbl">GitHub</span>
+										<span class="p-c-val">github.com/badgaitintin</span>
+									</a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 2: RESUME & TRANSCRIPT (6 cols × 5)   -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">RESUME &amp; TRANSCRIPT</h2>
+					<div class="tile-grid">
+
+						<!-- Resume Preview Tile (3×5): Click to Expand Modal -->
+						<div class="tile t-3x5 tile-doc-preview" id="tile-preview-resume" onclick="openPdfModal('resume')" title="Click to view full Resume PDF">
+							<div class="doc-preview-topbar">
+								<span class="doc-preview-name">Resume (CV)</span>
+								<span class="doc-preview-expand-hint">Expand ⛶</span>
+							</div>
+							<div class="doc-preview-frame-wrap">
+								<iframe
+									class="doc-preview-iframe"
+									src="/cvutil/CV_Tinnaphop_Sonsang.pdf#toolbar=0&view=FitH"
+									title="Resume PDF Preview"
+								></iframe>
+								<div class="doc-preview-click-overlay"></div>
+							</div>
+							<div class="doc-preview-bottombar" onclick="event.stopPropagation()">
+								<span>CV_Tinnaphop_Sonsang.pdf</span>
+								<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="doc-download-link">↓ Download</a>
+							</div>
+						</div>
+
+						<!-- Transcript Preview Tile (3×5): Click to Expand Modal -->
+						<div class="tile t-3x5 tile-doc-preview" id="tile-preview-transcript" onclick="openPdfModal('transcript')" title="Click to view full Transcript PDF">
+							<div class="doc-preview-topbar">
+								<span class="doc-preview-name">Academic Transcript</span>
+								<span class="doc-preview-expand-hint">Expand ⛶</span>
+							</div>
+							<div class="doc-preview-frame-wrap">
+								<iframe
+									class="doc-preview-iframe"
+									src="/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf#toolbar=0&view=FitH"
+									title="Transcript PDF Preview"
+								></iframe>
+								<div class="doc-preview-click-overlay"></div>
+							</div>
+							<div class="doc-preview-bottombar" onclick="event.stopPropagation()">
+								<span>Transcript_SID65120479.pdf</span>
+								<a href="/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf" download="Transcript_SID65120479_Tinnaphop_Sonsang.pdf" class="doc-download-link">↓ Download</a>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 3: THAIDOTRUN (ASICS) (10 cols × 5)   -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">THAIDOTRUN (ASICS)</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Runner Highlight Extraction (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-runner-highlights" onclick="openTileModal('runner-highlights')" style="cursor: pointer;" title="Click to view full project dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Runner Highlight Extraction</h3>
+										<span class="exp-role">Thaidotrun Co., Ltd. (Merged into ASICS) · Bangkok</span>
+									</div>
+									<span class="exp-date">2025–2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed an automated pipeline for detecting, tracking, and extracting individual runner highlights from crowded race footage, with clips lasting <strong class="hl">10–20 seconds</strong> for social media.</li>
+									<li>Evaluated detection and tracking architectures, benchmarking CNN and Transformer models (<strong class="hl">RT-DETR</strong>) paired with <strong class="hl">BoTSORT</strong> for robust tracking in high-density fields.</li>
+									<li>Applied custom <strong class="hl">spatial weighting</strong> prioritizing camera-center runners and integrated <strong class="hl">OCR bib number recognition</strong> to dynamically match runners for highlight selection.</li>
+									<li>Achieved an average success rate of <strong class="hl-green">~60%</strong> in automated highlight generation; identified tracking drift in severe runner occlusion as the primary bottleneck for continuous optimization.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Shoe Detection & Classification Pipeline (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-shoe-detection" onclick="openTileModal('shoe-detection')" style="cursor: pointer;" title="Click to view full project dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Shoe Detection &amp; Classification</h3>
+										<span class="exp-role">Computer Vision Pipeline · Azure Machine Learning</span>
+									</div>
+									<span class="exp-date">Race Insights</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed a computer vision pipeline for shoe-brand recognition using open-source shoe detection crop followed by custom classification on <strong class="hl">Azure ML</strong>.</li>
+									<li>Deduplicated <strong class="hl">150,000+ raw video frames down to ~35,000 verified images</strong> using <strong class="hl-purple">DINO feature extraction</strong>, <strong class="hl">HDBSCAN clustering</strong>, and color similarity.</li>
+									<li>Reduced dataset preparation and annotation turnaround from <strong class="hl-green">7–10 days to 1–2 days</strong> via pseudo-labeling, human verification, and data augmentation.</li>
+									<li>Improved test set accuracy from <strong class="hl-green">0.74 to 0.85 ± 0.05</strong> through iterative data and model development, achieving strong accuracy on major brands (<strong class="hl">Nike, Adidas, ASICS</strong>).</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 4: LIEF CAPITAL & AGRI AI (10 cols × 5)-->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">LIEF CAPITAL &amp; AGRI AI</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Lief Capital Asset Management (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-liefcapital" onclick="openTileModal('lief-capital')" style="cursor: pointer;" title="Click to view full experience dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Lief Capital Asset Management</h3>
+										<span class="exp-role">Data Scientist - AI &amp; Research (Contract) · Bangkok</span>
+									</div>
+									<span class="exp-date">2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Worked with an existing AI and financial data processing codebase on <strong class="hl">Azure Machine Learning</strong> across data gathering, EDA, preprocessing, feature engineering, and model training.</li>
+									<li>Analyzed multi-decade financial data workflows and restructured external EODHD data ingestion using parallel processing, connection reuse, vectorized computation, and <strong class="hl">Polars</strong>.</li>
+									<li>Reduced pipeline execution runtime by over 50% from <strong class="hl-green">&gt;1 hour to under 30 minutes</strong> on critical financial backtesting workflows.</li>
+									<li>Contributed to a machine learning financial ranking pipeline with sector-relative feature development, model optimization, and time-aware backtesting using <strong class="hl">Walk-Forward Validation</strong>.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: MTC-UAV Maize Tassel Counting (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-maize-tassel" onclick="openTileModal('maize-tassel')" style="cursor: pointer;" title="Click to view full research dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">MTC-UAV Maize Tassel Counting</h3>
+										<span class="exp-role">Deep Learning &amp; Precision Agriculture · Computer Vision</span>
+									</div>
+									<span class="exp-date">2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Explored maize tassel counting in dense aerial UAV imagery where individual identification becomes difficult; developed deep learning <strong class="hl">spatial density estimation</strong> models for robust counting.</li>
+									<li>Conducted model fine-tuning, domain-specific data augmentation, training optimization, and multi-seed testing across varying altitudes and illumination conditions.</li>
+									<li>Evaluated model reliability through <strong class="hl">uncertainty estimation</strong>, density-stratified performance analysis, visual attribution, and occlusion sensitivity.</li>
+									<li>Achieved <strong class="hl-green">34.0 ± 3.3 MAE</strong> across 5 random seeds on internal held-out test set; scheduled real-world UAV deployment on family's maize plantation during upcoming planting cycle.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 5: CAPSTONE THESIS & WU (9 cols × 5)  -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">CAPSTONE THESIS &amp; EDUCATION</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Raptor WBC Thesis (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-thesis" onclick="openTileModal('raptor-thesis')" style="cursor: pointer;" title="Click to view full thesis dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Thesis: White Blood Cells in Raptors</h3>
+										<span class="exp-role">Walailak University (SET &amp; Veterinary College)</span>
+									</div>
+									<span class="exp-date">2024–2025</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed a deep learning object detection system identifying six blood-cell classes in raptor blood smear images using <strong class="hl">1,180 manually annotated microscopic images</strong>.</li>
+									<li>Benchmarked YOLO-11l, 12l, 26l, and RT-DETR across five augmentation strategies, achieving top baseline with <strong class="hl-green">YOLO-26l (0.957 mAP@0.5, 93.4% recall)</strong>.</li>
+									<li>Applied <strong class="hl-purple">Grad-CAM for Explainable AI (XAI)</strong> to verify model attention against avian hematological biomarkers and validate feature representations.</li>
+									<li>Built full-stack AI web app (<strong class="hl">Next.js, PostgreSQL/Supabase</strong>) deploying trained models directly in the browser via <strong class="hl">WebAssembly (WASM)</strong> for client-side batch inference; manuscript authored for <strong class="hl">CMPB journal</strong> submission.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Academic Honors & Education (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-education" onclick="openTileModal('wu-education')" style="cursor: pointer;" title="Click to view academic credentials">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Walailak University</h3>
+										<span class="exp-role">School of Engineering and Technology</span>
+									</div>
+									<span class="exp-date">2022–2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li><strong>Bachelor of Engineering (B.Eng.)</strong> in Computer Engineering and Artificial Intelligence.</li>
+									<li>Graduated with <strong class="hl-green">First-class Honors</strong> with cumulative <strong class="hl">GPAX: 3.65 / 4.00</strong> (Graduation: 7 May 2026).</li>
+									<li>Comprehensive training across Deep Learning, Computer Vision, Distributed Systems, Software Engineering, and AI Mathematics.</li>
+									<li>Consistently recognized on <strong class="hl">Dean's Academic Honors List</strong> across all academic semesters.</li>
+									<li>Collaborated with veterinary medicine faculty on interdisciplinary diagnostic AI research.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Records &amp; Transcript ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 6: SKILLS & ACCREDITATIONS (8 cols × 5)-->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">SKILLS &amp; ACCREDITATIONS</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: AI, Deep Learning & Vision (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-skills-ai">
+							<div class="skills-matrix-box">
+								<div class="exp-header-row">
+									<h3 class="exp-company" style="font-size: 12px;">AI, Deep Learning &amp; Vision</h3>
+									<span class="exp-date">Core Expertise</span>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Learning Paradigms</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Supervised (ML &amp; Deep Learning)</strong>, Classification, Regression, <strong class="hl">Unsupervised Clustering</strong>, Representation Learning
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Vision &amp; Methods</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Object Detection</strong>, <strong class="hl">Tracking</strong>, Pose Estimation, <strong class="hl">OCR</strong>, <strong class="hl-purple">Grad-CAM (XAI)</strong>, Ensemble Learning, Few-Shot, Pseudo-Labeling, Feature Engineering
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Models &amp; Frameworks</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">PyTorch</strong>, <strong class="hl">YOLO (11/12/26)</strong>, <strong class="hl">RT-DETR</strong>, Grounding DINO, OpenCV, Transformers, XGBoost, Scikit-learn
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Data, Software & Accreditations (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-skills-data">
+							<div class="skills-matrix-box">
+								<div class="exp-header-row">
+									<h3 class="exp-company" style="font-size: 12px;">Data, Systems &amp; Certs</h3>
+									<span class="exp-date">Workflow &amp; Stack</span>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Data &amp; Pipelines</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Polars</strong>, Pandas, NumPy, PySpark, HDBSCAN, <strong class="hl">Azure ML</strong>, ETL Pipelines, Parallel Workers
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Web, Systems &amp; NLP</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">TypeScript</strong>, Next.js, React, Astro, PostgreSQL / Supabase, Docker, Git, SentencePiece, LLM APIs
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Certifications &amp; Languages</span>
+									<div class="skill-editorial-body">
+										<strong class="hl-green">EF SET English: 56/100 (B2 · C1 Reading)</strong>, <strong class="hl">Microsoft Azure MLOps</strong>, Thai (Native), English (B2)
+									</div>
+								</div>
+
+								<a href="/" class="return-home-btn" title="Back to main dashboard">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>
+									<span>Return to site(.)moss</span>
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+			</main>
 		</div>
 
-		<script>
-			// ── Page exit transition ──
-			const backBtn = document.getElementById("backBtn");
-			if (backBtn) {
-				backBtn.addEventListener("click", (e) => {
-					e.preventDefault();
-					document.body.classList.add("is-exiting");
-					setTimeout(() => {
-						window.location.href = backBtn.getAttribute("href");
-					}, 280);
-				});
+	</div>
+
+	<!-- ==========================================================================
+	     MODAL 1: HIGH-RES PDF VIEWER MODAL
+	     ========================================================================== -->
+	<div class="pdf-modal-backdrop" id="pdfModal" role="dialog" aria-modal="true" aria-label="PDF Document Viewer">
+		<div class="pdf-modal-dialog">
+			<div class="pdf-modal-header">
+				<h3 class="pdf-modal-title" id="modalDocTitle">Curriculum Vitae — CV_Tinnaphop_Sonsang.pdf</h3>
+				<div class="pdf-modal-controls">
+					<div class="modal-seg-ctrl">
+						<button type="button" class="modal-seg-btn on" id="modalTabResume">Resume (CV)</button>
+						<button type="button" class="modal-seg-btn" id="modalTabTranscript">Transcript (WU)</button>
+					</div>
+					<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener" class="modal-action-btn" id="modalExternalLink">Open New Tab ↗</a>
+					<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="modal-action-btn primary" id="modalDownloadBtn">↓ Download</a>
+					<button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">✕</button>
+				</div>
+			</div>
+			<div class="pdf-modal-body">
+				<iframe class="pdf-modal-iframe" id="modalPdfFrame" src="" title="PDF Document Preview Frame"></iframe>
+			</div>
+		</div>
+	</div>
+
+	<!-- ==========================================================================
+	     MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+	     ========================================================================== -->
+	<div class="detail-modal-backdrop" id="tileDetailModal" role="dialog" aria-modal="true" aria-label="Project Details Dossier">
+		<div class="detail-modal-dialog">
+			<div class="detail-modal-header">
+				<div>
+					<div class="detail-modal-badge" id="dModalCategory">PROJECT DOSSIER</div>
+					<h3 class="detail-modal-title" id="dModalTitle">Runner Highlight Extraction</h3>
+					<div class="detail-modal-sub" id="dModalSub">Thaidotrun Co., Ltd. (Merged into ASICS) · 2025–2026</div>
+				</div>
+				<button type="button" class="modal-close-btn" id="dModalCloseBtn" aria-label="Close modal">✕</button>
+			</div>
+			<div class="detail-modal-body">
+				<div>
+					<div class="detail-section-title">Overview &amp; Executive Summary</div>
+					<p class="detail-overview-text" id="dModalOverview"></p>
+				</div>
+
+				<div>
+					<div class="detail-section-title">Technical Architecture &amp; Implementation Details</div>
+					<ul class="detail-bullets" id="dModalBullets"></ul>
+				</div>
+
+				<div>
+					<div class="detail-section-title">Core Technologies, Frameworks &amp; Environment</div>
+					<div class="detail-tools-line" id="dModalTools"></div>
+				</div>
+			</div>
+			<div class="detail-modal-footer">
+				<span style="font-size: 10px; color: var(--tile-label-color); font-weight: 600;">Curriculum Vitae — Complete Technical Record</span>
+				<button type="button" class="modal-action-btn primary" onclick="closeTileModal()">Close Dossier</button>
+			</div>
+		</div>
+	</div>
+
+	<Watermark position="bottom-right" />
+
+	<script is:inline>
+	(function() {
+		// URLs for documents
+		var docResume = '/cvutil/CV_Tinnaphop_Sonsang.pdf';
+		var docTranscript = '/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf';
+
+		// ==========================================================================
+		// MODAL 1: PDF VIEWER LOGIC
+		// ==========================================================================
+		var pdfModal = document.getElementById('pdfModal');
+		var modalFrame = document.getElementById('modalPdfFrame');
+		var modalTitle = document.getElementById('modalDocTitle');
+		var modalTabResume = document.getElementById('modalTabResume');
+		var modalTabTranscript = document.getElementById('modalTabTranscript');
+		var modalExternal = document.getElementById('modalExternalLink');
+		var modalDownload = document.getElementById('modalDownloadBtn');
+		var modalClose = document.getElementById('modalCloseBtn');
+
+		window.openPdfModal = function(type) {
+			var isResume = type !== 'transcript';
+			var url = isResume ? docResume : docTranscript;
+			var filename = isResume ? 'CV_Tinnaphop_Sonsang.pdf' : 'Transcript_SID65120479_Tinnaphop_Sonsang.pdf';
+
+			if (isResume) {
+				modalTabResume.classList.add('on');
+				modalTabTranscript.classList.remove('on');
+				modalTitle.textContent = 'Curriculum Vitae — CV_Tinnaphop_Sonsang.pdf';
+			} else {
+				modalTabTranscript.classList.add('on');
+				modalTabResume.classList.remove('on');
+				modalTitle.textContent = 'Official Academic Transcript — Walailak University';
 			}
 
-			// ── Scroll-spy & Smooth scroll ──
-			(function() {
-				const workspace = document.querySelector('.wbc-workspace');
-				const sections = document.querySelectorAll('#summary, #education, #certifications, #skills, #experience, #projects');
-				const navLinks = document.querySelectorAll('.sidebar-nav-link');
+			modalExternal.href = url;
+			modalDownload.href = url;
+			modalDownload.setAttribute('download', filename);
+			modalFrame.src = url;
+			pdfModal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		};
 
-				if (!workspace) return;
+		window.closePdfModal = function() {
+			pdfModal.style.display = 'none';
+			modalFrame.src = '';
+			document.body.style.overflow = '';
+		};
 
-				workspace.addEventListener('scroll', () => {
-					let current = '';
-					sections.forEach(s => {
-						const top = s.offsetTop - workspace.offsetTop;
-						if (workspace.scrollTop >= top - 40) {
-							current = s.getAttribute('id');
-						}
-					});
-					navLinks.forEach(l => {
-						l.classList.toggle('active', l.getAttribute('href') === `#${current}`);
-					});
+		if (modalClose) modalClose.addEventListener('click', window.closePdfModal);
+		if (pdfModal) {
+			pdfModal.addEventListener('click', function(e) {
+				if (e.target === pdfModal) window.closePdfModal();
+			});
+		}
+		if (modalTabResume) {
+			modalTabResume.addEventListener('click', function() { window.openPdfModal('resume'); });
+		}
+		if (modalTabTranscript) {
+			modalTabTranscript.addEventListener('click', function() { window.openPdfModal('transcript'); });
+		}
+
+		// ==========================================================================
+		// MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+		// ==========================================================================
+		var tileModal = document.getElementById('tileDetailModal');
+		var dCloseBtn = document.getElementById('dModalCloseBtn');
+		var dCategory = document.getElementById('dModalCategory');
+		var dTitle = document.getElementById('dModalTitle');
+		var dSub = document.getElementById('dModalSub');
+		var dOverview = document.getElementById('dModalOverview');
+		var dBullets = document.getElementById('dModalBullets');
+		var dTools = document.getElementById('dModalTools');
+
+		var projectData = {
+			'runner-highlights': {
+				category: 'THAIDOTRUN (ASICS) · PROJECT DOSSIER',
+				title: 'Automated Runner Highlight Extraction System',
+				subtitle: 'Thaidotrun Co., Ltd. (Merged into ASICS) · AI & Computer Vision Intern (2025–2026)',
+				overview: 'Developed an automated computer vision pipeline designed for marathon and road race events, automatically detecting, tracking, and producing personalized runner highlight clips (typically lasting 10–20 seconds) tailored for direct athlete social media sharing.',
+				bullets: [
+					'Evaluated multiple state-of-the-art object detection and multi-object tracking architectures, including CNN and Transformer-based models (<strong class="hl">RT-DETR</strong>) paired with <strong class="hl">BoTSORT</strong> for robust subject tracking in high-density starting and finish line scenes.',
+					'Engineered a custom <strong class="hl">spatial weighting algorithm</strong> prioritizing runners located in the central camera zone, and integrated <strong class="hl">OCR bib number recognition</strong> to dynamically replace temporary tracking IDs with verified athlete numbers.',
+					'Achieved an average success rate of <strong class="hl-green">~60%</strong> in fully automated highlight generation, establishing a viable production baseline for event operations.',
+					'Systematically investigated failure cases (~40%), identifying tracking drift in severe occlusion and camera cuts as the key driver of clips cut prematurely or spanning excessively long durations.'
+				],
+				tools: 'Technologies: PyTorch · RT-DETR · BoTSORT · OCR · OpenCV · Spatial Weighting Algorithms · Video Encoding · Python'
+			},
+			'shoe-detection': {
+				category: 'THAIDOTRUN (ASICS) · PROJECT DOSSIER',
+				title: 'Shoe Detection & Classification Pipeline for Race Insights',
+				subtitle: 'Thaidotrun Co., Ltd. (Merged into ASICS) · Computer Vision Pipeline (2025–2026)',
+				overview: 'Engineered an end-to-end computer vision and data curation workflow for shoe-brand recognition across marathon footage, empowering brand sponsorship intelligence and post-race athletic market analysis on Azure Machine Learning.',
+				bullets: [
+					'Evaluated open-source shoe detection models to implement a high-efficiency detection-and-crop pipeline, followed by a dedicated fine-tuned classification model deployed on <strong class="hl">Azure Machine Learning</strong>.',
+					'Constructed an automated data curation pipeline to eliminate redundant video frames using <strong class="hl-purple">DINO-based feature extraction</strong>, <strong class="hl">HDBSCAN clustering</strong>, and color similarity metrics, dramatically trimming <strong class="hl">150,000+ raw frames down to ~35,000 verified images</strong>.',
+					'Reduced dataset preparation and annotation turnaround time from <strong class="hl-green">7–10 days down to 1–2 days</strong> through automated pseudo-labeling, representative image sampling, and human-in-the-loop verification.',
+					'Iterated through limited-data training, zero-shot evaluation, and supervised fine-tuning, successfully elevating test set performance from <strong class="hl-green">0.74 to 0.85 ± 0.05</strong> with strong recognition across major brands (<strong class="hl">Nike, Adidas, ASICS</strong>).'
+				],
+				tools: 'Technologies: DINO Vision Transformer · HDBSCAN · Azure Machine Learning · PyTorch · OpenCV · Pseudo-Labeling · Data Augmentation · Python'
+			},
+			'lief-capital': {
+				category: 'LIEF CAPITAL ASSET MANAGEMENT · EXPERIENCE DOSSIER',
+				title: 'Financial Data & Machine Learning Workflows',
+				subtitle: 'Lief Capital Asset Management · Data Scientist - AI & Research (2026)',
+				overview: 'Contributed to an institutional quantitative investment platform on Azure Machine Learning, optimizing multi-decade data ingestion, feature engineering pipelines, and financial ranking machine learning models.',
+				bullets: [
+					'Gained comprehensive hands-on experience across the entire quantitative pipeline on <strong class="hl">Azure Machine Learning</strong>, including large-scale financial data gathering, exploratory data analysis (EDA), preprocessing, and model evaluation.',
+					'Analyzed multi-decade historical market datasets and external EODHD data ingestion, accelerating pipelines through parallel workers, connection pooling, vectorized computation, and <strong class="hl">Polars</strong>.',
+					'Successfully cut critical financial backtesting and data pipeline runtime by over 50%, reducing execution from <strong class="hl-green">&gt;1 hour to under 30 minutes</strong>.',
+					'Contributed to a machine learning ranking pipeline by engineering sector-relative features, optimizing ranking objectives, and conducting time-aware backtesting via <strong class="hl">Walk-Forward Validation</strong>.'
+				],
+				tools: 'Technologies: Azure Machine Learning · Polars · Pandas · Vectorized Computing · Walk-Forward Validation · Financial Time-Series · Python'
+			},
+			'maize-tassel': {
+				category: 'INDEPENDENT RESEARCH · PRECISION AGRICULTURE',
+				title: 'MTC-UAV Maize Tassel Counting in Dense Aerial Imagery',
+				subtitle: 'Computer Vision, Deep Learning & Precision Agriculture (2026)',
+				overview: 'Investigated spatial density estimation as a robust computer vision solution for automated maize tassel enumeration in ultra-dense aerial drone imagery, addressing the severe occlusions where individual bounding box detectors fail.',
+				bullets: [
+					'Developed and trained deep learning <strong class="hl">spatial density estimation models</strong> capable of accurately estimating tassel populations despite severe object overlap and varying UAV altitudes.',
+					'Executed model fine-tuning, domain-specific data augmentation, training optimization, and multi-seed testing across varied sunlight, altitude, and canopy densities.',
+					'Rigorously audited model reliability using <strong class="hl">uncertainty estimation</strong>, density-stratified performance analysis, visual attribution, and occlusion sensitivity analysis to quantify failure modes.',
+					'Achieved <strong class="hl-green">34.0 ± 3.3 MAE</strong> across 5 random seeds on internal held-out test sets; scheduled real-world UAV flight validation at family maize fields during the upcoming planting cycle.'
+				],
+				tools: 'Technologies: PyTorch · Spatial Density Estimation · UAV Drone Sensing · Uncertainty Estimation · Grad-CAM Visual Attribution · Precision Agriculture'
+			},
+			'raptor-thesis': {
+				category: 'CAPSTONE GRADUATION THESIS · B.ENG.',
+				title: 'Detection of White Blood Cells in Raptors',
+				subtitle: 'Walailak University (SET & Akkhraratchakumari Veterinary College) · 2024–2025',
+				overview: 'Collaborative interdisciplinary engineering and veterinary medicine graduation research, creating a clinical deep learning object detection diagnostic system for identifying six avian blood-cell classes from raptor microscopic blood smears.',
+				bullets: [
+					'Curated and annotated <strong class="hl">1,180 high-resolution microscopic smear images</strong> across six avian white blood cell classes in partnership with veterinary clinical pathologists.',
+					'Benchmarked YOLO-11l, 12l, 26l, and RT-DETR-l across five data augmentation strategies, establishing the top baseline with <strong class="hl-green">YOLO-26l (0.957 mAP@0.5, 0.746 mAP@0.5:0.95, and 93.4% recall)</strong>.',
+					'Applied <strong class="hl-purple">Grad-CAM for Explainable AI (XAI)</strong> to visualize convolutional attention and verify that network detections aligned with cellular granulations and nuclear lobation.',
+					'Engineered a full-stack inference web platform (<strong class="hl">Next.js, PostgreSQL/Supabase</strong>) utilizing client-side <strong class="hl">WebAssembly (WASM)</strong> to execute real-time model inference directly in the browser; authored research manuscript for <strong class="hl">CMPB journal</strong> submission.'
+				],
+				tools: 'Technologies: YOLO-26l · RT-DETR · Grad-CAM XAI · WebAssembly (WASM) · Next.js · PostgreSQL / Supabase · Python · International Journal Manuscript'
+			},
+			'wu-education': {
+				category: 'ACADEMIC RECORD & QUALIFICATIONS',
+				title: 'Walailak University — Bachelor of Engineering',
+				subtitle: 'School of Engineering and Technology · Nakhon Si Thammarat (2022–2026)',
+				overview: 'Four-year intensive Bachelor of Engineering curriculum in Computer Engineering and Artificial Intelligence, culminating in First-class Honors and interdisciplinary capstone research.',
+				bullets: [
+					'Earned Bachelor of Engineering (B.Eng.) with <strong class="hl-green">First-class Honors</strong> and cumulative <strong class="hl">GPAX: 3.65 / 4.00</strong> (Graduation: 7 May 2026).',
+					'Comprehensive curriculum spanning Deep Learning, Computer Vision, Machine Learning, Natural Language Processing, Distributed Systems, Software Engineering, Parallel Computing, and Mathematics for AI.',
+					'Consistently earned placement on the Dean’s Academic Distinction List across all academic terms.',
+					'Official university academic transcripts can be directly previewed and downloaded in Group 2.'
+				],
+				tools: 'Qualifications: Bachelor of Engineering · First-class Honors (GPAX 3.65) · School of Engineering and Technology · Walailak University'
+			}
+		};
+
+		window.openTileModal = function(id) {
+			var data = projectData[id];
+			if (!data) return;
+
+			dCategory.textContent = data.category;
+			dTitle.textContent = data.title;
+			dSub.textContent = data.subtitle;
+			dOverview.innerHTML = data.overview;
+
+			// Populate bullets with inline highlighted text
+			dBullets.innerHTML = '';
+			data.bullets.forEach(function(b) {
+				var li = document.createElement('li');
+				li.innerHTML = b;
+				dBullets.appendChild(li);
+			});
+
+			dTools.innerHTML = data.tools;
+
+			tileModal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		};
+
+		window.closeTileModal = function() {
+			tileModal.style.display = 'none';
+			document.body.style.overflow = '';
+		};
+
+		if (dCloseBtn) dCloseBtn.addEventListener('click', window.closeTileModal);
+		if (tileModal) {
+			tileModal.addEventListener('click', function(e) {
+				if (e.target === tileModal) window.closeTileModal();
+			});
+		}
+
+		// Keyboard ESC to close any open modal
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				if (pdfModal.style.display === 'flex') window.closePdfModal();
+				if (tileModal.style.display === 'flex') window.closeTileModal();
+			}
+		});
+
+		// Mouse radial glow on tiles
+		document.querySelectorAll('.tile').forEach(function(tile) {
+			var ticking = false;
+			tile.addEventListener('mousemove', function(e) {
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(function() {
+					var rect = tile.getBoundingClientRect();
+					tile.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+					tile.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+					ticking = false;
 				});
+			});
+		});
 
-				navLinks.forEach(a => {
-					a.addEventListener('click', e => {
-						const targetId = a.getAttribute('href');
-						const targetEl = document.querySelector(targetId);
-						if (targetEl) {
-							e.preventDefault();
-							workspace.scrollTo({
-								top: targetEl.offsetTop - workspace.offsetTop + 1,
-								behavior: 'smooth'
-							});
-						}
-					});
-				});
-			})();
-		</script>
-		<Watermark />
-	</body>
+		// ==========================================================================
+		// HORIZONTAL MOUSE WHEEL & DRAG-TO-SCROLL (WINDOWS 8 HORIZONTAL PANNING)
+		// ==========================================================================
+		var scroll = document.getElementById('dashScroll');
+
+		// 1. Mouse wheel horizontal scrolling anywhere on the window!
+		window.addEventListener('wheel', function(e) {
+			// If either modal is open, let user scroll inside modal normally
+			if (pdfModal && pdfModal.style.display === 'flex') return;
+			if (tileModal && tileModal.style.display === 'flex') return;
+			if (!scroll) return;
+
+			// Translate vertical mouse wheel scrolling into horizontal dashboard scroll
+			if (Math.abs(e.deltaY) > 0) {
+				e.preventDefault();
+				scroll.scrollLeft += e.deltaY * 1.25;
+			} else if (Math.abs(e.deltaX) > 0) {
+				scroll.scrollLeft += e.deltaX;
+			}
+		}, { passive: false });
+
+		// 2. Mouse drag-to-scroll (swipe left/right with mouse)
+		if (scroll) {
+			var isDragging = false, startX = 0, scrollStartLeft = 0;
+			scroll.addEventListener('mousedown', function(e) {
+				if (e.target.closest('a, button, iframe, input, select')) return;
+				isDragging = true;
+				startX = e.pageX - scroll.offsetLeft;
+				scrollStartLeft = scroll.scrollLeft;
+				scroll.classList.add('is-dragging');
+			});
+			document.addEventListener('mousemove', function(e) {
+				if (!isDragging) return;
+				e.preventDefault();
+				var x = e.pageX - scroll.offsetLeft;
+				scroll.scrollLeft = scrollStartLeft - (x - startX);
+			});
+			document.addEventListener('mouseup', function() {
+				if (isDragging) {
+					isDragging = false;
+					scroll.classList.remove('is-dragging');
+				}
+			});
+		}
+	})();
+	</script>
+</body>
 </html>
