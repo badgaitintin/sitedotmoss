@@ -38,3 +38,14 @@ hf_space_pivot
 public/pivotingual-train (1).ipynb
 scripts/extract_nb.py
 scripts/extracted_nb.txt
+public/fruit_apple.png
+public/fruit_cherry.png
+public/fruit_lemon.png
+public/fruit_grapes.png
+public/fruit_orange.png
+public/fruit_star.png
+public/ogtree.png
+public/paper_tree.svg
+public/SMPTE_Color_Bars.svg.webp
+public/maize_tassel/urces (2).ipynb
+scripts/convert_to_onnx.py
