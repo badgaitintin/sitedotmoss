@@ -1,0 +1,1620 @@
+---
+// cv.astro — Professional Resume & Curriculum Vitae
+// Windows 8 Frosted Glass Dashboard, Full CV Content, Editorial Highlights (No Cluttered Tags), Unified Profile Tile & Smooth Wheel Scroll
+import '@fontsource/google-sans-flex';
+import Watermark from '../components/Watermark.astro';
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="/favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Resume — Tinnaphop Sonsang</title>
+	<meta name="description" content="Curriculum Vitae & Resume — Tinnaphop Sonsang. Computer Engineering & Artificial Intelligence Graduate." />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap" rel="stylesheet" />
+	<link rel="preload" as="image" href="/optimized/anim_bg_1.webp" />
+
+	<style is:inline>
+		/* ==========================================================================
+		   WINDOWS 8 TRANSLUCENT GLASS DESIGN SYSTEM
+		   ========================================================================== */
+		:root {
+			--bg:                #F0EBE4;
+			--fg:                #1A1410;
+			--tile-bg:           rgba(255, 255, 255, 0.45);
+			--tile-hover:        rgba(255, 255, 255, 0.68);
+			--tile-border:       rgba(255, 255, 255, 0.6);
+			--tile-border-hover: rgba(255, 255, 255, 0.9);
+			--tile-shadow:       0 2px 10px rgba(0, 0, 0, 0.04);
+			--tile-shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.09);
+			--tile-text:         #1A1410;
+			--tile-label-color:  rgba(26, 20, 16, 0.55);
+
+			--accent-primary:    #949B7B;
+			--accent-blue:       #0071e3;
+			--accent-green:      #10b981;
+			--accent-purple:     #8b5cf6;
+
+			--font: 'DM Sans', 'Google Sans Flex', system-ui, sans-serif;
+			--unit: clamp(64px, 8.2vh, 74px);
+			--gap: 6px;
+		}
+
+		*, *::before, *::after {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			-webkit-tap-highlight-color: transparent;
+		}
+
+		html, body {
+			width: 100%;
+			min-height: 100vh;
+			background: transparent;
+			color: var(--fg);
+			font-family: var(--font);
+			font-size: 14.5px;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			overflow-x: hidden;
+			scrollbar-width: none;
+			position: relative;
+		}
+
+		/* Wallpaper Background */
+		body::before {
+			content: "";
+			position: fixed;
+			inset: -20px;
+			z-index: -1;
+			background-image: url('/optimized/anim_bg_1.webp');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			filter: blur(6px);
+			-webkit-filter: blur(6px);
+			background-color: rgba(255, 255, 255, 0.08);
+			background-blend-mode: overlay;
+		}
+
+		/* Page Root */
+		.page-root {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 24px 0 28px 0;
+			gap: 14px;
+			width: 100%;
+		}
+
+		/* Site Header (Breadcrumb Style) */
+		.site-header {
+			width: 100%;
+			max-width: 100vw;
+			padding: 0 clamp(24px, 4vw, 56px);
+			text-align: left;
+			animation: fadeDown 0.8s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+
+		.header-inner {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.header-back-link {
+			display: inline-flex;
+			align-items: center;
+			gap: 4px;
+			color: var(--tile-label-color);
+			font-size: clamp(1.1rem, 2.2vw, 1.55rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			text-decoration: none;
+			transition: color 0.2s ease, transform 0.2s ease;
+		}
+		.header-back-link:hover {
+			color: var(--fg);
+			transform: translateX(-2px);
+		}
+
+		.header-sep {
+			color: rgba(0, 0, 0, 0.2);
+			font-size: clamp(1.2rem, 2.3vw, 1.65rem);
+			font-weight: 200;
+		}
+
+		.site-logo {
+			font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+			font-weight: 300;
+			letter-spacing: -0.02em;
+			color: var(--fg);
+			line-height: 1;
+		}
+
+		.header-hint {
+			font-size: 10px;
+			color: var(--tile-label-color);
+			margin-left: 14px;
+			padding: 3px 8px;
+			border-radius: 4px;
+			background: rgba(255, 255, 255, 0.35);
+			border: 1px solid rgba(255, 255, 255, 0.5);
+			display: inline-flex;
+			align-items: center;
+			gap: 5px;
+			font-weight: 500;
+		}
+
+		/* Dashboard Container (Windows 8 Horizontal Scroll & Drag) */
+		.dashboard-scroll {
+			width: 100%;
+			max-width: 100vw;
+			padding-left: clamp(24px, 4vw, 56px);
+			padding-right: clamp(24px, 4vw, 56px);
+			overflow-x: auto;
+			overflow-y: hidden;
+			-ms-overflow-style: none;
+			scrollbar-width: none;
+			cursor: grab;
+			user-select: none;
+			-webkit-overflow-scrolling: touch;
+			touch-action: pan-x;
+			display: block;
+		}
+		.dashboard-scroll::-webkit-scrollbar { display: none; }
+		.dashboard-scroll.is-dragging { cursor: grabbing; }
+
+		.dashboard-grid {
+			display: flex;
+			flex-wrap: nowrap;
+			gap: clamp(16px, 2.4vw, 32px);
+			align-items: flex-start;
+			width: max-content;
+			padding: 4px 0;
+		}
+
+		/* Tile Group */
+		.tile-group {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			flex-shrink: 0;
+			animation: fadeUp 0.75s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+		.tile-group:nth-child(1) { animation-delay: 0.05s; }
+		.tile-group:nth-child(2) { animation-delay: 0.1s; }
+		.tile-group:nth-child(3) { animation-delay: 0.15s; }
+		.tile-group:nth-child(4) { animation-delay: 0.2s; }
+		.tile-group:nth-child(5) { animation-delay: 0.25s; }
+		.tile-group:nth-child(6) { animation-delay: 0.3s; }
+
+		.group-label {
+			font-size: 9.5px;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--tile-label-color);
+			padding-left: 2px;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+		}
+
+		/* 5-Row Tile Grid */
+		.tile-grid {
+			display: grid;
+			grid-template-rows: repeat(5, var(--unit));
+			grid-auto-flow: column dense;
+			grid-auto-columns: var(--unit);
+			gap: var(--gap);
+		}
+
+		/* ==========================================================================
+		   TRANSLUCENT GLASS TILE
+		   ========================================================================== */
+		.tile {
+			background: var(--tile-bg);
+			border: 1px solid var(--tile-border);
+			box-shadow: var(--tile-shadow);
+			backdrop-filter: blur(14px);
+			-webkit-backdrop-filter: blur(14px);
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 12px 14px;
+			text-decoration: none;
+			color: var(--tile-text);
+			transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1),
+						box-shadow 0.25s ease,
+						border-color 0.25s ease,
+						background 0.2s ease;
+			transform: translateZ(0);
+			backface-visibility: hidden;
+		}
+		.tile:hover {
+			will-change: transform;
+			transform: translateY(-2px) scale(1.012);
+			box-shadow: var(--tile-shadow-hover);
+			border-color: var(--tile-border-hover);
+			background: var(--tile-hover);
+		}
+		.tile:active {
+			transform: scale(0.98);
+			transition-duration: 0.06s;
+		}
+
+		/* Glow overlay on hover */
+		.tile::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+			background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,0.4) 0%, transparent 65%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+			pointer-events: none;
+			z-index: 5;
+		}
+		.tile:hover::after { opacity: 1; }
+
+		/* Dimensions */
+		.t-3x5 { grid-column: span 3; grid-row: span 5; }
+		.t-4x5 { grid-column: span 4; grid-row: span 5; }
+		.t-5x5 { grid-column: span 5; grid-row: span 5; }
+
+
+		/* Expand Hint Button inside tiles */
+		.tile-expand-btn {
+			font-size: 8px;
+			font-weight: 700;
+			letter-spacing: 0.04em;
+			text-transform: uppercase;
+			color: var(--accent-blue);
+			display: inline-flex;
+			align-items: center;
+			gap: 3px;
+			padding: 2px 6px;
+			background: rgba(0, 113, 227, 0.08);
+			border: 1px solid rgba(0, 113, 227, 0.15);
+			border-radius: 3px;
+			cursor: pointer;
+			transition: all 0.15s ease;
+			flex-shrink: 0;
+		}
+		.tile-expand-btn:hover {
+			background: rgba(0, 113, 227, 0.18);
+			border-color: rgba(0, 113, 227, 0.3);
+		}
+
+		/* ==========================================================================
+		   INLINE TEXT HIGHLIGHTS — BOLD RED TEXT
+		   ========================================================================== */
+		.hl,
+		.hl-green,
+		.hl-purple {
+			color: #dc2626; /* Bold red text */
+			font-weight: 800;
+			background: rgba(220, 38, 38, 0.08);
+			padding: 1px 4px;
+			border-radius: 3px;
+		}
+
+		/* ==========================================================================
+		   GROUP 1: UNIFIED PROFILE & CONTACT TILE (5 ROWS — ZERO OVERFLOW)
+		   ========================================================================== */
+		.profile-card-unified {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			justify-content: flex-start;
+			z-index: 2;
+			overflow: hidden;
+		}
+
+		.profile-title-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.profile-name {
+			font-size: 18px;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+			line-height: 1.1;
+			color: var(--fg);
+		}
+		.profile-role {
+			font-size: 11px;
+			font-weight: 700;
+			color: var(--accent-blue);
+		}
+		.profile-school {
+			font-size: 8.5px;
+			color: var(--tile-label-color);
+			font-weight: 600;
+		}
+
+		.profile-summary-text {
+			font-size: 9px;
+			line-height: 1.45;
+			color: #334155;
+		}
+
+		.profile-honors-card {
+			padding: 6px 8px;
+			background: rgba(255, 255, 255, 0.65);
+			border: 1px solid rgba(0, 0, 0, 0.05);
+			border-radius: 5px;
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.honors-title {
+			font-size: 9px;
+			font-weight: 700;
+			color: var(--fg);
+		}
+		.honors-sub {
+			font-size: 8.5px;
+			color: #475569;
+			line-height: 1.35;
+		}
+
+		.profile-contact-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 4px;
+			margin-top: 1px;
+		}
+		.p-contact-item {
+			padding: 4px 6px;
+			background: rgba(255, 255, 255, 0.55);
+			border: 1px solid rgba(0, 0, 0, 0.05);
+			border-radius: 4px;
+			text-decoration: none;
+			color: var(--fg);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			transition: all 0.15s ease;
+		}
+		.p-contact-item:hover {
+			background: #ffffff;
+			border-color: rgba(0, 0, 0, 0.15);
+			transform: translateY(-1px);
+		}
+		.p-c-lbl {
+			font-size: 7px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+			color: var(--tile-label-color);
+		}
+		.p-c-val {
+			font-size: 8px;
+			font-weight: 600;
+			color: var(--accent-blue);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		/* ==========================================================================
+		   GROUP 2: DOCUMENT PREVIEW TILES (RESUME & TRANSCRIPT)
+		   ========================================================================== */
+		.tile-doc-preview {
+			padding: 0;
+			overflow: hidden;
+			cursor: pointer;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.doc-preview-topbar {
+			padding: 8px 10px;
+			background: rgba(255, 255, 255, 0.7);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			z-index: 3;
+			flex-shrink: 0;
+		}
+		.doc-preview-name {
+			font-size: 10px;
+			font-weight: 700;
+			color: var(--fg);
+		}
+		.doc-preview-expand-hint {
+			font-size: 8px;
+			font-weight: 700;
+			color: var(--accent-blue);
+			text-transform: uppercase;
+			letter-spacing: 0.05em;
+		}
+
+		.doc-preview-frame-wrap {
+			flex: 1;
+			position: relative;
+			background: #525659;
+			overflow: hidden;
+		}
+		.doc-preview-iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+			pointer-events: none;
+			transform: scale(1.02);
+		}
+		.doc-preview-click-overlay {
+			position: absolute;
+			inset: 0;
+			z-index: 2;
+			background: transparent;
+		}
+
+		.doc-preview-bottombar {
+			padding: 6px 10px;
+			background: rgba(255, 255, 255, 0.75);
+			border-top: 1px solid rgba(0, 0, 0, 0.06);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 8px;
+			font-weight: 600;
+			color: var(--tile-label-color);
+			z-index: 3;
+			flex-shrink: 0;
+		}
+		.doc-download-link {
+			color: var(--accent-blue);
+			text-decoration: none;
+			font-weight: 700;
+			padding: 1px 4px;
+			border-radius: 2px;
+		}
+		.doc-download-link:hover {
+			text-decoration: underline;
+		}
+
+		/* ==========================================================================
+		   EXPERIENCE & PROJECT TILES (CLEAN EDITORIAL BULLETS, NO TAGS/CHIPS)
+		   ========================================================================== */
+		.project-box {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			z-index: 2;
+			justify-content: flex-start;
+			overflow: hidden;
+		}
+
+		.exp-header-row {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			gap: 8px;
+		}
+		.exp-title-block {
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
+		}
+		.exp-company {
+			font-size: 13px;
+			font-weight: 800;
+			color: var(--fg);
+			line-height: 1.2;
+			letter-spacing: -0.01em;
+		}
+		.exp-role {
+			font-size: 9.5px;
+			font-weight: 700;
+			color: var(--accent-blue);
+		}
+		.exp-date {
+			font-size: 8.5px;
+			font-weight: 700;
+			color: var(--tile-label-color);
+			letter-spacing: 0.04em;
+			white-space: nowrap;
+			padding: 2px 6px;
+			background: rgba(0, 0, 0, 0.04);
+			border-radius: 4px;
+		}
+
+		.exp-desc-list {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 7px;
+			margin-top: 2px;
+			flex: 1;
+		}
+		.exp-desc-list li {
+			font-size: 9.5px;
+			line-height: 1.48;
+			color: #334155;
+			position: relative;
+			padding-left: 12px;
+		}
+		.exp-desc-list li::before {
+			content: "—";
+			position: absolute;
+			left: 0;
+			color: var(--accent-primary);
+			font-weight: 700;
+		}
+
+		.tile-action-bar {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			margin-top: auto;
+			padding-top: 6px;
+			border-top: 1px solid rgba(0, 0, 0, 0.05);
+			flex-shrink: 0;
+		}
+
+		/* ==========================================================================
+		   GROUP 6: SKILLS & ACCREDITATIONS (CLEAN CATEGORIES, NO CHIPS)
+		   ========================================================================== */
+		.skills-matrix-box {
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+			height: 100%;
+			z-index: 2;
+			justify-content: flex-start;
+			overflow: hidden;
+		}
+
+		.skill-editorial-block {
+			display: flex;
+			flex-direction: column;
+			gap: 2px;
+		}
+		.skill-editorial-label {
+			font-size: 8px;
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--tile-label-color);
+		}
+		.skill-editorial-body {
+			font-size: 9px;
+			line-height: 1.5;
+			color: #334155;
+		}
+
+		.return-home-btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			padding: 7px 10px;
+			background: rgba(255, 255, 255, 0.65);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+			font-size: 10px;
+			font-weight: 700;
+			color: var(--fg);
+			text-decoration: none;
+			transition: all 0.2s ease;
+			margin-top: auto;
+		}
+		.return-home-btn:hover {
+			background: #ffffff;
+			border-color: rgba(0, 0, 0, 0.2);
+			transform: translateY(-1px);
+			box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+		}
+
+		/* ==========================================================================
+		   MODAL 1: HIGH-RES PDF VIEWER MODAL
+		   ========================================================================== */
+		.pdf-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			z-index: 9999;
+			background: rgba(15, 23, 42, 0.6);
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: clamp(16px, 3vw, 40px);
+			animation: modalFadeIn 0.22s ease-out both;
+		}
+
+		.pdf-modal-dialog {
+			width: 100%;
+			max-width: 1100px;
+			height: 90vh;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(28px);
+			-webkit-backdrop-filter: blur(28px);
+			border: 1px solid rgba(255, 255, 255, 0.95);
+			border-radius: 6px;
+			box-shadow: 0 24px 64px rgba(0, 0, 0, 0.3);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			animation: modalPop 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+
+		.pdf-modal-header {
+			padding: 10px 16px;
+			background: rgba(255, 255, 255, 0.85);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+		}
+
+		.pdf-modal-title {
+			font-size: 13px;
+			font-weight: 700;
+			color: var(--fg);
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.pdf-modal-controls {
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			flex-shrink: 0;
+		}
+
+		.modal-seg-ctrl {
+			display: flex;
+			background: rgba(0, 0, 0, 0.06);
+			border: 1px solid rgba(0, 0, 0, 0.08);
+			border-radius: 4px;
+			padding: 2px;
+			gap: 2px;
+		}
+		.modal-seg-btn {
+			border: none;
+			background: transparent;
+			padding: 4px 10px;
+			font-size: 10px;
+			font-family: inherit;
+			font-weight: 600;
+			color: var(--tile-label-color);
+			cursor: pointer;
+			border-radius: 3px;
+			transition: all 0.15s ease;
+		}
+		.modal-seg-btn:hover { color: var(--fg); }
+		.modal-seg-btn.on {
+			background: #ffffff;
+			color: var(--fg);
+			font-weight: 700;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+		}
+
+		.modal-action-btn {
+			padding: 4px 10px;
+			font-size: 10px;
+			font-weight: 700;
+			border-radius: 4px;
+			text-decoration: none;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: #ffffff;
+			color: var(--fg);
+			transition: all 0.15s ease;
+		}
+		.modal-action-btn:hover {
+			background: #f1f5f9;
+			border-color: rgba(0,0,0,0.2);
+		}
+		.modal-action-btn.primary {
+			background: #0071e3;
+			border-color: #0071e3;
+			color: #ffffff;
+		}
+		.modal-action-btn.primary:hover {
+			background: #0060c2;
+		}
+
+		.modal-close-btn {
+			width: 26px;
+			height: 26px;
+			border-radius: 4px;
+			border: 1px solid rgba(0, 0, 0, 0.1);
+			background: rgba(0, 0, 0, 0.05);
+			color: var(--fg);
+			font-size: 14px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.15s ease;
+		}
+		.modal-close-btn:hover {
+			background: #ef4444;
+			border-color: #ef4444;
+			color: #ffffff;
+		}
+
+		.pdf-modal-body {
+			flex: 1;
+			width: 100%;
+			background: #2b2b2b;
+			position: relative;
+		}
+		.pdf-modal-iframe {
+			width: 100%;
+			height: 100%;
+			border: none;
+		}
+
+		/* ==========================================================================
+		   MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+		   ========================================================================== */
+		.detail-modal-backdrop {
+			position: fixed;
+			inset: 0;
+			z-index: 10000;
+			background: rgba(15, 23, 42, 0.65);
+			backdrop-filter: blur(16px);
+			-webkit-backdrop-filter: blur(16px);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: clamp(16px, 3vw, 40px);
+			animation: modalFadeIn 0.22s ease-out both;
+		}
+
+		.detail-modal-dialog {
+			width: 100%;
+			max-width: 820px;
+			max-height: 86vh;
+			background: rgba(255, 255, 255, 0.96);
+			backdrop-filter: blur(32px);
+			-webkit-backdrop-filter: blur(32px);
+			border: 1px solid rgba(255, 255, 255, 0.95);
+			border-radius: 8px;
+			box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
+			display: flex;
+			flex-direction: column;
+			overflow: hidden;
+			animation: modalPop 0.28s cubic-bezier(0.1, 0.9, 0.2, 1) both;
+		}
+
+		.detail-modal-header {
+			padding: 16px 22px;
+			background: rgba(255, 255, 255, 0.9);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 16px;
+			flex-shrink: 0;
+		}
+
+		.detail-modal-badge {
+			font-size: 8.5px;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--accent-blue);
+			margin-bottom: 2px;
+		}
+		.detail-modal-title {
+			font-size: 18px;
+			font-weight: 800;
+			color: var(--fg);
+			letter-spacing: -0.02em;
+			line-height: 1.2;
+		}
+		.detail-modal-sub {
+			font-size: 11px;
+			color: #475569;
+			font-weight: 600;
+			margin-top: 3px;
+		}
+
+		.detail-modal-body {
+			flex: 1;
+			overflow-y: auto;
+			padding: 22px 24px;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
+
+		.detail-section-title {
+			font-size: 10px;
+			font-weight: 800;
+			letter-spacing: 0.1em;
+			text-transform: uppercase;
+			color: var(--tile-label-color);
+			margin-bottom: 8px;
+		}
+
+		.detail-overview-text {
+			font-size: 13.5px;
+			line-height: 1.65;
+			color: #1e293b;
+		}
+
+		.detail-bullets {
+			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 11px;
+		}
+		.detail-bullets li {
+			font-size: 13px;
+			line-height: 1.62;
+			color: #1e293b;
+			position: relative;
+			padding-left: 18px;
+		}
+		.detail-bullets li::before {
+			content: "—";
+			position: absolute;
+			left: 0;
+			color: var(--accent-blue);
+			font-weight: 800;
+		}
+
+		.detail-tools-line {
+			font-size: 12px;
+			line-height: 1.6;
+			color: #475569;
+			padding: 10px 14px;
+			background: rgba(241, 245, 249, 0.7);
+			border: 1px solid rgba(0, 0, 0, 0.06);
+			border-radius: 6px;
+		}
+
+		.detail-modal-footer {
+			padding: 12px 22px;
+			background: rgba(255, 255, 255, 0.92);
+			border-top: 1px solid rgba(0, 0, 0, 0.08);
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			flex-shrink: 0;
+		}
+
+		@keyframes modalFadeIn {
+			from { opacity: 0; }
+			to   { opacity: 1; }
+		}
+		@keyframes modalPop {
+			from { opacity: 0; transform: scale(0.96) translateY(10px); }
+			to   { opacity: 1; transform: scale(1) translateY(0); }
+		}
+		@keyframes fadeDown {
+			from { opacity: 0; transform: translateY(-16px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+		@keyframes fadeUp {
+			from { opacity: 0; transform: translateY(14px); }
+			to   { opacity: 1; transform: translateY(0); }
+		}
+	</style>
+</head>
+<body>
+
+	<!-- Dashboard Page Root -->
+	<div class="page-root">
+
+		<!-- Site Header (Maize Tassel Breadcrumb Style) -->
+		<header class="site-header">
+			<div class="header-inner">
+				<a href="/" class="header-back-link" title="Return to site(.)moss">
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+					<span>site(.)moss</span>
+				</a>
+				<span class="header-sep">/</span>
+				<h1 class="site-logo">Resume</h1>
+				<span class="header-hint">
+					<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+					Scroll mouse wheel or drag horizontally
+				</span>
+			</div>
+		</header>
+
+		<!-- Dashboard Grid (Horizontal Scrollable Windows 8 Style) -->
+		<div class="dashboard-scroll" id="dashScroll">
+			<main class="dashboard-grid">
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 1: PROFILE & CONTACT (4 cols × 5)     -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">PROFILE &amp; CONTACT</h2>
+					<div class="tile-grid">
+
+						<!-- Unified 5-Row Profile Tile (No Overflow, Clean Spacing) -->
+						<div class="tile t-4x5" id="tile-profile-unified">
+							<div class="profile-card-unified">
+								<div class="profile-title-block">
+									<h2 class="profile-name">Tinnaphop Sonsang</h2>
+									<span class="profile-role">Computer Engineering &amp; AI Graduate</span>
+									<span class="profile-school">Walailak University · School of Engineering and Technology</span>
+								</div>
+
+								<p class="profile-summary-text">
+									Focused on <strong class="hl">applied AI</strong>, with hands-on experience building <strong class="hl">computer vision</strong> and data-driven solutions. Experienced in taking projects from data preparation and experimentation to practical deployment across production environments.
+								</p>
+
+								<div class="profile-honors-card">
+									<span class="honors-title">Bachelor of Engineering (B.Eng.)</span>
+									<div class="honors-sub">
+										<span class="hl-green">First-class Honors</span> · <strong class="hl">GPAX: 3.65 / 4.00</strong>
+									</div>
+									<div class="honors-sub" style="font-size: 8px; color: var(--tile-label-color);">
+										Graduation Date: 7 May 2026
+									</div>
+								</div>
+
+								<div class="profile-contact-grid">
+									<a href="mailto:tinnaphop.moss@gmail.com" class="p-contact-item" title="Email">
+										<span class="p-c-lbl">Email</span>
+										<span class="p-c-val">tinnaphop.moss@gmail.com</span>
+									</a>
+									<a href="tel:+66649417400" class="p-contact-item" title="Phone">
+										<span class="p-c-lbl">Phone</span>
+										<span class="p-c-val">+66 64-94-1740</span>
+									</a>
+									<a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener" class="p-contact-item" title="LinkedIn">
+										<span class="p-c-lbl">LinkedIn</span>
+										<span class="p-c-val">Tinnaphop Sonsang</span>
+									</a>
+									<a href="https://github.com/badgaitintin" target="_blank" rel="noopener" class="p-contact-item" title="GitHub">
+										<span class="p-c-lbl">GitHub</span>
+										<span class="p-c-val">github.com/badgaitintin</span>
+									</a>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 2: RESUME & TRANSCRIPT (6 cols × 5)   -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">RESUME &amp; TRANSCRIPT</h2>
+					<div class="tile-grid">
+
+						<!-- Resume Preview Tile (3×5): Click to Expand Modal -->
+						<div class="tile t-3x5 tile-doc-preview" id="tile-preview-resume" onclick="openPdfModal('resume')" title="Click to view full Resume PDF">
+							<div class="doc-preview-topbar">
+								<span class="doc-preview-name">Resume (CV)</span>
+								<span class="doc-preview-expand-hint">Expand ⛶</span>
+							</div>
+							<div class="doc-preview-frame-wrap">
+								<iframe
+									class="doc-preview-iframe"
+									src="/cvutil/CV_Tinnaphop_Sonsang.pdf#toolbar=0&view=FitH"
+									title="Resume PDF Preview"
+								></iframe>
+								<div class="doc-preview-click-overlay"></div>
+							</div>
+							<div class="doc-preview-bottombar" onclick="event.stopPropagation()">
+								<span>CV_Tinnaphop_Sonsang.pdf</span>
+								<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="doc-download-link">↓ Download</a>
+							</div>
+						</div>
+
+						<!-- Transcript Preview Tile (3×5): Click to Expand Modal -->
+						<div class="tile t-3x5 tile-doc-preview" id="tile-preview-transcript" onclick="openPdfModal('transcript')" title="Click to view full Transcript PDF">
+							<div class="doc-preview-topbar">
+								<span class="doc-preview-name">Academic Transcript</span>
+								<span class="doc-preview-expand-hint">Expand ⛶</span>
+							</div>
+							<div class="doc-preview-frame-wrap">
+								<iframe
+									class="doc-preview-iframe"
+									src="/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf#toolbar=0&view=FitH"
+									title="Transcript PDF Preview"
+								></iframe>
+								<div class="doc-preview-click-overlay"></div>
+							</div>
+							<div class="doc-preview-bottombar" onclick="event.stopPropagation()">
+								<span>Transcript_SID65120479.pdf</span>
+								<a href="/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf" download="Transcript_SID65120479_Tinnaphop_Sonsang.pdf" class="doc-download-link">↓ Download</a>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 3: THAIDOTRUN (ASICS) (10 cols × 5)   -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">THAIDOTRUN (ASICS)</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Runner Highlight Extraction (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-runner-highlights" onclick="openTileModal('runner-highlights')" style="cursor: pointer;" title="Click to view full project dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Runner Highlight Extraction</h3>
+										<span class="exp-role">Thaidotrun Co., Ltd. (Merged into ASICS) · Bangkok</span>
+									</div>
+									<span class="exp-date">2025–2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed an automated pipeline for detecting, tracking, and extracting individual runner highlights from crowded race footage, with clips lasting <strong class="hl">10–20 seconds</strong> for social media.</li>
+									<li>Evaluated detection and tracking architectures, benchmarking CNN and Transformer models (<strong class="hl">RT-DETR</strong>) paired with <strong class="hl">BoTSORT</strong> for robust tracking in high-density fields.</li>
+									<li>Applied custom <strong class="hl">spatial weighting</strong> prioritizing camera-center runners and integrated <strong class="hl">OCR bib number recognition</strong> to dynamically match runners for highlight selection.</li>
+									<li>Achieved an average success rate of <strong class="hl-green">~60%</strong> in automated highlight generation; identified tracking drift in severe runner occlusion as the primary bottleneck for continuous optimization.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Shoe Detection & Classification Pipeline (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-shoe-detection" onclick="openTileModal('shoe-detection')" style="cursor: pointer;" title="Click to view full project dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Shoe Detection &amp; Classification</h3>
+										<span class="exp-role">Computer Vision Pipeline · Azure Machine Learning</span>
+									</div>
+									<span class="exp-date">Race Insights</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed a computer vision pipeline for shoe-brand recognition using open-source shoe detection crop followed by custom classification on <strong class="hl">Azure ML</strong>.</li>
+									<li>Deduplicated <strong class="hl">150,000+ raw video frames down to ~35,000 verified images</strong> using <strong class="hl-purple">DINO feature extraction</strong>, <strong class="hl">HDBSCAN clustering</strong>, and color similarity.</li>
+									<li>Reduced dataset preparation and annotation turnaround from <strong class="hl-green">7–10 days to 1–2 days</strong> via pseudo-labeling, human verification, and data augmentation.</li>
+									<li>Improved test set accuracy from <strong class="hl-green">0.74 to 0.85 ± 0.05</strong> through iterative data and model development, achieving strong accuracy on major brands (<strong class="hl">Nike, Adidas, ASICS</strong>).</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 4: LIEF CAPITAL & AGRI AI (10 cols × 5)-->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">LIEF CAPITAL &amp; AGRI AI</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Lief Capital Asset Management (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-liefcapital" onclick="openTileModal('lief-capital')" style="cursor: pointer;" title="Click to view full experience dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Lief Capital Asset Management</h3>
+										<span class="exp-role">Data Scientist - AI &amp; Research (Contract) · Bangkok</span>
+									</div>
+									<span class="exp-date">2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Worked with an existing AI and financial data processing codebase on <strong class="hl">Azure Machine Learning</strong> across data gathering, EDA, preprocessing, feature engineering, and model training.</li>
+									<li>Analyzed multi-decade financial data workflows and restructured external EODHD data ingestion using parallel processing, connection reuse, vectorized computation, and <strong class="hl">Polars</strong>.</li>
+									<li>Reduced pipeline execution runtime by over 50% from <strong class="hl-green">&gt;1 hour to under 30 minutes</strong> on critical financial backtesting workflows.</li>
+									<li>Contributed to a machine learning financial ranking pipeline with sector-relative feature development, model optimization, and time-aware backtesting using <strong class="hl">Walk-Forward Validation</strong>.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: MTC-UAV Maize Tassel Counting (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-maize-tassel" onclick="openTileModal('maize-tassel')" style="cursor: pointer;" title="Click to view full research dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">MTC-UAV Maize Tassel Counting</h3>
+										<span class="exp-role">Deep Learning &amp; Precision Agriculture · Computer Vision</span>
+									</div>
+									<span class="exp-date">2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Explored maize tassel counting in dense aerial UAV imagery where individual identification becomes difficult; developed deep learning <strong class="hl">spatial density estimation</strong> models for robust counting.</li>
+									<li>Conducted model fine-tuning, domain-specific data augmentation, training optimization, and multi-seed testing across varying altitudes and illumination conditions.</li>
+									<li>Evaluated model reliability through <strong class="hl">uncertainty estimation</strong>, density-stratified performance analysis, visual attribution, and occlusion sensitivity.</li>
+									<li>Achieved <strong class="hl-green">34.0 ± 3.3 MAE</strong> across 5 random seeds on internal held-out test set; scheduled real-world UAV deployment on family's maize plantation during upcoming planting cycle.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 5: CAPSTONE THESIS & WU (9 cols × 5)  -->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">CAPSTONE THESIS &amp; EDUCATION</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: Raptor WBC Thesis (5 cols × 5 rows) -->
+						<div class="tile t-5x5" id="tile-thesis" onclick="openTileModal('raptor-thesis')" style="cursor: pointer;" title="Click to view full thesis dossier">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Thesis: White Blood Cells in Raptors</h3>
+										<span class="exp-role">Walailak University (SET &amp; Veterinary College)</span>
+									</div>
+									<span class="exp-date">2024–2025</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li>Developed a deep learning object detection system identifying six blood-cell classes in raptor blood smear images using <strong class="hl">1,180 manually annotated microscopic images</strong>.</li>
+									<li>Benchmarked YOLO-11l, 12l, 26l, and RT-DETR across five augmentation strategies, achieving top baseline with <strong class="hl-green">YOLO-26l (0.957 mAP@0.5, 93.4% recall)</strong>.</li>
+									<li>Applied <strong class="hl-purple">Grad-CAM for Explainable AI (XAI)</strong> to verify model attention against avian hematological biomarkers and validate feature representations.</li>
+									<li>Built full-stack AI web app (<strong class="hl">Next.js, PostgreSQL/Supabase</strong>) deploying trained models directly in the browser via <strong class="hl">WebAssembly (WASM)</strong> for client-side batch inference; manuscript authored for <strong class="hl">CMPB journal</strong> submission.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Expand Details ⤢</span>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Academic Honors & Education (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-education" onclick="openTileModal('wu-education')" style="cursor: pointer;" title="Click to view academic credentials">
+							<div class="project-box">
+								<div class="exp-header-row">
+									<div class="exp-title-block">
+										<h3 class="exp-company">Walailak University</h3>
+										<span class="exp-role">School of Engineering and Technology</span>
+									</div>
+									<span class="exp-date">2022–2026</span>
+								</div>
+
+								<ul class="exp-desc-list">
+									<li><strong>Bachelor of Engineering (B.Eng.)</strong> in Computer Engineering and Artificial Intelligence.</li>
+									<li>Graduated with <strong class="hl-green">First-class Honors</strong> with cumulative <strong class="hl">GPAX: 3.65 / 4.00</strong> (Graduation: 7 May 2026).</li>
+									<li>Comprehensive training across Deep Learning, Computer Vision, Distributed Systems, Software Engineering, and AI Mathematics.</li>
+									<li>Consistently recognized on <strong class="hl">Dean's Academic Honors List</strong> across all academic semesters.</li>
+									<li>Collaborated with veterinary medicine faculty on interdisciplinary diagnostic AI research.</li>
+								</ul>
+
+								<div class="tile-action-bar">
+									<span class="tile-expand-btn">Records &amp; Transcript ⤢</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+				<!-- ─────────────────────────────────────────── -->
+				<!-- GROUP 6: SKILLS & ACCREDITATIONS (8 cols × 5)-->
+				<!-- ─────────────────────────────────────────── -->
+				<section class="tile-group">
+					<h2 class="group-label">SKILLS &amp; ACCREDITATIONS</h2>
+					<div class="tile-grid">
+
+						<!-- Tile 1: AI, Deep Learning & Vision (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-skills-ai">
+							<div class="skills-matrix-box">
+								<div class="exp-header-row">
+									<h3 class="exp-company" style="font-size: 12px;">AI, Deep Learning &amp; Vision</h3>
+									<span class="exp-date">Core Expertise</span>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Learning Paradigms</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Supervised (ML &amp; Deep Learning)</strong>, Classification, Regression, <strong class="hl">Unsupervised Clustering</strong>, Representation Learning
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Vision &amp; Methods</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Object Detection</strong>, <strong class="hl">Tracking</strong>, Pose Estimation, <strong class="hl">OCR</strong>, <strong class="hl-purple">Grad-CAM (XAI)</strong>, Ensemble Learning, Few-Shot, Pseudo-Labeling, Feature Engineering
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Models &amp; Frameworks</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">PyTorch</strong>, <strong class="hl">YOLO (11/12/26)</strong>, <strong class="hl">RT-DETR</strong>, Grounding DINO, OpenCV, Transformers, XGBoost, Scikit-learn
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- Tile 2: Data, Software & Accreditations (4 cols × 5 rows) -->
+						<div class="tile t-4x5" id="tile-skills-data">
+							<div class="skills-matrix-box">
+								<div class="exp-header-row">
+									<h3 class="exp-company" style="font-size: 12px;">Data, Systems &amp; Certs</h3>
+									<span class="exp-date">Workflow &amp; Stack</span>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Data &amp; Pipelines</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">Polars</strong>, Pandas, NumPy, PySpark, HDBSCAN, <strong class="hl">Azure ML</strong>, ETL Pipelines, Parallel Workers
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Web, Systems &amp; NLP</span>
+									<div class="skill-editorial-body">
+										<strong class="hl">TypeScript</strong>, Next.js, React, Astro, PostgreSQL / Supabase, Docker, Git, SentencePiece, LLM APIs
+									</div>
+								</div>
+
+								<div class="skill-editorial-block">
+									<span class="skill-editorial-label">Certifications &amp; Languages</span>
+									<div class="skill-editorial-body">
+										<strong class="hl-green">EF SET English: 56/100 (B2 · C1 Reading)</strong>, <strong class="hl">Microsoft Azure MLOps</strong>, Thai (Native), English (B2)
+									</div>
+								</div>
+
+								<a href="/" class="return-home-btn" title="Back to main dashboard">
+									<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m15 18-6-6 6-6"/></svg>
+									<span>Return to site(.)moss</span>
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</section>
+
+			</main>
+		</div>
+
+	</div>
+
+	<!-- ==========================================================================
+	     MODAL 1: HIGH-RES PDF VIEWER MODAL
+	     ========================================================================== -->
+	<div class="pdf-modal-backdrop" id="pdfModal" role="dialog" aria-modal="true" aria-label="PDF Document Viewer">
+		<div class="pdf-modal-dialog">
+			<div class="pdf-modal-header">
+				<h3 class="pdf-modal-title" id="modalDocTitle">Curriculum Vitae — CV_Tinnaphop_Sonsang.pdf</h3>
+				<div class="pdf-modal-controls">
+					<div class="modal-seg-ctrl">
+						<button type="button" class="modal-seg-btn on" id="modalTabResume">Resume (CV)</button>
+						<button type="button" class="modal-seg-btn" id="modalTabTranscript">Transcript (WU)</button>
+					</div>
+					<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener" class="modal-action-btn" id="modalExternalLink">Open New Tab ↗</a>
+					<a href="/cvutil/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="modal-action-btn primary" id="modalDownloadBtn">↓ Download</a>
+					<button type="button" class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">✕</button>
+				</div>
+			</div>
+			<div class="pdf-modal-body">
+				<iframe class="pdf-modal-iframe" id="modalPdfFrame" src="" title="PDF Document Preview Frame"></iframe>
+			</div>
+		</div>
+	</div>
+
+	<!-- ==========================================================================
+	     MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+	     ========================================================================== -->
+	<div class="detail-modal-backdrop" id="tileDetailModal" role="dialog" aria-modal="true" aria-label="Project Details Dossier">
+		<div class="detail-modal-dialog">
+			<div class="detail-modal-header">
+				<div>
+					<div class="detail-modal-badge" id="dModalCategory">PROJECT DOSSIER</div>
+					<h3 class="detail-modal-title" id="dModalTitle">Runner Highlight Extraction</h3>
+					<div class="detail-modal-sub" id="dModalSub">Thaidotrun Co., Ltd. (Merged into ASICS) · 2025–2026</div>
+				</div>
+				<button type="button" class="modal-close-btn" id="dModalCloseBtn" aria-label="Close modal">✕</button>
+			</div>
+			<div class="detail-modal-body">
+				<div>
+					<div class="detail-section-title">Overview &amp; Executive Summary</div>
+					<p class="detail-overview-text" id="dModalOverview"></p>
+				</div>
+
+				<div>
+					<div class="detail-section-title">Technical Architecture &amp; Implementation Details</div>
+					<ul class="detail-bullets" id="dModalBullets"></ul>
+				</div>
+
+				<div>
+					<div class="detail-section-title">Core Technologies, Frameworks &amp; Environment</div>
+					<div class="detail-tools-line" id="dModalTools"></div>
+				</div>
+			</div>
+			<div class="detail-modal-footer">
+				<span style="font-size: 10px; color: var(--tile-label-color); font-weight: 600;">Curriculum Vitae — Complete Technical Record</span>
+				<button type="button" class="modal-action-btn primary" onclick="closeTileModal()">Close Dossier</button>
+			</div>
+		</div>
+	</div>
+
+	<Watermark position="bottom-right" />
+
+	<script is:inline>
+	(function() {
+		// URLs for documents
+		var docResume = '/cvutil/CV_Tinnaphop_Sonsang.pdf';
+		var docTranscript = '/cvutil/Transcript_SID65120479_Tinnaphop_Sonsang.pdf';
+
+		// ==========================================================================
+		// MODAL 1: PDF VIEWER LOGIC
+		// ==========================================================================
+		var pdfModal = document.getElementById('pdfModal');
+		var modalFrame = document.getElementById('modalPdfFrame');
+		var modalTitle = document.getElementById('modalDocTitle');
+		var modalTabResume = document.getElementById('modalTabResume');
+		var modalTabTranscript = document.getElementById('modalTabTranscript');
+		var modalExternal = document.getElementById('modalExternalLink');
+		var modalDownload = document.getElementById('modalDownloadBtn');
+		var modalClose = document.getElementById('modalCloseBtn');
+
+		window.openPdfModal = function(type) {
+			var isResume = type !== 'transcript';
+			var url = isResume ? docResume : docTranscript;
+			var filename = isResume ? 'CV_Tinnaphop_Sonsang.pdf' : 'Transcript_SID65120479_Tinnaphop_Sonsang.pdf';
+
+			if (isResume) {
+				modalTabResume.classList.add('on');
+				modalTabTranscript.classList.remove('on');
+				modalTitle.textContent = 'Curriculum Vitae — CV_Tinnaphop_Sonsang.pdf';
+			} else {
+				modalTabTranscript.classList.add('on');
+				modalTabResume.classList.remove('on');
+				modalTitle.textContent = 'Official Academic Transcript — Walailak University';
+			}
+
+			modalExternal.href = url;
+			modalDownload.href = url;
+			modalDownload.setAttribute('download', filename);
+			modalFrame.src = url;
+			pdfModal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		};
+
+		window.closePdfModal = function() {
+			pdfModal.style.display = 'none';
+			modalFrame.src = '';
+			document.body.style.overflow = '';
+		};
+
+		if (modalClose) modalClose.addEventListener('click', window.closePdfModal);
+		if (pdfModal) {
+			pdfModal.addEventListener('click', function(e) {
+				if (e.target === pdfModal) window.closePdfModal();
+			});
+		}
+		if (modalTabResume) {
+			modalTabResume.addEventListener('click', function() { window.openPdfModal('resume'); });
+		}
+		if (modalTabTranscript) {
+			modalTabTranscript.addEventListener('click', function() { window.openPdfModal('transcript'); });
+		}
+
+		// ==========================================================================
+		// MODAL 2: PROJECT & EXPERIENCE DETAIL DOSSIER (CLEAN EDITORIAL — NO TABS)
+		// ==========================================================================
+		var tileModal = document.getElementById('tileDetailModal');
+		var dCloseBtn = document.getElementById('dModalCloseBtn');
+		var dCategory = document.getElementById('dModalCategory');
+		var dTitle = document.getElementById('dModalTitle');
+		var dSub = document.getElementById('dModalSub');
+		var dOverview = document.getElementById('dModalOverview');
+		var dBullets = document.getElementById('dModalBullets');
+		var dTools = document.getElementById('dModalTools');
+
+		var projectData = {
+			'runner-highlights': {
+				category: 'THAIDOTRUN (ASICS) · PROJECT DOSSIER',
+				title: 'Automated Runner Highlight Extraction System',
+				subtitle: 'Thaidotrun Co., Ltd. (Merged into ASICS) · AI & Computer Vision Intern (2025–2026)',
+				overview: 'Developed an automated computer vision pipeline designed for marathon and road race events, automatically detecting, tracking, and producing personalized runner highlight clips (typically lasting 10–20 seconds) tailored for direct athlete social media sharing.',
+				bullets: [
+					'Evaluated multiple state-of-the-art object detection and multi-object tracking architectures, including CNN and Transformer-based models (<strong class="hl">RT-DETR</strong>) paired with <strong class="hl">BoTSORT</strong> for robust subject tracking in high-density starting and finish line scenes.',
+					'Engineered a custom <strong class="hl">spatial weighting algorithm</strong> prioritizing runners located in the central camera zone, and integrated <strong class="hl">OCR bib number recognition</strong> to dynamically replace temporary tracking IDs with verified athlete numbers.',
+					'Achieved an average success rate of <strong class="hl-green">~60%</strong> in fully automated highlight generation, establishing a viable production baseline for event operations.',
+					'Systematically investigated failure cases (~40%), identifying tracking drift in severe occlusion and camera cuts as the key driver of clips cut prematurely or spanning excessively long durations.'
+				],
+				tools: 'Technologies: PyTorch · RT-DETR · BoTSORT · OCR · OpenCV · Spatial Weighting Algorithms · Video Encoding · Python'
+			},
+			'shoe-detection': {
+				category: 'THAIDOTRUN (ASICS) · PROJECT DOSSIER',
+				title: 'Shoe Detection & Classification Pipeline for Race Insights',
+				subtitle: 'Thaidotrun Co., Ltd. (Merged into ASICS) · Computer Vision Pipeline (2025–2026)',
+				overview: 'Engineered an end-to-end computer vision and data curation workflow for shoe-brand recognition across marathon footage, empowering brand sponsorship intelligence and post-race athletic market analysis on Azure Machine Learning.',
+				bullets: [
+					'Evaluated open-source shoe detection models to implement a high-efficiency detection-and-crop pipeline, followed by a dedicated fine-tuned classification model deployed on <strong class="hl">Azure Machine Learning</strong>.',
+					'Constructed an automated data curation pipeline to eliminate redundant video frames using <strong class="hl-purple">DINO-based feature extraction</strong>, <strong class="hl">HDBSCAN clustering</strong>, and color similarity metrics, dramatically trimming <strong class="hl">150,000+ raw frames down to ~35,000 verified images</strong>.',
+					'Reduced dataset preparation and annotation turnaround time from <strong class="hl-green">7–10 days down to 1–2 days</strong> through automated pseudo-labeling, representative image sampling, and human-in-the-loop verification.',
+					'Iterated through limited-data training, zero-shot evaluation, and supervised fine-tuning, successfully elevating test set performance from <strong class="hl-green">0.74 to 0.85 ± 0.05</strong> with strong recognition across major brands (<strong class="hl">Nike, Adidas, ASICS</strong>).'
+				],
+				tools: 'Technologies: DINO Vision Transformer · HDBSCAN · Azure Machine Learning · PyTorch · OpenCV · Pseudo-Labeling · Data Augmentation · Python'
+			},
+			'lief-capital': {
+				category: 'LIEF CAPITAL ASSET MANAGEMENT · EXPERIENCE DOSSIER',
+				title: 'Financial Data & Machine Learning Workflows',
+				subtitle: 'Lief Capital Asset Management · Data Scientist - AI & Research (2026)',
+				overview: 'Contributed to an institutional quantitative investment platform on Azure Machine Learning, optimizing multi-decade data ingestion, feature engineering pipelines, and financial ranking machine learning models.',
+				bullets: [
+					'Gained comprehensive hands-on experience across the entire quantitative pipeline on <strong class="hl">Azure Machine Learning</strong>, including large-scale financial data gathering, exploratory data analysis (EDA), preprocessing, and model evaluation.',
+					'Analyzed multi-decade historical market datasets and external EODHD data ingestion, accelerating pipelines through parallel workers, connection pooling, vectorized computation, and <strong class="hl">Polars</strong>.',
+					'Successfully cut critical financial backtesting and data pipeline runtime by over 50%, reducing execution from <strong class="hl-green">&gt;1 hour to under 30 minutes</strong>.',
+					'Contributed to a machine learning ranking pipeline by engineering sector-relative features, optimizing ranking objectives, and conducting time-aware backtesting via <strong class="hl">Walk-Forward Validation</strong>.'
+				],
+				tools: 'Technologies: Azure Machine Learning · Polars · Pandas · Vectorized Computing · Walk-Forward Validation · Financial Time-Series · Python'
+			},
+			'maize-tassel': {
+				category: 'INDEPENDENT RESEARCH · PRECISION AGRICULTURE',
+				title: 'MTC-UAV Maize Tassel Counting in Dense Aerial Imagery',
+				subtitle: 'Computer Vision, Deep Learning & Precision Agriculture (2026)',
+				overview: 'Investigated spatial density estimation as a robust computer vision solution for automated maize tassel enumeration in ultra-dense aerial drone imagery, addressing the severe occlusions where individual bounding box detectors fail.',
+				bullets: [
+					'Developed and trained deep learning <strong class="hl">spatial density estimation models</strong> capable of accurately estimating tassel populations despite severe object overlap and varying UAV altitudes.',
+					'Executed model fine-tuning, domain-specific data augmentation, training optimization, and multi-seed testing across varied sunlight, altitude, and canopy densities.',
+					'Rigorously audited model reliability using <strong class="hl">uncertainty estimation</strong>, density-stratified performance analysis, visual attribution, and occlusion sensitivity analysis to quantify failure modes.',
+					'Achieved <strong class="hl-green">34.0 ± 3.3 MAE</strong> across 5 random seeds on internal held-out test sets; scheduled real-world UAV flight validation at family maize fields during the upcoming planting cycle.'
+				],
+				tools: 'Technologies: PyTorch · Spatial Density Estimation · UAV Drone Sensing · Uncertainty Estimation · Grad-CAM Visual Attribution · Precision Agriculture'
+			},
+			'raptor-thesis': {
+				category: 'CAPSTONE GRADUATION THESIS · B.ENG.',
+				title: 'Detection of White Blood Cells in Raptors',
+				subtitle: 'Walailak University (SET & Akkhraratchakumari Veterinary College) · 2024–2025',
+				overview: 'Collaborative interdisciplinary engineering and veterinary medicine graduation research, creating a clinical deep learning object detection diagnostic system for identifying six avian blood-cell classes from raptor microscopic blood smears.',
+				bullets: [
+					'Curated and annotated <strong class="hl">1,180 high-resolution microscopic smear images</strong> across six avian white blood cell classes in partnership with veterinary clinical pathologists.',
+					'Benchmarked YOLO-11l, 12l, 26l, and RT-DETR-l across five data augmentation strategies, establishing the top baseline with <strong class="hl-green">YOLO-26l (0.957 mAP@0.5, 0.746 mAP@0.5:0.95, and 93.4% recall)</strong>.',
+					'Applied <strong class="hl-purple">Grad-CAM for Explainable AI (XAI)</strong> to visualize convolutional attention and verify that network detections aligned with cellular granulations and nuclear lobation.',
+					'Engineered a full-stack inference web platform (<strong class="hl">Next.js, PostgreSQL/Supabase</strong>) utilizing client-side <strong class="hl">WebAssembly (WASM)</strong> to execute real-time model inference directly in the browser; authored research manuscript for <strong class="hl">CMPB journal</strong> submission.'
+				],
+				tools: 'Technologies: YOLO-26l · RT-DETR · Grad-CAM XAI · WebAssembly (WASM) · Next.js · PostgreSQL / Supabase · Python · International Journal Manuscript'
+			},
+			'wu-education': {
+				category: 'ACADEMIC RECORD & QUALIFICATIONS',
+				title: 'Walailak University — Bachelor of Engineering',
+				subtitle: 'School of Engineering and Technology · Nakhon Si Thammarat (2022–2026)',
+				overview: 'Four-year intensive Bachelor of Engineering curriculum in Computer Engineering and Artificial Intelligence, culminating in First-class Honors and interdisciplinary capstone research.',
+				bullets: [
+					'Earned Bachelor of Engineering (B.Eng.) with <strong class="hl-green">First-class Honors</strong> and cumulative <strong class="hl">GPAX: 3.65 / 4.00</strong> (Graduation: 7 May 2026).',
+					'Comprehensive curriculum spanning Deep Learning, Computer Vision, Machine Learning, Natural Language Processing, Distributed Systems, Software Engineering, Parallel Computing, and Mathematics for AI.',
+					'Consistently earned placement on the Dean’s Academic Distinction List across all academic terms.',
+					'Official university academic transcripts can be directly previewed and downloaded in Group 2.'
+				],
+				tools: 'Qualifications: Bachelor of Engineering · First-class Honors (GPAX 3.65) · School of Engineering and Technology · Walailak University'
+			}
+		};
+
+		window.openTileModal = function(id) {
+			var data = projectData[id];
+			if (!data) return;
+
+			dCategory.textContent = data.category;
+			dTitle.textContent = data.title;
+			dSub.textContent = data.subtitle;
+			dOverview.innerHTML = data.overview;
+
+			// Populate bullets with inline highlighted text
+			dBullets.innerHTML = '';
+			data.bullets.forEach(function(b) {
+				var li = document.createElement('li');
+				li.innerHTML = b;
+				dBullets.appendChild(li);
+			});
+
+			dTools.innerHTML = data.tools;
+
+			tileModal.style.display = 'flex';
+			document.body.style.overflow = 'hidden';
+		};
+
+		window.closeTileModal = function() {
+			tileModal.style.display = 'none';
+			document.body.style.overflow = '';
+		};
+
+		if (dCloseBtn) dCloseBtn.addEventListener('click', window.closeTileModal);
+		if (tileModal) {
+			tileModal.addEventListener('click', function(e) {
+				if (e.target === tileModal) window.closeTileModal();
+			});
+		}
+
+		// Keyboard ESC to close any open modal
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				if (pdfModal.style.display === 'flex') window.closePdfModal();
+				if (tileModal.style.display === 'flex') window.closeTileModal();
+			}
+		});
+
+		// Mouse radial glow on tiles
+		document.querySelectorAll('.tile').forEach(function(tile) {
+			var ticking = false;
+			tile.addEventListener('mousemove', function(e) {
+				if (ticking) return;
+				ticking = true;
+				requestAnimationFrame(function() {
+					var rect = tile.getBoundingClientRect();
+					tile.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+					tile.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+					ticking = false;
+				});
+			});
+		});
+
+		// ==========================================================================
+		// HORIZONTAL MOUSE WHEEL & DRAG-TO-SCROLL (WINDOWS 8 HORIZONTAL PANNING)
+		// ==========================================================================
+		var scroll = document.getElementById('dashScroll');
+
+		// 1. Mouse wheel horizontal scrolling anywhere on the window!
+		window.addEventListener('wheel', function(e) {
+			// If either modal is open, let user scroll inside modal normally
+			if (pdfModal && pdfModal.style.display === 'flex') return;
+			if (tileModal && tileModal.style.display === 'flex') return;
+			if (!scroll) return;
+
+			// Translate vertical mouse wheel scrolling into horizontal dashboard scroll
+			if (Math.abs(e.deltaY) > 0) {
+				e.preventDefault();
+				scroll.scrollLeft += e.deltaY * 1.25;
+			} else if (Math.abs(e.deltaX) > 0) {
+				scroll.scrollLeft += e.deltaX;
+			}
+		}, { passive: false });
+
+		// 2. Mouse drag-to-scroll (swipe left/right with mouse)
+		if (scroll) {
+			var isDragging = false, startX = 0, scrollStartLeft = 0;
+			scroll.addEventListener('mousedown', function(e) {
+				if (e.target.closest('a, button, iframe, input, select')) return;
+				isDragging = true;
+				startX = e.pageX - scroll.offsetLeft;
+				scrollStartLeft = scroll.scrollLeft;
+				scroll.classList.add('is-dragging');
+			});
+			document.addEventListener('mousemove', function(e) {
+				if (!isDragging) return;
+				e.preventDefault();
+				var x = e.pageX - scroll.offsetLeft;
+				scroll.scrollLeft = scrollStartLeft - (x - startX);
+			});
+			document.addEventListener('mouseup', function() {
+				if (isDragging) {
+					isDragging = false;
+					scroll.classList.remove('is-dragging');
+				}
+			});
+		}
+	})();
+	</script>
+</body>
+</html>

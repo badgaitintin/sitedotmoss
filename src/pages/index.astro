@@ -25,7 +25,7 @@ import '@fontsource/google-sans-flex';
         <li><a href="/legacy">legacy</a></li>
         <li><button type="button" class="nav-btn" id="navExperienceBtn" data-target="experience">experience</button></li>
         <li><button type="button" class="nav-btn" id="navProjectBtn" data-target="project">project</button></li>
-        <li><a href="/cv">cv</a></li>
+        <li><button type="button" class="nav-btn" id="navCvBtn" data-target="cv">cv</button></li>
       </ul>
     </nav>
 
@@ -35,33 +35,37 @@ import '@fontsource/google-sans-flex';
       <!-- LANDSCAPE / DESKTOP (3 Circles: OOO) -->
       <svg class="venn-svg landscape-venn" id="vennLandscape" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <!-- 1. Arc 1: Circle 2 left boundary (runs convex towards left) -->
-          <path id="arcCircle2Left" d="M 482,132 A 450,450 0 0,0 482,768" fill="none" />
-          
-          <!-- 2. Arc 2: Center vesica left boundary (Circle 3 left boundary inside middle circle) -->
-          <path id="arcVesicaLeft" d="M 800,167 A 450,450 0 0,0 800,733" fill="none" />
+          <!-- 1. Arc 1: Circle 1 left outer arc -->
+          <path id="arcCircle1OuterLeft" d="M 450,0 A 450,450 0 0,0 450,900" fill="none" />
 
-          <!-- 3. Arc 3: Center vesica right boundary (Circle 1 right boundary inside middle circle) -->
+          <!-- 2. Arc 2: Circle 2 left boundary (reversed: bottom to top so text tops point outward to left) -->
+          <path id="arcCircle2LeftFlipped" d="M 482,768 A 450,450 0 0,1 482,132" fill="none" />
+          
+          <!-- 3. Arc 3: Center vesica left boundary (Circle 3 left curve inside middle circle, reversed: bottom to top) -->
+          <path id="arcVesicaLeftFlipped" d="M 800,733 A 450,450 0 0,1 800,167" fill="none" />
+
+          <!-- 4. Arc 4: Center vesica right boundary (Circle 1 right curve inside middle circle) -->
           <path id="arcVesicaRight" d="M 800,167 A 450,450 0 0,1 800,733" fill="none" />
 
-          <!-- 4. Arc 4: Circle 2 right boundary (runs convex towards right) -->
+          <!-- 5. Arc 5: Circle 2 right boundary (right inner lens curve) -->
           <path id="arcCircle2Right" d="M 1118,132 A 450,450 0 0,1 1118,768" fill="none" />
         </defs>
 
-        <circle cx="450" cy="450" r="450" class="venn-circle" />
-        <circle cx="800" cy="450" r="450" class="venn-circle" />
-        <circle cx="1150" cy="450" r="450" class="venn-circle" />
+        <!-- Circles with individual classes for transition animations -->
+        <circle cx="450" cy="450" r="450" class="venn-circle circle-left" />
+        <circle cx="800" cy="450" r="450" class="venn-circle circle-mid" />
+        <circle cx="1150" cy="450" r="450" class="venn-circle circle-right" />
 
-        <!-- 1. Tinnaphop Sonsang (Top-left arc, green circle) -->
+        <!-- 1. Tinnaphop Sonsang (Back on inner vesica arc, top pointing outward) -->
         <text class="venn-text text-curved">
-          <textPath href="#arcCircle2Left" startOffset="26%" text-anchor="middle">
+          <textPath href="#arcVesicaLeftFlipped" startOffset="60%" text-anchor="middle">
             Tinnaphop Sonsang
           </textPath>
         </text>
 
-        <!-- 2. Moss (Moved into left inner vesica arc - first yellow region) -->
+        <!-- 2. Moss (On left arcCircle2Left, top pointing outward) -->
         <text class="venn-text text-curved">
-          <textPath href="#arcVesicaLeft" startOffset="50%" text-anchor="middle">
+          <textPath href="#arcCircle2LeftFlipped" startOffset="50%" text-anchor="middle">
             Moss
           </textPath>
         </text>
@@ -77,36 +81,46 @@ import '@fontsource/google-sans-flex';
           class="eye-img"
         />
 
-        <!-- 3. Live age (Moved into right inner vesica arc - second yellow region) -->
+        <!-- 3. Live age (Restored to original right inner vesica boundary) -->
         <text class="venn-text text-curved">
           <textPath href="#arcVesicaRight" startOffset="50%" text-anchor="middle">
             <tspan id="ageDisplay">22y 314d 1052m</tspan> · 60kg 180cm
           </textPath>
         </text>
 
-        <!-- 4. linkedin & email (On right arc, moved down along curve towards bottom arrow) -->
-        <a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener noreferrer">
-          <text class="venn-text text-curved hover-link">
-            <textPath href="#arcCircle2Right" startOffset="66%" text-anchor="middle">
-              linkedin
-            </textPath>
-          </text>
-        </a>
+        <!-- 4. PUSH INTERACTION: linkedin and email along right curve arcCircle2Right -->
+        <g id="contactGroupLandscape" class="contact-arc-group">
+          <a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener noreferrer">
+            <text class="venn-text text-curved hover-link contact-item-linkedin">
+              <textPath id="tpLinkedinL" href="#arcCircle2Right" startOffset="66%" text-anchor="middle">
+                linkedin
+              </textPath>
+            </text>
+          </a>
 
-        <a href="mailto:tinnaphop.moss@gmail.com">
-          <text class="venn-text text-curved hover-link">
-            <textPath href="#arcCircle2Right" startOffset="79%" text-anchor="middle">
+          <!-- Email button (Click to push contacts up and reveal address) -->
+          <text class="venn-text text-curved hover-link contact-item-email" id="emailTriggerBtn" style="cursor: pointer;">
+            <textPath id="tpEmailL" href="#arcCircle2Right" startOffset="79%" text-anchor="middle">
               email
             </textPath>
           </text>
-        </a>
+
+          <!-- Revealed actual email address (appears where email was, with dedicated comfortable gap) -->
+          <a href="mailto:tinnaphop.moss@gmail.com" id="actualEmailLink" style="display: none;">
+            <text class="venn-text text-curved hover-link actual-email-text">
+              <textPath id="tpActualEmailL" href="#arcCircle2Right" startOffset="82%" text-anchor="middle">
+                tinnaphop.moss@gmail.com
+              </textPath>
+            </text>
+          </a>
+        </g>
       </svg>
 
       <!-- PORTRAIT / MOBILE (3 Circles in a column) -->
       <svg class="venn-svg portrait-venn" id="vennPortrait" viewBox="0 0 900 1600" preserveAspectRatio="xMidYMid slice">
-        <circle cx="450" cy="450" r="450" class="venn-circle" />
-        <circle cx="450" cy="800" r="450" class="venn-circle" />
-        <circle cx="450" cy="1150" r="450" class="venn-circle" />
+        <circle cx="450" cy="450" r="450" class="venn-circle circle-top" />
+        <circle cx="450" cy="800" r="450" class="venn-circle circle-mid" />
+        <circle cx="450" cy="1150" r="450" class="venn-circle circle-bottom" />
 
         <!-- TOP LENS (Exclusive 1 ∩ 2): Center y=525 -->
         <g id="lensTopPortrait" class="venn-lens-group">
@@ -154,8 +168,10 @@ import '@fontsource/google-sans-flex';
         <circle cx="560" cy="450" r="450" class="venn-circle" />
         <circle cx="1040" cy="450" r="450" class="venn-circle" />
 
-        <!-- Left Circle Exclusive: x=360 -->
-        <g id="twoLeftLandscape" class="venn-lens-group"></g>
+        <!-- Left Circle Exclusive: x=340 -->
+        <foreignObject id="twoLeftFO" x="120" y="240" width="440" height="420" class="two-circle-fo">
+          <div xmlns="http://www.w3.org/1999/xhtml" id="twoLeftLandscape" class="two-circle-content"></div>
+        </foreignObject>
 
         <!-- Center Intersection (Lens): x=800 -->
         <g id="twoCenterLandscape" class="venn-lens-group">
@@ -163,8 +179,10 @@ import '@fontsource/google-sans-flex';
           </text>
         </g>
 
-        <!-- Right Circle Exclusive: x=1240 -->
-        <g id="twoRightLandscape" class="venn-lens-group"></g>
+        <!-- Right Circle Exclusive: x=1260 -->
+        <foreignObject id="twoRightFO" x="1040" y="240" width="440" height="420" class="two-circle-fo">
+          <div xmlns="http://www.w3.org/1999/xhtml" id="twoRightLandscape" class="two-circle-content"></div>
+        </foreignObject>
       </svg>
 
       <!-- Portrait 2 circles (Top circle cy=560, Bottom circle cy=1040, r=450) -->
@@ -172,8 +190,10 @@ import '@fontsource/google-sans-flex';
         <circle cx="450" cy="560" r="450" class="venn-circle" />
         <circle cx="450" cy="1040" r="450" class="venn-circle" />
 
-        <!-- Top Circle Exclusive: y=360 -->
-        <g id="twoTopPortrait" class="venn-lens-group"></g>
+        <!-- Top Circle Exclusive: y=320 -->
+        <foreignObject id="twoTopFO" x="100" y="180" width="700" height="340" class="two-circle-fo">
+          <div xmlns="http://www.w3.org/1999/xhtml" id="twoTopPortrait" class="two-circle-content"></div>
+        </foreignObject>
 
         <!-- Center Intersection: y=800 -->
         <g id="twoCenterPortrait" class="venn-lens-group">
@@ -181,10 +201,45 @@ import '@fontsource/google-sans-flex';
           </text>
         </g>
 
-        <!-- Bottom Circle Exclusive: y=1240 -->
-        <g id="twoBottomPortrait" class="venn-lens-group"></g>
+        <!-- Bottom Circle Exclusive: y=1280 -->
+        <foreignObject id="twoBottomFO" x="100" y="1080" width="700" height="340" class="two-circle-fo">
+          <div xmlns="http://www.w3.org/1999/xhtml" id="twoBottomPortrait" class="two-circle-content"></div>
+        </foreignObject>
       </svg>
     </main>
+
+    <!-- CV PDF VIEWER OVERLAY (Shown when cv button is active) -->
+    <section class="cv-overlay-view" id="cvOverlayView" style="display: none;">
+      <div class="cv-viewer-card">
+        <div class="cv-viewer-header">
+          <div class="cv-title-group">
+            <span class="cv-subtag">Curriculum Vitae</span>
+            <span class="cv-name-tag">Tinnaphop Sonsang</span>
+          </div>
+          <div class="cv-btn-group">
+            <a href="/assets/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener noreferrer" class="cv-pill-btn">
+              open tab
+            </a>
+            <a href="/assets/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="cv-pill-btn cv-download-pill">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              download
+            </a>
+          </div>
+        </div>
+        <div class="cv-frame-box">
+          <iframe
+            src="/assets/CV_Tinnaphop_Sonsang.pdf#toolbar=0&navpanes=0&scrollbar=1"
+            class="cv-pdf-iframe"
+            title="Tinnaphop Sonsang CV PDF"
+          >
+          </iframe>
+        </div>
+      </div>
+    </section>
 
     <!-- BOTTOM-LEFT: 3-CIRCLE MINI ICON + INSPIRED BY CREDIT -->
     <aside class="corner bottom-left">
@@ -244,25 +299,25 @@ import '@fontsource/google-sans-flex';
       const twoCircleData = {
         experience: {
           title: "experience",
-          left: [
-            { title: "Lief Capital Asset Management", sub: "Data Scientist · AI & Research (2026)" },
-            { title: "Azure ML & Polars Ingestion", sub: "Vectorized workflows, >50% backtest runtime cut" }
-          ],
-          right: [
-            { title: "Thaidotrun Co., Ltd. (ASICS)", sub: "AI & Computer Vision Intern (2025–2026)" },
-            { title: "RT-DETR & BoTSORT Tracking", sub: "Marathon runner highlight generation pipeline" }
-          ]
+          left: {
+            title: "Lief Capital Asset Management",
+            desc: "Worked with AI and data processing workflows on Azure Machine Learning, covering data preprocessing, feature engineering, model training, and evaluation. Optimized large-scale financial data processing using parallel processing, vectorized computation, and Polars, reducing runtime from over 1 hour to under 30 minutes. Also contributed to a machine learning-based financial ranking pipeline with Walk-Forward Validation."
+          },
+          right: {
+            title: "Thaidotrun Co., Ltd. (Merged into ASICS)",
+            desc: "Worked on computer vision and machine learning solutions for race events. Developed an automated runner highlight extraction system using object detection, tracking, and OCR to generate 10–20 second clips, achieving approximately 60% success rate. Also built a shoe detection and brand classification pipeline using DINO feature extraction, unsupervised learning, and pseudo-labeling, reducing dataset preparation time from 7–10 days to 1–2 days and improving model performance from 0.74 to 0.85 ± 0.05."
+          }
         },
         project: {
           title: "project",
-          left: [
-            { title: "MTC-UAV Maize Counting", sub: "Spatial density estimation in dense aerial UAV imagery" },
-            { title: "Raptor Blood Cell Classification", sub: "YOLO-26l, RT-DETR & Grad-CAM XAI diagnostics" }
-          ],
-          right: [
-            { title: "Runner Highlight Extraction", sub: "Spatial weighting algorithm & OCR bib recognition" },
-            { title: "Shoe Detection & ML Pipeline", sub: "DINO Vision Transformer & HDBSCAN video curation" }
-          ]
+          left: {
+            title: "MTC-UAV Maize Tassel Counting",
+            desc: "Investigated spatial density estimation as a robust computer vision solution for automated maize tassel enumeration in ultra-dense aerial drone imagery, addressing severe occlusions where individual bounding box detectors fail."
+          },
+          right: {
+            title: "Raptor Blood Cell Classification System",
+            desc: "Collaborative graduation research creating a clinical deep learning object detection diagnostic system for identifying six avian blood-cell classes from raptor blood smears with YOLO-26l, RT-DETR, and Grad-CAM for Explainable AI (XAI)."
+          }
         }
       };
 
@@ -270,6 +325,9 @@ import '@fontsource/google-sans-flex';
 
       const navExpBtn = document.getElementById('navExperienceBtn');
       const navProjBtn = document.getElementById('navProjectBtn');
+      const navCvBtn = document.getElementById('navCvBtn');
+      const cvOverlay = document.getElementById('cvOverlayView');
+      const mainStage = document.querySelector('.venn-stage');
 
       const venn3Landscape = document.getElementById('vennLandscape');
       const venn3Portrait = document.getElementById('vennPortrait');
@@ -283,65 +341,234 @@ import '@fontsource/google-sans-flex';
       const twoTopP = document.getElementById('twoTopPortrait');
       const twoBottomP = document.getElementById('twoBottomPortrait');
 
-      function renderSideItems(items, x, isPortrait, yBase) {
-        if (!items) return '';
-        const yOffsets = items.length === 1 ? [0] : [-55, 55];
-        return items.map((it, idx) => {
-          const cy = (yBase || 450) + (yOffsets[idx] || 0);
-          return `
-            <text x="${x}" y="${cy}" text-anchor="middle" class="venn-text ${isPortrait ? 'text-side-portrait' : 'text-side'}">
-              <tspan x="${x}" dy="-0.2em">${it.title}</tspan>
-              <tspan x="${x}" dy="1.2em" class="${isPortrait ? 'venn-text-sub-portrait' : 'venn-text-sub'}">${it.sub}</tspan>
-            </text>
-          `;
-        }).join('');
+      function renderSideCard(item) {
+        if (!item) return '';
+        return `
+          <div class="two-circle-card">
+            <h3 class="two-circle-card-title">${item.title}</h3>
+            <p class="two-circle-card-desc">${item.desc}</p>
+          </div>
+        `;
+      }
+
+      function resetNavButtons() {
+        if (navExpBtn) navExpBtn.textContent = 'experience';
+        if (navProjBtn) navProjBtn.textContent = 'project';
+        if (navCvBtn) navCvBtn.textContent = 'cv';
       }
 
       function switchView(section) {
-        const stage = document.querySelector('.venn-stage');
-        if (stage) stage.classList.add('flipping');
-        setTimeout(() => {
-          if (stage) stage.classList.remove('flipping');
-        }, 300);
-
         if (activeSection === section) {
-          // Flip back to 3-circle landing
+          // ── CLOSING (ANIMATING BACK TO 3-CIRCLE LANDING) ──
+          const closingSection = activeSection;
           activeSection = null;
-          if (navExpBtn) navExpBtn.textContent = 'experience';
-          if (navProjBtn) navProjBtn.textContent = 'project';
+          resetNavButtons();
 
-          // Show 3-circle, hide 2-circle
-          venn3Landscape.style.setProperty('display', '', '');
-          venn3Portrait.style.setProperty('display', '', '');
-          venn2Landscape.style.setProperty('display', 'none', 'important');
-          venn2Portrait.style.setProperty('display', 'none', 'important');
+          if (closingSection === 'cv') {
+            // CV Close: Fade out CV viewer
+            if (cvOverlay) {
+              cvOverlay.classList.remove('cv-active');
+              cvOverlay.classList.add('cv-closing');
+            }
+            if (mainStage) {
+              mainStage.style.display = '';
+              mainStage.classList.remove('anim-cv-exit');
+              mainStage.classList.add('anim-cv-enter');
+            }
+            setTimeout(() => {
+              if (cvOverlay) {
+                cvOverlay.style.display = 'none';
+                cvOverlay.classList.remove('cv-closing');
+              }
+              if (mainStage) {
+                mainStage.classList.remove('anim-cv-enter', 'text-out');
+              }
+            }, 550);
+          } else {
+            // Experience / Project Close:
+            if (mainStage) {
+              mainStage.classList.add('text-out');
+              mainStage.classList.remove('anim-two-active');
+              mainStage.classList.add('anim-two-closing');
+            }
+            setTimeout(() => {
+              venn3Landscape.style.setProperty('display', '', '');
+              venn3Portrait.style.setProperty('display', '', '');
+              venn2Landscape.style.setProperty('display', 'none', 'important');
+              venn2Portrait.style.setProperty('display', 'none', 'important');
+              if (mainStage) {
+                mainStage.classList.remove('anim-two-closing', 'text-out');
+              }
+            }, 500);
+          }
         } else {
-          // Flip to 2-circle section
+          // ── OPENING NEW SECTION OR SWITCHING BETWEEN SECTIONS ──
+          const prevSection = activeSection;
           activeSection = section;
-          if (navExpBtn) navExpBtn.textContent = section === 'experience' ? '✕' : 'experience';
-          if (navProjBtn) navProjBtn.textContent = section === 'project' ? '✕' : 'project';
+          resetNavButtons();
 
-          const data = twoCircleData[section];
-          if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
-          if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
+          // 1. CROSS-SWITCHING DIRECTLY FROM CV TO EXPERIENCE/PROJECT
+          if (prevSection === 'cv' && (section === 'experience' || section === 'project')) {
+            if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
+            if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
 
-          if (twoLeftL) twoLeftL.innerHTML = renderSideItems(data.left, 360, false, 450);
-          if (twoRightL) twoRightL.innerHTML = renderSideItems(data.right, 1240, false, 450);
-          if (twoTopP) twoTopP.innerHTML = renderSideItems(data.left, 450, true, 360);
-          if (twoBottomP) twoBottomP.innerHTML = renderSideItems(data.right, 450, true, 1240);
+            if (cvOverlay) {
+              cvOverlay.classList.remove('cv-active');
+              cvOverlay.classList.add('cv-closing');
+            }
 
-          // Hide 3-circle, show 2-circle
-          venn3Landscape.style.setProperty('display', 'none', 'important');
-          venn3Portrait.style.setProperty('display', 'none', 'important');
-          venn2Landscape.style.setProperty('display', '', '');
-          venn2Portrait.style.setProperty('display', '', '');
+            const data = twoCircleData[section];
+            if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
+            if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
+
+            if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
+            if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
+            if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
+            if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
+
+            setTimeout(() => {
+              if (cvOverlay) {
+                cvOverlay.style.display = 'none';
+                cvOverlay.classList.remove('cv-closing');
+              }
+              if (mainStage) {
+                mainStage.style.display = '';
+                mainStage.classList.remove('anim-cv-exit', 'anim-cv-enter');
+                mainStage.classList.add('anim-two-active');
+              }
+              venn3Landscape.style.setProperty('display', 'none', 'important');
+              venn3Portrait.style.setProperty('display', 'none', 'important');
+              venn2Landscape.style.setProperty('display', '', '');
+              venn2Portrait.style.setProperty('display', '', '');
+            }, 300);
+            return;
+          }
+
+          // 2. CROSS-SWITCHING FROM EXPERIENCE/PROJECT TO CV
+          if ((prevSection === 'experience' || prevSection === 'project') && section === 'cv') {
+            if (navCvBtn) navCvBtn.textContent = '✕';
+            if (mainStage) {
+              mainStage.classList.add('text-out');
+            }
+            setTimeout(() => {
+              venn3Landscape.style.setProperty('display', '', '');
+              venn3Portrait.style.setProperty('display', '', '');
+              venn2Landscape.style.setProperty('display', 'none', 'important');
+              venn2Portrait.style.setProperty('display', 'none', 'important');
+
+              if (mainStage) {
+                mainStage.classList.remove('anim-two-active', 'anim-two-closing');
+                mainStage.classList.add('anim-cv-exit');
+              }
+              setTimeout(() => {
+                if (mainStage) mainStage.style.display = 'none';
+                if (cvOverlay) {
+                  cvOverlay.style.display = 'flex';
+                  cvOverlay.classList.remove('cv-closing');
+                  cvOverlay.classList.add('cv-active');
+                }
+              }, 450);
+            }, 200);
+            return;
+          }
+
+          // 3. SWITCHING DIRECTLY BETWEEN EXPERIENCE AND PROJECT
+          if ((prevSection === 'experience' && section === 'project') || (prevSection === 'project' && section === 'experience')) {
+            if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
+            if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
+
+            if (mainStage) mainStage.classList.add('text-out');
+            setTimeout(() => {
+              const data = twoCircleData[section];
+              if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
+              if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
+
+              if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
+              if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
+              if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
+              if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
+              if (mainStage) mainStage.classList.remove('text-out');
+            }, 250);
+            return;
+          }
+
+          // 4. OPENING FROM LANDING (NORMAL INITIAL OPEN)
+          // Step 1: Text & eye fade out cleanly first
+          if (mainStage) mainStage.classList.add('text-out');
+
+          setTimeout(() => {
+            if (section === 'cv') {
+              if (navCvBtn) navCvBtn.textContent = '✕';
+              if (mainStage) {
+                mainStage.classList.remove('anim-two-active', 'anim-two-closing');
+                mainStage.classList.add('anim-cv-exit');
+              }
+              setTimeout(() => {
+                if (mainStage) mainStage.style.display = 'none';
+                if (cvOverlay) {
+                  cvOverlay.style.display = 'flex';
+                  cvOverlay.classList.remove('cv-closing');
+                  cvOverlay.classList.add('cv-active');
+                }
+              }, 450);
+            } else {
+              // Opening experience or project
+              if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
+              if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
+
+              const data = twoCircleData[section];
+              if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
+              if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
+
+              if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
+              if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
+              if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
+              if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
+
+              if (mainStage) mainStage.classList.add('anim-two-active');
+              setTimeout(() => {
+                venn3Landscape.style.setProperty('display', 'none', 'important');
+                venn3Portrait.style.setProperty('display', 'none', 'important');
+                venn2Landscape.style.setProperty('display', '', '');
+                venn2Portrait.style.setProperty('display', '', '');
+                if (mainStage) mainStage.classList.remove('text-out');
+              }, 350);
+            }
+          }, 200);
         }
       }
 
       if (navExpBtn) navExpBtn.addEventListener('click', () => switchView('experience'));
       if (navProjBtn) navProjBtn.addEventListener('click', () => switchView('project'));
+      if (navCvBtn) navCvBtn.addEventListener('click', () => switchView('cv'));
 
-      // ── SHARE BUTTON ──
+      // ── EMAIL PUSH INTERACTION ──
+      let emailPushed = false;
+      const emailBtn = document.getElementById('emailTriggerBtn');
+      const tpLinkedin = document.getElementById('tpLinkedinL');
+      const tpEmail = document.getElementById('tpEmailL');
+      const actualEmail = document.getElementById('actualEmailLink');
+
+      if (emailBtn) {
+        emailBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          emailPushed = !emailPushed;
+          if (emailPushed) {
+            // Push linkedin and email smoothly up along the arc with a generous gap
+            if (tpLinkedin) tpLinkedin.setAttribute('startOffset', '24%');
+            if (tpEmail) tpEmail.setAttribute('startOffset', '42%');
+            // Reveal actual email address with a clear separation below
+            setTimeout(() => {
+              if (actualEmail) actualEmail.style.display = 'block';
+            }, 250);
+          } else {
+            // Push back down to normal
+            if (actualEmail) actualEmail.style.display = 'none';
+            if (tpLinkedin) tpLinkedin.setAttribute('startOffset', '66%');
+            if (tpEmail) tpEmail.setAttribute('startOffset', '79%');
+          }
+        });
+      }
       const shareBtn = document.getElementById('shareBtn');
       const toast = document.getElementById('toast');
 
@@ -562,6 +789,48 @@ import '@fontsource/google-sans-flex';
     fill: #000000;
   }
 
+  /* ── 2-CIRCLE EDITORIAL CARDS ── */
+  .two-circle-fo {
+    overflow: visible;
+  }
+
+  .two-circle-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .two-circle-card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    text-align: left;
+    max-width: 380px;
+    margin: 0 auto;
+    padding: 0 10px;
+  }
+
+  .two-circle-card-title {
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    color: #000000;
+    text-align: left;
+  }
+
+  .two-circle-card-desc {
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: #27272a;
+    letter-spacing: -0.01em;
+    text-align: left;
+    word-break: break-word;
+  }
+
   /* Side Text Sizes (Tinnaphop Sonsang & Moss) - Fits inside intersection lens without cutting lines */
   .text-side {
     font-size: 38px;
@@ -605,14 +874,196 @@ import '@fontsource/google-sans-flex';
     letter-spacing: -0.02em;
   }
 
-  /* Flip page transition effect */
-  .venn-stage {
-    transition: opacity 0.25s ease, transform 0.25s ease;
+  /* Push animation for textPath offsets: Spring / Elastic natural curve */
+  .contact-item-linkedin textPath,
+  .contact-item-email textPath,
+  .actual-email-text textPath {
+    transition: startOffset 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
-  .venn-stage.flipping {
+  /* Fade effect for actual email reveal */
+  .actual-email-text {
+    animation: emailPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  @keyframes emailPopIn {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ── SMOOTH & ELASTIC TRANSITION ANIMATIONS FOR VENN CIRCLES ── */
+  /* Bezier curve: cubic-bezier(0.16, 1, 0.3, 1) - Natural, snappy & organic feel */
+  .venn-circle {
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center center;
+  }
+
+  .venn-text, .eye-img {
+    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* STEP 1: Text & eye fade out cleanly before any circle motion starts */
+  .venn-stage.text-out .venn-text,
+  .venn-stage.text-out .eye-img {
+    opacity: 0 !important;
+    transform: scale(0.85);
+  }
+
+  /* 1. EXPERIENCE / PROJECT TRANSITIONS */
+  /* Landscape: circle-right shoots out to the right */
+  .venn-stage.anim-two-active .circle-right {
+    transform: translateX(750px);
     opacity: 0;
-    transform: scale(0.97);
+  }
+  .venn-stage.anim-two-active .circle-left {
+    transform: translateX(110px);
+  }
+  .venn-stage.anim-two-active .circle-mid {
+    transform: translateX(240px);
+  }
+
+  /* Portrait / Mobile: circle-bottom shoots down to the bottom */
+  .venn-stage.anim-two-active .circle-bottom {
+    transform: translateY(750px);
+    opacity: 0;
+  }
+  .venn-stage.anim-two-active .circle-top {
+    transform: translateY(110px);
+  }
+
+  /* Returning from 2-circle back to 3-circle */
+  .venn-stage.anim-two-closing .circle-right {
+    animation: slideInRight 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-two-closing .circle-bottom {
+    animation: slideInBottom 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-two-closing .circle-left {
+    transform: translateX(0);
+  }
+  .venn-stage.anim-two-closing .circle-top {
+    transform: translateY(0);
+  }
+  .venn-stage.anim-two-closing .circle-mid {
+    transform: translateX(0);
+  }
+
+  @keyframes slideInRight {
+    from {
+      transform: translateX(750px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInBottom {
+    from {
+      transform: translateY(750px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* 2. CV TRANSITIONS */
+  /* Landscape: Left & Right shoot out sideways */
+  .venn-stage.anim-cv-exit .circle-left {
+    transform: translateX(-800px);
+    opacity: 0;
+  }
+  .venn-stage.anim-cv-exit .circle-right {
+    transform: translateX(800px);
+    opacity: 0;
+  }
+  /* Portrait: Top & Bottom shoot out vertically */
+  .venn-stage.anim-cv-exit .circle-top {
+    transform: translateY(-800px);
+    opacity: 0;
+  }
+  .venn-stage.anim-cv-exit .circle-bottom {
+    transform: translateY(800px);
+    opacity: 0;
+  }
+  /* Center circle expands until it covers and fades out */
+  .venn-stage.anim-cv-exit .circle-mid {
+    transform: scale(4.2);
+    opacity: 0;
+  }
+
+  /* CV Returning to landing: Center circle shrinks back down, others slide back in smoothly */
+  .venn-stage.anim-cv-enter .circle-left {
+    animation: slideInLeft 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-cv-enter .circle-right {
+    animation: slideInRight 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-cv-enter .circle-top {
+    animation: slideInTop 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-cv-enter .circle-bottom {
+    animation: slideInBottom 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .venn-stage.anim-cv-enter .circle-mid {
+    animation: shrinkFromHuge 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-800px);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideInTop {
+    from {
+      transform: translateY(-800px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes shrinkFromHuge {
+    from {
+      transform: scale(3.8);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* CV Overlay Fade & Snappy Zoom */
+  .cv-overlay-view {
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .cv-overlay-view.cv-active {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  .cv-overlay-view.cv-closing {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.92);
   }
 
   .hover-link {
@@ -776,8 +1227,134 @@ import '@fontsource/google-sans-flex';
     transform: translateX(-50%) translateY(0);
   }
 
+  /* ── CV PDF VIEWER OVERLAY VIEW ── */
+  .cv-overlay-view {
+    position: fixed;
+    top: 90px;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(880px, calc(100vw - 48px));
+    display: flex;
+    flex-direction: column;
+    z-index: 30;
+    animation: fadeInCv 0.25s ease forwards;
+  }
+
+  @keyframes fadeInCv {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  .cv-viewer-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 12px;
+  }
+
+  .cv-viewer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 4px;
+  }
+
+  .cv-title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .cv-subtag {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #71717a;
+  }
+
+  .cv-name-tag {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #000000;
+    letter-spacing: -0.02em;
+  }
+
+  .cv-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cv-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    background: transparent;
+    color: #000000;
+    font-family: inherit;
+    font-size: 0.88rem;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .cv-pill-btn:hover {
+    background: #f4f4f5;
+  }
+
+  .cv-download-pill {
+    background: #000000;
+    color: #ffffff;
+  }
+
+  .cv-download-pill:hover {
+    background: #27272a;
+    color: #ffffff;
+  }
+
+  .cv-frame-box {
+    flex: 1;
+    width: 100%;
+    background: #fafafa;
+    border: 1px solid #000000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  }
+
+  .cv-pdf-iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+
   /* ── MOBILE BREAKPOINT ── */
   @media (max-width: 640px) {
+    .cv-overlay-view {
+      top: 130px;
+      bottom: 45px;
+      width: calc(100vw - 28px);
+    }
+    .cv-title-group {
+      flex-direction: column;
+      gap: 2px;
+    }
     .top-left {
       top: 14px;
       left: 14px;
