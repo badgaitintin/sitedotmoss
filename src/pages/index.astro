@@ -68,24 +68,52 @@ const initialAge = computeInitialAge();
           <path id="arcCircle2Right" d="M 1118,132 A 450,450 0 0,1 1118,768" fill="none" />
         </defs>
 
-        <!-- Circles with individual classes for transition animations -->
+        <!-- Side shapes (placed before circle-mid so they render BEHIND the center circle in CV mode) -->
         <circle cx="450" cy="450" r="450" class="venn-circle circle-left" />
-        <circle cx="800" cy="450" r="450" class="venn-circle circle-mid" />
+        <rect x="70" y="70" width="760" height="760" class="venn-circle venn-shape shape-square" />
+
         <circle cx="1150" cy="450" r="450" class="venn-circle circle-right" />
+        <polygon points="1150,60 1550,790 750,790" class="venn-circle venn-shape shape-triangle" />
+
+        <!-- Center circle painted last so square & triangle stay behind it -->
+        <circle cx="800" cy="450" r="450" class="venn-circle circle-mid" />
+
+        <!-- Morphing roulette paths (shown during 5-10s CV loading) -->
+        <path id="morphL1" class="venn-morph-path" d="" style="display:none;" />
+        <path id="morphL3" class="venn-morph-path" d="" style="display:none;" />
+        <path id="morphL2" class="venn-morph-path venn-morph-mid" d="" style="display:none;" />
 
         <!-- 1. Tinnaphop Sonsang (Back on inner vesica arc, top pointing outward) -->
-        <text class="venn-text text-curved">
+        <text class="venn-text text-curved" dy="-14">
           <textPath href="#arcVesicaLeftFlipped" startOffset="60%" text-anchor="middle">
             Tinnaphop Sonsang
           </textPath>
         </text>
 
-        <!-- 2. Moss (On left arcCircle2Left, top pointing outward) -->
-        <text class="venn-text text-curved">
-          <textPath href="#arcCircle2LeftFlipped" startOffset="50%" text-anchor="middle">
-            Moss
-          </textPath>
-        </text>
+        <!-- 2. Moss (On left arcCircle2Left, top pointing outward; click to push up & reveal IG + gaming TikTok) -->
+        <g id="mossGroupLandscape" class="moss-arc-group">
+          <text class="venn-text text-curved hover-link" id="mossTriggerBtn" dy="-14" style="cursor: pointer;">
+            <textPath id="tpMossL" href="#arcCircle2LeftFlipped" startOffset="50%" text-anchor="middle">
+              Moss
+            </textPath>
+          </text>
+
+          <a href="https://instagram.com/badgaitintin" target="_blank" rel="noopener noreferrer" id="igLinkL" class="arc-reveal-link" style="opacity: 0; pointer-events: none;">
+            <text class="venn-text text-curved moss-social-text hover-link" dy="-14">
+              <textPath id="tpIgL" href="#arcCircle2LeftFlipped" startOffset="-10%" text-anchor="middle">
+                ig @badgaitintin
+              </textPath>
+            </text>
+          </a>
+
+          <a href="https://www.tiktok.com/@badgaitintin_roblox" target="_blank" rel="noopener noreferrer" id="tiktokLinkL" class="arc-reveal-link" style="opacity: 0; pointer-events: none;">
+            <text class="venn-text text-curved moss-social-text hover-link" dy="-14">
+              <textPath id="tpTiktokL" href="#arcCircle2LeftFlipped" startOffset="-25%" text-anchor="middle">
+                tiktok @badgaitintin_roblox
+              </textPath>
+            </text>
+          </a>
+        </g>
 
         <!-- CENTER EYE IMAGE -->
         <image
@@ -99,7 +127,7 @@ const initialAge = computeInitialAge();
         />
 
         <!-- 3. Live age (Restored to original right inner vesica boundary) -->
-        <text class="venn-text text-curved">
+        <text class="venn-text text-curved" dy="-14">
           <textPath href="#arcVesicaRight" startOffset="50%" text-anchor="middle">
             <tspan id="ageDisplay">{initialAge}</tspan> · 60kg 180cm
           </textPath>
@@ -108,7 +136,7 @@ const initialAge = computeInitialAge();
         <!-- 4. PUSH INTERACTION: linkedin and email along right curve arcCircle2Right -->
         <g id="contactGroupLandscape" class="contact-arc-group">
           <a href="https://linkedin.com/in/tinnaphop-sonsang" target="_blank" rel="noopener noreferrer">
-            <text class="venn-text text-curved hover-link contact-item-linkedin">
+            <text class="venn-text text-curved hover-link contact-item-linkedin" dy="-14">
               <textPath id="tpLinkedinL" href="#arcCircle2Right" startOffset="66%" text-anchor="middle">
                 linkedin
               </textPath>
@@ -116,16 +144,16 @@ const initialAge = computeInitialAge();
           </a>
 
           <!-- Email button (Click to push contacts up and reveal address) -->
-          <text class="venn-text text-curved hover-link contact-item-email" id="emailTriggerBtn" style="cursor: pointer;">
+          <text class="venn-text text-curved hover-link contact-item-email" id="emailTriggerBtn" dy="-14" style="cursor: pointer;">
             <textPath id="tpEmailL" href="#arcCircle2Right" startOffset="79%" text-anchor="middle">
               email
             </textPath>
           </text>
 
-          <!-- Revealed actual email address (appears where email was, with dedicated comfortable gap) -->
-          <a href="mailto:tinnaphop.moss@gmail.com" id="actualEmailLink" style="display: none;">
-            <text class="venn-text text-curved hover-link actual-email-text">
-              <textPath id="tpActualEmailL" href="#arcCircle2Right" startOffset="82%" text-anchor="middle">
+          <!-- Revealed actual email address (slides in along the arc) -->
+          <a href="mailto:tinnaphop.moss@gmail.com" id="actualEmailLink" class="actual-email-link" style="opacity: 0; pointer-events: none;">
+            <text class="venn-text text-curved hover-link actual-email-text" dy="-14">
+              <textPath id="tpActualEmailL" href="#arcCircle2Right" startOffset="102%" text-anchor="middle">
                 tinnaphop.moss@gmail.com
               </textPath>
             </text>
@@ -136,8 +164,17 @@ const initialAge = computeInitialAge();
       <!-- PORTRAIT / MOBILE (3 Circles in a column) -->
       <svg class="venn-svg portrait-venn" id="vennPortrait" viewBox="0 0 900 1600" preserveAspectRatio="xMidYMid slice">
         <circle cx="450" cy="450" r="450" class="venn-circle circle-top" />
-        <circle cx="450" cy="800" r="450" class="venn-circle circle-mid" />
+        <rect x="70" y="70" width="760" height="760" class="venn-circle venn-shape shape-square" />
+
         <circle cx="450" cy="1150" r="450" class="venn-circle circle-bottom" />
+        <polygon points="450,760 850,1490 50,1490" class="venn-circle venn-shape shape-triangle" />
+
+        <circle cx="450" cy="800" r="450" class="venn-circle circle-mid" />
+
+        <!-- Morphing roulette paths for portrait -->
+        <path id="morphP1" class="venn-morph-path" d="" style="display:none;" />
+        <path id="morphP3" class="venn-morph-path" d="" style="display:none;" />
+        <path id="morphP2" class="venn-morph-path venn-morph-mid" d="" style="display:none;" />
 
         <!-- TOP LENS (Exclusive 1 ∩ 2): Center y=525 -->
         <g id="lensTopPortrait" class="venn-lens-group">
@@ -225,35 +262,29 @@ const initialAge = computeInitialAge();
       </svg>
     </main>
 
-    <!-- CV PDF VIEWER OVERLAY (Shown when cv button is active) -->
+    <!-- CV PDF VIEWER OVERLAY (Fills entire center circle with overlay buttons) -->
     <section class="cv-overlay-view" id="cvOverlayView" style="display: none;">
       <div class="cv-viewer-card">
-        <div class="cv-viewer-header">
-          <div class="cv-title-group">
-            <span class="cv-subtag">Curriculum Vitae</span>
-            <span class="cv-name-tag">Tinnaphop Sonsang</span>
-          </div>
-          <div class="cv-btn-group">
-            <a href="/assets/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener noreferrer" class="cv-pill-btn">
-              open tab
-            </a>
-            <a href="/assets/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="cv-pill-btn cv-download-pill">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="7 10 12 15 17 10"></polyline>
-                <line x1="12" y1="15" x2="12" y2="3"></line>
-              </svg>
-              download
-            </a>
-          </div>
-        </div>
         <div class="cv-frame-box">
           <iframe
-            src="/assets/CV_Tinnaphop_Sonsang.pdf#toolbar=0&navpanes=0&scrollbar=1"
+            src="/assets/CV_Tinnaphop_Sonsang.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH"
             class="cv-pdf-iframe"
             title="Tinnaphop Sonsang CV PDF"
           >
           </iframe>
+        </div>
+        <div class="cv-bottom-actions">
+          <a href="/assets/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="cv-pill-btn cv-download-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            download cv
+          </a>
+          <a href="/assets/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener noreferrer" class="cv-pill-btn">
+            open tab
+          </a>
         </div>
       </div>
     </section>
@@ -376,216 +407,391 @@ const initialAge = computeInitialAge();
         if (navCvBtn) navCvBtn.textContent = 'cv';
       }
 
+      // ── FAST SNAP SHAPE ROULETTE (~3s, only triangle / square / circle, both IN and OUT) ──
+      const ROULETTE_SHAPES = ['circle', 'square', 'triangle'];
+      let rouletteTimer = null;
+
+      function shapePath(type, cx, cy, r) {
+        if (type === 'circle') {
+          return `M ${cx - r},${cy} A ${r},${r} 0 1,0 ${cx + r},${cy} A ${r},${r} 0 1,0 ${cx - r},${cy} Z`;
+        }
+        if (type === 'square') {
+          const s = r * 0.844; // matches 760x760 when r=450
+          return `M ${cx - s},${cy - s} L ${cx + s},${cy - s} L ${cx + s},${cy + s} L ${cx - s},${cy + s} Z`;
+        }
+        // triangle
+        const topY = cy - r * 0.87;
+        const botY = cy + r * 0.76;
+        const halfW = r * 0.89;
+        return `M ${cx},${topY.toFixed(1)} L ${(cx + halfW).toFixed(1)},${botY.toFixed(1)} L ${(cx - halfW).toFixed(1)},${botY.toFixed(1)} Z`;
+      }
+
+      function stopShapeRoulette() {
+        if (rouletteTimer) {
+          clearTimeout(rouletteTimer);
+          rouletteTimer = null;
+        }
+        if (mainStage) mainStage.classList.remove('roulette-active');
+        ['morphL1', 'morphL2', 'morphL3', 'morphP1', 'morphP2', 'morphP3'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
+      }
+
+      function runShapeRoulette(targets, onDone) {
+        stopShapeRoulette();
+        if (mainStage) mainStage.classList.add('roulette-active');
+
+        const slotsL = [
+          { el: document.getElementById('morphL1'), cx: 450, cy: 450, r: 450, targetR: 450 },
+          { el: document.getElementById('morphL2'), cx: 800, cy: 450, r: 450, targetR: 387 },
+          { el: document.getElementById('morphL3'), cx: 1150, cy: 450, r: 450, targetR: 445 },
+        ];
+        const slotsP = [
+          { el: document.getElementById('morphP1'), cx: 450, cy: 450, r: 450, targetR: 450 },
+          { el: document.getElementById('morphP2'), cx: 450, cy: 800, r: 450, targetR: 387 },
+          { el: document.getElementById('morphP3'), cx: 450, cy: 1150, r: 450, targetR: 445 },
+        ];
+
+        const allSlots = [...slotsL, ...slotsP];
+        allSlots.forEach(s => {
+          if (s.el) s.el.style.display = 'block';
+        });
+
+        // Fast discrete flips: 21 steps × 85ms ≈ 1.8s (total ~2.0s with fade)
+        const totalSteps = 21;
+        const stepMs = 85;
+        let step = 0;
+        let prevTypes = ['circle', 'circle', 'circle'];
+
+        function tick() {
+          const isFinal = step >= totalSteps;
+          const chosen = [0, 1, 2].map(idx => {
+            if (isFinal) return targets[idx];
+            const pool = ROULETTE_SHAPES.filter(t => t !== prevTypes[idx]);
+            return pool[Math.floor(Math.random() * pool.length)];
+          });
+          prevTypes = chosen;
+
+          allSlots.forEach((s, i) => {
+            const idx = i % 3;
+            const rad = isFinal ? s.targetR : s.r * (idx === 1 ? 0.88 : 0.96);
+            if (s.el) s.el.setAttribute('d', shapePath(chosen[idx], s.cx, s.cy, rad));
+          });
+
+          if (isFinal) {
+            stopShapeRoulette();
+            onDone();
+          } else {
+            step++;
+            rouletteTimer = setTimeout(tick, stepMs);
+          }
+        }
+
+        tick();
+      }
+
+      let viewTimer1 = null;
+      let viewTimer2 = null;
+
+      function clearViewTimers() {
+        if (viewTimer1) { clearTimeout(viewTimer1); viewTimer1 = null; }
+        if (viewTimer2) { clearTimeout(viewTimer2); viewTimer2 = null; }
+        stopShapeRoulette();
+      }
+
+      function showVenn3() {
+        venn3Landscape.style.setProperty('display', '', '');
+        venn3Portrait.style.setProperty('display', '', '');
+        venn2Landscape.style.setProperty('display', 'none', 'important');
+        venn2Portrait.style.setProperty('display', 'none', 'important');
+      }
+
+      function showVenn2() {
+        venn3Landscape.style.setProperty('display', 'none', 'important');
+        venn3Portrait.style.setProperty('display', 'none', 'important');
+        venn2Landscape.style.setProperty('display', '', '');
+        venn2Portrait.style.setProperty('display', '', '');
+      }
+
+      function populateTwoCircle(section) {
+        const data = twoCircleData[section];
+        if (!data) return;
+        if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
+        if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
+        if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
+        if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
+        if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
+        if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
+      }
+
       function switchView(section) {
+        clearViewTimers();
+
         if (activeSection === section) {
-          // ── CLOSING (ANIMATING BACK TO 3-CIRCLE LANDING) ──
+          // ── CLOSING BACK TO 3-CIRCLE LANDING ──
           const closingSection = activeSection;
           activeSection = null;
           resetNavButtons();
 
           if (closingSection === 'cv') {
-            // CV Close: Fade out CV viewer
+            document.body.classList.remove('cv-dark-mode');
             if (cvOverlay) {
               cvOverlay.classList.remove('cv-active');
               cvOverlay.classList.add('cv-closing');
             }
-            if (mainStage) {
-              mainStage.style.display = '';
-              mainStage.classList.remove('anim-cv-exit');
-              mainStage.classList.add('anim-cv-enter');
-            }
-            setTimeout(() => {
+            viewTimer1 = setTimeout(() => {
               if (cvOverlay) {
                 cvOverlay.style.display = 'none';
                 cvOverlay.classList.remove('cv-closing');
               }
               if (mainStage) {
-                mainStage.classList.remove('anim-cv-enter', 'text-out');
+                mainStage.classList.remove('anim-cv-active');
               }
-            }, 550);
-          } else {
-            // Experience / Project Close:
-            if (mainStage) {
-              mainStage.classList.add('text-out');
-              mainStage.classList.remove('anim-two-active');
-              mainStage.classList.add('anim-two-closing');
-            }
-            setTimeout(() => {
-              venn3Landscape.style.setProperty('display', '', '');
-              venn3Portrait.style.setProperty('display', '', '');
-              venn2Landscape.style.setProperty('display', 'none', 'important');
-              venn2Portrait.style.setProperty('display', 'none', 'important');
-              if (mainStage) {
-                mainStage.classList.remove('anim-two-closing', 'text-out');
-              }
-            }, 500);
-          }
-        } else {
-          // ── OPENING NEW SECTION OR SWITCHING BETWEEN SECTIONS ──
-          const prevSection = activeSection;
-          activeSection = section;
-          resetNavButtons();
-
-          // 1. CROSS-SWITCHING DIRECTLY FROM CV TO EXPERIENCE/PROJECT
-          if (prevSection === 'cv' && (section === 'experience' || section === 'project')) {
-            if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
-            if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
-
-            if (cvOverlay) {
-              cvOverlay.classList.remove('cv-active');
-              cvOverlay.classList.add('cv-closing');
-            }
-
-            const data = twoCircleData[section];
-            if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
-            if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
-
-            if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
-            if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
-            if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
-            if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
-
-            setTimeout(() => {
-              if (cvOverlay) {
-                cvOverlay.style.display = 'none';
-                cvOverlay.classList.remove('cv-closing');
-              }
-              if (mainStage) {
-                mainStage.style.display = '';
-                mainStage.classList.remove('anim-cv-exit', 'anim-cv-enter');
-                mainStage.classList.add('anim-two-active');
-              }
-              venn3Landscape.style.setProperty('display', 'none', 'important');
-              venn3Portrait.style.setProperty('display', 'none', 'important');
-              venn2Landscape.style.setProperty('display', '', '');
-              venn2Portrait.style.setProperty('display', '', '');
-            }, 300);
-            return;
-          }
-
-          // 2. CROSS-SWITCHING FROM EXPERIENCE/PROJECT TO CV
-          if ((prevSection === 'experience' || prevSection === 'project') && section === 'cv') {
-            if (navCvBtn) navCvBtn.textContent = '✕';
-            if (mainStage) {
-              mainStage.classList.add('text-out');
-            }
-            setTimeout(() => {
-              venn3Landscape.style.setProperty('display', '', '');
-              venn3Portrait.style.setProperty('display', '', '');
-              venn2Landscape.style.setProperty('display', 'none', 'important');
-              venn2Portrait.style.setProperty('display', 'none', 'important');
-
-              if (mainStage) {
-                mainStage.classList.remove('anim-two-active', 'anim-two-closing');
-                mainStage.classList.add('anim-cv-exit');
-              }
-              setTimeout(() => {
-                if (mainStage) mainStage.style.display = 'none';
-                if (cvOverlay) {
-                  cvOverlay.style.display = 'flex';
-                  cvOverlay.classList.remove('cv-closing');
-                  cvOverlay.classList.add('cv-active');
-                }
-              }, 450);
-            }, 200);
-            return;
-          }
-
-          // 3. SWITCHING DIRECTLY BETWEEN EXPERIENCE AND PROJECT
-          if ((prevSection === 'experience' && section === 'project') || (prevSection === 'project' && section === 'experience')) {
-            if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
-            if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
-
-            if (mainStage) mainStage.classList.add('text-out');
-            setTimeout(() => {
-              const data = twoCircleData[section];
-              if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
-              if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
-
-              if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
-              if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
-              if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
-              if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
-              if (mainStage) mainStage.classList.remove('text-out');
-            }, 250);
-            return;
-          }
-
-          // 4. OPENING FROM LANDING (NORMAL INITIAL OPEN)
-          // Step 1: Text & eye fade out cleanly first
-          if (mainStage) mainStage.classList.add('text-out');
-
-          setTimeout(() => {
-            if (section === 'cv') {
-              if (navCvBtn) navCvBtn.textContent = '✕';
-              if (mainStage) {
-                mainStage.classList.remove('anim-two-active', 'anim-two-closing');
-                mainStage.classList.add('anim-cv-exit');
-              }
-              setTimeout(() => {
-                if (mainStage) mainStage.style.display = 'none';
-                if (cvOverlay) {
-                  cvOverlay.style.display = 'flex';
-                  cvOverlay.classList.remove('cv-closing');
-                  cvOverlay.classList.add('cv-active');
-                }
-              }, 450);
-            } else {
-              // Opening experience or project
-              if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
-              if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
-
-              const data = twoCircleData[section];
-              if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
-              if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
-
-              if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
-              if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
-              if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
-              if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
-
-              if (mainStage) mainStage.classList.add('anim-two-active');
-              setTimeout(() => {
-                venn3Landscape.style.setProperty('display', 'none', 'important');
-                venn3Portrait.style.setProperty('display', 'none', 'important');
-                venn2Landscape.style.setProperty('display', '', '');
-                venn2Portrait.style.setProperty('display', '', '');
+              runShapeRoulette(['circle', 'circle', 'circle'], () => {
                 if (mainStage) mainStage.classList.remove('text-out');
-              }, 350);
-            }
-          }, 200);
+              });
+            }, 200);
+          } else {
+            // Closing Experience / Project: fade out 2-circle content, swap to venn3 at 2-circle coords, then spring back
+            if (mainStage) mainStage.classList.add('two-content-out');
+            viewTimer1 = setTimeout(() => {
+              showVenn3();
+              if (mainStage) {
+                mainStage.classList.remove('two-content-out');
+                mainStage.classList.add('text-out', 'anim-two-active');
+                void mainStage.offsetWidth;
+                mainStage.classList.remove('anim-two-active');
+              }
+              viewTimer2 = setTimeout(() => {
+                if (mainStage) mainStage.classList.remove('text-out');
+              }, 680);
+            }, 260);
+          }
+          return;
         }
+
+        // ── OPENING OR CROSS-SWITCHING ──
+        const prevSection = activeSection;
+        activeSection = section;
+        resetNavButtons();
+
+        if (section === 'experience' && navExpBtn) navExpBtn.textContent = '✕';
+        if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
+        if (section === 'cv' && navCvBtn) navCvBtn.textContent = '✕';
+
+        // 1. Cross-switch: CV -> Experience / Project
+        if (prevSection === 'cv' && (section === 'experience' || section === 'project')) {
+          document.body.classList.remove('cv-dark-mode');
+          if (cvOverlay) {
+            cvOverlay.classList.remove('cv-active');
+            cvOverlay.classList.add('cv-closing');
+          }
+          populateTwoCircle(section);
+          viewTimer1 = setTimeout(() => {
+            if (cvOverlay) {
+              cvOverlay.style.display = 'none';
+              cvOverlay.classList.remove('cv-closing');
+            }
+            if (mainStage) {
+              mainStage.classList.remove('anim-cv-active');
+              mainStage.classList.add('anim-two-active');
+            }
+            viewTimer2 = setTimeout(() => {
+              showVenn2();
+              if (mainStage) {
+                mainStage.classList.remove('text-out', 'anim-two-active');
+                mainStage.classList.add('two-content-in');
+                setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+              }
+            }, 900);
+          }, 260);
+          return;
+        }
+
+        // 2. Cross-switch: Experience / Project -> CV (with 5-10s shape roulette)
+        if ((prevSection === 'experience' || prevSection === 'project') && section === 'cv') {
+          if (mainStage) mainStage.classList.add('two-content-out');
+          viewTimer1 = setTimeout(() => {
+            showVenn3();
+            if (mainStage) {
+              mainStage.classList.remove('two-content-out', 'anim-two-active');
+              mainStage.classList.add('text-out');
+            }
+            runShapeRoulette(['square', 'circle', 'triangle'], () => {
+              document.body.classList.add('cv-dark-mode');
+              if (mainStage) mainStage.classList.add('anim-cv-active');
+              if (cvOverlay) {
+                cvOverlay.style.display = 'flex';
+                cvOverlay.classList.remove('cv-closing');
+                void cvOverlay.offsetWidth;
+                cvOverlay.classList.add('cv-active');
+              }
+            });
+          }, 260);
+          return;
+        }
+
+        // 3. Cross-switch: Experience <-> Project
+        if ((prevSection === 'experience' && section === 'project') || (prevSection === 'project' && section === 'experience')) {
+          if (mainStage) mainStage.classList.add('two-content-out');
+          viewTimer1 = setTimeout(() => {
+            populateTwoCircle(section);
+            if (mainStage) {
+              mainStage.classList.remove('two-content-out');
+              mainStage.classList.add('two-content-in');
+              setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+            }
+          }, 260);
+          return;
+        }
+
+        // 4. Normal open from Landing (3-circle -> target)
+        if (mainStage) mainStage.classList.add('text-out');
+
+        viewTimer1 = setTimeout(() => {
+          if (section === 'cv') {
+            runShapeRoulette(['square', 'circle', 'triangle'], () => {
+              document.body.classList.add('cv-dark-mode');
+              if (mainStage) mainStage.classList.add('anim-cv-active');
+              if (cvOverlay) {
+                cvOverlay.style.display = 'flex';
+                cvOverlay.classList.remove('cv-closing');
+                void cvOverlay.offsetWidth;
+                cvOverlay.classList.add('cv-active');
+              }
+            });
+          } else {
+            populateTwoCircle(section);
+            if (mainStage) mainStage.classList.add('anim-two-active');
+            viewTimer2 = setTimeout(() => {
+              showVenn2();
+              if (mainStage) {
+                mainStage.classList.remove('text-out', 'anim-two-active');
+                mainStage.classList.add('two-content-in');
+                setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+              }
+            }, 900);
+          }
+        }, 260);
       }
 
       if (navExpBtn) navExpBtn.addEventListener('click', () => switchView('experience'));
       if (navProjBtn) navProjBtn.addEventListener('click', () => switchView('project'));
       if (navCvBtn) navCvBtn.addEventListener('click', () => switchView('cv'));
 
-      // ── EMAIL PUSH INTERACTION ──
+      // ── ARC PUSH INTERACTIONS (Email & Moss via shared rAF helper) ──
+      // Snappy spring-like easeOutBack curve
+      function easeOutBack(t) {
+        const c1 = 1.4;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+      }
+
+      function getOffset(el, fallback) {
+        if (!el) return fallback;
+        const val = parseFloat(el.getAttribute('startOffset'));
+        return Number.isNaN(val) ? fallback : val;
+      }
+
+      const arcAnimFrames = {};
+
+      function animateArcGroup(key, tracks, opacityTargets, opening) {
+        if (arcAnimFrames[key]) cancelAnimationFrame(arcAnimFrames[key]);
+
+        const resolvedTracks = tracks.map(tr => ({
+          el: tr.el,
+          from: getOffset(tr.el, opening ? tr.closed : tr.open),
+          to: opening ? tr.open : tr.closed,
+        }));
+
+        const resolvedOpacities = opacityTargets.map(op => {
+          if (op.link) op.link.style.pointerEvents = opening ? 'auto' : 'none';
+          return {
+            link: op.link,
+            from: op.link ? parseFloat(op.link.style.opacity || (opening ? '0' : '1')) : (opening ? 0 : 1),
+            to: opening ? 1 : 0,
+          };
+        });
+
+        const duration = 620;
+        const startTime = performance.now();
+
+        function tick(now) {
+          const rawT = Math.min(1, (now - startTime) / duration);
+          const eased = easeOutBack(rawT);
+          const alphaT = Math.min(1, rawT * 1.4);
+
+          resolvedTracks.forEach(tr => {
+            if (tr.el) {
+              tr.el.setAttribute('startOffset', `${(tr.from + (tr.to - tr.from) * eased).toFixed(2)}%`);
+            }
+          });
+
+          resolvedOpacities.forEach(op => {
+            if (op.link) {
+              op.link.style.opacity = (op.from + (op.to - op.from) * alphaT).toFixed(3);
+            }
+          });
+
+          if (rawT < 1) {
+            arcAnimFrames[key] = requestAnimationFrame(tick);
+          } else {
+            arcAnimFrames[key] = null;
+          }
+        }
+
+        arcAnimFrames[key] = requestAnimationFrame(tick);
+      }
+
+      // Email push interaction
       let emailPushed = false;
       const emailBtn = document.getElementById('emailTriggerBtn');
       const tpLinkedin = document.getElementById('tpLinkedinL');
       const tpEmail = document.getElementById('tpEmailL');
+      const tpActualEmail = document.getElementById('tpActualEmailL');
       const actualEmail = document.getElementById('actualEmailLink');
 
       if (emailBtn) {
         emailBtn.addEventListener('click', (e) => {
           e.preventDefault();
           emailPushed = !emailPushed;
-          if (emailPushed) {
-            // Push linkedin and email smoothly up along the arc with a generous gap
-            if (tpLinkedin) tpLinkedin.setAttribute('startOffset', '24%');
-            if (tpEmail) tpEmail.setAttribute('startOffset', '42%');
-            // Reveal actual email address with a clear separation below
-            setTimeout(() => {
-              if (actualEmail) actualEmail.style.display = 'block';
-            }, 250);
-          } else {
-            // Push back down to normal
-            if (actualEmail) actualEmail.style.display = 'none';
-            if (tpLinkedin) tpLinkedin.setAttribute('startOffset', '66%');
-            if (tpEmail) tpEmail.setAttribute('startOffset', '79%');
-          }
+          animateArcGroup(
+            'email',
+            [
+              { el: tpLinkedin, closed: 66, open: 24 },
+              { el: tpEmail, closed: 79, open: 42 },
+              { el: tpActualEmail, closed: 102, open: 78 },
+            ],
+            [{ link: actualEmail }],
+            emailPushed
+          );
+        });
+      }
+
+      // Moss push interaction (reveals IG & gaming TikTok along left arc)
+      let mossPushed = false;
+      const mossBtn = document.getElementById('mossTriggerBtn');
+      const tpMoss = document.getElementById('tpMossL');
+      const tpIg = document.getElementById('tpIgL');
+      const tpTiktok = document.getElementById('tpTiktokL');
+      const igLink = document.getElementById('igLinkL');
+      const tiktokLink = document.getElementById('tiktokLinkL');
+
+      if (mossBtn) {
+        mossBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          mossPushed = !mossPushed;
+          animateArcGroup(
+            'moss',
+            [
+              { el: tpMoss, closed: 50, open: 85 },
+              { el: tpIg, closed: -10, open: 61 },
+              { el: tpTiktok, closed: -25, open: 24 },
+            ],
+            [{ link: igLink }, { link: tiktokLink }],
+            mossPushed
+          );
         });
       }
       const shareBtn = document.getElementById('shareBtn');
@@ -893,51 +1099,96 @@ const initialAge = computeInitialAge();
     letter-spacing: -0.02em;
   }
 
-  /* Push animation for textPath offsets: Spring / Elastic natural curve */
-  .contact-item-linkedin textPath,
-  .contact-item-email textPath,
-  .actual-email-text textPath {
-    transition: startOffset 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Smooth opacity transition for revealed arc links (movement is driven along arc via rAF) */
+  .actual-email-link,
+  .arc-reveal-link {
+    transition: opacity 0.25s ease;
   }
 
-  /* Fade effect for actual email reveal */
-  .actual-email-text {
-    animation: emailPopIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  .moss-social-text {
+    font-size: 25px;
   }
 
-  @keyframes emailPopIn {
-    from {
-      opacity: 0;
-      transform: translateY(12px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* ── SMOOTH & ELASTIC TRANSITION ANIMATIONS FOR VENN CIRCLES ── */
-  /* Bezier curve: cubic-bezier(0.16, 1, 0.3, 1) - Natural, snappy & organic feel */
+  /* ── SMOOTH & STICKY 60FPS SPRING TRANSITION ANIMATIONS FOR VENN CIRCLES ── */
   .venn-circle {
-    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.95s cubic-bezier(0.22, 1.18, 0.36, 1), opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1);
     transform-origin: center center;
+    will-change: transform, opacity;
+    transform: translateZ(0);
+  }
+
+  .venn-shape {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.84);
+  }
+
+  .venn-morph-path {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 3.2px;
+    stroke-linejoin: round;
+    pointer-events: none;
+  }
+
+  .venn-morph-mid {
+    fill: #ffffff;
+  }
+
+  .venn-stage.roulette-active .venn-circle {
+    opacity: 0 !important;
+    transition: opacity 0.15s ease;
   }
 
   .venn-text, .eye-img {
-    transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity 0.28s ease, transform 0.42s cubic-bezier(0.22, 1.18, 0.36, 1);
+    will-change: transform, opacity;
   }
 
   /* STEP 1: Text & eye fade out cleanly before any circle motion starts */
   .venn-stage.text-out .venn-text,
   .venn-stage.text-out .eye-img {
     opacity: 0 !important;
-    transform: scale(0.85);
+    transform: scale(0.9);
   }
 
-  /* 1. EXPERIENCE / PROJECT TRANSITIONS */
-  /* Landscape: circle-right shoots out to the right */
+  /* 2-circle content fade out / in */
+  #vennTwoCircleLandscape .two-circle-content,
+  #vennTwoCircleLandscape .text-flip-title,
+  #vennTwoCirclePortrait .two-circle-content,
+  #vennTwoCirclePortrait .text-flip-title-portrait {
+    transition: opacity 0.38s ease, transform 0.6s cubic-bezier(0.22, 1.18, 0.36, 1);
+  }
+
+  .venn-stage.two-content-out #vennTwoCircleLandscape .two-circle-content,
+  .venn-stage.two-content-out #vennTwoCircleLandscape .text-flip-title,
+  .venn-stage.two-content-out #vennTwoCirclePortrait .two-circle-content,
+  .venn-stage.two-content-out #vennTwoCirclePortrait .text-flip-title-portrait {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+
+  .venn-stage.two-content-in #vennTwoCircleLandscape .two-circle-content,
+  .venn-stage.two-content-in #vennTwoCircleLandscape .text-flip-title,
+  .venn-stage.two-content-in #vennTwoCirclePortrait .two-circle-content,
+  .venn-stage.two-content-in #vennTwoCirclePortrait .text-flip-title-portrait {
+    animation: twoContentIn 0.6s cubic-bezier(0.22, 1.18, 0.36, 1) forwards;
+  }
+
+  @keyframes twoContentIn {
+    from {
+      opacity: 0;
+      transform: scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* 1. EXPERIENCE / PROJECT TRANSITIONS (3 circles -> 2 circles, and smooth reverse back) */
   .venn-stage.anim-two-active .circle-right {
-    transform: translateX(750px);
+    transform: translateX(780px);
     opacity: 0;
   }
   .venn-stage.anim-two-active .circle-left {
@@ -947,142 +1198,60 @@ const initialAge = computeInitialAge();
     transform: translateX(240px);
   }
 
-  /* Portrait / Mobile: circle-bottom shoots down to the bottom */
-  .venn-stage.anim-two-active .circle-bottom {
-    transform: translateY(750px);
-    opacity: 0;
-  }
-  .venn-stage.anim-two-active .circle-top {
-    transform: translateY(110px);
-  }
-
-  /* Returning from 2-circle back to 3-circle */
-  .venn-stage.anim-two-closing .circle-right {
-    animation: slideInRight 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-two-closing .circle-bottom {
-    animation: slideInBottom 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-two-closing .circle-left {
-    transform: translateX(0);
-  }
-  .venn-stage.anim-two-closing .circle-top {
-    transform: translateY(0);
-  }
-  .venn-stage.anim-two-closing .circle-mid {
-    transform: translateX(0);
-  }
-
-  @keyframes slideInRight {
-    from {
-      transform: translateX(750px);
+  @media (max-aspect-ratio: 1/1) {
+    .venn-stage.anim-two-active .circle-bottom {
+      transform: translateY(780px);
       opacity: 0;
     }
-    to {
-      transform: translateX(0);
-      opacity: 1;
+    .venn-stage.anim-two-active .circle-top {
+      transform: translateY(110px);
+    }
+    .venn-stage.anim-two-active .circle-mid {
+      transform: translateY(240px);
     }
   }
 
-  @keyframes slideInBottom {
-    from {
-      transform: translateY(750px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  /* 2. CV TRANSITIONS */
-  /* Landscape: Left & Right shoot out sideways */
-  .venn-stage.anim-cv-exit .circle-left {
-    transform: translateX(-800px);
+  /* 2. CV TRANSITIONS (Left -> Square, Right -> Triangle behind Center Circle; Center Circle stays on top) */
+  .venn-stage.anim-cv-active .circle-left,
+  .venn-stage.anim-cv-active .circle-top {
+    transform: scale(1.06);
     opacity: 0;
   }
-  .venn-stage.anim-cv-exit .circle-right {
-    transform: translateX(800px);
+  .venn-stage.anim-cv-active .circle-right,
+  .venn-stage.anim-cv-active .circle-bottom {
+    transform: scale(1.06);
     opacity: 0;
   }
-  /* Portrait: Top & Bottom shoot out vertically */
-  .venn-stage.anim-cv-exit .circle-top {
-    transform: translateY(-800px);
-    opacity: 0;
+  .venn-stage.anim-cv-active .shape-square {
+    opacity: 1;
+    transform: scale(1);
   }
-  .venn-stage.anim-cv-exit .circle-bottom {
-    transform: translateY(800px);
-    opacity: 0;
+  .venn-stage.anim-cv-active .shape-triangle {
+    opacity: 1;
+    transform: scale(1);
   }
-  /* Center circle expands until it covers and fades out */
-  .venn-stage.anim-cv-exit .circle-mid {
-    transform: scale(4.2);
-    opacity: 0;
-  }
-
-  /* CV Returning to landing: Center circle shrinks back down, others slide back in smoothly */
-  .venn-stage.anim-cv-enter .circle-left {
-    animation: slideInLeft 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-cv-enter .circle-right {
-    animation: slideInRight 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-cv-enter .circle-top {
-    animation: slideInTop 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-cv-enter .circle-bottom {
-    animation: slideInBottom 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .venn-stage.anim-cv-enter .circle-mid {
-    animation: shrinkFromHuge 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  .venn-stage.anim-cv-active .circle-mid {
+    transform: scale(0.86);
+    fill: #ffffff;
+    opacity: 1;
   }
 
-  @keyframes slideInLeft {
-    from {
-      transform: translateX(-800px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideInTop {
-    from {
-      transform: translateY(-800px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  @keyframes shrinkFromHuge {
-    from {
-      transform: scale(3.8);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* CV Overlay Fade & Snappy Zoom */
+  /* CV Overlay Fade & Sticky Spring Zoom filling the center circle */
   .cv-overlay-view {
-    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.88);
+    transition: opacity 0.45s ease, transform 0.65s cubic-bezier(0.22, 1.18, 0.36, 1);
+    will-change: transform, opacity;
   }
 
   .cv-overlay-view.cv-active {
     opacity: 1;
-    transform: translateX(-50%) scale(1);
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .cv-overlay-view.cv-closing {
     opacity: 0;
-    transform: translateX(-50%) scale(0.92);
+    transform: translate(-50%, -50%) scale(0.9);
   }
 
   .hover-link {
@@ -1246,72 +1415,42 @@ const initialAge = computeInitialAge();
     transform: translateX(-50%) translateY(0);
   }
 
-  /* ── CV PDF VIEWER OVERLAY VIEW ── */
+  /* ── CV PDF VIEWER OVERLAY VIEW (Fills entire center circle with overlay buttons) ── */
   .cv-overlay-view {
     position: fixed;
-    top: 90px;
-    bottom: 50px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    width: min(880px, calc(100vw - 48px));
+    width: min(86vh, 86vw);
+    height: min(86vh, 86vw);
     display: flex;
     flex-direction: column;
     z-index: 30;
-    animation: fadeInCv 0.25s ease forwards;
-  }
-
-  @keyframes fadeInCv {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
   }
 
   .cv-viewer-card {
-    display: flex;
-    flex-direction: column;
+    position: relative;
     width: 100%;
     height: 100%;
-    gap: 12px;
+    border-radius: 50%;
+    overflow: hidden;
   }
 
-  .cv-viewer-header {
+  .cv-bottom-actions {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0 4px;
-  }
-
-  .cv-title-group {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-
-  .cv-subtag {
-    font-size: 0.85rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #71717a;
-  }
-
-  .cv-name-tag {
-    font-size: 1.1rem;
-    font-weight: 500;
-    color: #000000;
-    letter-spacing: -0.02em;
-  }
-
-  .cv-btn-group {
-    display: flex;
-    align-items: center;
+    justify-content: center;
     gap: 10px;
+    z-index: 5;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   }
 
   .cv-pill-btn {
@@ -1321,14 +1460,15 @@ const initialAge = computeInitialAge();
     padding: 6px 14px;
     border: 1px solid #000000;
     border-radius: 999px;
-    background: transparent;
+    background: #ffffff;
     color: #000000;
     font-family: inherit;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-weight: 500;
     text-decoration: none;
     letter-spacing: -0.02em;
     cursor: pointer;
+    white-space: nowrap;
     transition: all 0.15s ease;
   }
 
@@ -1347,13 +1487,12 @@ const initialAge = computeInitialAge();
   }
 
   .cv-frame-box {
-    flex: 1;
     width: 100%;
-    background: #fafafa;
-    border: 1px solid #000000;
-    border-radius: 8px;
+    height: 100%;
+    background: #ffffff;
+    border: 2.5px solid #000000;
+    border-radius: 50%;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
   }
 
   .cv-pdf-iframe {
@@ -1363,16 +1502,105 @@ const initialAge = computeInitialAge();
     display: block;
   }
 
+  /* ── CV DARK MODE (Inverted B&W / W&B exclusively for CV focus) ── */
+  body {
+    transition: background-color 0.5s ease, color 0.5s ease;
+  }
+
+  .brand-link,
+  .nav-list a,
+  .nav-btn,
+  .action-btn,
+  .mini-diagram,
+  .inspired-text,
+  .inspired-text a {
+    transition: color 0.5s ease, opacity 0.15s ease;
+  }
+
+  .venn-circle,
+  .venn-morph-path {
+    transition: transform 0.95s cubic-bezier(0.22, 1.18, 0.36, 1), opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.5s ease, fill 0.5s ease;
+  }
+
+  body.cv-dark-mode {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  body.cv-dark-mode .brand-link,
+  body.cv-dark-mode .nav-list a,
+  body.cv-dark-mode .nav-btn,
+  body.cv-dark-mode .action-btn,
+  body.cv-dark-mode .mini-diagram {
+    color: #ffffff;
+  }
+
+  body.cv-dark-mode .inspired-text {
+    color: #a1a1aa;
+  }
+
+  body.cv-dark-mode .inspired-text a {
+    color: #e4e4e7;
+  }
+
+  body.cv-dark-mode .venn-circle,
+  body.cv-dark-mode .venn-morph-path {
+    stroke: #ffffff;
+  }
+
+  body.cv-dark-mode .venn-stage.anim-cv-active .circle-mid {
+    fill: #000000;
+  }
+
+  body.cv-dark-mode .cv-frame-box {
+    background: #000000;
+    border-color: #ffffff;
+  }
+
+  body.cv-dark-mode .cv-bottom-actions {
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 4px 18px rgba(255, 255, 255, 0.08);
+  }
+
+  body.cv-dark-mode .cv-pill-btn {
+    background: #000000;
+    color: #ffffff;
+    border-color: #ffffff;
+  }
+
+  body.cv-dark-mode .cv-pill-btn:hover {
+    background: #18181b;
+  }
+
+  body.cv-dark-mode .cv-download-pill {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+
+  body.cv-dark-mode .cv-download-pill:hover {
+    background: #e4e4e7;
+    color: #000000;
+  }
+
+  body.cv-dark-mode .stripe-black {
+    border: 1px solid #27272a;
+  }
+
   /* ── MOBILE BREAKPOINT ── */
   @media (max-width: 640px) {
     .cv-overlay-view {
-      top: 130px;
-      bottom: 45px;
-      width: calc(100vw - 28px);
+      width: min(86vw, 62vh);
+      height: min(86vw, 62vh);
     }
-    .cv-title-group {
-      flex-direction: column;
-      gap: 2px;
+    .cv-bottom-actions {
+      bottom: 16px;
+      gap: 6px;
+      padding: 4px 8px;
+    }
+    .cv-pill-btn {
+      padding: 5px 11px;
+      font-size: 0.78rem;
     }
     .top-left {
       top: 14px;
