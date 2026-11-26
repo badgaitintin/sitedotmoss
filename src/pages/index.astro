@@ -1,6 +1,23 @@
 ---
 // index.astro — Minimalist 3-Circle Venn Diagram (Google Sans Flex)
 import '@fontsource/google-sans-flex';
+
+function computeInitialAge() {
+  const now = new Date();
+  const birthYear = 2004;
+  const birthMonth = 0; // Jan (0-indexed)
+  const birthDay = 13;
+  let years = now.getFullYear() - birthYear;
+  let birthThisYear = new Date(now.getFullYear(), birthMonth, birthDay);
+  if (now < birthThisYear) {
+    years--;
+    birthThisYear = new Date(now.getFullYear() - 1, birthMonth, birthDay);
+  }
+  const days = Math.floor((now.getTime() - birthThisYear.getTime()) / (1000 * 60 * 60 * 24));
+  const mins = now.getHours() * 60 + now.getMinutes();
+  return `${years}y ${days}d ${mins}m`;
+}
+const initialAge = computeInitialAge();
 ---
 
 <!doctype html>
@@ -84,7 +101,7 @@ import '@fontsource/google-sans-flex';
         <!-- 3. Live age (Restored to original right inner vesica boundary) -->
         <text class="venn-text text-curved">
           <textPath href="#arcVesicaRight" startOffset="50%" text-anchor="middle">
-            <tspan id="ageDisplay">22y 314d 1052m</tspan> · 60kg 180cm
+            <tspan id="ageDisplay">{initialAge}</tspan> · 60kg 180cm
           </textPath>
         </text>
 
@@ -145,7 +162,7 @@ import '@fontsource/google-sans-flex';
         <!-- BOTTOM LENS (Exclusive 2 ∩ 3): Center y=1075 -->
         <g id="lensBottomPortrait" class="venn-lens-group">
           <text x="450" y="1020" text-anchor="middle" class="venn-text text-side-portrait">
-            <tspan x="450" dy="0" id="ageDisplayMobile">22y 314d 1052m</tspan>
+            <tspan x="450" dy="0" id="ageDisplayMobile">{initialAge}</tspan>
             <tspan x="450" dy="1.15em" class="venn-text-sub-portrait">60kg · 180cm</tspan>
           </text>
           <!-- linkedin and email kept right next to each other -->
@@ -271,18 +288,20 @@ import '@fontsource/google-sans-flex';
     <div class="toast" id="toast">link copied!</div>
 
     <script is:inline>
-      // ── BIRTHDAY LIVE CALCULATION: 13 Jan 2004 ──
-      const BIRTH_DATE = new Date('2004-01-13T00:00:00+07:00');
+      // ── BIRTHDAY LIVE CALCULATION: 13/01/2004 ──
+      const BIRTH_YEAR = 2004;
+      const BIRTH_MONTH = 0; // Jan (0-indexed)
+      const BIRTH_DAY = 13;
 
       function updateAge() {
         const now = new Date();
-        let years = now.getFullYear() - BIRTH_DATE.getFullYear();
-        let birthThisYear = new Date(now.getFullYear(), BIRTH_DATE.getMonth(), BIRTH_DATE.getDate());
+        let years = now.getFullYear() - BIRTH_YEAR;
+        let birthThisYear = new Date(now.getFullYear(), BIRTH_MONTH, BIRTH_DAY);
         if (now < birthThisYear) {
           years--;
-          birthThisYear = new Date(now.getFullYear() - 1, BIRTH_DATE.getMonth(), BIRTH_DATE.getDate());
+          birthThisYear = new Date(now.getFullYear() - 1, BIRTH_MONTH, BIRTH_DAY);
         }
-        const daysSinceLastBirthday = Math.floor((now - birthThisYear) / (1000 * 60 * 60 * 24));
+        const daysSinceLastBirthday = Math.floor((now.getTime() - birthThisYear.getTime()) / (1000 * 60 * 60 * 24));
         const minutesInDay = (now.getHours() * 60) + now.getMinutes();
         const ageStr = `${years}y ${daysSinceLastBirthday}d ${minutesInDay}m`;
 
