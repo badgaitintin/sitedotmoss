@@ -1,23 +1,9 @@
 ---
 // index.astro — Minimalist 3-Circle Venn Diagram (Google Sans Flex)
 import '@fontsource/google-sans-flex';
+import { computeAgeString } from '../lib/home/venn-helpers';
 
-function computeInitialAge() {
-  const now = new Date();
-  const birthYear = 2004;
-  const birthMonth = 0; // Jan (0-indexed)
-  const birthDay = 13;
-  let years = now.getFullYear() - birthYear;
-  let birthThisYear = new Date(now.getFullYear(), birthMonth, birthDay);
-  if (now < birthThisYear) {
-    years--;
-    birthThisYear = new Date(now.getFullYear() - 1, birthMonth, birthDay);
-  }
-  const days = Math.floor((now.getTime() - birthThisYear.getTime()) / (1000 * 60 * 60 * 24));
-  const mins = now.getHours() * 60 + now.getMinutes();
-  return `${years}y ${days}d ${mins}m`;
-}
-const initialAge = computeInitialAge();
+const initialAge = computeAgeString();
 ---
 
 <!doctype html>
@@ -52,19 +38,16 @@ const initialAge = computeInitialAge();
       <!-- LANDSCAPE / DESKTOP (3 Circles: OOO) -->
       <svg class="venn-svg landscape-venn" id="vennLandscape" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
         <defs>
-          <!-- 1. Arc 1: Circle 1 left outer arc -->
-          <path id="arcCircle1OuterLeft" d="M 450,0 A 450,450 0 0,0 450,900" fill="none" />
-
-          <!-- 2. Arc 2: Circle 2 left boundary (reversed: bottom to top so text tops point outward to left) -->
+          <!-- 1. Arc 2: Circle 2 left boundary (reversed: bottom to top so text tops point outward to left) -->
           <path id="arcCircle2LeftFlipped" d="M 482,768 A 450,450 0 0,1 482,132" fill="none" />
-          
-          <!-- 3. Arc 3: Center vesica left boundary (Circle 3 left curve inside middle circle, reversed: bottom to top) -->
+
+          <!-- 2. Arc 3: Center vesica left boundary (Circle 3 left curve inside middle circle, reversed: bottom to top) -->
           <path id="arcVesicaLeftFlipped" d="M 800,733 A 450,450 0 0,1 800,167" fill="none" />
 
-          <!-- 4. Arc 4: Center vesica right boundary (Circle 1 right curve inside middle circle) -->
+          <!-- 3. Arc 4: Center vesica right boundary (Circle 1 right curve inside middle circle) -->
           <path id="arcVesicaRight" d="M 800,167 A 450,450 0 0,1 800,733" fill="none" />
 
-          <!-- 5. Arc 5: Circle 2 right boundary (right inner lens curve) -->
+          <!-- 4. Arc 5: Circle 2 right boundary (right inner lens curve) -->
           <path id="arcCircle2Right" d="M 1118,132 A 450,450 0 0,1 1118,768" fill="none" />
         </defs>
 
@@ -77,11 +60,6 @@ const initialAge = computeInitialAge();
 
         <!-- Center circle painted last so square & triangle stay behind it -->
         <circle cx="800" cy="450" r="450" class="venn-circle circle-mid" />
-
-        <!-- Morphing roulette paths (shown during 5-10s CV loading) -->
-        <path id="morphL1" class="venn-morph-path" d="" style="display:none;" />
-        <path id="morphL3" class="venn-morph-path" d="" style="display:none;" />
-        <path id="morphL2" class="venn-morph-path venn-morph-mid" d="" style="display:none;" />
 
         <!-- 1. Tinnaphop Sonsang (Back on inner vesica arc, top pointing outward) -->
         <text class="venn-text text-curved" dy="-14">
@@ -171,11 +149,6 @@ const initialAge = computeInitialAge();
 
         <circle cx="450" cy="800" r="450" class="venn-circle circle-mid" />
 
-        <!-- Morphing roulette paths for portrait -->
-        <path id="morphP1" class="venn-morph-path" d="" style="display:none;" />
-        <path id="morphP3" class="venn-morph-path" d="" style="display:none;" />
-        <path id="morphP2" class="venn-morph-path venn-morph-mid" d="" style="display:none;" />
-
         <!-- TOP LENS (Exclusive 1 ∩ 2): Center y=525 -->
         <g id="lensTopPortrait" class="venn-lens-group">
           <text x="450" y="490" text-anchor="middle" class="venn-text text-side-portrait">
@@ -224,7 +197,7 @@ const initialAge = computeInitialAge();
 
         <!-- Left Circle Exclusive: x=340 -->
         <foreignObject id="twoLeftFO" x="120" y="240" width="440" height="420" class="two-circle-fo">
-          <div xmlns="http://www.w3.org/1999/xhtml" id="twoLeftLandscape" class="two-circle-content"></div>
+          <div id="twoLeftLandscape" class="two-circle-content"></div>
         </foreignObject>
 
         <!-- Center Intersection (Lens): x=800 -->
@@ -235,7 +208,7 @@ const initialAge = computeInitialAge();
 
         <!-- Right Circle Exclusive: x=1260 -->
         <foreignObject id="twoRightFO" x="1040" y="240" width="440" height="420" class="two-circle-fo">
-          <div xmlns="http://www.w3.org/1999/xhtml" id="twoRightLandscape" class="two-circle-content"></div>
+          <div id="twoRightLandscape" class="two-circle-content"></div>
         </foreignObject>
       </svg>
 
@@ -246,7 +219,7 @@ const initialAge = computeInitialAge();
 
         <!-- Top Circle Exclusive: y=320 -->
         <foreignObject id="twoTopFO" x="100" y="180" width="700" height="340" class="two-circle-fo">
-          <div xmlns="http://www.w3.org/1999/xhtml" id="twoTopPortrait" class="two-circle-content"></div>
+          <div id="twoTopPortrait" class="two-circle-content"></div>
         </foreignObject>
 
         <!-- Center Intersection: y=800 -->
@@ -257,7 +230,7 @@ const initialAge = computeInitialAge();
 
         <!-- Bottom Circle Exclusive: y=1280 -->
         <foreignObject id="twoBottomFO" x="100" y="1080" width="700" height="340" class="two-circle-fo">
-          <div xmlns="http://www.w3.org/1999/xhtml" id="twoBottomPortrait" class="two-circle-content"></div>
+          <div id="twoBottomPortrait" class="two-circle-content"></div>
         </foreignObject>
       </svg>
     </main>
@@ -318,71 +291,45 @@ const initialAge = computeInitialAge();
     <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast">link copied!</div>
 
-    <script is:inline>
-      // ── BIRTHDAY LIVE CALCULATION: 13/01/2004 ──
-      const BIRTH_YEAR = 2004;
-      const BIRTH_MONTH = 0; // Jan (0-indexed)
-      const BIRTH_DAY = 13;
+    <script>
+      import {
+        TWO_CIRCLE_SECTIONS,
+        computeAgeString,
+        easeOutBack,
+        interpolatePercent,
+        renderSideCardHtml,
+        type TwoCircleSectionKey,
+      } from '../lib/home/venn-helpers';
 
-      function updateAge() {
-        const now = new Date();
-        let years = now.getFullYear() - BIRTH_YEAR;
-        let birthThisYear = new Date(now.getFullYear(), BIRTH_MONTH, BIRTH_DAY);
-        if (now < birthThisYear) {
-          years--;
-          birthThisYear = new Date(now.getFullYear() - 1, BIRTH_MONTH, BIRTH_DAY);
-        }
-        const daysSinceLastBirthday = Math.floor((now.getTime() - birthThisYear.getTime()) / (1000 * 60 * 60 * 24));
-        const minutesInDay = (now.getHours() * 60) + now.getMinutes();
-        const ageStr = `${years}y ${daysSinceLastBirthday}d ${minutesInDay}m`;
+      type ActiveSection = TwoCircleSectionKey | 'cv' | null;
 
-        const el1 = document.getElementById('ageDisplay');
-        const el2 = document.getElementById('ageDisplayMobile');
-        if (el1) el1.textContent = ageStr;
-        if (el2) el2.textContent = ageStr;
+      // ── LIVE AGE UPDATER (13/01/2004) ──
+      function updateAge(): void {
+        const ageStr = computeAgeString();
+        const elDesktop = document.getElementById('ageDisplay');
+        const elMobile = document.getElementById('ageDisplayMobile');
+        if (elDesktop) elDesktop.textContent = ageStr;
+        if (elMobile) elMobile.textContent = ageStr;
       }
 
       updateAge();
       setInterval(updateAge, 30000);
 
-      // ── FLIP DATA FOR 2-CIRCLE EXPERIENCE & PROJECT ──
-      const twoCircleData = {
-        experience: {
-          title: "experience",
-          left: {
-            title: "Lief Capital Asset Management",
-            desc: "Worked with AI and data processing workflows on Azure Machine Learning, covering data preprocessing, feature engineering, model training, and evaluation. Optimized large-scale financial data processing using parallel processing, vectorized computation, and Polars, reducing runtime from over 1 hour to under 30 minutes. Also contributed to a machine learning-based financial ranking pipeline with Walk-Forward Validation."
-          },
-          right: {
-            title: "Thaidotrun Co., Ltd. (Merged into ASICS)",
-            desc: "Worked on computer vision and machine learning solutions for race events. Developed an automated runner highlight extraction system using object detection, tracking, and OCR to generate 10–20 second clips, achieving approximately 60% success rate. Also built a shoe detection and brand classification pipeline using DINO feature extraction, unsupervised learning, and pseudo-labeling, reducing dataset preparation time from 7–10 days to 1–2 days and improving model performance from 0.74 to 0.85 ± 0.05."
-          }
-        },
-        project: {
-          title: "project",
-          left: {
-            title: "MTC-UAV Maize Tassel Counting",
-            desc: "Investigated spatial density estimation as a robust computer vision solution for automated maize tassel enumeration in ultra-dense aerial drone imagery, addressing severe occlusions where individual bounding box detectors fail."
-          },
-          right: {
-            title: "Raptor Blood Cell Classification System",
-            desc: "Collaborative graduation research creating a clinical deep learning object detection diagnostic system for identifying six avian blood-cell classes from raptor blood smears with YOLO-26l, RT-DETR, and Grad-CAM for Explainable AI (XAI)."
-          }
-        }
-      };
-
-      let activeSection = null;
+      // ── VIEW STATE & DOM REFS ──
+      let activeSection: ActiveSection = null;
+      let viewTimer1: ReturnType<typeof setTimeout> | null = null;
+      let viewTimer2: ReturnType<typeof setTimeout> | null = null;
 
       const navExpBtn = document.getElementById('navExperienceBtn');
       const navProjBtn = document.getElementById('navProjectBtn');
       const navCvBtn = document.getElementById('navCvBtn');
-      const cvOverlay = document.getElementById('cvOverlayView');
-      const mainStage = document.querySelector('.venn-stage');
+      const cvOverlay = document.getElementById('cvOverlayView') as HTMLElement | null;
+      const mainStage = document.querySelector('.venn-stage') as HTMLElement | null;
 
-      const venn3Landscape = document.getElementById('vennLandscape');
-      const venn3Portrait = document.getElementById('vennPortrait');
-      const venn2Landscape = document.getElementById('vennTwoCircleLandscape');
-      const venn2Portrait = document.getElementById('vennTwoCirclePortrait');
+      const venn3Landscape = document.getElementById('vennLandscape') as HTMLElement | null;
+      const venn3Portrait = document.getElementById('vennPortrait') as HTMLElement | null;
+      const venn2Landscape = document.getElementById('vennTwoCircleLandscape') as HTMLElement | null;
+      const venn2Portrait = document.getElementById('vennTwoCirclePortrait') as HTMLElement | null;
 
       const twoCenterTitleL = document.getElementById('twoCenterTitleLandscape');
       const twoCenterTitleP = document.getElementById('twoCenterTitlePortrait');
@@ -391,187 +338,103 @@ const initialAge = computeInitialAge();
       const twoTopP = document.getElementById('twoTopPortrait');
       const twoBottomP = document.getElementById('twoBottomPortrait');
 
-      function renderSideCard(item) {
-        if (!item) return '';
-        return `
-          <div class="two-circle-card">
-            <h3 class="two-circle-card-title">${item.title}</h3>
-            <p class="two-circle-card-desc">${item.desc}</p>
-          </div>
-        `;
+      function clearViewTimers(): void {
+        if (viewTimer1) { clearTimeout(viewTimer1); viewTimer1 = null; }
+        if (viewTimer2) { clearTimeout(viewTimer2); viewTimer2 = null; }
       }
 
-      function resetNavButtons() {
+      function resetNavButtons(): void {
         if (navExpBtn) navExpBtn.textContent = 'experience';
         if (navProjBtn) navProjBtn.textContent = 'project';
         if (navCvBtn) navCvBtn.textContent = 'cv';
       }
 
-      // ── FAST SNAP SHAPE ROULETTE (~3s, only triangle / square / circle, both IN and OUT) ──
-      const ROULETTE_SHAPES = ['circle', 'square', 'triangle'];
-      let rouletteTimer = null;
-
-      function shapePath(type, cx, cy, r) {
-        if (type === 'circle') {
-          return `M ${cx - r},${cy} A ${r},${r} 0 1,0 ${cx + r},${cy} A ${r},${r} 0 1,0 ${cx - r},${cy} Z`;
-        }
-        if (type === 'square') {
-          const s = r * 0.844; // matches 760x760 when r=450
-          return `M ${cx - s},${cy - s} L ${cx + s},${cy - s} L ${cx + s},${cy + s} L ${cx - s},${cy + s} Z`;
-        }
-        // triangle
-        const topY = cy - r * 0.87;
-        const botY = cy + r * 0.76;
-        const halfW = r * 0.89;
-        return `M ${cx},${topY.toFixed(1)} L ${(cx + halfW).toFixed(1)},${botY.toFixed(1)} L ${(cx - halfW).toFixed(1)},${botY.toFixed(1)} Z`;
+      function setVennMode(mode: 'three' | 'two'): void {
+        const show3 = mode === 'three';
+        if (venn3Landscape) venn3Landscape.style.setProperty('display', show3 ? '' : 'none', show3 ? '' : 'important');
+        if (venn3Portrait) venn3Portrait.style.setProperty('display', show3 ? '' : 'none', show3 ? '' : 'important');
+        if (venn2Landscape) venn2Landscape.style.setProperty('display', show3 ? 'none' : '', show3 ? 'important' : '');
+        if (venn2Portrait) venn2Portrait.style.setProperty('display', show3 ? 'none' : '', show3 ? 'important' : '');
       }
 
-      function stopShapeRoulette() {
-        if (rouletteTimer) {
-          clearTimeout(rouletteTimer);
-          rouletteTimer = null;
-        }
-        if (mainStage) mainStage.classList.remove('roulette-active');
-        ['morphL1', 'morphL2', 'morphL3', 'morphP1', 'morphP2', 'morphP3'].forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.style.display = 'none';
-        });
-      }
-
-      function runShapeRoulette(targets, onDone) {
-        stopShapeRoulette();
-        if (mainStage) mainStage.classList.add('roulette-active');
-
-        const slotsL = [
-          { el: document.getElementById('morphL1'), cx: 450, cy: 450, r: 450, targetR: 450 },
-          { el: document.getElementById('morphL2'), cx: 800, cy: 450, r: 450, targetR: 387 },
-          { el: document.getElementById('morphL3'), cx: 1150, cy: 450, r: 450, targetR: 445 },
-        ];
-        const slotsP = [
-          { el: document.getElementById('morphP1'), cx: 450, cy: 450, r: 450, targetR: 450 },
-          { el: document.getElementById('morphP2'), cx: 450, cy: 800, r: 450, targetR: 387 },
-          { el: document.getElementById('morphP3'), cx: 450, cy: 1150, r: 450, targetR: 445 },
-        ];
-
-        const allSlots = [...slotsL, ...slotsP];
-        allSlots.forEach(s => {
-          if (s.el) s.el.style.display = 'block';
-        });
-
-        // Fast discrete flips: 21 steps × 85ms ≈ 1.8s (total ~2.0s with fade)
-        const totalSteps = 21;
-        const stepMs = 85;
-        let step = 0;
-        let prevTypes = ['circle', 'circle', 'circle'];
-
-        function tick() {
-          const isFinal = step >= totalSteps;
-          const chosen = [0, 1, 2].map(idx => {
-            if (isFinal) return targets[idx];
-            const pool = ROULETTE_SHAPES.filter(t => t !== prevTypes[idx]);
-            return pool[Math.floor(Math.random() * pool.length)];
-          });
-          prevTypes = chosen;
-
-          allSlots.forEach((s, i) => {
-            const idx = i % 3;
-            const rad = isFinal ? s.targetR : s.r * (idx === 1 ? 0.88 : 0.96);
-            if (s.el) s.el.setAttribute('d', shapePath(chosen[idx], s.cx, s.cy, rad));
-          });
-
-          if (isFinal) {
-            stopShapeRoulette();
-            onDone();
-          } else {
-            step++;
-            rouletteTimer = setTimeout(tick, stepMs);
-          }
-        }
-
-        tick();
-      }
-
-      let viewTimer1 = null;
-      let viewTimer2 = null;
-
-      function clearViewTimers() {
-        if (viewTimer1) { clearTimeout(viewTimer1); viewTimer1 = null; }
-        if (viewTimer2) { clearTimeout(viewTimer2); viewTimer2 = null; }
-        stopShapeRoulette();
-      }
-
-      function showVenn3() {
-        venn3Landscape.style.setProperty('display', '', '');
-        venn3Portrait.style.setProperty('display', '', '');
-        venn2Landscape.style.setProperty('display', 'none', 'important');
-        venn2Portrait.style.setProperty('display', 'none', 'important');
-      }
-
-      function showVenn2() {
-        venn3Landscape.style.setProperty('display', 'none', 'important');
-        venn3Portrait.style.setProperty('display', 'none', 'important');
-        venn2Landscape.style.setProperty('display', '', '');
-        venn2Portrait.style.setProperty('display', '', '');
-      }
-
-      function populateTwoCircle(section) {
-        const data = twoCircleData[section];
-        if (!data) return;
+      function populateTwoCircle(section: TwoCircleSectionKey): void {
+        const data = TWO_CIRCLE_SECTIONS[section];
         if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
         if (twoCenterTitleP) twoCenterTitleP.textContent = data.title;
-        if (twoLeftL) twoLeftL.innerHTML = renderSideCard(data.left);
-        if (twoRightL) twoRightL.innerHTML = renderSideCard(data.right);
-        if (twoTopP) twoTopP.innerHTML = renderSideCard(data.left);
-        if (twoBottomP) twoBottomP.innerHTML = renderSideCard(data.right);
+        if (twoLeftL) twoLeftL.innerHTML = renderSideCardHtml(data.left);
+        if (twoRightL) twoRightL.innerHTML = renderSideCardHtml(data.right);
+        if (twoTopP) twoTopP.innerHTML = renderSideCardHtml(data.left);
+        if (twoBottomP) twoBottomP.innerHTML = renderSideCardHtml(data.right);
       }
 
-      function switchView(section) {
+      function showCvOverlay(): void {
+        document.body.classList.add('cv-dark-mode');
+        mainStage?.classList.add('anim-cv-active');
+        if (!cvOverlay) return;
+        cvOverlay.style.display = 'flex';
+        cvOverlay.classList.remove('cv-closing');
+        void cvOverlay.offsetWidth;
+        cvOverlay.classList.add('cv-active');
+      }
+
+      function hideCvOverlay(onHidden: () => void): void {
+        document.body.classList.remove('cv-dark-mode');
+        cvOverlay?.classList.remove('cv-active');
+        cvOverlay?.classList.add('cv-closing');
+        viewTimer1 = setTimeout(() => {
+          if (cvOverlay) {
+            cvOverlay.style.display = 'none';
+            cvOverlay.classList.remove('cv-closing');
+          }
+          onHidden();
+        }, 260);
+      }
+
+      function settleTwoCircle(delayMs: number): void {
+        viewTimer2 = setTimeout(() => {
+          setVennMode('two');
+          if (!mainStage) return;
+          mainStage.classList.remove('text-out', 'anim-two-active');
+          mainStage.classList.add('two-content-in');
+          setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+        }, delayMs);
+      }
+
+      function switchView(section: Exclude<ActiveSection, null>): void {
         clearViewTimers();
 
+        // Closing active section back to 3-circle landing
         if (activeSection === section) {
-          // ── CLOSING BACK TO 3-CIRCLE LANDING ──
           const closingSection = activeSection;
           activeSection = null;
           resetNavButtons();
 
           if (closingSection === 'cv') {
-            document.body.classList.remove('cv-dark-mode');
-            if (cvOverlay) {
-              cvOverlay.classList.remove('cv-active');
-              cvOverlay.classList.add('cv-closing');
-            }
-            viewTimer1 = setTimeout(() => {
-              if (cvOverlay) {
-                cvOverlay.style.display = 'none';
-                cvOverlay.classList.remove('cv-closing');
-              }
+            hideCvOverlay(() => {
               if (mainStage) {
+                void mainStage.offsetWidth;
                 mainStage.classList.remove('anim-cv-active');
               }
-              runShapeRoulette(['circle', 'circle', 'circle'], () => {
-                if (mainStage) mainStage.classList.remove('text-out');
-              });
-            }, 200);
-          } else {
-            // Closing Experience / Project: fade out 2-circle content, swap to venn3 at 2-circle coords, then spring back
-            if (mainStage) mainStage.classList.add('two-content-out');
-            viewTimer1 = setTimeout(() => {
-              showVenn3();
-              if (mainStage) {
-                mainStage.classList.remove('two-content-out');
-                mainStage.classList.add('text-out', 'anim-two-active');
-                void mainStage.offsetWidth;
-                mainStage.classList.remove('anim-two-active');
-              }
-              viewTimer2 = setTimeout(() => {
-                if (mainStage) mainStage.classList.remove('text-out');
-              }, 680);
-            }, 260);
+              viewTimer2 = setTimeout(() => mainStage?.classList.remove('text-out'), 680);
+            });
+            return;
           }
+
+          mainStage?.classList.add('two-content-out');
+          viewTimer1 = setTimeout(() => {
+            setVennMode('three');
+            if (mainStage) {
+              mainStage.classList.remove('two-content-out');
+              mainStage.classList.add('text-out', 'anim-two-active');
+              void mainStage.offsetWidth;
+              mainStage.classList.remove('anim-two-active');
+            }
+            viewTimer2 = setTimeout(() => mainStage?.classList.remove('text-out'), 680);
+          }, 260);
           return;
         }
 
-        // ── OPENING OR CROSS-SWITCHING ──
+        // Opening or cross-switching sections
         const prevSection = activeSection;
         activeSection = section;
         resetNavButtons();
@@ -580,124 +443,85 @@ const initialAge = computeInitialAge();
         if (section === 'project' && navProjBtn) navProjBtn.textContent = '✕';
         if (section === 'cv' && navCvBtn) navCvBtn.textContent = '✕';
 
-        // 1. Cross-switch: CV -> Experience / Project
-        if (prevSection === 'cv' && (section === 'experience' || section === 'project')) {
-          document.body.classList.remove('cv-dark-mode');
-          if (cvOverlay) {
-            cvOverlay.classList.remove('cv-active');
-            cvOverlay.classList.add('cv-closing');
-          }
+        // Cross-switch: CV -> Experience / Project
+        if (prevSection === 'cv' && section !== 'cv') {
           populateTwoCircle(section);
-          viewTimer1 = setTimeout(() => {
-            if (cvOverlay) {
-              cvOverlay.style.display = 'none';
-              cvOverlay.classList.remove('cv-closing');
-            }
-            if (mainStage) {
-              mainStage.classList.remove('anim-cv-active');
-              mainStage.classList.add('anim-two-active');
-            }
-            viewTimer2 = setTimeout(() => {
-              showVenn2();
-              if (mainStage) {
-                mainStage.classList.remove('text-out', 'anim-two-active');
-                mainStage.classList.add('two-content-in');
-                setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
-              }
-            }, 900);
-          }, 260);
+          hideCvOverlay(() => {
+            mainStage?.classList.remove('anim-cv-active');
+            mainStage?.classList.add('anim-two-active');
+            settleTwoCircle(900);
+          });
           return;
         }
 
-        // 2. Cross-switch: Experience / Project -> CV (with 5-10s shape roulette)
+        // Cross-switch: Experience / Project -> CV
         if ((prevSection === 'experience' || prevSection === 'project') && section === 'cv') {
-          if (mainStage) mainStage.classList.add('two-content-out');
+          mainStage?.classList.add('two-content-out');
           viewTimer1 = setTimeout(() => {
-            showVenn3();
-            if (mainStage) {
-              mainStage.classList.remove('two-content-out', 'anim-two-active');
-              mainStage.classList.add('text-out');
-            }
-            runShapeRoulette(['square', 'circle', 'triangle'], () => {
-              document.body.classList.add('cv-dark-mode');
-              if (mainStage) mainStage.classList.add('anim-cv-active');
-              if (cvOverlay) {
-                cvOverlay.style.display = 'flex';
-                cvOverlay.classList.remove('cv-closing');
-                void cvOverlay.offsetWidth;
-                cvOverlay.classList.add('cv-active');
-              }
-            });
-          }, 260);
-          return;
-        }
-
-        // 3. Cross-switch: Experience <-> Project
-        if ((prevSection === 'experience' && section === 'project') || (prevSection === 'project' && section === 'experience')) {
-          if (mainStage) mainStage.classList.add('two-content-out');
-          viewTimer1 = setTimeout(() => {
-            populateTwoCircle(section);
+            setVennMode('three');
             if (mainStage) {
               mainStage.classList.remove('two-content-out');
-              mainStage.classList.add('two-content-in');
-              setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+              mainStage.classList.add('text-out', 'anim-two-active');
+              void mainStage.offsetWidth;
+              mainStage.classList.remove('anim-two-active');
             }
+            viewTimer2 = setTimeout(showCvOverlay, 240);
           }, 260);
           return;
         }
 
-        // 4. Normal open from Landing (3-circle -> target)
-        if (mainStage) mainStage.classList.add('text-out');
+        // Cross-switch: Experience <-> Project
+        if (prevSection && section !== 'cv') {
+          mainStage?.classList.add('two-content-out');
+          viewTimer1 = setTimeout(() => {
+            populateTwoCircle(section);
+            if (!mainStage) return;
+            mainStage.classList.remove('two-content-out');
+            mainStage.classList.add('two-content-in');
+            setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
+          }, 260);
+          return;
+        }
 
+        // Normal open from 3-circle landing
+        mainStage?.classList.add('text-out');
         viewTimer1 = setTimeout(() => {
           if (section === 'cv') {
-            runShapeRoulette(['square', 'circle', 'triangle'], () => {
-              document.body.classList.add('cv-dark-mode');
-              if (mainStage) mainStage.classList.add('anim-cv-active');
-              if (cvOverlay) {
-                cvOverlay.style.display = 'flex';
-                cvOverlay.classList.remove('cv-closing');
-                void cvOverlay.offsetWidth;
-                cvOverlay.classList.add('cv-active');
-              }
-            });
+            showCvOverlay();
           } else {
             populateTwoCircle(section);
-            if (mainStage) mainStage.classList.add('anim-two-active');
-            viewTimer2 = setTimeout(() => {
-              showVenn2();
-              if (mainStage) {
-                mainStage.classList.remove('text-out', 'anim-two-active');
-                mainStage.classList.add('two-content-in');
-                setTimeout(() => mainStage.classList.remove('two-content-in'), 450);
-              }
-            }, 900);
+            mainStage?.classList.add('anim-two-active');
+            settleTwoCircle(900);
           }
         }, 260);
       }
 
-      if (navExpBtn) navExpBtn.addEventListener('click', () => switchView('experience'));
-      if (navProjBtn) navProjBtn.addEventListener('click', () => switchView('project'));
-      if (navCvBtn) navCvBtn.addEventListener('click', () => switchView('cv'));
+      navExpBtn?.addEventListener('click', () => switchView('experience'));
+      navProjBtn?.addEventListener('click', () => switchView('project'));
+      navCvBtn?.addEventListener('click', () => switchView('cv'));
 
       // ── ARC PUSH INTERACTIONS (Email & Moss via shared rAF helper) ──
-      // Snappy spring-like easeOutBack curve
-      function easeOutBack(t) {
-        const c1 = 1.4;
-        const c3 = c1 + 1;
-        return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+      interface ArcTrack {
+        el: Element | null;
+        closed: number;
+        open: number;
       }
 
-      function getOffset(el, fallback) {
+      const arcAnimFrames: Record<string, number | null> = {};
+
+      function getOffset(el: Element | null, fallback: number): number {
         if (!el) return fallback;
-        const val = parseFloat(el.getAttribute('startOffset'));
+        const val = parseFloat(el.getAttribute('startOffset') ?? '');
         return Number.isNaN(val) ? fallback : val;
       }
 
-      const arcAnimFrames = {};
-
-      function animateArcGroup(key, tracks, opacityTargets, opening) {
-        if (arcAnimFrames[key]) cancelAnimationFrame(arcAnimFrames[key]);
+      function animateArcGroup(
+        key: string,
+        tracks: ArcTrack[],
+        revealLinks: (HTMLElement | SVGElement | null)[],
+        opening: boolean
+      ): void {
+        if (arcAnimFrames[key]) cancelAnimationFrame(arcAnimFrames[key]!);
 
         const resolvedTracks = tracks.map(tr => ({
           el: tr.el,
@@ -705,11 +529,11 @@ const initialAge = computeInitialAge();
           to: opening ? tr.open : tr.closed,
         }));
 
-        const resolvedOpacities = opacityTargets.map(op => {
-          if (op.link) op.link.style.pointerEvents = opening ? 'auto' : 'none';
+        const resolvedOpacities = revealLinks.map(link => {
+          if (link) link.style.pointerEvents = opening ? 'auto' : 'none';
           return {
-            link: op.link,
-            from: op.link ? parseFloat(op.link.style.opacity || (opening ? '0' : '1')) : (opening ? 0 : 1),
+            link,
+            from: link ? parseFloat(link.style.opacity || (opening ? '0' : '1')) : (opening ? 0 : 1),
             to: opening ? 1 : 0,
           };
         });
@@ -717,15 +541,13 @@ const initialAge = computeInitialAge();
         const duration = 620;
         const startTime = performance.now();
 
-        function tick(now) {
+        function tick(now: number): void {
           const rawT = Math.min(1, (now - startTime) / duration);
           const eased = easeOutBack(rawT);
           const alphaT = Math.min(1, rawT * 1.4);
 
           resolvedTracks.forEach(tr => {
-            if (tr.el) {
-              tr.el.setAttribute('startOffset', `${(tr.from + (tr.to - tr.from) * eased).toFixed(2)}%`);
-            }
+            tr.el?.setAttribute('startOffset', interpolatePercent(tr.from, tr.to, eased));
           });
 
           resolvedOpacities.forEach(op => {
@@ -744,74 +566,72 @@ const initialAge = computeInitialAge();
         arcAnimFrames[key] = requestAnimationFrame(tick);
       }
 
-      // Email push interaction
       let emailPushed = false;
       const emailBtn = document.getElementById('emailTriggerBtn');
       const tpLinkedin = document.getElementById('tpLinkedinL');
       const tpEmail = document.getElementById('tpEmailL');
       const tpActualEmail = document.getElementById('tpActualEmailL');
-      const actualEmail = document.getElementById('actualEmailLink');
+      const actualEmail = document.getElementById('actualEmailLink') as SVGElement | null;
 
-      if (emailBtn) {
-        emailBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          emailPushed = !emailPushed;
-          animateArcGroup(
-            'email',
-            [
-              { el: tpLinkedin, closed: 66, open: 24 },
-              { el: tpEmail, closed: 79, open: 42 },
-              { el: tpActualEmail, closed: 102, open: 78 },
-            ],
-            [{ link: actualEmail }],
-            emailPushed
-          );
-        });
-      }
+      emailBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        emailPushed = !emailPushed;
+        animateArcGroup(
+          'email',
+          [
+            { el: tpLinkedin, closed: 66, open: 24 },
+            { el: tpEmail, closed: 79, open: 42 },
+            { el: tpActualEmail, closed: 102, open: 78 },
+          ],
+          [actualEmail],
+          emailPushed
+        );
+      });
 
-      // Moss push interaction (reveals IG & gaming TikTok along left arc)
       let mossPushed = false;
       const mossBtn = document.getElementById('mossTriggerBtn');
       const tpMoss = document.getElementById('tpMossL');
       const tpIg = document.getElementById('tpIgL');
       const tpTiktok = document.getElementById('tpTiktokL');
-      const igLink = document.getElementById('igLinkL');
-      const tiktokLink = document.getElementById('tiktokLinkL');
+      const igLink = document.getElementById('igLinkL') as SVGElement | null;
+      const tiktokLink = document.getElementById('tiktokLinkL') as SVGElement | null;
 
-      if (mossBtn) {
-        mossBtn.addEventListener('click', (e) => {
-          e.preventDefault();
-          mossPushed = !mossPushed;
-          animateArcGroup(
-            'moss',
-            [
-              { el: tpMoss, closed: 50, open: 85 },
-              { el: tpIg, closed: -10, open: 61 },
-              { el: tpTiktok, closed: -25, open: 24 },
-            ],
-            [{ link: igLink }, { link: tiktokLink }],
-            mossPushed
-          );
-        });
-      }
+      mossBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        mossPushed = !mossPushed;
+        animateArcGroup(
+          'moss',
+          [
+            { el: tpMoss, closed: 50, open: 85 },
+            { el: tpIg, closed: -10, open: 61 },
+            { el: tpTiktok, closed: -25, open: 24 },
+          ],
+          [igLink, tiktokLink],
+          mossPushed
+        );
+      });
+
+      // ── SHARE BUTTON ──
       const shareBtn = document.getElementById('shareBtn');
       const toast = document.getElementById('toast');
 
-      shareBtn.addEventListener('click', async () => {
+      shareBtn?.addEventListener('click', async () => {
         const url = window.location.href;
         if (navigator.share) {
           try {
             await navigator.share({
               title: 'sitedotmoss.vercel.app',
               text: 'Tinnaphop Sonsang (Moss)',
-              url: url
+              url,
             });
             return;
-          } catch (e) {}
+          } catch {
+            // Fall through to clipboard copy
+          }
         }
         navigator.clipboard.writeText(url).then(() => {
-          toast.classList.add('show');
-          setTimeout(() => toast.classList.remove('show'), 1800);
+          toast?.classList.add('show');
+          setTimeout(() => toast?.classList.remove('show'), 1800);
         });
       });
     </script>
@@ -908,67 +728,6 @@ const initialAge = computeInitialAge();
 
   .nav-list a:hover, .nav-btn:hover {
     opacity: 0.4;
-  }
-
-  /* ── VENN OVERLAY HTML STYLES ── */
-  .venn-overlay-fo {
-    overflow: visible;
-    pointer-events: auto;
-  }
-
-  .venn-overlay-inner {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    box-sizing: border-box;
-    padding: 10px 4px;
-    font-family: 'Google Sans Flex', -apple-system, sans-serif;
-  }
-
-  .venn-cv-card {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    max-width: 100%;
-  }
-
-  .venn-cv-tag {
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    color: #71717a;
-    text-transform: uppercase;
-  }
-
-  .venn-cv-item {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  .venn-cv-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: #000000;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-
-  .venn-cv-sub {
-    font-size: 11px;
-    color: #71717a;
-    line-height: 1.2;
-  }
-
-  .venn-cv-body {
-    font-size: 12px;
-    color: #27272a;
-    line-height: 1.35;
-    letter-spacing: -0.01em;
   }
 
   /* ── MAIN VENN STAGE ── */
@@ -1121,23 +880,6 @@ const initialAge = computeInitialAge();
     opacity: 0;
     pointer-events: none;
     transform: scale(0.84);
-  }
-
-  .venn-morph-path {
-    fill: none;
-    stroke: #000000;
-    stroke-width: 3.2px;
-    stroke-linejoin: round;
-    pointer-events: none;
-  }
-
-  .venn-morph-mid {
-    fill: #ffffff;
-  }
-
-  .venn-stage.roulette-active .venn-circle {
-    opacity: 0 !important;
-    transition: opacity 0.15s ease;
   }
 
   .venn-text, .eye-img {
@@ -1517,8 +1259,7 @@ const initialAge = computeInitialAge();
     transition: color 0.5s ease, opacity 0.15s ease;
   }
 
-  .venn-circle,
-  .venn-morph-path {
+  .venn-circle {
     transition: transform 0.95s cubic-bezier(0.22, 1.18, 0.36, 1), opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), stroke 0.5s ease, fill 0.5s ease;
   }
 
@@ -1543,8 +1284,7 @@ const initialAge = computeInitialAge();
     color: #e4e4e7;
   }
 
-  body.cv-dark-mode .venn-circle,
-  body.cv-dark-mode .venn-morph-path {
+  body.cv-dark-mode .venn-circle {
     stroke: #ffffff;
   }
 
