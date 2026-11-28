@@ -72,6 +72,15 @@ export interface DetectionResult {
 	readonly cells: DetectedCell[];
 }
 
+// ── Inference backend contract ──────────────────────────────
+/**
+ * Contract every inference engine must fulfil, so the page can swap
+ * between HF Space API, ONNX/WASM or TensorRT without touching the UI.
+ */
+export interface WbcInferenceBackend {
+	infer(file: File, onProgress?: (pct: number, status: string) => void): Promise<DetectionResult>;
+}
+
 // ── Application state machine ───────────────────────────────
 /** Finite states of the NextWBC UI. */
 export enum AppState {
@@ -107,6 +116,31 @@ export const DEFAULT_INFERENCE_CONFIG: InferenceConfig = {
 	spaceUrl: 'https://badgaitintin-nextwbc.hf.space',
 	maxFileSizeMB: 20,
 	allowedMimePrefix: 'image/',
+};
+
+/** Configuration for the client-side ONNX Runtime Web (WASM) backend. */
+export interface OnnxInferenceConfig {
+	readonly modelUrl: string;
+	/** Square model input side in pixels (Ultralytics `imgsz`). */
+	readonly inputSize: number;
+	/** Class names in the model's output order — mirrors the `names` metadata of the ONNX file. */
+	readonly classNames: readonly string[];
+	readonly confThreshold: number;
+	readonly iouThreshold: number;
+	readonly maxDetections: number;
+}
+
+/**
+ * Default ONNX configuration. Matches the Ultralytics YOLO26n export of
+ * `best.onnx` and the default predict settings it was evaluated with.
+ */
+export const DEFAULT_ONNX_INFERENCE_CONFIG: OnnxInferenceConfig = {
+	modelUrl: '/best.onnx',
+	inputSize: 640,
+	classNames: ['basophils', 'eosinophils', 'heterophils', 'lymphocytes', 'monocytes', 'thrombocytes'],
+	confThreshold: 0.25,
+	iouThreshold: 0.7,
+	maxDetections: 300,
 };
 
 // ── File validation ─────────────────────────────────────────

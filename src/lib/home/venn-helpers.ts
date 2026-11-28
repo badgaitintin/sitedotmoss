@@ -10,8 +10,12 @@ export interface BirthDateParts {
 }
 
 export interface TwoCircleCard {
+  period?: string;
+  role?: string;
   title: string;
-  desc: string;
+  desc?: string;
+  bullets?: string[];
+  bgImage?: string;
 }
 
 export interface TwoCircleSection {
@@ -78,23 +82,49 @@ export const TWO_CIRCLE_SECTIONS: Record<TwoCircleSectionKey, TwoCircleSection> 
   experience: {
     title: 'experience',
     left: {
+      period: 'May 2026',
+      role: 'Data Scientist',
       title: 'Lief Capital Asset Management',
-      desc: 'Worked with AI and data processing workflows on Azure Machine Learning, covering data preprocessing, feature engineering, model training, and evaluation. Optimized large-scale financial data processing using parallel processing, vectorized computation, and Polars, reducing runtime from over 1 hour to under 30 minutes. Also contributed to a machine learning-based financial ranking pipeline with Walk-Forward Validation.',
+      bullets: [
+        'Worked across AI & data workflows on Azure Machine Learning (EDA, preprocessing, feature engineering, training, and evaluation).',
+        'Optimized multi-decade financial data pipelines using parallel processing, vectorization, and Polars, cutting runtime from >1h to <30m.',
+        'Contributed to a machine learning financial ranking pipeline with time-aware Walk-Forward Validation.',
+      ],
     },
     right: {
+      period: 'September 2025 – April 2026',
+      role: 'Intern',
       title: 'Thaidotrun Co., Ltd. (Merged into ASICS)',
-      desc: 'Worked on computer vision and machine learning solutions for race events. Developed an automated runner highlight extraction system using object detection, tracking, and OCR to generate 10–20 second clips, achieving approximately 60% success rate. Also built a shoe detection and brand classification pipeline using DINO feature extraction, unsupervised learning, and pseudo-labeling, reducing dataset preparation time from 7–10 days to 1–2 days and improving model performance from 0.74 to 0.85 ± 0.05.',
+      bullets: [
+        'Built an automated runner highlight extraction pipeline (detection, tracking, OCR) generating 10–20s clips at ~60% success rate.',
+        'Developed a shoe detection & brand classification pipeline using DINO feature extraction, unsupervised clustering, and pseudo-labeling.',
+        'Cut dataset preparation from 7–10 days to 1–2 days and improved test performance from 0.74 to 0.85 ± 0.05.',
+      ],
     },
   },
   project: {
     title: 'project',
     left: {
-      title: 'MTC-UAV Maize Tassel Counting',
-      desc: 'Investigated spatial density estimation as a robust computer vision solution for automated maize tassel enumeration in ultra-dense aerial drone imagery, addressing severe occlusions where individual bounding box detectors fail.',
+      period: 'August 2024 – October 2024',
+      role: 'Pre-Graduation Thesis · Computer Vision, Edge AI',
+      title: 'Shrimp Detection & Counting System',
+      bgImage: '/shrimp.jpg',
+      bullets: [
+        'Built an aquaculture shrimp detection & counting prototype fusing camera data with an underwater ultrasonic transducer.',
+        'Trained YOLO11n on ~300 varied images (0.882 mAP@0.5) and converted to TensorRT FP16 (~28 FPS on NVIDIA Jetson Nano).',
+        'Ran a live freshwater experiment, identifying flood-prone outdoor hardware risks before pond-scale rollout.',
+      ],
     },
     right: {
-      title: 'Raptor Blood Cell Classification System',
-      desc: 'Collaborative graduation research creating a clinical deep learning object detection diagnostic system for identifying six avian blood-cell classes from raptor blood smears with YOLO-26l, RT-DETR, and Grad-CAM for Explainable AI (XAI).',
+      period: 'November 2024 – August 2025',
+      role: 'Graduation Thesis · B.Eng. Computer Engineering & AI',
+      title: 'Detection of White Blood Cells in Raptors',
+      bgImage: '/wbc.png',
+      bullets: [
+        'Developed a deep learning detector for 6 avian blood-cell classes across 1,180 annotated smear images.',
+        'Benchmarked YOLO-11l/12l/26l & RT-DETR-l; YOLO-26l reached 0.957 mAP@0.5 (93.4% recall) with Grad-CAM XAI.',
+        'Built a full-stack Next.js/Supabase app with client-side WebAssembly (WASM) inference and authored a journal manuscript.',
+      ],
     },
   },
 };
@@ -104,10 +134,26 @@ export const TWO_CIRCLE_SECTIONS: Record<TwoCircleSectionKey, TwoCircleSection> 
  */
 export function renderSideCardHtml(item: TwoCircleCard | null | undefined): string {
   if (!item) return '';
+  const periodHtml = item.period
+    ? `<div class="two-circle-card-period">${escapeHtml(item.period)}</div>`
+    : '';
+  const roleHtml = item.role
+    ? `<div class="two-circle-card-role">${escapeHtml(item.role)}</div>`
+    : '';
+  const bodyHtml = item.bullets?.length
+    ? `<ul class="two-circle-card-bullets">${item.bullets
+        .map((b) => `<li>${escapeHtml(b)}</li>`)
+        .join('')}</ul>`
+    : item.desc
+      ? `<p class="two-circle-card-desc">${escapeHtml(item.desc)}</p>`
+      : '';
+
   return `
     <div class="two-circle-card">
+      ${periodHtml}
+      ${roleHtml}
       <h3 class="two-circle-card-title">${escapeHtml(item.title)}</h3>
-      <p class="two-circle-card-desc">${escapeHtml(item.desc)}</p>
+      ${bodyHtml}
     </div>
   `.trim();
 }

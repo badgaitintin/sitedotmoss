@@ -1,0 +1,455 @@
+---
+// src/pages/nextwbc-new.astro — Minimalist Venn-themed NextWBC Avian Blood Cell Demo
+import '@fontsource/google-sans-flex';
+import { ORT_SCRIPT_URL } from '../lib/nextwbc/onnx-backend';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NextWBC Demo — sitedotmoss.vercel.app</title>
+    <meta name="description" content="NextWBC — Avian White Blood Cell Detection Demo (sitedotmoss.vercel.app)" />
+    <script is:inline src={ORT_SCRIPT_URL} defer></script>
+  </head>
+  <body>
+
+    <!-- TOP-LEFT: BRAND -->
+    <header class="corner top-left">
+      <a href="/" class="brand-link">sitedotmoss.vercel.app</a>
+    </header>
+
+    <!-- TOP-RIGHT: NAVIGATION -->
+    <nav class="corner top-right">
+      <ul class="nav-list">
+        <li><a href="/">back</a></li>
+        <li><a href="/nextwbc">legacy demo</a></li>
+      </ul>
+    </nav>
+
+    <!-- BACKGROUND VENN: CIRCLE · SQUARE · TRIANGLE · CENTER CIRCLE -->
+    <div class="venn-bg" aria-hidden="true">
+      <svg class="venn-svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+        <circle cx="450" cy="450" r="450" class="venn-shape" />
+        <rect x="70" y="70" width="760" height="760" class="venn-shape" />
+        <polygon points="1150,60 1550,790 750,790" class="venn-shape" />
+        <circle cx="800" cy="450" r="450" class="venn-shape" />
+      </svg>
+    </div>
+
+    <!-- MAIN DEMO WORKSPACE -->
+    <main class="demo-stage">
+      <!-- IDLE -->
+      <div class="stage-col" id="idleView">
+        <p class="kicker">graduation thesis · computer vision</p>
+        <h1 class="title">NextWBC</h1>
+        <p class="sub">YOLO26n · ONNX WASM — runs entirely in your browser.</p>
+
+        <label class="dropzone" id="wbcDropzone" for="wbcFileInput">
+          <input type="file" id="wbcFileInput" accept="image/*" hidden />
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+          <span class="dz-title">drop blood smear image</span>
+        </label>
+
+        <button type="button" class="sample-chip" id="sampleBtn">
+          <img src="/raptor_wbc_00001.jpeg" alt="Sample blood smear" />
+          <span>or try a sample</span>
+        </button>
+
+        <div class="status-row hidden" id="statusBox">
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+          <span class="status-text" id="statusText">loading model…</span>
+        </div>
+        <p class="error-box hidden" id="errorBox"></p>
+      </div>
+
+      <!-- RESULT -->
+      <div class="stage-col hidden" id="resultView">
+        <img id="annotatedImg" src="" alt="Annotated WBC Detections" />
+        <div class="result-line">
+          <span id="totalCellsLabel">0 cells</span>
+          <button type="button" class="reset-btn" id="resetBtn">reset</button>
+        </div>
+        <div class="crops-row" id="cropsRow"></div>
+      </div>
+    </main>
+
+    <!-- BOTTOM-LEFT CREDIT -->
+    <aside class="corner bottom-left">
+      <span class="inspired-text">inspired by robyn — <a href="https://sexistential.xyz" target="_blank" rel="noopener noreferrer">sexistential.xyz</a></span>
+    </aside>
+
+    <!-- BOTTOM 5-COLOR ACCENT STRIPE -->
+    <div class="bottom-stripe">
+      <span class="stripe-block stripe-white"></span>
+      <span class="stripe-block stripe-black"></span>
+      <span class="stripe-block stripe-sakura"></span>
+      <span class="stripe-block stripe-blue"></span>
+      <span class="stripe-block stripe-mustard"></span>
+    </div>
+
+    <script>
+      import { OnnxRuntimeBackend } from '../lib/nextwbc/onnx-backend';
+      import { WBC_CLASS_MAP, validateFile, type DetectionResult } from '../lib/nextwbc/nextwbc-types';
+
+      const backend = new OnnxRuntimeBackend();
+
+      const idleView = document.getElementById('idleView')!;
+      const resultView = document.getElementById('resultView')!;
+      const dropzone = document.getElementById('wbcDropzone') as HTMLLabelElement;
+      const fileInput = document.getElementById('wbcFileInput') as HTMLInputElement;
+      const statusBox = document.getElementById('statusBox')!;
+      const statusText = document.getElementById('statusText')!;
+      const progressFill = document.getElementById('progressFill')!;
+      const errorBox = document.getElementById('errorBox')!;
+      const annotatedImg = document.getElementById('annotatedImg') as HTMLImageElement;
+      const totalCellsLabel = document.getElementById('totalCellsLabel')!;
+      const cropsRow = document.getElementById('cropsRow')!;
+      const sampleBtn = document.getElementById('sampleBtn') as HTMLButtonElement;
+
+      function renderResult(res: DetectionResult): void {
+        idleView.classList.add('hidden');
+        resultView.classList.remove('hidden');
+        totalCellsLabel.textContent = `${res.totalCells} cell${res.totalCells === 1 ? '' : 's'}`;
+        annotatedImg.src = res.annotatedImage;
+        cropsRow.innerHTML = res.cells.slice(0, 12).map(cell => {
+          const cfg = WBC_CLASS_MAP.get(cell.class)!;
+          const conf = Math.round(cell.confidence * 100);
+          return `
+            <span class="crop-chip">
+              <i class="dot" style="background:${cfg.color}"></i>
+              ${cfg.label} · ${conf}%
+            </span>
+          `;
+        }).join('');
+      }
+
+      async function handleFile(file: File): Promise<void> {
+        errorBox.classList.add('hidden');
+        const err = validateFile(file);
+        if (err) {
+          errorBox.textContent = err;
+          errorBox.classList.remove('hidden');
+          return;
+        }
+        statusBox.classList.remove('hidden');
+        try {
+          const result = await backend.infer(file, (pct, msg) => {
+            progressFill.style.width = `${pct}%`;
+            statusText.textContent = msg.toLowerCase();
+          });
+          statusBox.classList.add('hidden');
+          renderResult(result);
+        } catch (e) {
+          statusBox.classList.add('hidden');
+          errorBox.textContent = e instanceof Error ? e.message : 'inference failed — try again';
+          errorBox.classList.remove('hidden');
+        }
+      }
+
+      fileInput.addEventListener('change', () => {
+        const file = fileInput.files?.[0];
+        if (file) void handleFile(file);
+      });
+
+      dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+      });
+      dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+      dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        const file = e.dataTransfer?.files?.[0];
+        if (file) void handleFile(file);
+      });
+
+      sampleBtn.addEventListener('click', async () => {
+        try {
+          const res = await fetch('/raptor_wbc_00001.jpeg');
+          if (!res.ok) throw new Error('could not load sample');
+          await handleFile(new File([await res.blob()], 'raptor_wbc_00001.jpeg', { type: 'image/jpeg' }));
+        } catch (e) {
+          errorBox.textContent = e instanceof Error ? e.message : 'failed to load sample';
+          errorBox.classList.remove('hidden');
+        }
+      });
+
+      document.getElementById('resetBtn')!.addEventListener('click', () => {
+        fileInput.value = '';
+        resultView.classList.add('hidden');
+        idleView.classList.remove('hidden');
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    --site-font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: #ffffff;
+    color: #000000;
+    font-family: 'Google Sans Flex', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .hidden { display: none !important; }
+
+  .corner {
+    position: fixed;
+    z-index: 50;
+    user-select: none;
+  }
+  .top-left { top: 20px; left: 24px; }
+  .top-right { top: 18px; right: 24px; }
+  .bottom-left { bottom: 22px; left: 24px; }
+
+  .brand-link, .nav-list a {
+    font-size: var(--site-font-size);
+    font-weight: 400;
+    letter-spacing: -0.04em;
+    color: #000000;
+    text-decoration: none;
+    line-height: 1.08;
+    display: block;
+    transition: opacity 0.15s ease;
+  }
+  .brand-link:hover, .nav-list a:hover { opacity: 0.45; }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  /* Background venn shapes */
+  .venn-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.1;
+  }
+  .venn-svg { width: 100%; height: 100%; }
+  .venn-shape {
+    fill: none;
+    stroke: #000000;
+    stroke-width: 3.2px;
+  }
+
+  /* Main stage */
+  .demo-stage {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 96px 24px 72px;
+  }
+
+  .stage-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    text-align: center;
+    width: min(680px, 100%);
+  }
+
+  .kicker {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #71717a;
+  }
+
+  .title {
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .sub {
+    font-size: 0.9rem;
+    color: #3f3f46;
+  }
+
+  /* Circular dropzone (circle motif) */
+  .dropzone {
+    width: min(300px, 62vw);
+    aspect-ratio: 1;
+    border: 1.5px dashed #000000;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #000000;
+    transition: background-color 0.15s ease;
+  }
+  .dropzone:hover, .dropzone.dragover { background: #f4f4f5; }
+  .dz-title { font-size: 0.9rem; letter-spacing: -0.01em; }
+
+  /* Sample chip */
+  .sample-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 6px;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .sample-chip:hover { background: #f4f4f5; }
+  .sample-chip img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid #e4e4e7;
+  }
+
+  /* Status */
+  .status-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: min(300px, 62vw);
+  }
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: #e4e4e7;
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    width: 0%;
+    height: 100%;
+    background: #000000;
+    transition: width 0.25s ease;
+  }
+  .status-text {
+    font-size: 0.72rem;
+    color: #71717a;
+    white-space: nowrap;
+  }
+
+  .error-box {
+    font-size: 0.82rem;
+    color: #b91c1c;
+  }
+
+  /* Result */
+  #annotatedImg {
+    max-width: 100%;
+    max-height: 52vh;
+    border: 1.5px solid #000000;
+    border-radius: 20px;
+    object-fit: contain;
+  }
+
+  .result-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  .reset-btn {
+    padding: 4px 12px;
+    border: 1px solid #000000;
+    border-radius: 999px;
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.8rem;
+    cursor: pointer;
+  }
+  .reset-btn:hover { background: #f4f4f5; }
+
+  :global(.crops-row) {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  :global(.crop-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 12px;
+    border: 1px solid #e4e4e7;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  :global(.crop-chip .dot) {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+
+  .inspired-text { font-size: 0.75rem; color: #71717a; }
+  .inspired-text a { color: #27272a; text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Bottom stripe */
+  .bottom-stripe {
+    position: fixed;
+    bottom: 0;
+    left: 38%;
+    right: 18%;
+    height: 16px;
+    display: flex;
+    z-index: 40;
+    pointer-events: none;
+  }
+  .stripe-block { flex: 1; height: 100%; }
+  .stripe-white { background: #ffffff; border: 1px solid #e4e4e7; }
+  .stripe-black { background: #000000; }
+  .stripe-sakura { background: #ffb7c5; }
+  .stripe-blue { background: #0038a8; }
+  .stripe-mustard { background: #e1ad01; }
+
+  @media (max-width: 820px) {
+    .demo-stage { padding: 110px 14px 64px; }
+    .top-left { top: 14px; left: 14px; }
+    .top-right { top: 12px; right: 14px; }
+    .bottom-left { bottom: 18px; left: 14px; }
+    .bottom-stripe { left: 20%; right: 6%; height: 10px; }
+  }
+</style>

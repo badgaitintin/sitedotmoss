@@ -192,11 +192,28 @@ const initialAge = computeAgeString();
       <!-- 2-CIRCLE VENN (FLIP PAGE FOR EXPERIENCE & PROJECT) -->
       <!-- Landscape 2 circles (Left circle cx=560, Right circle cx=1040, r=450) -->
       <svg class="venn-svg landscape-venn" id="vennTwoCircleLandscape" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" style="display:none !important;">
+        <defs>
+          <mask id="maskTwoLeftL">
+            <circle cx="560" cy="450" r="450" fill="white" />
+            <circle cx="1040" cy="450" r="450" fill="black" />
+          </mask>
+          <mask id="maskTwoRightL">
+            <circle cx="1040" cy="450" r="450" fill="white" />
+            <circle cx="560" cy="450" r="450" fill="black" />
+          </mask>
+          <!-- Outer right arc for curved "demo nextwbc" link in Project mode -->
+          <path id="arcTwoOuterRightL" d="M 1430,225 A 450,450 0 0,1 1430,675" fill="none" />
+        </defs>
+
+        <!-- Masked background images for project section -->
+        <image id="twoBgLeftL" href="/shrimp.jpg" x="110" y="0" width="900" height="900" preserveAspectRatio="xMidYMid slice" mask="url(#maskTwoLeftL)" class="two-bg-img" style="display:none;" />
+        <image id="twoBgRightL" href="/wbc.png" x="590" y="0" width="900" height="900" preserveAspectRatio="xMidYMid slice" mask="url(#maskTwoRightL)" class="two-bg-img" style="display:none;" />
+
         <circle cx="560" cy="450" r="450" class="venn-circle" />
         <circle cx="1040" cy="450" r="450" class="venn-circle" />
 
-        <!-- Left Circle Exclusive: x=340 -->
-        <foreignObject id="twoLeftFO" x="120" y="240" width="440" height="420" class="two-circle-fo">
+        <!-- Left Circle Exclusive: center x=350 (60px margin from 110..590) -->
+        <foreignObject id="twoLeftFO" x="170" y="210" width="360" height="480" class="two-circle-fo">
           <div id="twoLeftLandscape" class="two-circle-content"></div>
         </foreignObject>
 
@@ -206,19 +223,43 @@ const initialAge = computeAgeString();
           </text>
         </g>
 
-        <!-- Right Circle Exclusive: x=1260 -->
-        <foreignObject id="twoRightFO" x="1040" y="240" width="440" height="420" class="two-circle-fo">
+        <!-- Right Circle Exclusive: center x=1250 (60px margin from 1010..1490) -->
+        <foreignObject id="twoRightFO" x="1070" y="210" width="360" height="480" class="two-circle-fo">
           <div id="twoRightLandscape" class="two-circle-content"></div>
         </foreignObject>
+
+        <!-- Curved link along outer right edge (shown in Project mode) -->
+        <a href="/nextwbc-new" id="nextwbcDemoLinkL" style="display:none;">
+          <text class="venn-text text-curved hover-link" dy="-14">
+            <textPath href="#arcTwoOuterRightL" startOffset="50%" text-anchor="middle">
+              demo nextwbc ↗
+            </textPath>
+          </text>
+        </a>
       </svg>
 
       <!-- Portrait 2 circles (Top circle cy=560, Bottom circle cy=1040, r=450) -->
       <svg class="venn-svg portrait-venn" id="vennTwoCirclePortrait" viewBox="0 0 900 1600" preserveAspectRatio="xMidYMid slice" style="display:none !important;">
+        <defs>
+          <mask id="maskTwoTopP">
+            <circle cx="450" cy="560" r="450" fill="white" />
+            <circle cx="450" cy="1040" r="450" fill="black" />
+          </mask>
+          <mask id="maskTwoBottomP">
+            <circle cx="450" cy="1040" r="450" fill="white" />
+            <circle cx="450" cy="560" r="450" fill="black" />
+          </mask>
+          <path id="arcTwoOuterBottomP" d="M 885,1156 A 450,450 0 0,1 566,1475" fill="none" />
+        </defs>
+
+        <image id="twoBgTopP" href="/shrimp.jpg" x="0" y="110" width="900" height="900" preserveAspectRatio="xMidYMid slice" mask="url(#maskTwoTopP)" class="two-bg-img" style="display:none;" />
+        <image id="twoBgBottomP" href="/wbc.png" x="0" y="590" width="900" height="900" preserveAspectRatio="xMidYMid slice" mask="url(#maskTwoBottomP)" class="two-bg-img" style="display:none;" />
+
         <circle cx="450" cy="560" r="450" class="venn-circle" />
         <circle cx="450" cy="1040" r="450" class="venn-circle" />
 
-        <!-- Top Circle Exclusive: y=320 -->
-        <foreignObject id="twoTopFO" x="100" y="180" width="700" height="340" class="two-circle-fo">
+        <!-- Top Circle Exclusive: center (450, 385) inside circle curves -->
+        <foreignObject id="twoTopFO" x="170" y="215" width="560" height="340" class="two-circle-fo">
           <div id="twoTopPortrait" class="two-circle-content"></div>
         </foreignObject>
 
@@ -228,10 +269,19 @@ const initialAge = computeAgeString();
           </text>
         </g>
 
-        <!-- Bottom Circle Exclusive: y=1280 -->
-        <foreignObject id="twoBottomFO" x="100" y="1080" width="700" height="340" class="two-circle-fo">
+        <!-- Bottom Circle Exclusive: center (450, 1215) inside circle curves -->
+        <foreignObject id="twoBottomFO" x="170" y="1045" width="560" height="340" class="two-circle-fo">
           <div id="twoBottomPortrait" class="two-circle-content"></div>
         </foreignObject>
+
+        <!-- Curved link along outer bottom-right edge (shown in Project mode) -->
+        <a href="/nextwbc-new" id="nextwbcDemoLinkP" style="display:none;">
+          <text class="venn-text text-curved hover-link" dy="-14">
+            <textPath href="#arcTwoOuterBottomP" startOffset="50%" text-anchor="middle">
+              demo nextwbc ↗
+            </textPath>
+          </text>
+        </a>
       </svg>
     </main>
 
@@ -240,14 +290,14 @@ const initialAge = computeAgeString();
       <div class="cv-viewer-card">
         <div class="cv-frame-box">
           <iframe
-            src="/assets/CV_Tinnaphop_Sonsang.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH"
+            src="/assets/Resume_TinnaphopSonsang.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH"
             class="cv-pdf-iframe"
             title="Tinnaphop Sonsang CV PDF"
           >
           </iframe>
         </div>
         <div class="cv-bottom-actions">
-          <a href="/assets/CV_Tinnaphop_Sonsang.pdf" download="CV_Tinnaphop_Sonsang.pdf" class="cv-pill-btn cv-download-pill">
+          <a href="/assets/Resume_TinnaphopSonsang.pdf" download="Resume_TinnaphopSonsang.pdf" class="cv-pill-btn cv-download-pill">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
               <polyline points="7 10 12 15 17 10"></polyline>
@@ -255,7 +305,7 @@ const initialAge = computeAgeString();
             </svg>
             download cv
           </a>
-          <a href="/assets/CV_Tinnaphop_Sonsang.pdf" target="_blank" rel="noopener noreferrer" class="cv-pill-btn">
+          <a href="/assets/Resume_TinnaphopSonsang.pdf" target="_blank" rel="noopener noreferrer" class="cv-pill-btn">
             open tab
           </a>
         </div>
@@ -357,6 +407,24 @@ const initialAge = computeAgeString();
         if (venn2Portrait) venn2Portrait.style.setProperty('display', show3 ? 'none' : '', show3 ? 'important' : '');
       }
 
+      const twoBgLeftL = document.getElementById('twoBgLeftL');
+      const twoBgRightL = document.getElementById('twoBgRightL');
+      const twoBgTopP = document.getElementById('twoBgTopP');
+      const twoBgBottomP = document.getElementById('twoBgBottomP');
+      const nextwbcDemoLinkL = document.getElementById('nextwbcDemoLinkL');
+      const nextwbcDemoLinkP = document.getElementById('nextwbcDemoLinkP');
+
+      function setBgImage(el: Element | null, src?: string): void {
+        if (!el) return;
+        const svgEl = el as SVGImageElement;
+        if (src) {
+          svgEl.setAttribute('href', src);
+          svgEl.style.display = 'block';
+        } else {
+          svgEl.style.display = 'none';
+        }
+      }
+
       function populateTwoCircle(section: TwoCircleSectionKey): void {
         const data = TWO_CIRCLE_SECTIONS[section];
         if (twoCenterTitleL) twoCenterTitleL.textContent = data.title;
@@ -365,6 +433,14 @@ const initialAge = computeAgeString();
         if (twoRightL) twoRightL.innerHTML = renderSideCardHtml(data.right);
         if (twoTopP) twoTopP.innerHTML = renderSideCardHtml(data.left);
         if (twoBottomP) twoBottomP.innerHTML = renderSideCardHtml(data.right);
+        setBgImage(twoBgLeftL, data.left.bgImage);
+        setBgImage(twoBgRightL, data.right.bgImage);
+        setBgImage(twoBgTopP, data.left.bgImage);
+        setBgImage(twoBgBottomP, data.right.bgImage);
+
+        const showDemoLink = section === 'project';
+        if (nextwbcDemoLinkL) (nextwbcDemoLinkL as unknown as SVGElement).style.display = showDemoLink ? 'block' : 'none';
+        if (nextwbcDemoLinkP) (nextwbcDemoLinkP as unknown as SVGElement).style.display = showDemoLink ? 'block' : 'none';
       }
 
       function showCvOverlay(): void {
@@ -774,6 +850,16 @@ const initialAge = computeAgeString();
   }
 
   /* ── 2-CIRCLE EDITORIAL CARDS ── */
+  .two-bg-img {
+    opacity: 0.22;
+    pointer-events: none;
+    transition: opacity 0.38s ease;
+  }
+
+  .venn-stage.two-content-out .two-bg-img {
+    opacity: 0;
+  }
+
   .two-circle-fo {
     overflow: visible;
   }
@@ -786,33 +872,71 @@ const initialAge = computeAgeString();
     justify-content: center;
   }
 
-  .two-circle-card {
+  :global(.two-circle-card) {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    text-align: left;
-    max-width: 380px;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    max-width: 480px;
     margin: 0 auto;
-    padding: 0 10px;
+    padding: 0 8px;
   }
 
-  .two-circle-card-title {
+  :global(.two-circle-card-period) {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #71717a;
+  }
+
+  :global(.two-circle-card-role) {
+    display: block;
+    width: 100%;
+    font-size: 16.5px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: #18181b;
+  }
+
+  :global(.two-circle-card-title) {
     font-size: 22px;
     font-weight: 500;
-    line-height: 1.25;
-    letter-spacing: -0.03em;
+    line-height: 1.22;
+    letter-spacing: -0.04em;
     color: #000000;
-    text-align: left;
+    text-align: center;
+    text-wrap: balance;
+    margin-bottom: 4px;
   }
 
-  .two-circle-card-desc {
-    font-size: 14.5px;
+  :global(.two-circle-card-desc) {
+    font-size: 16.5px;
     font-weight: 400;
     line-height: 1.65;
-    color: #27272a;
-    letter-spacing: -0.01em;
-    text-align: left;
+    color: #3f3f46;
+    letter-spacing: -0.015em;
+    text-align: center;
+    text-wrap: balance;
     word-break: break-word;
+  }
+
+  :global(.two-circle-card-bullets) {
+    list-style: disc;
+    padding-left: 18px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+    font-size: 14.5px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #3f3f46;
+    letter-spacing: -0.01em;
   }
 
   /* Side Text Sizes (Tinnaphop Sonsang & Moss) - Fits inside intersection lens without cutting lines */

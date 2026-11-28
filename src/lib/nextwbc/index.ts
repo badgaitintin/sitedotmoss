@@ -9,6 +9,7 @@ export {
 	AppState,
 	VALID_TRANSITIONS,
 	DEFAULT_INFERENCE_CONFIG,
+	DEFAULT_ONNX_INFERENCE_CONFIG,
 	validateFile,
 } from './nextwbc-types';
 
@@ -18,10 +19,14 @@ export type {
 	DetectionResult,
 	BBox,
 	InferenceConfig,
+	OnnxInferenceConfig,
+	WbcInferenceBackend,
 	FileValidationError,
 } from './nextwbc-types';
 
 export { GradioSpaceClient } from './gradio-client';
+export { OnnxRuntimeBackend, ORT_SCRIPT_URL } from './onnx-backend';
+export type { Letterbox, RawDetection } from './onnx-backend';
 export { NextWbcUI } from './nextwbc-ui';
 export { AeroBubbleEngine } from './bubble-engine';
 export type { Bubble, BubbleEngineConfig } from './bubble-engine';

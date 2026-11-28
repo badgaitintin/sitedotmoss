@@ -63,15 +63,27 @@ describe('renderSideCardHtml() and TWO_CIRCLE_SECTIONS', () => {
     expect(renderSideCardHtml(undefined)).toBe('');
   });
 
-  it('renders experience and project cards with full titles', () => {
-    const expHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.experience.left);
-    expect(expHtml).toContain('Lief Capital Asset Management');
-    expect(expHtml).toContain('Walk-Forward Validation');
+  it('renders experience and project cards with period, role, company, and bullets', () => {
+    const liefHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.experience.left);
+    expect(liefHtml).toContain('May 2026');
+    expect(liefHtml).toContain('Data Scientist');
+    expect(liefHtml).toContain('Lief Capital Asset Management');
+    expect(liefHtml).toContain('<ul class="two-circle-card-bullets">');
+    expect(liefHtml).toContain('Walk-Forward Validation');
 
     const thaidotrunHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.experience.right);
+    expect(thaidotrunHtml).toContain('September 2025 – April 2026');
+    expect(thaidotrunHtml).toContain('Intern');
     expect(thaidotrunHtml).toContain('Thaidotrun Co., Ltd. (Merged into ASICS)');
+    expect(thaidotrunHtml).toContain('<li>');
 
-    const projHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.project.left);
-    expect(projHtml).toContain('MTC-UAV Maize Tassel Counting');
+    const projLeftHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.project.left);
+    expect(projLeftHtml).toContain('August 2024 – October 2024');
+    expect(projLeftHtml).toContain('Shrimp Detection &amp; Counting System');
+    expect(projLeftHtml).toContain('<ul class="two-circle-card-bullets">');
+
+    const projRightHtml = renderSideCardHtml(TWO_CIRCLE_SECTIONS.project.right);
+    expect(projRightHtml).toContain('November 2024 – August 2025');
+    expect(projRightHtml).toContain('Detection of White Blood Cells in Raptors');
   });
 });
